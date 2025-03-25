@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Menu, X, Shield, Terminal, Power } from 'lucide-react';
 
@@ -32,26 +33,26 @@ const Navbar = () => {
       <div className="container mx-auto px-6 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <a href="/" className="text-xl font-bold tracking-tighter flex items-center">
+            <Link to="/" className="text-xl font-bold tracking-tighter flex items-center">
               <Shield className="h-5 w-5 mr-2 text-primary" />
               <span className="font-mono">RFP GLOBAL</span>
-            </a>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
-              ASSETS
-            </a>
-            <a href="#" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
-              PROTOCOLS
-            </a>
-            <a href="#" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
-              INTELLIGENCE
-            </a>
-            <a href="#" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
-              CONTACT
-            </a>
+            <Link to="/marketplace" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
+              MARKETPLACE
+            </Link>
+            <Link to="/services" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
+              SERVICES
+            </Link>
+            <Link to="/how-it-works" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
+              HOW IT WORKS
+            </Link>
+            <Link to="/about" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
+              ABOUT
+            </Link>
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
@@ -86,34 +87,34 @@ const Navbar = () => {
       }`}>
         <div className="container mx-auto px-6 py-4 space-y-6">
           <nav className="flex flex-col space-y-4">
-            <a 
-              href="#" 
+            <Link 
+              to="/marketplace" 
               className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
               onClick={() => setMobileMenuOpen(false)}
             >
-              ASSETS
-            </a>
-            <a 
-              href="#" 
+              MARKETPLACE
+            </Link>
+            <Link 
+              to="/services" 
               className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
               onClick={() => setMobileMenuOpen(false)}
             >
-              PROTOCOLS
-            </a>
-            <a 
-              href="#" 
+              SERVICES
+            </Link>
+            <Link 
+              to="/how-it-works" 
               className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
               onClick={() => setMobileMenuOpen(false)}
             >
-              INTELLIGENCE
-            </a>
-            <a 
-              href="#" 
+              HOW IT WORKS
+            </Link>
+            <Link 
+              to="/about" 
               className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
               onClick={() => setMobileMenuOpen(false)}
             >
-              CONTACT
-            </a>
+              ABOUT
+            </Link>
           </nav>
           <div className="flex flex-col space-y-4">
             <Button variant="outline" className="rounded-none w-full font-mono text-sm border-primary/30">
