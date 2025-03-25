@@ -1,7 +1,7 @@
 
 import { useEffect, useRef } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Users, TrendingUp, Shield, Briefcase, Radio, Database, Terminal, Lock, Eye, Zap } from "lucide-react";
+import { Users, TrendingUp, Shield, Briefcase, Radio, Database, Terminal, Lock, Eye, Zap, FileText, BarChart3, Building } from "lucide-react";
 
 interface Benefit {
   icon: React.ReactNode;
@@ -13,46 +13,46 @@ interface Benefit {
 
 const benefits: Benefit[] = [
   {
-    icon: <TrendingUp className="h-8 w-8 text-primary" />,
-    title: "SUPERIOR YIELD VECTORS",
-    description: "Classified returns significantly outperforming public sector instruments with strategic deployment.",
-    highlight: "7-12% Target Returns",
-    code: "RTN-01"
+    icon: <Building className="h-8 w-8 text-primary" />,
+    title: "MARKETPLACE ACCESS",
+    description: "Create financing proposals and shop them on our secure platform with live bidding from pre-vetted lenders.",
+    highlight: "Live Bidding",
+    code: "MKT-01"
   },
   {
     icon: <Shield className="h-8 w-8 text-primary" />,
-    title: "ENHANCED SECURITY PROTOCOL",
-    description: "Multi-layered authentication and verification ensures only top-tier opportunities are transmitted.",
-    highlight: "Level 5 Clearance",
-    code: "SEC-02"
+    title: "INTELLIGENT UNDERWRITING",
+    description: "AI-powered underwriting algorithm that pre-qualifies businesses and matches them with compatible lenders.",
+    highlight: "Pre-Qualification",
+    code: "UND-02"
   },
   {
-    icon: <Radio className="h-8 w-8 text-primary" />,
-    title: "ENCRYPTED NETWORK ACCESS",
-    description: "Secure channel to opportunities typically restricted to highest-level institutional operatives.",
-    highlight: "Exclusive Intel",
-    code: "NET-03"
+    icon: <FileText className="h-8 w-8 text-primary" />,
+    title: "CREDIT FACILITY BUILDER",
+    description: "AI tool that projects attainable loans based on company characteristics and marketplace data.",
+    highlight: "AI Recommendations",
+    code: "CFB-03"
   },
   {
-    icon: <Eye className="h-8 w-8 text-primary" />,
-    title: "COUNTER-CYCLICAL PROTECTION",
-    description: "Strategic diversification with minimal correlation to standard market fluctuations.",
-    highlight: "Signal Isolation",
-    code: "DIV-04"
+    icon: <Database className="h-8 w-8 text-primary" />,
+    title: "DOCUMENT WAREHOUSE",
+    description: "Secure storage for all pertinent financial data that lenders need to review before funding.",
+    highlight: "Secure Access",
+    code: "DOC-04"
   },
   {
-    icon: <Terminal className="h-8 w-8 text-primary" />,
-    title: "STREAMLINED DEPLOYMENT",
-    description: "Efficient processing algorithms optimize transmission of documentation and asset allocation.",
-    highlight: "Rapid Execution",
-    code: "PRO-05"
+    icon: <TrendingUp className="h-8 w-8 text-primary" />,
+    title: "LOAN TRACKER",
+    description: "Visual timeline showing loan repayment progress, including interest and principal paid to date.",
+    highlight: "Visual Timeline",
+    code: "TRK-05"
   },
   {
-    icon: <Zap className="h-8 w-8 text-primary" />,
-    title: "ACCELERATED CAPITAL TRANSFER",
-    description: "Swift deployment protocols across multiple strategic vectors via unified command interface.",
-    highlight: "Optimized Deployment",
-    code: "SPD-06"
+    icon: <BarChart3 className="h-8 w-8 text-primary" />,
+    title: "ADVANCED ANALYTICS",
+    description: "Access historical transaction data, advanced analytics and market trends to make informed decisions.",
+    highlight: "Market Intelligence",
+    code: "ANL-06"
   },
 ];
 
@@ -87,16 +87,16 @@ const BenefitsSection = () => {
       <div className="container mx-auto px-6 relative z-10">
         <div ref={sectionRef} className="section-animate text-center mb-16 stagger-animate">
           <div className="inline-block mb-2">
-            <span className="inline-flex items-center px-4 py-1.5 rounded-sm bg-primary/10 text-primary text-xs font-mono uppercase tracking-wider border border-primary/30">
-              <Lock className="h-3 w-3 mr-2" />
-              Secure Protocol
+            <span className="rfp-badge">
+              <Terminal className="h-3 w-3 mr-2" />
+              Platform Benefits
             </span>
           </div>
           <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">
-            CreditBridge Strategic Advantages
+            RFP Global Strategic Advantages
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Tactical benefits of our secure private credit transmission network for operatives with proper clearance.
+            Empowering businesses and lenders with a transparent credit formation ecosystem that delivers better financing outcomes.
           </p>
         </div>
         

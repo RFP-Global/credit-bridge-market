@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
@@ -6,65 +7,65 @@
 
 @layer base {
   :root {
-    --background: 220 20% 10%;
-    --foreground: 220 30% 85%;
+    --background: 240 25% 6%;
+    --foreground: 210 30% 85%;
 
-    --card: 220 20% 12%;
-    --card-foreground: 220 30% 85%;
+    --card: 240 25% 8%;
+    --card-foreground: 210 30% 85%;
 
-    --popover: 220 20% 12%;
-    --popover-foreground: 220 30% 85%;
+    --popover: 240 25% 8%;
+    --popover-foreground: 210 30% 85%;
 
-    --primary: 200 100% 30%;
+    --primary: 210 100% 40%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 40% 15%;
+    --secondary: 240 30% 12%;
     --secondary-foreground: 210 30% 85%;
 
-    --muted: 220 40% 15%;
-    --muted-foreground: 220 15% 65%;
+    --muted: 240 30% 12%;
+    --muted-foreground: 240 15% 65%;
 
-    --accent: 200 100% 25%;
+    --accent: 210 100% 35%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 70% 40%;
     --destructive-foreground: 210 30% 85%;
 
-    --border: 220 40% 15%;
-    --input: 220 40% 15%;
-    --ring: 200 100% 30%;
+    --border: 240 30% 12%;
+    --input: 240 30% 12%;
+    --ring: 210 100% 40%;
     
-    --radius: 0.5rem;
+    --radius: 0.25rem;
   }
 
   .dark {
-    --background: 220 20% 10%;
-    --foreground: 220 30% 85%;
+    --background: 240 25% 6%;
+    --foreground: 210 30% 85%;
 
-    --card: 220 20% 12%;
-    --card-foreground: 220 30% 85%;
+    --card: 240 25% 8%;
+    --card-foreground: 210 30% 85%;
 
-    --popover: 220 20% 12%;
-    --popover-foreground: 220 30% 85%;
+    --popover: 240 25% 8%;
+    --popover-foreground: 210 30% 85%;
 
-    --primary: 200 100% 30%;
+    --primary: 210 100% 40%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 40% 15%;
+    --secondary: 240 30% 12%;
     --secondary-foreground: 210 30% 85%;
 
-    --muted: 220 40% 15%;
-    --muted-foreground: 220 15% 65%;
+    --muted: 240 30% 12%;
+    --muted-foreground: 240 15% 65%;
 
-    --accent: 200 100% 25%;
+    --accent: 210 100% 35%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 70% 40%;
     --destructive-foreground: 210 30% 85%;
 
-    --border: 220 40% 15%;
-    --input: 220 40% 15%;
-    --ring: 200 100% 30%;
+    --border: 240 30% 12%;
+    --input: 240 30% 12%;
+    --ring: 210 100% 40%;
   }
 }
 
@@ -97,7 +98,7 @@
   }
 
   .terminal-card {
-    @apply border border-primary/30 bg-background rounded-md p-4 shadow-[0_0_15px_rgba(0,200,255,0.15)] relative;
+    @apply border border-primary/30 bg-background rounded-md p-4 shadow-[0_0_15px_rgba(0,150,255,0.15)] relative;
   }
 
   .terminal-header {
@@ -130,6 +131,22 @@
 
   .blink {
     animation: blink 1s step-end infinite;
+  }
+
+  .rfp-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-sm bg-primary/10 text-primary text-xs font-mono uppercase tracking-wider border border-primary/30;
+  }
+
+  .data-row {
+    @apply flex overflow-hidden whitespace-nowrap;
+  }
+  
+  .data-item {
+    @apply px-4 py-1 border-r border-primary/20 flex-shrink-0;
+  }
+
+  .market-ticker {
+    @apply bg-secondary/50 border-y border-primary/20 flex overflow-hidden;
   }
 
   @keyframes blink {

@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Terminal, Timer, ArrowUpRight, TrendingUp, Shield, BarChart3, Database, Lock, Radio } from "lucide-react";
+import { Terminal, Timer, ArrowUpRight, TrendingUp, Shield, BarChart3, Database, Lock, FileText, Building, Briefcase } from "lucide-react";
 import { useEffect, useRef } from "react";
 
 interface DealProps {
@@ -11,45 +11,49 @@ interface DealProps {
   target: string;
   term: string;
   minInvestment: string;
-  status: "ACTIVE" | "CLOSING" | "RESTRICTED";
+  status: "ACTIVE" | "CLOSING SOON" | "QUALIFIED";
   badgeColor: string;
   progress: number;
   code: string;
+  industry: string;
 }
 
 const deals: DealProps[] = [
   {
-    title: "OPERATION SKYFALL",
-    type: "Senior Secured Debt",
-    target: "9.2% APY",
-    term: "36 Months",
-    minInvestment: "$100,000",
+    title: "GROWTH CAPITAL",
+    type: "Term Loan",
+    target: "7.8% APR",
+    term: "60 Months",
+    minInvestment: "$500,000",
     status: "ACTIVE",
     badgeColor: "bg-emerald-900/20 text-emerald-500 border-emerald-500/30",
     progress: 65,
-    code: "MF-713"
+    code: "TCF-713",
+    industry: "Technology"
   },
   {
-    title: "PROJECT MERIDIAN",
-    type: "Mezzanine Debt",
-    target: "11.5% APY",
-    term: "48 Months",
+    title: "WORKING CAPITAL",
+    type: "Revolving Line of Credit",
+    target: "8.5% APR",
+    term: "24 Months",
     minInvestment: "$250,000",
-    status: "CLOSING",
+    status: "CLOSING SOON",
     badgeColor: "bg-amber-900/20 text-amber-500 border-amber-500/30",
     progress: 82,
-    code: "IC-289"
+    code: "RLC-289",
+    industry: "Healthcare"
   },
   {
-    title: "BLACKBIRD INITIATIVE",
-    type: "Senior Secured Loans",
-    target: "8.7% APY",
-    term: "24 Months",
-    minInvestment: "$50,000",
-    status: "RESTRICTED",
+    title: "EQUIPMENT FINANCE",
+    type: "Asset-Backed Loan",
+    target: "6.7% APR",
+    term: "48 Months",
+    minInvestment: "$100,000",
+    status: "QUALIFIED",
     badgeColor: "bg-blue-900/20 text-blue-500 border-blue-500/30",
     progress: 98,
-    code: "DCL-456"
+    code: "EQF-456",
+    industry: "Manufacturing"
   },
 ];
 
@@ -69,14 +73,21 @@ const DealCard = ({ deal }: { deal: DealProps }) => {
               </span>
             </div>
             <CardTitle className="text-md font-mono tracking-tight">{deal.title}</CardTitle>
-            <p className="text-xs text-muted-foreground mt-1 font-mono">{deal.type}</p>
+            <div className="flex items-center">
+              <p className="text-xs text-muted-foreground mt-1 font-mono">{deal.type}</p>
+              <span className="mx-2 text-muted-foreground">•</span>
+              <p className="text-xs text-muted-foreground mt-1 font-mono flex items-center">
+                <Building className="h-3 w-3 mr-1" /> 
+                {deal.industry}
+              </p>
+            </div>
           </div>
         </div>
       </CardHeader>
       <CardContent className="pt-4">
         <div className="grid grid-cols-2 gap-3 mb-4">
           <div className="space-y-1">
-            <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider">Yield</p>
+            <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider">Rate</p>
             <p className="text-xl font-semibold text-primary flex items-center">
               {deal.target}
               <TrendingUp className="h-4 w-4 ml-1" />
@@ -111,7 +122,7 @@ const DealCard = ({ deal }: { deal: DealProps }) => {
       </CardContent>
       <CardFooter className="border-t border-primary/20 bg-muted/30">
         <Button className="w-full rounded-none text-xs font-mono" size="sm">
-          REQUEST ACCESS
+          SUBMIT BID
           <ArrowUpRight className="ml-2 h-3 w-3" />
         </Button>
       </CardFooter>
@@ -150,16 +161,16 @@ const FeaturedListings = () => {
       <div className="container mx-auto px-6 relative z-10">
         <div ref={sectionRef} className="section-animate mb-12 text-center stagger-animate">
           <div className="inline-block mb-2">
-            <span className="inline-flex items-center px-4 py-1.5 rounded-sm bg-primary/10 text-primary text-xs font-mono uppercase tracking-wider border border-primary/30">
-              <Database className="h-3 w-3 mr-2" />
-              Classified Assets
+            <span className="rfp-badge">
+              <Briefcase className="h-3 w-3 mr-2" />
+              Active Credit RFPs
             </span>
           </div>
           <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">
-            Strategic Investment Opportunities
+            Active Marketplace Opportunities
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Secure access to vetted private credit operations with level 5 clearance.
+            Pre-vetted credit opportunities from qualified businesses seeking optimal financing terms.
           </p>
         </div>
         
@@ -179,7 +190,7 @@ const FeaturedListings = () => {
         
         <div className="text-center mt-12 opacity-0" style={{ animation: 'fade-in 0.5s ease forwards 0.8s' }}>
           <Button variant="outline" size="lg" className="rounded-none px-8 border-primary/30 font-mono text-sm">
-            VIEW ALL ASSETS
+            EXPLORE ALL OPPORTUNITIES
             <Lock className="ml-2 h-4 w-4" />
           </Button>
         </div>
