@@ -1,9 +1,8 @@
-
 import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Shield, BarChart3, FileText, Calculator, Target, Lightbulb, Users, CheckCircle, Terminal } from "lucide-react";
+import { ArrowRight, Shield, BarChart3, FileText, Calculator, Target, Lightbulb, Users, CheckCircle, Terminal, Briefcase } from "lucide-react";
 
 const HowItWorks = () => {
   useEffect(() => {
