@@ -34,7 +34,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <a href="/" className="text-xl font-bold tracking-tighter flex items-center">
               <Shield className="h-5 w-5 mr-2 text-primary" />
-              <span className="font-mono">CREDITBRIDGE</span>
+              <span className="font-mono">RFP GLOBAL</span>
             </a>
           </div>
 
