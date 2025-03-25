@@ -1,51 +1,58 @@
 
 import { useEffect, useRef } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Users, TrendingUp, ShieldCheck, Briefcase, LineChart, Zap } from "lucide-react";
+import { Users, TrendingUp, Shield, Briefcase, Radio, Database, Terminal, Lock, Eye, Zap } from "lucide-react";
 
 interface Benefit {
   icon: React.ReactNode;
   title: string;
   description: string;
   highlight?: string;
+  code: string;
 }
 
 const benefits: Benefit[] = [
   {
-    icon: <TrendingUp className="h-10 w-10 text-blue-500" />,
-    title: "Superior Returns",
-    description: "Access private credit investments with historically higher yields than public markets.",
+    icon: <TrendingUp className="h-8 w-8 text-primary" />,
+    title: "SUPERIOR YIELD VECTORS",
+    description: "Classified returns significantly outperforming public sector instruments with strategic deployment.",
     highlight: "7-12% Target Returns",
+    code: "RTN-01"
   },
   {
-    icon: <ShieldCheck className="h-10 w-10 text-emerald-500" />,
-    title: "Institutional Quality",
-    description: "Rigorous due diligence process ensures only high-quality opportunities are offered.",
-    highlight: "Thorough Vetting",
+    icon: <Shield className="h-8 w-8 text-primary" />,
+    title: "ENHANCED SECURITY PROTOCOL",
+    description: "Multi-layered authentication and verification ensures only top-tier opportunities are transmitted.",
+    highlight: "Level 5 Clearance",
+    code: "SEC-02"
   },
   {
-    icon: <Users className="h-10 w-10 text-violet-500" />,
-    title: "Network Access",
-    description: "Tap into deals typically only available to institutional investors.",
-    highlight: "Exclusive Opportunities",
+    icon: <Radio className="h-8 w-8 text-primary" />,
+    title: "ENCRYPTED NETWORK ACCESS",
+    description: "Secure channel to opportunities typically restricted to highest-level institutional operatives.",
+    highlight: "Exclusive Intel",
+    code: "NET-03"
   },
   {
-    icon: <LineChart className="h-10 w-10 text-amber-500" />,
-    title: "Portfolio Diversification",
-    description: "Low correlation to public markets helps protect your overall portfolio.",
-    highlight: "Reduced Volatility",
+    icon: <Eye className="h-8 w-8 text-primary" />,
+    title: "COUNTER-CYCLICAL PROTECTION",
+    description: "Strategic diversification with minimal correlation to standard market fluctuations.",
+    highlight: "Signal Isolation",
+    code: "DIV-04"
   },
   {
-    icon: <Briefcase className="h-10 w-10 text-indigo-500" />,
-    title: "Simplified Process",
-    description: "Streamlined investment process with transparent documentation and reporting.",
-    highlight: "Easy Onboarding",
+    icon: <Terminal className="h-8 w-8 text-primary" />,
+    title: "STREAMLINED DEPLOYMENT",
+    description: "Efficient processing algorithms optimize transmission of documentation and asset allocation.",
+    highlight: "Rapid Execution",
+    code: "PRO-05"
   },
   {
-    icon: <Zap className="h-10 w-10 text-rose-500" />,
-    title: "Efficient Deployment",
-    description: "Quickly deploy capital across multiple opportunities in a single platform.",
-    highlight: "Fast Access",
+    icon: <Zap className="h-8 w-8 text-primary" />,
+    title: "ACCELERATED CAPITAL TRANSFER",
+    description: "Swift deployment protocols across multiple strategic vectors via unified command interface.",
+    highlight: "Optimized Deployment",
+    code: "SPD-06"
   },
 ];
 
@@ -74,14 +81,22 @@ const BenefitsSection = () => {
   }, []);
 
   return (
-    <section className="py-20 bg-white">
-      <div className="container mx-auto px-6">
+    <section className="py-20 bg-background relative grid-bg">
+      <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/20 to-transparent"></div>
+      
+      <div className="container mx-auto px-6 relative z-10">
         <div ref={sectionRef} className="section-animate text-center mb-16 stagger-animate">
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-            Why Choose CreditBridge
+          <div className="inline-block mb-2">
+            <span className="inline-flex items-center px-4 py-1.5 rounded-sm bg-primary/10 text-primary text-xs font-mono uppercase tracking-wider border border-primary/30">
+              <Lock className="h-3 w-3 mr-2" />
+              Secure Protocol
+            </span>
+          </div>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">
+            CreditBridge Strategic Advantages
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Discover the advantages of our premium private credit marketplace for sophisticated investors.
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            Tactical benefits of our secure private credit transmission network for operatives with proper clearance.
           </p>
         </div>
         
@@ -89,18 +104,21 @@ const BenefitsSection = () => {
           {benefits.map((benefit, index) => (
             <div 
               key={index} 
-              className="bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow duration-300 opacity-0"
+              className="terminal-card opacity-0 relative overflow-hidden"
               style={{ 
                 animation: `fade-in 0.5s ease forwards ${0.2 + index * 0.1}s`
               }}
             >
+              <div className="absolute top-2 right-2 text-xs text-muted-foreground font-mono">
+                {benefit.code}
+              </div>
               <div className="mb-4">
                 {benefit.icon}
               </div>
-              <h3 className="text-xl font-semibold mb-2">{benefit.title}</h3>
-              <p className="text-muted-foreground mb-4">{benefit.description}</p>
+              <h3 className="text-lg font-semibold mb-2 font-mono">{benefit.title}</h3>
+              <p className="text-muted-foreground mb-4 text-sm">{benefit.description}</p>
               {benefit.highlight && (
-                <Badge variant="secondary" className="text-sm font-medium">
+                <Badge variant="outline" className="text-xs font-mono border-primary/30">
                   {benefit.highlight}
                 </Badge>
               )}

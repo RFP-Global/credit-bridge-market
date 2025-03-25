@@ -1,8 +1,8 @@
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tag, Timer, ArrowUpRight, TrendingUp, Shield, BarChart3 } from "lucide-react";
+import { Terminal, Timer, ArrowUpRight, TrendingUp, Shield, BarChart3, Database, Lock, Radio } from "lucide-react";
 import { useEffect, useRef } from "react";
 
 interface DealProps {
@@ -11,75 +11,80 @@ interface DealProps {
   target: string;
   term: string;
   minInvestment: string;
-  status: "Open" | "Closing Soon" | "Oversubscribed";
+  status: "ACTIVE" | "CLOSING" | "RESTRICTED";
   badgeColor: string;
   progress: number;
+  code: string;
 }
 
 const deals: DealProps[] = [
   {
-    title: "Multi-Family Real Estate Debt Fund",
+    title: "OPERATION SKYFALL",
     type: "Senior Secured Debt",
     target: "9.2% APY",
     term: "36 Months",
     minInvestment: "$100,000",
-    status: "Open",
-    badgeColor: "bg-green-100 text-green-800",
+    status: "ACTIVE",
+    badgeColor: "bg-emerald-900/20 text-emerald-500 border-emerald-500/30",
     progress: 65,
+    code: "MF-713"
   },
   {
-    title: "Infrastructure Credit Opportunity",
+    title: "PROJECT MERIDIAN",
     type: "Mezzanine Debt",
     target: "11.5% APY",
     term: "48 Months",
     minInvestment: "$250,000",
-    status: "Closing Soon",
-    badgeColor: "bg-amber-100 text-amber-800",
+    status: "CLOSING",
+    badgeColor: "bg-amber-900/20 text-amber-500 border-amber-500/30",
     progress: 82,
+    code: "IC-289"
   },
   {
-    title: "Diversified Corporate Lending Portfolio",
+    title: "BLACKBIRD INITIATIVE",
     type: "Senior Secured Loans",
     target: "8.7% APY",
     term: "24 Months",
     minInvestment: "$50,000",
-    status: "Oversubscribed",
-    badgeColor: "bg-blue-100 text-blue-800",
+    status: "RESTRICTED",
+    badgeColor: "bg-blue-900/20 text-blue-500 border-blue-500/30",
     progress: 98,
+    code: "DCL-456"
   },
 ];
 
 const DealCard = ({ deal }: { deal: DealProps }) => {
   return (
-    <Card className="overflow-hidden glass-card hover-scale">
-      <CardHeader className="border-b bg-muted/30">
+    <Card className="overflow-hidden terminal-card hover-scale border-primary/30">
+      <CardHeader className="border-b border-primary/20 bg-muted/30 pb-3">
         <div className="flex justify-between items-start">
           <div>
             <div className="flex items-center mb-2">
-              <Badge className={`font-medium ${deal.badgeColor}`}>
+              <Badge className={`font-mono text-xs border ${deal.badgeColor}`}>
                 {deal.status}
               </Badge>
-              <span className="text-xs text-muted-foreground ml-2 flex items-center">
-                <Tag className="h-3 w-3 mr-1" />
-                {deal.type}
+              <span className="text-xs text-muted-foreground ml-2 flex items-center font-mono">
+                <Terminal className="h-3 w-3 mr-1" />
+                {deal.code}
               </span>
             </div>
-            <CardTitle className="text-xl">{deal.title}</CardTitle>
+            <CardTitle className="text-md font-mono tracking-tight">{deal.title}</CardTitle>
+            <p className="text-xs text-muted-foreground mt-1 font-mono">{deal.type}</p>
           </div>
         </div>
       </CardHeader>
-      <CardContent className="pt-6">
-        <div className="grid grid-cols-2 gap-4 mb-4">
+      <CardContent className="pt-4">
+        <div className="grid grid-cols-2 gap-3 mb-4">
           <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">Target Return</p>
-            <p className="text-2xl font-semibold text-primary flex items-center">
+            <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider">Yield</p>
+            <p className="text-xl font-semibold text-primary flex items-center">
               {deal.target}
               <TrendingUp className="h-4 w-4 ml-1" />
             </p>
           </div>
           <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">Investment Term</p>
-            <p className="text-2xl font-semibold flex items-center">
+            <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider">Term</p>
+            <p className="text-xl font-semibold flex items-center">
               {deal.term}
               <Timer className="h-4 w-4 ml-1" />
             </p>
@@ -87,27 +92,27 @@ const DealCard = ({ deal }: { deal: DealProps }) => {
         </div>
         
         <div className="space-y-1 mb-4">
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Funding Progress</span>
+          <div className="flex justify-between text-xs font-mono">
+            <span className="text-muted-foreground uppercase tracking-wider">Funding Status</span>
             <span className="font-medium">{deal.progress}%</span>
           </div>
-          <div className="w-full bg-secondary rounded-full h-2">
+          <div className="w-full bg-secondary rounded-none h-1">
             <div 
-              className="bg-primary h-2 rounded-full" 
+              className="bg-primary h-1" 
               style={{ width: `${deal.progress}%` }}
             ></div>
           </div>
         </div>
         
-        <div className="text-sm text-muted-foreground flex items-center">
-          <Shield className="h-4 w-4 mr-1" />
-          <span>Min. Investment: {deal.minInvestment}</span>
+        <div className="text-xs text-muted-foreground flex items-center font-mono">
+          <Shield className="h-3 w-3 mr-1" />
+          <span>MIN. INVESTMENT: {deal.minInvestment}</span>
         </div>
       </CardContent>
-      <CardFooter className="border-t bg-muted/30">
-        <Button className="w-full rounded-md">
-          View Opportunity
-          <ArrowUpRight className="ml-2 h-4 w-4" />
+      <CardFooter className="border-t border-primary/20 bg-muted/30">
+        <Button className="w-full rounded-none text-xs font-mono" size="sm">
+          REQUEST ACCESS
+          <ArrowUpRight className="ml-2 h-3 w-3" />
         </Button>
       </CardFooter>
     </Card>
@@ -139,14 +144,22 @@ const FeaturedListings = () => {
   }, []);
 
   return (
-    <section id="featured-listings" className="py-20 bg-gradient-to-b from-white to-secondary">
-      <div className="container mx-auto px-6">
+    <section id="featured-listings" className="py-20 bg-gradient-to-b from-background to-secondary/50 grid-bg relative">
+      <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/20 to-transparent"></div>
+      
+      <div className="container mx-auto px-6 relative z-10">
         <div ref={sectionRef} className="section-animate mb-12 text-center stagger-animate">
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-            Curated Investment Opportunities
+          <div className="inline-block mb-2">
+            <span className="inline-flex items-center px-4 py-1.5 rounded-sm bg-primary/10 text-primary text-xs font-mono uppercase tracking-wider border border-primary/30">
+              <Database className="h-3 w-3 mr-2" />
+              Classified Assets
+            </span>
+          </div>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">
+            Strategic Investment Opportunities
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Explore our exclusive selection of private credit investments, carefully vetted for quality and performance.
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            Secure access to vetted private credit operations with level 5 clearance.
           </p>
         </div>
         
@@ -165,9 +178,9 @@ const FeaturedListings = () => {
         </div>
         
         <div className="text-center mt-12 opacity-0" style={{ animation: 'fade-in 0.5s ease forwards 0.8s' }}>
-          <Button variant="outline" size="lg" className="rounded-full px-8">
-            View All Opportunities
-            <BarChart3 className="ml-2 h-4 w-4" />
+          <Button variant="outline" size="lg" className="rounded-none px-8 border-primary/30 font-mono text-sm">
+            VIEW ALL ASSETS
+            <Lock className="ml-2 h-4 w-4" />
           </Button>
         </div>
       </div>

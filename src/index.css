@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,35 +7,35 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 220 20% 16%;
+    --background: 220 20% 97%;
+    --foreground: 220 40% 16%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 220 20% 16%;
+    --card: 220 20% 97%;
+    --card-foreground: 220 40% 16%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 16%;
+    --popover: 220 20% 97%;
+    --popover-foreground: 220 40% 16%;
 
-    --primary: 220 92% 55%;
+    --primary: 200 100% 40%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 220 20% 16%;
+    --secondary: 220 14% 90%;
+    --secondary-foreground: 220 40% 16%;
 
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 8% 56%;
+    --muted: 220 14% 90%;
+    --muted-foreground: 220 8% 45%;
 
-    --accent: 220 14% 96%;
-    --accent-foreground: 220 20% 16%;
+    --accent: 200 100% 35%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 220 92% 55%;
+    --border: 220 13% 85%;
+    --input: 220 13% 85%;
+    --ring: 200 100% 40%;
 
-    --radius: 0.5rem;
+    --radius: 0.25rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -48,37 +48,37 @@
   }
 
   .dark {
-    --background: 220 40% 10%;
-    --foreground: 0 0% 95%;
+    --background: 220 40% 8%;
+    --foreground: 210 30% 85%;
 
-    --card: 220 40% 13%;
-    --card-foreground: 0 0% 95%;
+    --card: 220 40% 12%;
+    --card-foreground: 210 30% 85%;
 
-    --popover: 220 40% 13%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 220 40% 12%;
+    --popover-foreground: 210 30% 85%;
 
-    --primary: 220 92% 65%;
+    --primary: 200 100% 45%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 40% 16%;
-    --secondary-foreground: 0 0% 95%;
+    --secondary: 220 40% 15%;
+    --secondary-foreground: 210 30% 85%;
 
-    --muted: 220 40% 16%;
-    --muted-foreground: 220 15% 70%;
+    --muted: 220 40% 15%;
+    --muted-foreground: 220 15% 65%;
 
-    --accent: 220 40% 16%;
-    --accent-foreground: 0 0% 95%;
+    --accent: 200 100% 40%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 70% 50%;
-    --destructive-foreground: 0 0% 95%;
+    --destructive-foreground: 210 30% 85%;
 
-    --border: 220 40% 16%;
-    --input: 220 40% 16%;
-    --ring: 220 92% 65%;
+    --border: 220 40% 15%;
+    --input: 220 40% 15%;
+    --ring: 200 100% 45%;
     
-    --sidebar-background: 240 5.9% 10%;
+    --sidebar-background: 240 10% 12%;
     --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary: 200 100% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
@@ -97,28 +97,74 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-mono;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
   }
 }
 
 @layer components {
   .glass-card {
-    @apply bg-white/70 backdrop-blur-lg border border-white/20 shadow-lg;
+    @apply bg-background/80 backdrop-blur-md border border-border/50 shadow-lg;
   }
   
   .hover-scale {
-    @apply transition-transform duration-300 hover:scale-[1.02];
+    @apply transition-transform duration-300 hover:scale-[1.01];
   }
   
   .text-balance {
     text-wrap: balance;
   }
+
+  .terminal-card {
+    @apply border border-primary/30 bg-background rounded-md p-4 shadow-[0_0_15px_rgba(0,200,255,0.15)] relative;
+  }
+
+  .terminal-header {
+    @apply absolute top-0 left-0 right-0 border-b border-primary/30 py-1 px-3 flex items-center;
+  }
+
+  .terminal-dot {
+    @apply w-2 h-2 rounded-full mr-1;
+  }
+
+  .terminal-content {
+    @apply pt-8;
+  }
+
+  .data-grid {
+    @apply grid grid-cols-2 gap-3 text-sm;
+  }
+
+  .data-grid-item {
+    @apply flex flex-col;
+  }
+
+  .data-label {
+    @apply text-muted-foreground text-xs uppercase tracking-wider;
+  }
+
+  .data-value {
+    @apply font-medium;
+  }
+
+  .blink {
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
 }
 
 /* Custom Styles */
 body {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+h1, h2, h3, h4, h5, h6 {
   font-family: 'Inter', sans-serif;
+  letter-spacing: -0.025em;
 }
 
 button, a {
@@ -148,3 +194,80 @@ button, a {
   opacity: 1;
   transform: translateY(0);
 }
+
+@keyframes fade-in {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.typewriter {
+  overflow: hidden;
+  border-right: 0.15em solid var(--primary);
+  white-space: nowrap;
+  margin: 0 auto;
+  animation: 
+    typing 3.5s steps(40, end),
+    blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: hsl(var(--primary)); }
+}
+
+.scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: hsl(var(--primary) / 0.2);
+  opacity: 0.75;
+  animation: scanline 6s linear infinite;
+}
+
+@keyframes scanline {
+  0% {
+    top: 0%;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+.grid-bg {
+  background-image: 
+    linear-gradient(to right, hsl(var(--primary) / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, hsl(var(--primary) / 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.radar-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150%;
+  height: 150%;
+  border-radius: 50%;
+  background: radial-gradient(circle, transparent 50%, hsl(var(--primary) / 0.1) 100%);
+  opacity: 0;
+  animation: pulse 4s linear infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
