@@ -89,14 +89,14 @@ const BenefitsSection = () => {
           <div className="inline-block mb-2">
             <span className="rfp-badge">
               <Terminal className="h-3 w-3 mr-2" />
-              Platform Benefits
+              RFP Global Platform Benefits
             </span>
           </div>
           <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">
             RFP Global Strategic Advantages
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Empowering businesses and lenders with a transparent credit formation ecosystem that delivers better financing outcomes.
+            Empowering businesses and lenders with a transparent credit formation ecosystem that delivers better financing outcomes through RFP Global.
           </p>
         </div>
         

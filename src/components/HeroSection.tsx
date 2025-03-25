@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown, Terminal, Shield, Database, FileText, BarChart3, Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -21,7 +20,6 @@ const HeroSection = () => {
       observer.observe(sectionRef.current);
     }
 
-    // Simulate typewriter completion
     const timer = setTimeout(() => {
       setTypeComplete(true);
     }, 3500);
@@ -114,7 +112,7 @@ const HeroSection = () => {
                 <div className="terminal-dot bg-red-500"></div>
                 <div className="terminal-dot bg-yellow-500"></div>
                 <div className="terminal-dot bg-green-500"></div>
-                <div className="flex-1 text-center text-xs text-muted-foreground font-mono">RFP TERMINAL // SECURE MARKETPLACE</div>
+                <div className="flex-1 text-center text-xs text-muted-foreground font-mono">RFP GLOBAL TERMINAL // SECURE MARKETPLACE</div>
               </div>
               <div className="terminal-content">
                 <div className="mb-4 font-mono text-primary text-sm">
