@@ -5,7 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
-import Index from "./pages/Index";
+import SimplifiedIndex from "./pages/SimplifiedIndex";
 import Marketplace from "./pages/Marketplace";
 import Services from "./pages/Services";
 import About from "./pages/About";
@@ -24,17 +24,18 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <BrowserRouter>
-          <Toaster />
-          <Sonner />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/marketplace" element={<Marketplace />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/how-it-works" element={<HowItWorks />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <div className="app-container">
+            <Toaster />
+            <Sonner />
+            <Routes>
+              <Route path="/" element={<SimplifiedIndex />} />
+              <Route path="/marketplace" element={<Marketplace />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/how-it-works" element={<HowItWorks />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
