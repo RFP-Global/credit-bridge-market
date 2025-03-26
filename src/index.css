@@ -192,31 +192,6 @@
       linear-gradient(to bottom, rgba(0, 255, 100, 0.05) 1px, transparent 1px);
     background-size: 20px 20px;
   }
-  
-  /* Sonar beacon effect */
-  .radar-pulse {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 150%;
-    height: 150%;
-    border-radius: 50%;
-    background: radial-gradient(circle, transparent 50%, rgba(14, 165, 233, 0.1) 100%);
-    opacity: 0;
-    animation: pulse 4s linear infinite;
-  }
-
-  @keyframes pulse {
-    0% {
-      transform: translate(-50%, -50%) scale(0.1);
-      opacity: 1;
-    }
-    100% {
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 0;
-    }
-  }
 }
 
 /* Custom Styles */
@@ -293,4 +268,28 @@ button, a {
 @keyframes blink-caret {
   from, to { border-color: transparent }
   50% { border-color: hsl(var(--primary)); }
+}
+
+.radar-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150%;
+  height: 150%;
+  border-radius: 50%;
+  background: radial-gradient(circle, transparent 50%, rgba(14, 165, 233, 0.1) 100%);
+  opacity: 0;
+  animation: pulse 4s linear infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
 }
