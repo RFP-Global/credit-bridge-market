@@ -45,7 +45,7 @@ const Marketplace = () => {
   } = useMarketplace(financeProposals);
 
   return (
-    <div className="min-h-screen bg-black text-gray-200 relative grid-bg">
+    <div className="min-h-screen bg-background text-foreground relative grid-bg">
       <Navbar />
       <FullscreenButton />
       
@@ -89,7 +89,7 @@ const Marketplace = () => {
         </div>
 
         {/* Fixed pagination at the bottom */}
-        <div className="mt-4 bg-black pt-2">
+        <div className="mt-4 bg-background pt-2">
           <MarketplacePagination 
             currentPage={currentPage}
             totalPages={totalPages}
