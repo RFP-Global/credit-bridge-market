@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -110,6 +111,16 @@ const structureLoanTermData = [
   { month: 'Apr', llc: 40, corporate: 35, partnership: 30 },
   { month: 'May', llc: 30, corporate: 30, partnership: 35 },
   { month: 'Jun', llc: 35, corporate: 25, partnership: 30 }
+];
+
+// Add the missing industryLoanTermData
+const industryLoanTermData = [
+  { month: 'Jan', retail: 30, tech: 45, construction: 25, manufacturing: 35 },
+  { month: 'Feb', retail: 35, tech: 50, construction: 30, manufacturing: 40 },
+  { month: 'Mar', retail: 45, tech: 40, construction: 35, manufacturing: 35 },
+  { month: 'Apr', retail: 40, tech: 35, construction: 45, manufacturing: 30 },
+  { month: 'May', retail: 30, tech: 30, construction: 40, manufacturing: 35 },
+  { month: 'Jun', retail: 35, tech: 25, construction: 30, manufacturing: 45 }
 ];
 
 const Intelligence = () => {
