@@ -45,6 +45,9 @@ const Navbar = () => {
             <Link to="/marketplace" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
               MARKETPLACE
             </Link>
+            <Link to="/enterprise-dashboard" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
+              ENTERPRISE DASHBOARD
+            </Link>
             <Link to="#" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
               INTELLIGENCE
             </Link>
@@ -92,6 +95,13 @@ const Navbar = () => {
               onClick={() => setMobileMenuOpen(false)}
             >
               MARKETPLACE
+            </Link>
+            <Link 
+              to="/enterprise-dashboard" 
+              className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              ENTERPRISE DASHBOARD
             </Link>
             <Link 
               to="#" 
