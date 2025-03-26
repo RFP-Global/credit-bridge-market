@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
@@ -140,7 +139,6 @@ const Marketplace = () => {
     status: []
   });
   
-  // Enhanced column visibility state
   const [columnVisibility, setColumnVisibility] = useState({
     projectName: true,
     facilityType: true,
@@ -156,7 +154,6 @@ const Marketplace = () => {
     bidVolume: true
   });
   
-  // Toggle column visibility
   const toggleColumn = (column) => {
     setColumnVisibility(prev => ({
       ...prev,
@@ -164,14 +161,11 @@ const Marketplace = () => {
     }));
   };
 
-  // Column management popover
   const [showColumnsMenu, setShowColumnsMenu] = useState(false);
   
-  // Apply filters and search to the data
   useEffect(() => {
     let result = [...marketplaceData];
     
-    // Apply search
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       result = result.filter(item => 
@@ -183,7 +177,6 @@ const Marketplace = () => {
       );
     }
     
-    // Apply filters
     if (filters.facilityType.length > 0) {
       result = result.filter(item => filters.facilityType.includes(item.facilityType));
     }
@@ -205,20 +198,17 @@ const Marketplace = () => {
     }
     
     setFilteredData(result);
-    setCurrentPage(1); // Reset to first page when filters change
+    setCurrentPage(1);
   }, [searchQuery, filters]);
 
-  // Handle filter changes
   const toggleFilter = (category, value) => {
     setFilters(prev => {
       const updatedCategory = [...prev[category]];
       
       if (updatedCategory.includes(value)) {
-        // Remove the value
         const index = updatedCategory.indexOf(value);
         updatedCategory.splice(index, 1);
       } else {
-        // Add the value
         updatedCategory.push(value);
       }
       
@@ -229,7 +219,6 @@ const Marketplace = () => {
     });
   };
 
-  // Clear all filters
   const clearFilters = () => {
     setFilters({
       facilityType: [],
@@ -242,29 +231,29 @@ const Marketplace = () => {
     toast.success("All filters have been cleared.");
   };
 
-  // Handle pagination
-  const itemsPerPage = 5;
-  const pageCount = Math.ceil(filteredData.length / itemsPerPage);
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  // Handle view project
   const handleViewProject = (projectId) => {
     toast.info(`Viewing details for project ${projectId}`);
   };
 
-  // Toggle all columns
-  const toggleAllColumns = (value) => {
-    const newState = Object.fromEntries(
-      Object.keys(columnVisibility).map(key => [key, value])
-    );
-    setColumnVisibility(newState);
+  const toggleAllColumns = (value: boolean) => {
+    setColumnVisibility({
+      projectName: value,
+      facilityType: value,
+      financing: value,
+      principal: value,
+      rateType: value,
+      targetRate: value,
+      term: value,
+      status: value,
+      deadline: value,
+      lender: value,
+      industry: value,
+      bidVolume: value
+    });
   };
   
   return (
@@ -303,7 +292,6 @@ const Marketplace = () => {
               </div>
             </div>
             
-            {/* Column Management Button */}
             <Popover open={showColumnsMenu} onOpenChange={setShowColumnsMenu}>
               <PopoverTrigger asChild>
                 <Button variant="outline" className="gap-2 font-mono text-xs border-primary/30">
@@ -367,7 +355,6 @@ const Marketplace = () => {
               </PopoverContent>
             </Popover>
             
-            {/* Facility Type Filter */}
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="outline" className="gap-2 font-mono text-xs border-primary/30">
@@ -408,7 +395,6 @@ const Marketplace = () => {
               </PopoverContent>
             </Popover>
             
-            {/* Target Terms Filter */}
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="outline" className="gap-2 font-mono text-xs border-primary/30">
@@ -476,7 +462,6 @@ const Marketplace = () => {
               </PopoverContent>
             </Popover>
             
-            {/* Deal Activity Filter */}
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="outline" className="gap-2 font-mono text-xs border-primary/30">
@@ -568,7 +553,6 @@ const Marketplace = () => {
                         RFP<br/>CREDIT<br/>RATING
                       </TableHead>
                       
-                      {/* Project Name Column with Collapsible */}
                       {columnVisibility.projectName && (
                         <TableHead className="text-xs text-muted-foreground font-mono">
                           <div className="flex items-center gap-1">
@@ -585,7 +569,6 @@ const Marketplace = () => {
                         </TableHead>
                       )}
                       
-                      {/* Facility Type Column */}
                       {columnVisibility.facilityType && (
                         <TableHead className="text-xs text-muted-foreground font-mono">
                           <div className="flex items-center gap-1">
@@ -602,7 +585,6 @@ const Marketplace = () => {
                         </TableHead>
                       )}
                       
-                      {/* Financing Column */}
                       {columnVisibility.financing && (
                         <TableHead className="text-xs text-muted-foreground font-mono">
                           <div className="flex items-center gap-1">
@@ -619,7 +601,6 @@ const Marketplace = () => {
                         </TableHead>
                       )}
                       
-                      {/* Principal Column */}
                       {columnVisibility.principal && (
                         <TableHead className="text-xs text-muted-foreground font-mono">
                           <div className="flex items-center gap-1">
@@ -636,7 +617,6 @@ const Marketplace = () => {
                         </TableHead>
                       )}
                       
-                      {/* Rate Type Column */}
                       {columnVisibility.rateType && (
                         <TableHead className="text-xs text-muted-foreground font-mono">
                           <div className="flex items-center gap-1">
@@ -653,7 +633,6 @@ const Marketplace = () => {
                         </TableHead>
                       )}
                       
-                      {/* Target Rate Column */}
                       {columnVisibility.targetRate && (
                         <TableHead className="text-xs text-muted-foreground font-mono">
                           <div className="flex items-center gap-1">
@@ -670,7 +649,6 @@ const Marketplace = () => {
                         </TableHead>
                       )}
                       
-                      {/* Term Column */}
                       {columnVisibility.term && (
                         <TableHead className="text-xs text-muted-foreground font-mono">
                           <div className="flex items-center gap-1">
@@ -687,7 +665,6 @@ const Marketplace = () => {
                         </TableHead>
                       )}
                       
-                      {/* Status Column */}
                       {columnVisibility.status && (
                         <TableHead className="text-xs text-muted-foreground font-mono">
                           <div className="flex items-center gap-1">
@@ -704,7 +681,6 @@ const Marketplace = () => {
                         </TableHead>
                       )}
                       
-                      {/* Deadline Column */}
                       {columnVisibility.deadline && (
                         <TableHead className="text-xs text-muted-foreground font-mono">
                           <div className="flex items-center gap-1">
@@ -721,7 +697,6 @@ const Marketplace = () => {
                         </TableHead>
                       )}
                       
-                      {/* Lender Column */}
                       {columnVisibility.lender && (
                         <TableHead className="text-xs text-muted-foreground font-mono">
                           <div className="flex items-center gap-1">
@@ -738,7 +713,6 @@ const Marketplace = () => {
                         </TableHead>
                       )}
                       
-                      {/* Industry Column */}
                       {columnVisibility.industry && (
                         <TableHead className="text-xs text-muted-foreground font-mono">
                           <div className="flex items-center gap-1">
@@ -755,7 +729,6 @@ const Marketplace = () => {
                         </TableHead>
                       )}
                       
-                      {/* Bid Volume Column */}
                       {columnVisibility.bidVolume && (
                         <TableHead className="text-xs text-muted-foreground font-mono">
                           <div className="flex items-center gap-1">
@@ -804,48 +777,40 @@ const Marketplace = () => {
                             </div>
                           </TableCell>
                           
-                          {/* Project Name Cell */}
                           {columnVisibility.projectName && (
                             <TableCell className="font-mono text-foreground py-3">
                               {item.projectName}
                             </TableCell>
                           )}
                           
-                          {/* Facility Type Cell */}
                           {columnVisibility.facilityType && (
                             <TableCell className="font-mono text-foreground py-3">
                               {item.facilityType}
                             </TableCell>
                           )}
                           
-                          {/* Financing Cell */}
                           {columnVisibility.financing && (
                             <TableCell className="font-mono text-foreground py-3">
                               {item.financing}
                             </TableCell>
                           )}
                           
-                          {/* Principal Cell */}
                           {columnVisibility.principal && (
                             <TableCell className="font-mono text-foreground py-3">{item.principal}</TableCell>
                           )}
                           
-                          {/* Rate Type Cell */}
                           {columnVisibility.rateType && (
                             <TableCell className="font-mono text-foreground py-3">{item.rateType}</TableCell>
                           )}
                           
-                          {/* Target Rate Cell */}
                           {columnVisibility.targetRate && (
                             <TableCell className="font-mono text-foreground py-3">{item.targetRate}</TableCell>
                           )}
                           
-                          {/* Term Cell */}
                           {columnVisibility.term && (
                             <TableCell className="font-mono text-foreground py-3">{item.term}</TableCell>
                           )}
                           
-                          {/* Status Cell */}
                           {columnVisibility.status && (
                             <TableCell className="py-3">
                               <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-mono
@@ -857,22 +822,18 @@ const Marketplace = () => {
                             </TableCell>
                           )}
                           
-                          {/* Deadline Cell */}
                           {columnVisibility.deadline && (
                             <TableCell className="font-mono text-foreground py-3">{item.deadline}</TableCell>
                           )}
                           
-                          {/* Lender Cell */}
                           {columnVisibility.lender && (
                             <TableCell className="font-mono text-foreground py-3">{item.lender}</TableCell>
                           )}
                           
-                          {/* Industry Cell */}
                           {columnVisibility.industry && (
                             <TableCell className="font-mono text-foreground py-3">{item.industry}</TableCell>
                           )}
                           
-                          {/* Bid Volume Cell */}
                           {columnVisibility.bidVolume && (
                             <TableCell className="py-3">
                               <div className="w-24 bg-muted rounded-full h-2">
@@ -904,7 +865,6 @@ const Marketplace = () => {
                   </PaginationItem>
                   
                   {Array.from({ length: Math.min(5, pageCount) }).map((_, i) => {
-                    // Show first page, last page, and pages around current page
                     let pageNum;
                     if (pageCount <= 5) {
                       pageNum = i + 1;
