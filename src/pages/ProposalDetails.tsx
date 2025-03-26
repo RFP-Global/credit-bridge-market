@@ -15,6 +15,7 @@ import { FinanceProposal } from "@/types/marketplace";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TimeSeriesLineChart, IndustryBarChart } from "@/components/charts";
 import { timeSeriesData, timeSeriesLines, industryBarData } from "@/data/chartMockData";
+import { useToast } from "@/hooks/use-toast";
 
 // Add types for financial data that will be displayed on this page
 interface FinancialRatios {
@@ -69,6 +70,7 @@ const ProposalDetails = () => {
   const [demographics, setDemographics] = useState<CompanyDemographics | null>(null);
   const [creditHistory, setCreditHistory] = useState<CreditHistory | null>(null);
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (id) {
@@ -128,6 +130,14 @@ const ProposalDetails = () => {
     }
   }, [id]);
 
+  const handleBid = () => {
+    toast({
+      title: "Bid Submitted",
+      description: `Your bid for ${proposal?.projectName} has been submitted successfully.`,
+      variant: "default",
+    });
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-black text-gray-200">
@@ -172,35 +182,49 @@ const ProposalDetails = () => {
           </Button>
           
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <div className="flex items-center space-x-2 mb-2">
-                <Badge className={`
-                  ${proposal.status === "OPEN" ? "bg-white/10 text-white" : 
-                    proposal.status === "COMPLETED" ? "bg-gray-500/20 text-gray-300" : 
-                    "bg-gray-400/10 text-gray-400"}
-                  rounded-full px-3
-                `}>
-                  {proposal.status}
-                </Badge>
-                <Badge variant="outline" className="font-mono">
-                  <Building className="mr-2 h-3 w-3" />
-                  {demographics.ownership}
-                </Badge>
-                <Badge variant="outline" className="font-mono">
-                  <Calendar className="mr-2 h-3 w-3" />
-                  EST. {demographics.founded}
-                </Badge>
+            <div className="flex flex-col md:flex-row md:items-center gap-4 flex-grow">
+              <div className="flex-grow">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Badge className={`
+                    ${proposal.status === "OPEN" ? "bg-white/10 text-white" : 
+                      proposal.status === "COMPLETED" ? "bg-gray-500/20 text-gray-300" : 
+                      "bg-gray-400/10 text-gray-400"}
+                    rounded-full px-3
+                  `}>
+                    {proposal.status}
+                  </Badge>
+                  <Badge variant="outline" className="font-mono">
+                    <Building className="mr-2 h-3 w-3" />
+                    {demographics.ownership}
+                  </Badge>
+                  <Badge variant="outline" className="font-mono">
+                    <Calendar className="mr-2 h-3 w-3" />
+                    EST. {demographics.founded}
+                  </Badge>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
+                    {proposal.projectName}: {proposal.facilityType}
+                  </h1>
+                  
+                  {proposal.status === "OPEN" && (
+                    <Button 
+                      onClick={handleBid} 
+                      variant="default" 
+                      className="ml-4 bg-cyan-600 hover:bg-cyan-700 font-semibold"
+                    >
+                      Submit Bid
+                    </Button>
+                  )}
+                </div>
+                
+                <p className="text-gray-400 mt-1">
+                  <span className="font-semibold">{proposal.industry}</span> • 
+                  <span className="ml-2">{demographics.location}</span> • 
+                  <span className="ml-2">{demographics.employees} Employees</span>
+                </p>
               </div>
-              
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-                {proposal.projectName}: {proposal.facilityType}
-              </h1>
-              
-              <p className="text-gray-400 mt-1">
-                <span className="font-semibold">{proposal.industry}</span> • 
-                <span className="ml-2">{demographics.location}</span> • 
-                <span className="ml-2">{demographics.employees} Employees</span>
-              </p>
             </div>
             
             <div className="flex flex-col items-start md:items-end">
