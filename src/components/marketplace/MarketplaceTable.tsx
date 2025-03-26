@@ -33,9 +33,9 @@ const MarketplaceTable = ({
   };
 
   return (
-    <div className="border border-gray-700 rounded-sm overflow-hidden mb-4">
+    <div className="border border-gray-700 rounded-sm overflow-hidden mb-4 relative">
       <Table>
-        <TableHeader className="bg-gray-800/40">
+        <TableHeader className="bg-gray-800/40 sticky top-0 z-10">
           <TableRow className="border-gray-700 hover:bg-transparent">
             <TableHead className="text-center w-16 text-xs font-medium text-cyan-400">
               
