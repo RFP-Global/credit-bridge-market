@@ -73,12 +73,14 @@ const Marketplace = () => {
 
         <div className="flex-1 overflow-hidden">
           <ScrollArea className="h-[calc(100vh-340px)]">
-            <MarketplaceTable 
-              proposals={paginatedProposals}
-              sortField={sortField}
-              sortDirection={sortDirection}
-              handleSort={handleSort}
-            />
+            <div className="min-w-max">
+              <MarketplaceTable 
+                proposals={paginatedProposals}
+                sortField={sortField}
+                sortDirection={sortDirection}
+                handleSort={handleSort}
+              />
+            </div>
           </ScrollArea>
         </div>
 
