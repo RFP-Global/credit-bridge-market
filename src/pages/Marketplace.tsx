@@ -2,6 +2,8 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { 
   Table, 
   TableBody, 
@@ -10,309 +12,214 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  Tabs, 
-  TabsContent, 
-  TabsList, 
-  TabsTrigger 
-} from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { 
-  Pagination, 
-  PaginationContent, 
-  PaginationItem, 
-  PaginationLink, 
-  PaginationNext, 
-  PaginationPrevious 
-} from "@/components/ui/pagination";
-import { 
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle
-} from "@/components/ui/navigation-menu";
-import { Shield, Filter, ArrowUpRight, Clock, TrendingUp, BarChart3, FileText } from "lucide-react";
+import { Eye, Filter, ArrowUpDown } from "lucide-react";
 
 const marketplaceData = [
   {
-    id: "RFP-001",
-    title: "Expansion Capital",
-    amount: "$2,500,000",
-    term: "60 months",
-    industry: "Technology",
-    useOfFunds: "Working Capital",
-    status: "Open",
-    posted: "2d ago",
-    applications: 8,
-    rating: "A+"
+    id: "75",
+    projectName: "Project A",
+    facilityType: "Term Loan",
+    financing: "New Financing",
+    principal: "$500,000",
+    rateType: "Fixed",
+    targetRate: "12.00%",
+    term: "36 Months",
+    status: "OPEN",
+    deadline: "21:08:30",
+    lender: "Regional Bank",
+    industry: "Construction",
+    bidVolume: 75
   },
   {
-    id: "RFP-002",
-    title: "Manufacturing Equipment",
-    amount: "$750,000",
-    term: "48 months",
-    industry: "Manufacturing",
-    useOfFunds: "Equipment Purchase",
-    status: "Open",
-    posted: "5d ago",
-    applications: 12,
-    rating: "A"
-  },
-  {
-    id: "RFP-003",
-    title: "Real Estate Acquisition",
-    amount: "$5,000,000",
-    term: "120 months",
+    id: "82",
+    projectName: "Project B",
+    facilityType: "364-Day Revolver",
+    financing: "Refinancing",
+    principal: "$1,500,000",
+    rateType: "Fixed",
+    targetRate: "10.175%",
+    term: "12 Months",
+    status: "OPEN",
+    deadline: "00:05:35",
+    lender: "Community Bank",
     industry: "Real Estate",
-    useOfFunds: "Property Acquisition",
-    status: "Open",
-    posted: "1d ago",
-    applications: 3,
-    rating: "A-"
+    bidVolume: 85
   },
   {
-    id: "RFP-004",
-    title: "Inventory Financing",
-    amount: "$350,000",
-    term: "12 months",
-    industry: "Retail",
-    useOfFunds: "Inventory",
-    status: "Open",
-    posted: "7d ago",
-    applications: 15,
-    rating: "B+"
-  },
-  {
-    id: "RFP-005",
-    title: "Healthcare Equipment",
-    amount: "$1,200,000",
-    term: "36 months",
+    id: "54",
+    projectName: "Project C",
+    facilityType: "Asset-Based Loan",
+    financing: "Refinancing",
+    principal: "$250,000",
+    rateType: "Floating",
+    targetRate: "SOFR + 350",
+    term: "14 Months",
+    status: "OPEN",
+    deadline: "02:11:10",
+    lender: "National Bank",
     industry: "Healthcare",
-    useOfFunds: "Equipment Purchase",
-    status: "Open",
-    posted: "3d ago",
-    applications: 6,
-    rating: "A"
+    bidVolume: 60
+  },
+  {
+    id: "94",
+    projectName: "Project D",
+    facilityType: "SBA Loan",
+    financing: "New Financing",
+    principal: "$5,000,000",
+    rateType: "Floating",
+    targetRate: "SOFR + 200",
+    term: "24 Months",
+    status: "COMPLETED",
+    deadline: "Closed",
+    lender: "FinTech",
+    industry: "Manufacturing",
+    bidVolume: 90
+  },
+  {
+    id: "47",
+    projectName: "Project E",
+    facilityType: "Equipment Financing",
+    financing: "Refinancing",
+    principal: "$7,500,000",
+    rateType: "Floating",
+    targetRate: "8.750%",
+    term: "60 Months",
+    status: "EXPIRED",
+    deadline: "Closed",
+    lender: "Private Credit",
+    industry: "Manufacturing",
+    bidVolume: 45
   }
 ];
 
 const Marketplace = () => {
-  const [activeTab, setActiveTab] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#111]">
       <Navbar />
       
-      <div className="pt-24 pb-16">
-        <div className="container mx-auto px-6">
-          <div className="mb-8">
-            <div className="inline-block mb-2">
-              <span className="rfp-badge">
-                <Shield className="h-3 w-3 mr-2" />
-                Marketplace
-              </span>
-            </div>
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tighter mb-2">
-              RFP Marketplace
+      <main className="container mx-auto px-6 pt-24 pb-16">
+        <div className="space-y-8">
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-mono tracking-tight text-[#4ECDC4]">
+              Proposals
             </h1>
-            <p className="text-muted-foreground max-w-2xl">
-              Browse and respond to active Requests for Proposals from businesses seeking optimal financing solutions.
-            </p>
+            <Button variant="outline" className="font-mono text-xs border-[#4ECDC4] text-[#4ECDC4] hover:bg-[#4ECDC4]/10">
+              New Proposal
+            </Button>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div className="md:col-span-3">
-              <Tabs defaultValue="all" className="w-full" onValueChange={setActiveTab}>
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                  <TabsList className="mb-4 md:mb-0 bg-background border">
-                    <TabsTrigger value="all" className="text-xs font-mono">ALL RFPs</TabsTrigger>
-                    <TabsTrigger value="recommended" className="text-xs font-mono">RECOMMENDED</TabsTrigger>
-                    <TabsTrigger value="trending" className="text-xs font-mono">TRENDING</TabsTrigger>
-                    <TabsTrigger value="new" className="text-xs font-mono">NEWEST</TabsTrigger>
-                  </TabsList>
-                  
-                  <Button variant="outline" size="sm" className="font-mono text-xs">
-                    <Filter className="mr-2 h-3 w-3" />
-                    FILTERS
-                  </Button>
-                </div>
-                
-                <TabsContent value="all" className="mt-0">
-                  <div className="overflow-hidden rounded-md border">
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="bg-muted/50">
-                          <TableHead className="font-mono text-xs w-[100px]">RFP ID</TableHead>
-                          <TableHead className="font-mono text-xs">TITLE</TableHead>
-                          <TableHead className="font-mono text-xs">AMOUNT</TableHead>
-                          <TableHead className="font-mono text-xs">TERM</TableHead>
-                          <TableHead className="font-mono text-xs">INDUSTRY</TableHead>
-                          <TableHead className="font-mono text-xs">STATUS</TableHead>
-                          <TableHead className="font-mono text-xs text-right">ACTION</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {marketplaceData.map((item) => (
-                          <TableRow key={item.id} className="hover:bg-muted/80 cursor-pointer">
-                            <TableCell className="font-mono text-xs">{item.id}</TableCell>
-                            <TableCell className="font-medium">{item.title}</TableCell>
-                            <TableCell>{item.amount}</TableCell>
-                            <TableCell>{item.term}</TableCell>
-                            <TableCell>{item.industry}</TableCell>
-                            <TableCell>
-                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
-                                {item.status}
-                              </span>
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <Button variant="outline" size="sm">
-                                View
-                                <ArrowUpRight className="ml-2 h-3 w-3" />
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                  
-                  <Pagination className="mt-4">
-                    <PaginationContent>
-                      <PaginationItem>
-                        <PaginationPrevious href="#" />
-                      </PaginationItem>
-                      <PaginationItem>
-                        <PaginationLink href="#" isActive>1</PaginationLink>
-                      </PaginationItem>
-                      <PaginationItem>
-                        <PaginationLink href="#">2</PaginationLink>
-                      </PaginationItem>
-                      <PaginationItem>
-                        <PaginationLink href="#">3</PaginationLink>
-                      </PaginationItem>
-                      <PaginationItem>
-                        <PaginationNext href="#" />
-                      </PaginationItem>
-                    </PaginationContent>
-                  </Pagination>
-                </TabsContent>
-                
-                <TabsContent value="recommended" className="mt-0">
-                  <Card>
-                    <CardContent className="p-8 text-center">
-                      <p className="text-muted-foreground">Personalized recommendations will appear here based on your preferences and history.</p>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-                
-                <TabsContent value="trending" className="mt-0">
-                  <Card>
-                    <CardContent className="p-8 text-center">
-                      <p className="text-muted-foreground">Currently trending RFPs will appear here.</p>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-                
-                <TabsContent value="new" className="mt-0">
-                  <Card>
-                    <CardContent className="p-8 text-center">
-                      <p className="text-muted-foreground">The newest RFPs will appear here.</p>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-              </Tabs>
+
+          <div className="flex gap-4">
+            <div className="flex-1 flex gap-4">
+              <div className="relative flex-1">
+                <Input
+                  type="search"
+                  placeholder="Search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-[#222] border-[#333] text-white placeholder:text-gray-500"
+                />
+              </div>
+              <Button variant="outline" className="gap-2 font-mono text-xs border-[#333] text-gray-400">
+                <Filter className="h-4 w-4" />
+                Loan Request Type
+              </Button>
+              <Button variant="outline" className="gap-2 font-mono text-xs border-[#333] text-gray-400">
+                <Filter className="h-4 w-4" />
+                Target Terms
+              </Button>
+              <Button variant="outline" className="gap-2 font-mono text-xs border-[#333] text-gray-400">
+                <Filter className="h-4 w-4" />
+                Deal Activity Metrics
+              </Button>
             </div>
-            
-            <div className="space-y-6">
-              <Card className="border-primary/30">
-                <CardHeader className="pb-3 border-b border-primary/20 bg-muted/30">
-                  <CardTitle className="text-sm font-mono">MARKETPLACE STATS</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-4">
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground font-mono flex items-center">
-                        <FileText className="h-3 w-3 mr-2" />
-                        ACTIVE RFPs
+          </div>
+
+          <div className="border border-[#333] rounded-lg overflow-hidden">
+            <Table>
+              <TableHeader className="bg-[#1A1A1A]">
+                <TableRow className="hover:bg-transparent border-[#333]">
+                  <TableHead className="text-xs text-gray-400 font-mono w-[50px]"></TableHead>
+                  <TableHead className="text-xs text-gray-400 font-mono">RFP CREDIT RATING</TableHead>
+                  <TableHead className="text-xs text-gray-400 font-mono">PROJECT NAME</TableHead>
+                  <TableHead className="text-xs text-gray-400 font-mono">FACILITY TYPE</TableHead>
+                  <TableHead className="text-xs text-gray-400 font-mono">NEW FINANCING OR REFINANCING</TableHead>
+                  <TableHead className="text-xs text-gray-400 font-mono">TARGET PRINCIPAL</TableHead>
+                  <TableHead className="text-xs text-gray-400 font-mono">INTEREST RATE TYPE</TableHead>
+                  <TableHead className="text-xs text-gray-400 font-mono">TARGET INTEREST RATE</TableHead>
+                  <TableHead className="text-xs text-gray-400 font-mono">TARGET TERM</TableHead>
+                  <TableHead className="text-xs text-gray-400 font-mono">STATUS</TableHead>
+                  <TableHead className="text-xs text-gray-400 font-mono">BID DEADLINE</TableHead>
+                  <TableHead className="text-xs text-gray-400 font-mono">LENDER PREFERENCES</TableHead>
+                  <TableHead className="text-xs text-gray-400 font-mono">INDUSTRY</TableHead>
+                  <TableHead className="text-xs text-gray-400 font-mono">BID VOLUME</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {marketplaceData.map((item) => (
+                  <TableRow 
+                    key={item.id}
+                    className="hover:bg-[#1A1A1A] border-[#333]"
+                  >
+                    <TableCell>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <Eye className="h-4 w-4 text-gray-400" />
+                      </Button>
+                    </TableCell>
+                    <TableCell className="font-mono">
+                      <div className="flex items-center gap-2">
+                        <div className="h-1.5 w-1.5 rounded-full bg-[#4ECDC4]" />
+                        {item.id}
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-mono text-gray-300">{item.projectName}</TableCell>
+                    <TableCell className="font-mono text-gray-300">{item.facilityType}</TableCell>
+                    <TableCell className="font-mono text-gray-300">{item.financing}</TableCell>
+                    <TableCell className="font-mono text-gray-300">{item.principal}</TableCell>
+                    <TableCell className="font-mono text-gray-300">{item.rateType}</TableCell>
+                    <TableCell className="font-mono text-gray-300">{item.targetRate}</TableCell>
+                    <TableCell className="font-mono text-gray-300">{item.term}</TableCell>
+                    <TableCell>
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-mono
+                        ${item.status === 'OPEN' ? 'bg-emerald-400/10 text-emerald-400' :
+                          item.status === 'COMPLETED' ? 'bg-blue-400/10 text-blue-400' :
+                          'bg-gray-400/10 text-gray-400'}`}>
+                        {item.status}
                       </span>
-                      <span className="font-semibold">128</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground font-mono flex items-center">
-                        <TrendingUp className="h-3 w-3 mr-2" />
-                        TOTAL VOLUME
-                      </span>
-                      <span className="font-semibold">$47.2M</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground font-mono flex items-center">
-                        <Clock className="h-3 w-3 mr-2" />
-                        AVG RESPONSE TIME
-                      </span>
-                      <span className="font-semibold">2.3 days</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground font-mono flex items-center">
-                        <BarChart3 className="h-3 w-3 mr-2" />
-                        FUNDED RATE
-                      </span>
-                      <span className="font-semibold">72%</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card className="border-primary/30">
-                <CardHeader className="pb-3 border-b border-primary/20 bg-muted/30">
-                  <CardTitle className="text-sm font-mono">RESOURCES</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-4">
-                  <NavigationMenu orientation="vertical" className="w-full max-w-none">
-                    <NavigationMenuList className="flex-col space-y-2 w-full">
-                      <NavigationMenuItem className="w-full">
-                        <NavigationMenuLink 
-                          className={`${navigationMenuTriggerStyle()} w-full justify-start text-left text-sm font-mono`}
-                          href="#"
-                        >
-                          RFP Guidelines
-                        </NavigationMenuLink>
-                      </NavigationMenuItem>
-                      <NavigationMenuItem className="w-full">
-                        <NavigationMenuLink 
-                          className={`${navigationMenuTriggerStyle()} w-full justify-start text-left text-sm font-mono`}
-                          href="#"
-                        >
-                          Submission Requirements
-                        </NavigationMenuLink>
-                      </NavigationMenuItem>
-                      <NavigationMenuItem className="w-full">
-                        <NavigationMenuLink 
-                          className={`${navigationMenuTriggerStyle()} w-full justify-start text-left text-sm font-mono`}
-                          href="#"
-                        >
-                          Due Diligence Process
-                        </NavigationMenuLink>
-                      </NavigationMenuItem>
-                      <NavigationMenuItem className="w-full">
-                        <NavigationMenuLink 
-                          className={`${navigationMenuTriggerStyle()} w-full justify-start text-left text-sm font-mono`}
-                          href="#"
-                        >
-                          FAQ
-                        </NavigationMenuLink>
-                      </NavigationMenuItem>
-                    </NavigationMenuList>
-                  </NavigationMenu>
-                </CardContent>
-              </Card>
-            </div>
+                    </TableCell>
+                    <TableCell className="font-mono text-gray-300">{item.deadline}</TableCell>
+                    <TableCell className="font-mono text-gray-300">{item.lender}</TableCell>
+                    <TableCell className="font-mono text-gray-300">{item.industry}</TableCell>
+                    <TableCell>
+                      <div className="w-24 bg-[#222] rounded-full h-2">
+                        <div 
+                          className="bg-[#4ECDC4] h-full rounded-full" 
+                          style={{ width: `${item.bidVolume}%` }}
+                        />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          <div className="flex justify-center gap-1">
+            {[1, 2, 3, 4, 10, 20, 21].map((page) => (
+              <Button
+                key={page}
+                variant={page === 1 ? "default" : "outline"}
+                size="icon"
+                className={`w-8 h-8 text-xs font-mono
+                  ${page === 1 ? 'bg-[#4ECDC4] hover:bg-[#4ECDC4]/90' : 'border-[#333] text-gray-400'}`}
+              >
+                {page}
+              </Button>
+            ))}
           </div>
         </div>
-      </div>
+      </main>
       
       <Footer />
     </div>
