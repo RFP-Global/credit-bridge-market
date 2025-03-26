@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown, Terminal, Database, FileText, BarChart3, Search, Radio, Radar, Signal } from "lucide-react";
@@ -55,7 +54,7 @@ const HeroSection = () => {
       <div className="scanline z-10"></div>
       
       {/* Full-width ticker container */}
-      <div className="w-full z-10 mb-6">
+      <div className="w-full absolute top-0 left-0 right-0 z-10">
         <div className="market-ticker animate-data-stream">
           <div className="data-row whitespace-nowrap flex-shrink-0" style={{ animationDelay: "0s" }}>
             {Array.from({ length: 4 }).map((_, i) => (
@@ -76,7 +75,7 @@ const HeroSection = () => {
         </div>
       </div>
       
-      <div className="container mx-auto px-6 py-8 z-10">
+      <div className="container mx-auto px-6 py-8 z-10 mt-12">
         <div ref={sectionRef} className="section-animate flex flex-col md:flex-row items-center justify-between gap-10">
           <div className="w-full md:w-1/2 lg:w-5/12 space-y-8 stagger-animate">
             <div className="inline-block">
