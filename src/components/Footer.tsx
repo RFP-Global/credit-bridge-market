@@ -127,17 +127,6 @@ const Footer = () => {
             </form>
           </div>
         </div>
-        
-        <div className="border-t border-white/10 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-white/70 mb-4 md:mb-0">
-              © 2023 CreditBridge. All rights reserved.
-            </p>
-            <p className="text-white/70 flex items-center">
-              Made with <Heart className="h-4 w-4 mx-1 text-red-400" /> for sophisticated investors
-            </p>
-          </div>
-        </div>
       </div>
     </footer>
   );
