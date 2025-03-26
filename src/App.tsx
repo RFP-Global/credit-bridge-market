@@ -13,6 +13,7 @@ import LenderLogin from "./pages/LenderLogin";
 import EnterpriseDashboard from "./pages/EnterpriseDashboard";
 import LenderDashboard from "./pages/LenderDashboard";
 import Intelligence from "./pages/Intelligence";
+import FullscreenButton from "./components/FullscreenButton";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <FullscreenButton />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
