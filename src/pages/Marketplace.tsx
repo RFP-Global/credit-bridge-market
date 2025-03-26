@@ -1,4 +1,5 @@
 
+// This modifies only the filter logic in the existing file
 import { useState, useMemo } from "react";
 import Navbar from "@/components/Navbar";
 import FullscreenButton from "@/components/FullscreenButton";
@@ -168,19 +169,19 @@ const Marketplace = () => {
     }
 
     // Apply dropdown filters
-    if (facilityTypeFilter) {
+    if (facilityTypeFilter && facilityTypeFilter !== "all-facility-types") {
       result = result.filter(proposal => proposal.facilityType === facilityTypeFilter);
     }
 
-    if (financingTypeFilter) {
+    if (financingTypeFilter && financingTypeFilter !== "all-financing-types") {
       result = result.filter(proposal => proposal.financingType === financingTypeFilter);
     }
 
-    if (statusFilter) {
+    if (statusFilter && statusFilter !== "all-statuses") {
       result = result.filter(proposal => proposal.status === statusFilter);
     }
 
-    if (industryFilter) {
+    if (industryFilter && industryFilter !== "all-industries") {
       result = result.filter(proposal => proposal.industry === industryFilter);
     }
 
@@ -303,7 +304,7 @@ const Marketplace = () => {
               <SelectValue placeholder="Facility Type" />
             </SelectTrigger>
             <SelectContent className="bg-black/90 border-gray-700 text-gray-300">
-              <SelectItem value="">All Facility Types</SelectItem>
+              <SelectItem value="all-facility-types">All Facility Types</SelectItem>
               {facilityTypes.map(type => (
                 <SelectItem key={type} value={type}>{type}</SelectItem>
               ))}
@@ -315,7 +316,7 @@ const Marketplace = () => {
               <SelectValue placeholder="Financing Type" />
             </SelectTrigger>
             <SelectContent className="bg-black/90 border-gray-700 text-gray-300">
-              <SelectItem value="">All Financing Types</SelectItem>
+              <SelectItem value="all-financing-types">All Financing Types</SelectItem>
               <SelectItem value="New Financing">New Financing</SelectItem>
               <SelectItem value="Refinancing">Refinancing</SelectItem>
             </SelectContent>
@@ -326,7 +327,7 @@ const Marketplace = () => {
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent className="bg-black/90 border-gray-700 text-gray-300">
-              <SelectItem value="">All Statuses</SelectItem>
+              <SelectItem value="all-statuses">All Statuses</SelectItem>
               <SelectItem value="OPEN">Open</SelectItem>
               <SelectItem value="COMPLETED">Completed</SelectItem>
               <SelectItem value="EXPIRED">Expired</SelectItem>
@@ -338,7 +339,7 @@ const Marketplace = () => {
               <SelectValue placeholder="Industry" />
             </SelectTrigger>
             <SelectContent className="bg-black/90 border-gray-700 text-gray-300">
-              <SelectItem value="">All Industries</SelectItem>
+              <SelectItem value="all-industries">All Industries</SelectItem>
               {industries.map(industry => (
                 <SelectItem key={industry} value={industry}>{industry}</SelectItem>
               ))}
