@@ -1,6 +1,6 @@
-
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
+import FullscreenButton from "@/components/FullscreenButton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -131,10 +131,11 @@ const Marketplace = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   return (
-    <div className="min-h-screen bg-black text-gray-200">
+    <div className="min-h-screen bg-black text-gray-200 relative">
       <Navbar />
-
-      <div className="container mx-auto px-4 py-6 pt-24">  {/* Changed mt-20 to pt-24 for better spacing */}
+      <FullscreenButton />
+      
+      <div className="container mx-auto px-4 py-6 pt-24">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-cyan-400 mb-4">Proposals</h1>
           <div className="flex justify-between items-center">
