@@ -50,27 +50,31 @@ const Marketplace = () => {
       <FullscreenButton />
       
       <div className="container mx-auto px-4 py-6 pt-24 h-screen flex flex-col">
-        <MarketplaceHeader 
-          resultsCount={filteredProposals.length}
-          clearFilters={clearFilters}
-        />
+        {/* Fixed header section */}
+        <div className="sticky top-0 z-10 bg-black pb-4">
+          <MarketplaceHeader 
+            resultsCount={filteredProposals.length}
+            clearFilters={clearFilters}
+          />
 
-        <MarketplaceFilters 
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          facilityTypeFilter={facilityTypeFilter}
-          setFacilityTypeFilter={setFacilityTypeFilter}
-          financingTypeFilter={financingTypeFilter}
-          setFinancingTypeFilter={setFinancingTypeFilter}
-          statusFilter={statusFilter}
-          setStatusFilter={setStatusFilter}
-          industryFilter={industryFilter}
-          setIndustryFilter={setIndustryFilter}
-          facilityTypes={facilityTypes}
-          industries={industries}
-          clearFilters={clearFilters}
-        />
+          <MarketplaceFilters 
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            facilityTypeFilter={facilityTypeFilter}
+            setFacilityTypeFilter={setFacilityTypeFilter}
+            financingTypeFilter={financingTypeFilter}
+            setFinancingTypeFilter={setFinancingTypeFilter}
+            statusFilter={statusFilter}
+            setStatusFilter={setStatusFilter}
+            industryFilter={industryFilter}
+            setIndustryFilter={setIndustryFilter}
+            facilityTypes={facilityTypes}
+            industries={industries}
+            clearFilters={clearFilters}
+          />
+        </div>
 
+        {/* Scrollable table area */}
         <div className="flex-1 overflow-hidden">
           <ScrollArea className="h-[calc(100vh-340px)]">
             <div className="min-w-max">
@@ -84,7 +88,8 @@ const Marketplace = () => {
           </ScrollArea>
         </div>
 
-        <div className="mt-4">
+        {/* Fixed pagination at the bottom */}
+        <div className="mt-4 sticky bottom-0 bg-black pt-2">
           <MarketplacePagination 
             currentPage={currentPage}
             totalPages={totalPages}
