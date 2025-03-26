@@ -7,7 +7,7 @@ import {
   TableRow
 } from "@/components/ui/table";
 import { FinanceProposal } from "@/types/marketplace";
-import { Radar, Check, ArrowDown, ArrowUp, ArrowDownAZ, ArrowUpAZ, ArrowDownZA, ArrowUpZA } from "lucide-react";
+import { Radar, Check, ArrowDown, ArrowUp, ArrowDownAZ, ArrowUpAZ, ArrowDownZA, ArrowUpZA, ArrowsUpDown } from "lucide-react";
 import ProposalTableRow from "./table/ProposalTableRow";
 import EmptyTableRow from "./table/EmptyTableRow";
 import SortableTableHeader from "./table/SortableTableHeader";
@@ -307,7 +307,7 @@ const MarketplaceTable = ({
                         {sortField === column.key ? (
                           sortDirection === 'asc' ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />
                         ) : (
-                          <ArrowUpDown className="h-3 w-3" />
+                          <ArrowsUpDown className="h-3 w-3" />
                         )}
                       </Button>
                     </DropdownMenuTrigger>
@@ -335,7 +335,7 @@ const MarketplaceTable = ({
                           toast.info(`Cleared sorting on ${column.key}`);
                         }}
                       >
-                        <ArrowUpDown className="h-3.5 w-3.5 mr-2" /> Clear Sort
+                        <ArrowsUpDown className="h-3.5 w-3.5 mr-2" /> Clear Sort
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

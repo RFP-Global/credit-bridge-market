@@ -1,5 +1,5 @@
 
-import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowsUpDown } from "lucide-react";
 import { TableHead } from "@/components/ui/table";
 import { FinanceProposal } from "@/types/marketplace";
 
@@ -37,7 +37,7 @@ const SortableTableHeader = ({
               <ArrowDown className="h-3 w-3" />
             )
           ) : (
-            <ArrowUpDown className="h-3 w-3 opacity-70" />
+            <ArrowsUpDown className="h-3 w-3 opacity-70" />
           )}
         </span>
       </div>
