@@ -34,6 +34,8 @@ const Marketplace = () => {
     setStatusFilter,
     industryFilter,
     setIndustryFilter,
+    columnFilters,
+    setColumnFilters,
     sortField,
     sortDirection,
     currentPage,
@@ -89,6 +91,8 @@ const Marketplace = () => {
                 sortField={sortField}
                 sortDirection={sortDirection}
                 handleSort={handleSort}
+                columnFilters={columnFilters}
+                setColumnFilters={setColumnFilters}
               />
             </div>
           </ScrollArea>

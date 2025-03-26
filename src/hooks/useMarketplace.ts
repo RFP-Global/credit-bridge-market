@@ -12,6 +12,7 @@ export const useMarketplace = (proposals: FinanceProposal[]) => {
   const [sortField, setSortField] = useState<keyof FinanceProposal | "">("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [currentPage, setCurrentPage] = useState(1);
+  const [columnFilters, setColumnFilters] = useState<Record<string, string>>({});
   const itemsPerPage = 10; // Increased from 5 to 10 for better pagination with 50+ items
 
   // Filter and sort the proposals
@@ -45,6 +46,18 @@ export const useMarketplace = (proposals: FinanceProposal[]) => {
       result = result.filter(proposal => proposal.industry === industryFilter);
     }
 
+    // Apply column-specific filters
+    Object.entries(columnFilters).forEach(([column, value]) => {
+      if (value) {
+        const filterValue = value.toLowerCase();
+        result = result.filter(proposal => {
+          const propValue = proposal[column as keyof FinanceProposal];
+          return propValue !== undefined && 
+                 String(propValue).toLowerCase().includes(filterValue);
+        });
+      }
+    });
+
     // Apply sorting
     if (sortField) {
       result = result.sort((a, b) => {
@@ -71,7 +84,8 @@ export const useMarketplace = (proposals: FinanceProposal[]) => {
     facilityTypeFilter, 
     financingTypeFilter, 
     statusFilter, 
-    industryFilter, 
+    industryFilter,
+    columnFilters,
     sortField, 
     sortDirection
   ]);
@@ -111,6 +125,7 @@ export const useMarketplace = (proposals: FinanceProposal[]) => {
     setFinancingTypeFilter("all");
     setStatusFilter("all");
     setIndustryFilter("all");
+    setColumnFilters({});
     setSortField("");
     setSortDirection("asc");
     setCurrentPage(1);
@@ -128,6 +143,8 @@ export const useMarketplace = (proposals: FinanceProposal[]) => {
     setStatusFilter,
     industryFilter,
     setIndustryFilter,
+    columnFilters,
+    setColumnFilters,
     sortField,
     sortDirection,
     currentPage,
