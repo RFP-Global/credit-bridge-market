@@ -1,11 +1,10 @@
 
-import { Eye, CircleHelp } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { TableRow, TableCell } from "@/components/ui/table";
-import { FinanceProposal } from "@/types/marketplace";
 import { useNavigate } from "react-router-dom";
+import { TableCell, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ArrowRightIcon } from "lucide-react";
+import { FinanceProposal } from "@/types/marketplace";
 
 interface ProposalTableRowProps {
   proposal: FinanceProposal;
@@ -14,85 +13,62 @@ interface ProposalTableRowProps {
 
 const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) => {
   const navigate = useNavigate();
-  
-  const handleViewDetails = () => {
-    // Call the onViewDetails function for backward compatibility
+
+  const handleViewClick = () => {
     onViewDetails(proposal.id);
-    // Navigate to the proposal details page
-    navigate(`/proposal/${proposal.id}`);
+  };
+
+  const handleBidClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/proposal/${proposal.id}/bid`);
   };
 
   return (
     <TableRow 
-      key={proposal.id} 
-      className="border-gray-700/30 hover:bg-gray-800/20 bg-black/20 backdrop-blur-sm cursor-pointer"
-      onClick={handleViewDetails}
+      className="border-gray-700/30 hover:bg-gray-800/20 cursor-pointer transition-colors"
+      onClick={handleViewClick}
     >
-      <TableCell className="text-center py-3">
-        <div className="flex justify-center items-center">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-gray-400 hover:text-white hover:bg-gray-700/50"
-            onClick={(e) => {
-              e.stopPropagation(); // Prevent row click from triggering
-              handleViewDetails();
-            }}
-          >
-            <Eye className="h-5 w-5" />
-          </Button>
-        </div>
-      </TableCell>
-      <TableCell className="text-center py-3">
-        <div className="flex justify-center items-center gap-2">
-          <CircleHelp className="h-5 w-5 text-gray-400" />
-          <span className="font-mono">{proposal.creditRating}</span>
-        </div>
-      </TableCell>
-      <TableCell className="text-center py-3 font-mono">
-        {proposal.projectName}
-      </TableCell>
-      <TableCell className="text-center py-3 font-mono">
-        {proposal.facilityType}
-      </TableCell>
-      <TableCell className="text-center py-3 font-mono">
-        {proposal.financingType}
-      </TableCell>
-      <TableCell className="text-center py-3 font-mono">
-        {proposal.principal}
-      </TableCell>
-      <TableCell className="text-center py-3 font-mono">
-        {proposal.interestRateType}
-      </TableCell>
-      <TableCell className="text-center py-3 font-mono">
-        {proposal.interestRate}
-      </TableCell>
-      <TableCell className="text-center py-3 font-mono">
-        {proposal.term}
-      </TableCell>
-      <TableCell className="text-center py-3">
-        <Badge 
-          className={`
-            ${proposal.status === "OPEN" ? "bg-white/10 text-white" : 
-              proposal.status === "COMPLETED" ? "bg-gray-500/20 text-gray-300" : 
-              "bg-gray-400/10 text-gray-400"}
-            rounded-full px-3 font-mono
-          `}
+      <TableCell className="py-1">
+        <Button 
+          variant="outline" 
+          size="sm"
+          className="px-2 py-1 h-8 text-xs"
+          onClick={handleBidClick}
         >
+          Bid <ArrowRightIcon className="ml-1 h-3 w-3" />
+        </Button>
+      </TableCell>
+      <TableCell className="font-mono text-xs">{proposal.creditRating.toFixed(1)}</TableCell>
+      <TableCell className="font-medium">{proposal.projectName}</TableCell>
+      <TableCell>{proposal.facilityType}</TableCell>
+      <TableCell>{proposal.financingType}</TableCell>
+      <TableCell>{proposal.principal}</TableCell>
+      <TableCell>{proposal.interestRateType}</TableCell>
+      <TableCell>{proposal.interestRate}</TableCell>
+      <TableCell>{proposal.term}</TableCell>
+      <TableCell>
+        <Badge className={`
+          ${proposal.status === "OPEN" ? "bg-white/10 text-white" : 
+            proposal.status === "COMPLETED" ? "bg-gray-500/20 text-gray-300" : 
+            "bg-gray-400/10 text-gray-400"}
+          rounded-full px-2 text-xs
+        `}>
           {proposal.status}
         </Badge>
       </TableCell>
-      <TableCell className="text-center py-3 font-mono">
-        {proposal.bidDeadline}
-      </TableCell>
-      <TableCell className="text-center py-3 font-mono">
-        {proposal.lenderPreferences}
-      </TableCell>
-      <TableCell className="text-center py-3 font-mono">
-        {proposal.industry}
-      </TableCell>
-      <TableCell className="text-center py-3">
-        <Progress value={proposal.bidVolume} className="h-2 w-32 bg-cyan-950/40" />
+      <TableCell>{proposal.bidDeadline}</TableCell>
+      <TableCell>{proposal.lenderPreferences}</TableCell>
+      <TableCell>{proposal.industry}</TableCell>
+      <TableCell>
+        <div className="flex items-center">
+          <div className="w-16 bg-gray-700/50 h-1 rounded-full overflow-hidden mr-2">
+            <div 
+              className="bg-cyan-400/80 h-full rounded-full"
+              style={{ width: `${proposal.bidVolume}%` }}
+            />
+          </div>
+          <span className="text-xs">{proposal.bidVolume}%</span>
+        </div>
       </TableCell>
     </TableRow>
   );

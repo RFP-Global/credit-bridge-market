@@ -1,5 +1,5 @@
 
-import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -25,8 +25,10 @@ const MarketplaceTable = ({
   sortDirection,
   handleSort,
 }: MarketplaceTableProps) => {
+  const navigate = useNavigate();
+
   const viewProposalDetails = (id: string) => {
-    toast.info(`Viewing details for proposal ${id}`);
+    navigate(`/proposal/${id}`);
   };
 
   return (
