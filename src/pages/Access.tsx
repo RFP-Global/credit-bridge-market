@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Radar, Signal, Terminal, ArrowLeft, Building, Briefcase } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -9,6 +9,7 @@ import Navbar from "@/components/Navbar";
 
 const Access = () => {
   const [selectedMemberType, setSelectedMemberType] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleContinue = () => {
     if (!selectedMemberType) {
@@ -20,11 +21,12 @@ const Access = () => {
       return;
     }
     
-    // In a real app, this would redirect to a sign-up/login flow
-    toast({
-      title: "Access Requested",
-      description: `${selectedMemberType} access process initiated`,
-    });
+    // Navigate based on selected membership type
+    if (selectedMemberType === "Enterprise") {
+      navigate("/enterprise-signup");
+    } else if (selectedMemberType === "Lender") {
+      navigate("/lender-signup");
+    }
   };
 
   return (
@@ -66,6 +68,7 @@ const Access = () => {
                   ? "border-primary bg-primary/5" 
                   : "border-muted-foreground/20 hover:border-muted-foreground/30"
               }`}
+              onClick={() => setSelectedMemberType("Enterprise")}
             >
               <div className="absolute top-6 left-6">
                 <RadioGroupItem value="Enterprise" id="enterprise" className="mt-1" />
@@ -92,6 +95,7 @@ const Access = () => {
                   ? "border-primary bg-primary/5" 
                   : "border-muted-foreground/20 hover:border-muted-foreground/30"
               }`}
+              onClick={() => setSelectedMemberType("Lender")}
             >
               <div className="absolute top-6 left-6">
                 <RadioGroupItem value="Lender" id="lender" className="mt-1" />
