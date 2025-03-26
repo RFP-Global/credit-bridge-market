@@ -14,6 +14,12 @@ import {
 } from "@/components/ui/table";
 import { Eye, Filter } from "lucide-react";
 import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
   Pagination,
   PaginationContent,
   PaginationItem,
@@ -152,95 +158,97 @@ const Marketplace = () => {
             </Button>
           </div>
 
-          <div className="terminal-card">
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow className="hover:bg-transparent border-primary/20">
-                    <TableHead className="text-xs text-muted-foreground font-mono w-[50px]"></TableHead>
-                    <TableHead className="text-xs text-muted-foreground font-mono">
-                      RFP<br/>CREDIT<br/>RATING
-                    </TableHead>
-                    <TableHead className="text-xs text-muted-foreground font-mono">
-                      PROJECT<br/>NAME
-                    </TableHead>
-                    <TableHead className="text-xs text-muted-foreground font-mono">
-                      FACILITY<br/>TYPE
-                    </TableHead>
-                    <TableHead className="text-xs text-muted-foreground font-mono">
-                      NEW FINANCING<br/>OR<br/>REFINANCING
-                    </TableHead>
-                    <TableHead className="text-xs text-muted-foreground font-mono">
-                      TARGET<br/>PRINCIPAL
-                    </TableHead>
-                    <TableHead className="text-xs text-muted-foreground font-mono">
-                      INTEREST RATE<br/>TYPE
-                    </TableHead>
-                    <TableHead className="text-xs text-muted-foreground font-mono">
-                      TARGET<br/>INTEREST<br/>RATE
-                    </TableHead>
-                    <TableHead className="text-xs text-muted-foreground font-mono">
-                      TARGET<br/>TERM
-                    </TableHead>
-                    <TableHead className="text-xs text-muted-foreground font-mono">STATUS</TableHead>
-                    <TableHead className="text-xs text-muted-foreground font-mono">BID DEADLINE</TableHead>
-                    <TableHead className="text-xs text-muted-foreground font-mono">
-                      LENDER<br/>PREFERENCES
-                    </TableHead>
-                    <TableHead className="text-xs text-muted-foreground font-mono">INDUSTRY</TableHead>
-                    <TableHead className="text-xs text-muted-foreground font-mono">BID VOLUME</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {marketplaceData.map((item) => (
-                    <TableRow 
-                      key={item.id}
-                      className="hover:bg-primary/5 border-primary/20"
-                    >
-                      <TableCell className="py-3">
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <Eye className="h-4 w-4 text-primary/80" />
-                        </Button>
-                      </TableCell>
-                      <TableCell className="font-mono py-3">
-                        <div className="flex items-center justify-center">
-                          <div className="h-7 w-7 rounded-full bg-secondary flex items-center justify-center text-primary text-xs">
-                            {item.id}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-mono text-foreground py-3">{item.projectName}</TableCell>
-                      <TableCell className="font-mono text-foreground py-3">{item.facilityType}</TableCell>
-                      <TableCell className="font-mono text-foreground py-3">{item.financing}</TableCell>
-                      <TableCell className="font-mono text-foreground py-3">{item.principal}</TableCell>
-                      <TableCell className="font-mono text-foreground py-3">{item.rateType}</TableCell>
-                      <TableCell className="font-mono text-foreground py-3">{item.targetRate}</TableCell>
-                      <TableCell className="font-mono text-foreground py-3">{item.term}</TableCell>
-                      <TableCell className="py-3">
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-mono
-                          ${item.status === 'OPEN' ? 'bg-emerald-400/10 text-emerald-400' :
-                            item.status === 'COMPLETED' ? 'bg-blue-400/10 text-blue-400' :
-                            'bg-gray-400/10 text-gray-400'}`}>
-                          {item.status}
-                        </span>
-                      </TableCell>
-                      <TableCell className="font-mono text-foreground py-3">{item.deadline}</TableCell>
-                      <TableCell className="font-mono text-foreground py-3">{item.lender}</TableCell>
-                      <TableCell className="font-mono text-foreground py-3">{item.industry}</TableCell>
-                      <TableCell className="py-3">
-                        <div className="w-24 bg-muted rounded-full h-2">
-                          <div 
-                            className="bg-primary h-full rounded-full" 
-                            style={{ width: `${item.bidVolume}%` }}
-                          />
-                        </div>
-                      </TableCell>
+          <Card className="terminal-card border border-primary/30">
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="hover:bg-transparent border-primary/20">
+                      <TableHead className="text-xs text-muted-foreground font-mono w-[50px]"></TableHead>
+                      <TableHead className="text-xs text-muted-foreground font-mono">
+                        RFP<br/>CREDIT<br/>RATING
+                      </TableHead>
+                      <TableHead className="text-xs text-muted-foreground font-mono">
+                        PROJECT<br/>NAME
+                      </TableHead>
+                      <TableHead className="text-xs text-muted-foreground font-mono">
+                        FACILITY<br/>TYPE
+                      </TableHead>
+                      <TableHead className="text-xs text-muted-foreground font-mono">
+                        NEW FINANCING<br/>OR<br/>REFINANCING
+                      </TableHead>
+                      <TableHead className="text-xs text-muted-foreground font-mono">
+                        TARGET<br/>PRINCIPAL
+                      </TableHead>
+                      <TableHead className="text-xs text-muted-foreground font-mono">
+                        INTEREST RATE<br/>TYPE
+                      </TableHead>
+                      <TableHead className="text-xs text-muted-foreground font-mono">
+                        TARGET<br/>INTEREST<br/>RATE
+                      </TableHead>
+                      <TableHead className="text-xs text-muted-foreground font-mono">
+                        TARGET<br/>TERM
+                      </TableHead>
+                      <TableHead className="text-xs text-muted-foreground font-mono">STATUS</TableHead>
+                      <TableHead className="text-xs text-muted-foreground font-mono">BID DEADLINE</TableHead>
+                      <TableHead className="text-xs text-muted-foreground font-mono">
+                        LENDER<br/>PREFERENCES
+                      </TableHead>
+                      <TableHead className="text-xs text-muted-foreground font-mono">INDUSTRY</TableHead>
+                      <TableHead className="text-xs text-muted-foreground font-mono">BID VOLUME</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
+                  </TableHeader>
+                  <TableBody>
+                    {marketplaceData.map((item) => (
+                      <TableRow 
+                        key={item.id}
+                        className="hover:bg-primary/5 border-primary/20"
+                      >
+                        <TableCell className="py-3">
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <Eye className="h-4 w-4 text-primary/80" />
+                          </Button>
+                        </TableCell>
+                        <TableCell className="font-mono py-3">
+                          <div className="flex items-center justify-center">
+                            <div className="h-7 w-7 rounded-full bg-secondary flex items-center justify-center text-primary text-xs">
+                              {item.id}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="font-mono text-foreground py-3">{item.projectName}</TableCell>
+                        <TableCell className="font-mono text-foreground py-3">{item.facilityType}</TableCell>
+                        <TableCell className="font-mono text-foreground py-3">{item.financing}</TableCell>
+                        <TableCell className="font-mono text-foreground py-3">{item.principal}</TableCell>
+                        <TableCell className="font-mono text-foreground py-3">{item.rateType}</TableCell>
+                        <TableCell className="font-mono text-foreground py-3">{item.targetRate}</TableCell>
+                        <TableCell className="font-mono text-foreground py-3">{item.term}</TableCell>
+                        <TableCell className="py-3">
+                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-mono
+                            ${item.status === 'OPEN' ? 'bg-emerald-400/10 text-emerald-400' :
+                              item.status === 'COMPLETED' ? 'bg-blue-400/10 text-blue-400' :
+                              'bg-gray-400/10 text-gray-400'}`}>
+                            {item.status}
+                          </span>
+                        </TableCell>
+                        <TableCell className="font-mono text-foreground py-3">{item.deadline}</TableCell>
+                        <TableCell className="font-mono text-foreground py-3">{item.lender}</TableCell>
+                        <TableCell className="font-mono text-foreground py-3">{item.industry}</TableCell>
+                        <TableCell className="py-3">
+                          <div className="w-24 bg-muted rounded-full h-2">
+                            <div 
+                              className="bg-primary h-full rounded-full" 
+                              style={{ width: `${item.bidVolume}%` }}
+                            />
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
 
           <div className="flex justify-center mt-6">
             <Pagination>
@@ -264,7 +272,7 @@ const Marketplace = () => {
                   <PaginationLink href="#">5</PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationLink href="#">...</PaginationLink>
+                  <PaginationEllipsis />
                 </PaginationItem>
                 <PaginationItem>
                   <PaginationLink href="#">10</PaginationLink>
