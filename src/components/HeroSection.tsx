@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown, Terminal, Database, FileText, BarChart3, Search, Radio, Radar, Signal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -89,32 +88,28 @@ const HeroSection = () => {
               Accelerate credit financing with RFP Global. Connect businesses and lenders through an affordable, transparent marketplace that optimizes counterparty discovery and intellectual leverage.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 items-start">
               <Button 
                 variant="outline" 
                 size="lg" 
-                className="rounded-none px-8 py-6 text-md border-primary/30 group hover:bg-primary/10 transition-colors" 
+                className="rounded-none px-6 py-4 text-md border-primary/30 group hover:bg-primary/10 transition-colors w-full sm:w-auto" 
                 asChild
               >
-                <Link to="/enterprise-login" className="flex items-center">
+                <Link to="/enterprise-login" className="flex items-center justify-center">
                   <Radar className="mr-2 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-opacity" />
                   Enterprise Portal
-                  <div className="ml-3 h-4 w-px bg-primary/30 group-hover:bg-primary/50 transition-colors"></div>
-                  <Radio className="ml-3 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-opacity" />
                 </Link>
               </Button>
               
               <Button 
                 variant="outline" 
                 size="lg" 
-                className="rounded-none px-8 py-6 text-md border-primary/30 group hover:bg-primary/10 transition-colors" 
+                className="rounded-none px-6 py-4 text-md border-primary/30 group hover:bg-primary/10 transition-colors w-full sm:w-auto" 
                 asChild
               >
-                <Link to="/lender-login" className="flex items-center">
+                <Link to="/lender-login" className="flex items-center justify-center">
                   <Radio className="mr-2 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-opacity" />
                   Lender Portal
-                  <div className="ml-3 h-4 w-px bg-primary/30 group-hover:bg-primary/50 transition-colors"></div>
-                  <Radar className="ml-3 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-opacity" />
                 </Link>
               </Button>
             </div>
