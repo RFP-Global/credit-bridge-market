@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -52,6 +53,7 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        gridBlue: "#0EA5E9",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -86,6 +88,12 @@ export default {
         "data-stream": "data-stream 20s linear infinite",
         "terminal-blink": "terminal-blink 1s step-end infinite",
         "scan": "scan 3s linear infinite"
+      },
+      backgroundImage: {
+        'grid-pattern': 'linear-gradient(to right, rgba(14, 165, 233, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(14, 165, 233, 0.1) 1px, transparent 1px)',
+      },
+      backgroundSize: {
+        'grid-size': '40px 40px',
       },
     },
   },

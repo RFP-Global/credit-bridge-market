@@ -160,10 +160,12 @@ const ProposalDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black text-gray-200">
+    <div className="min-h-screen bg-black text-gray-200 relative">
+      <div className="absolute inset-0 bg-grid-pattern bg-grid-size opacity-20 pointer-events-none" />
+      
       <Navbar />
       
-      <div className="container mx-auto px-4 py-6 pt-24">
+      <div className="container mx-auto px-4 py-6 pt-24 relative z-10">
         <div className="mb-6">
           <Button variant="outline" size="sm" asChild className="mb-4">
             <Link to="/marketplace" className="flex items-center">

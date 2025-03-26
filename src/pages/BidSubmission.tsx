@@ -31,7 +31,6 @@ const BidSubmission = () => {
   const [additionalInfo, setAdditionalInfo] = useState("");
   const [daysLeft, setDaysLeft] = useState(0);
   
-  // Form values for original bid terms
   const [principal, setPrincipal] = useState("");
   const [interestRate, setInterestRate] = useState("");
   const [term, setTerm] = useState("");
@@ -42,17 +41,14 @@ const BidSubmission = () => {
 
   useEffect(() => {
     if (id) {
-      // Find the proposal in our data
       const foundProposal = financeProposals.find(p => p.id === id);
       if (foundProposal) {
         setProposal(foundProposal);
-        // Initialize with the original terms
         setPrincipal(foundProposal.principal.replace(/[^0-9.]/g, ""));
         setInterestRate(foundProposal.interestRate.replace(/[^0-9.]/g, ""));
         setTerm(foundProposal.term.split(" ")[0]);
         setLoanType(foundProposal.facilityType);
         
-        // Calculate days left from bid deadline
         const deadlineDate = new Date(foundProposal.bidDeadline);
         const today = new Date();
         const diffTime = deadlineDate.getTime() - today.getTime();
@@ -64,14 +60,12 @@ const BidSubmission = () => {
   }, [id]);
 
   const handleSubmitBid = () => {
-    // In a real application, this would submit to an API
     toast({
       title: "Bid Submitted Successfully",
       description: `Your bid for ${proposal?.projectName} has been submitted for review.`,
       variant: "default",
     });
     
-    // Redirect back to the marketplace
     navigate("/marketplace");
   };
 
@@ -132,11 +126,12 @@ const BidSubmission = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black text-gray-200">
+    <div className="min-h-screen bg-black text-gray-200 relative">
+      <div className="absolute inset-0 bg-grid-pattern bg-grid-size opacity-20 pointer-events-none" />
+      
       <Navbar />
       
-      <div className="container mx-auto px-4 py-6 pt-24">
-        {/* Back button and header */}
+      <div className="container mx-auto px-4 py-6 pt-24 relative z-10">
         <div className="mb-6">
           <div className="flex items-center space-x-2 text-sm text-gray-400 mb-4">
             <Link to="/marketplace" className="hover:text-white">Marketplace</Link>
@@ -171,9 +166,7 @@ const BidSubmission = () => {
         
         {step === 1 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Left column - Proposal details and Supplementary info */}
             <div className="space-y-6">
-              {/* Type of loan and amount */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="loan-type" className="text-xs text-gray-400 mb-2 block">Type of Loan</Label>
@@ -195,7 +188,6 @@ const BidSubmission = () => {
                 </div>
               </div>
               
-              {/* Interest rate and term */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="interest-rate" className="text-xs text-gray-400 mb-2 block">Loan Target Interest Rate</Label>
@@ -217,7 +209,6 @@ const BidSubmission = () => {
                 </div>
               </div>
 
-              {/* Supplementary Info - Moved from right column to here */}
               <Card className="bg-black border-gray-800">
                 <CardHeader className="border-b border-gray-800 flex flex-row items-center justify-between">
                   <CardTitle className="text-lg font-mono">Supplementary Info</CardTitle>
@@ -225,7 +216,6 @@ const BidSubmission = () => {
                 </CardHeader>
                 <CardContent className="pt-6">
                   <div className="space-y-6">
-                    {/* Case Studies */}
                     <div>
                       <div className="flex justify-between items-center mb-3">
                         <Label className="text-sm">Case Studies</Label>
@@ -247,7 +237,6 @@ const BidSubmission = () => {
                       </div>
                     </div>
                     
-                    {/* Additional Documents */}
                     <div>
                       <Label className="text-sm mb-3 block">Additional Documents</Label>
                       <div className="bg-black border border-gray-700 border-dashed rounded-md p-3 flex items-center space-x-4">
@@ -262,7 +251,6 @@ const BidSubmission = () => {
                       </div>
                     </div>
                     
-                    {/* Additional Information */}
                     <div>
                       <Label htmlFor="additional-info" className="text-sm mb-3 block">Additional Information</Label>
                       <Textarea 
@@ -278,7 +266,6 @@ const BidSubmission = () => {
               </Card>
             </div>
             
-            {/* Right column - Bid details */}
             <div className="space-y-6">
               <Card className="bg-black border-gray-800">
                 <CardHeader className="border-b border-gray-800 flex flex-row items-center justify-between">
@@ -480,7 +467,6 @@ const BidSubmission = () => {
           </div>
         )}
         
-        {/* Footer buttons */}
         <div className="flex justify-end mt-6 space-x-4">
           {step === 1 && (
             <>
