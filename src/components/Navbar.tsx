@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Menu, X, Shield, Terminal, Power } from 'lucide-react';
@@ -34,11 +33,10 @@ const Navbar = () => {
           <div className="flex items-center">
             <a href="/" className="text-xl font-bold tracking-tighter flex items-center">
               <Shield className="h-5 w-5 mr-2 text-primary" />
-              <span className="font-mono">CREDITBRIDGE</span>
+              <span className="font-mono">RFP GLOBAL</span>
             </a>
           </div>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <a href="#" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
               ASSETS
@@ -65,7 +63,6 @@ const Navbar = () => {
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="md:hidden">
             <button 
               onClick={toggleMobileMenu}
@@ -78,7 +75,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       <div className={`md:hidden transition-all duration-300 ease-in-out ${
         mobileMenuOpen 
           ? 'max-h-screen opacity-100 visible bg-background/95 backdrop-blur-lg border-b border-primary/20' 
