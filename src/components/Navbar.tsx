@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Menu, X, Terminal, Power, Radar, Signal } from 'lucide-react';
@@ -57,7 +56,7 @@ const Navbar = () => {
               className="rounded-none px-6 text-sm font-mono border-primary/30" 
               asChild
             >
-              <Link to="/marketplace">
+              <Link to="/access">
                 <Terminal className="h-4 w-4 mr-2" />
                 ACCESS
               </Link>
@@ -108,7 +107,7 @@ const Navbar = () => {
               className="rounded-none w-full font-mono text-sm border-primary/30" 
               asChild
             >
-              <Link to="/marketplace">
+              <Link to="/access">
                 <Terminal className="h-4 w-4 mr-2" />
                 ACCESS
               </Link>
