@@ -9,16 +9,16 @@ interface IntelligenceTimeFilterProps {
 const IntelligenceTimeFilter = ({ value, onChange }: IntelligenceTimeFilterProps) => {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="h-8 w-[120px] text-xs bg-black/60 border-gray-700 text-gray-300">
+      <SelectTrigger className="h-8 w-[120px] text-xs bg-black/60 border-green-800 text-green-400 font-mono">
         <SelectValue placeholder="Last Year" />
       </SelectTrigger>
-      <SelectContent className="bg-black/90 border-gray-700 text-gray-300">
-        <SelectItem value="last-day">Last Day</SelectItem>
-        <SelectItem value="last-week">Last Week</SelectItem>
-        <SelectItem value="last-month">Last Month</SelectItem>
-        <SelectItem value="last-quarter">Last Quarter</SelectItem>
-        <SelectItem value="last-year">Last Year</SelectItem>
-        <SelectItem value="all-time">All Time</SelectItem>
+      <SelectContent className="bg-black/90 border-green-800 text-green-400 font-mono">
+        <SelectItem value="last-day">LAST_DAY</SelectItem>
+        <SelectItem value="last-week">LAST_WEEK</SelectItem>
+        <SelectItem value="last-month">LAST_MONTH</SelectItem>
+        <SelectItem value="last-quarter">LAST_QUARTER</SelectItem>
+        <SelectItem value="last-year">LAST_YEAR</SelectItem>
+        <SelectItem value="all-time">ALL_TIME</SelectItem>
       </SelectContent>
     </Select>
   );

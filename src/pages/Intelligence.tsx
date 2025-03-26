@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Download, Settings, Filter } from "lucide-react";
+import { Download, Settings, Filter, Terminal, Shield, Database } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BusinessSizeAnalytics from "@/components/intelligence/BusinessSizeAnalytics";
 import IndustryTypeAnalytics from "@/components/intelligence/IndustryTypeAnalytics";
@@ -127,36 +127,77 @@ const Intelligence = () => {
   const [chartType, setChartType] = useState("bar");
   const [businessSize, setBusinessSize] = useState("all");
   const [industry, setIndustry] = useState("all");
+  const [scanline, setScanline] = useState(true);
 
   return (
-    <div className="min-h-screen bg-black text-gray-200 overflow-x-hidden">
+    <div className="min-h-screen bg-black text-green-400 overflow-x-hidden grid-bg relative">
+      {scanline && <div className="scanline"></div>}
+      <div className="radar-pulse"></div>
       <Navbar />
       <div className="container mx-auto px-2 py-6 mt-16">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold text-cyan-400">Analytic Intelligence</h1>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center">
+            <Terminal className="h-5 w-5 mr-2 text-green-500" />
+            <h1 className="text-2xl font-mono text-green-500 border-b-2 border-green-500/30">ANALYTIC_INTEL//</h1>
+          </div>
           <div className="flex items-center space-x-3">
-            <Button variant="outline" className="flex items-center h-8 bg-black/60 border-gray-700 text-gray-300 hover:bg-gray-800">
+            <Button variant="outline" className="flex items-center h-8 bg-black/60 border-green-800 text-green-400 hover:bg-green-900/20 font-mono text-xs">
               <Filter className="h-3.5 w-3.5 mr-1.5" />
-              Filters
+              FILTER_OPS
             </Button>
-            <Button variant="outline" className="flex items-center h-8 bg-black/60 border-gray-700 text-gray-300 hover:bg-gray-800">
+            <Button variant="outline" className="flex items-center h-8 bg-black/60 border-green-800 text-green-400 hover:bg-green-900/20 font-mono text-xs">
               <Download className="h-3.5 w-3.5 mr-1.5" />
-              Export
+              EXPORT_DATA
             </Button>
-            <Button variant="outline" className="flex items-center h-8 bg-black/60 border-gray-700 text-gray-300 hover:bg-gray-800">
+            <Button variant="outline" className="flex items-center h-8 bg-black/60 border-green-800 text-green-400 hover:bg-green-900/20 font-mono text-xs">
               <Settings className="h-3.5 w-3.5 mr-1.5" />
-              Settings
+              CONFIG
+            </Button>
+            <Button variant="outline" 
+              onClick={() => setScanline(!scanline)} 
+              className="flex items-center h-8 bg-black/60 border-green-800 text-green-400 hover:bg-green-900/20 font-mono text-xs"
+            >
+              <Shield className="h-3.5 w-3.5 mr-1.5" />
+              {scanline ? "HIDE_SCAN" : "SHOW_SCAN"}
             </Button>
           </div>
         </div>
 
+        <div className="terminal-card mb-6">
+          <div className="terminal-header">
+            <div className="terminal-dot bg-red-500"></div>
+            <div className="terminal-dot bg-yellow-500"></div>
+            <div className="terminal-dot bg-green-500"></div>
+            <span className="ml-2 text-xs font-mono text-green-400">terminal@intel-system</span>
+          </div>
+          <div className="terminal-content font-mono text-sm text-green-400">
+            <div className="mb-1">$ initiating intel analysis sequence...</div>
+            <div className="mb-1">$ loading demographic patterns...</div>
+            <div className="mb-1">$ decrypting market trends...</div>
+            <div className="mb-1 blink">$ ready_</div>
+          </div>
+        </div>
+
+        <div className="market-ticker mb-6">
+          <div className="data-row animate-[scroll_20s_linear_infinite]">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div key={i} className="data-item font-mono text-xs text-green-400">
+                <span className="text-green-600 mr-2">{`[${String(i).padStart(2, '0')}]`}</span>
+                <span>{`SECTOR_${i}_SCAN::`}</span>
+                <span className="text-green-300">{` ${(Math.random() * 100).toFixed(2)}%`}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <Tabs defaultValue="business" className="w-full">
-          <TabsList className="mb-4 bg-black/40 border border-gray-800">
+          <TabsList className="mb-4 bg-black/40 border border-green-900">
             <TabsTrigger 
               value="business" 
-              className="data-[state=active]:bg-gray-800 data-[state=active]:text-cyan-400"
+              className="data-[state=active]:bg-green-900/30 data-[state=active]:text-green-400 font-mono text-xs"
             >
-              Business Demographic Analytics
+              <Database className="h-3.5 w-3.5 mr-1.5" />
+              DEMOGRAPHIC_INTEL
             </TabsTrigger>
           </TabsList>
 

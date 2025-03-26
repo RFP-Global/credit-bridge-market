@@ -16,10 +16,10 @@ const IntelligenceAnalyticsCard = ({
   children
 }: IntelligenceAnalyticsCardProps) => {
   return (
-    <Card className="bg-black/30 border-gray-800 shadow-lg overflow-hidden">
-      <CardHeader className="p-3 border-b border-gray-800 bg-black/40">
+    <Card className="bg-black/30 border-green-900 shadow-lg overflow-hidden terminal-card">
+      <CardHeader className="p-3 border-b border-green-800 bg-black/40">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium text-cyan-400">{title}</CardTitle>
+          <CardTitle className="text-sm font-mono text-green-500">{title}</CardTitle>
           <IntelligenceTimeFilter value={timeFilter} onChange={onTimeFilterChange} />
         </div>
       </CardHeader>
