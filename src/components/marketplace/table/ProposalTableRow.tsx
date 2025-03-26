@@ -1,4 +1,3 @@
-
 import { Eye, CircleHelp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,15 +15,16 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
   const navigate = useNavigate();
   
   const handleViewDetails = () => {
-    // Call the onViewDetails function for backward compatibility
     onViewDetails(proposal.id);
-    // Navigate to the proposal details page
     navigate(`/proposal/${proposal.id}`);
   };
 
   return (
-    <TableRow key={proposal.id} className="border-gray-700 hover:bg-gray-800/20">
-      <TableCell className="text-center py-3">
+    <TableRow 
+      key={proposal.id} 
+      className="border-none hover:bg-gray-800/20 bg-transparent/0"
+    >
+      <TableCell className="text-center py-3 border-none">
         <div className="flex justify-center items-center">
           <Button
             variant="ghost"
@@ -36,34 +36,34 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
           </Button>
         </div>
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 border-none">
         <div className="flex justify-center items-center gap-2">
           <CircleHelp className="h-5 w-5 text-gray-400" />
           <span>{proposal.creditRating}</span>
         </div>
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 border-none">
         {proposal.projectName}
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 border-none">
         {proposal.facilityType}
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 border-none">
         {proposal.financingType}
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 border-none">
         {proposal.principal}
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 border-none">
         {proposal.interestRateType}
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 border-none">
         {proposal.interestRate}
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 border-none">
         {proposal.term}
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 border-none">
         <Badge 
           className={`
             ${proposal.status === "OPEN" ? "bg-white/10 text-white" : 
@@ -75,16 +75,16 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
           {proposal.status}
         </Badge>
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 border-none">
         {proposal.bidDeadline}
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 border-none">
         {proposal.lenderPreferences}
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 border-none">
         {proposal.industry}
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 border-none">
         <Progress value={proposal.bidVolume} className="h-2 w-32 bg-cyan-950/40" />
       </TableCell>
     </TableRow>

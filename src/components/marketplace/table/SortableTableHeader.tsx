@@ -20,7 +20,7 @@ const SortableTableHeader = ({
 }: SortableTableHeaderProps) => {
   return (
     <TableHead 
-      className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-transparent/0 sticky top-0 z-10"
+      className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-transparent/0 border-none sticky top-0 z-10"
       onClick={() => handleSort(field)}
     >
       <div className="flex items-center justify-center">
