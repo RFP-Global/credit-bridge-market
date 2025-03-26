@@ -39,7 +39,7 @@ const Navbar = () => {
       <div className="container mx-auto px-6 py-3">
         <div className="flex items-center justify-between pt-[25px]">
           <div className="flex items-center">
-            <Link to="/" className="text-xl font-bold tracking-tighter flex items-center">
+            <Link to="/" className="text-3xl font-bold tracking-tighter flex items-center">
               <div className="relative mr-2">
                 <Radar className="h-6 w-6 text-primary" />
                 <Signal className="h-4 w-4 text-primary/70 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
