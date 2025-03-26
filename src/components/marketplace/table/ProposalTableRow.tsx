@@ -2,8 +2,6 @@
 import { useNavigate } from "react-router-dom";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ArrowRightIcon } from "lucide-react";
 import { FinanceProposal } from "@/types/marketplace";
 
 interface ProposalTableRowProps {
@@ -28,16 +26,6 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
       className="border-gray-700/30 hover:bg-gray-800/20 cursor-pointer transition-colors"
       onClick={handleViewClick}
     >
-      <TableCell className="py-1">
-        <Button 
-          variant="outline" 
-          size="sm"
-          className="px-2 py-1 h-8 text-xs hover:bg-cyan-500/20 hover:text-cyan-300 hover:border-cyan-500/50 transition-colors"
-          onClick={handleBidClick}
-        >
-          Bid <ArrowRightIcon className="ml-1 h-3 w-3" />
-        </Button>
-      </TableCell>
       <TableCell className="font-mono text-xs">{proposal.creditRating.toFixed(1)}</TableCell>
       <TableCell className="font-medium">{proposal.projectName}</TableCell>
       <TableCell>{proposal.facilityType}</TableCell>

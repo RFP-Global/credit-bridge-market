@@ -36,7 +36,6 @@ const MarketplaceTable = ({
       <Table>
         <TableHeader className="sticky top-0 z-20">
           <TableRow className="border-gray-700/30 hover:bg-transparent bg-transparent">
-            <StaticTableHeader title="" />
             <SortableTableHeader 
               title="RFP CREDIT RATING" 
               field="creditRating" 
