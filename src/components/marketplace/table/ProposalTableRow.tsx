@@ -46,28 +46,28 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
       <TableCell className="text-center py-3">
         <div className="flex justify-center items-center gap-2">
           <CircleHelp className="h-5 w-5 text-gray-400" />
-          <span>{proposal.creditRating}</span>
+          <span className="font-mono">{proposal.creditRating}</span>
         </div>
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 font-mono">
         {proposal.projectName}
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 font-mono">
         {proposal.facilityType}
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 font-mono">
         {proposal.financingType}
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 font-mono">
         {proposal.principal}
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 font-mono">
         {proposal.interestRateType}
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 font-mono">
         {proposal.interestRate}
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 font-mono">
         {proposal.term}
       </TableCell>
       <TableCell className="text-center py-3">
@@ -76,19 +76,19 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
             ${proposal.status === "OPEN" ? "bg-white/10 text-white" : 
               proposal.status === "COMPLETED" ? "bg-gray-500/20 text-gray-300" : 
               "bg-gray-400/10 text-gray-400"}
-            rounded-full px-3
+            rounded-full px-3 font-mono
           `}
         >
           {proposal.status}
         </Badge>
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 font-mono">
         {proposal.bidDeadline}
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 font-mono">
         {proposal.lenderPreferences}
       </TableCell>
-      <TableCell className="text-center py-3">
+      <TableCell className="text-center py-3 font-mono">
         {proposal.industry}
       </TableCell>
       <TableCell className="text-center py-3">
