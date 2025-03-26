@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Menu, X, Terminal, Power, Radar, Signal } from 'lucide-react';
@@ -37,7 +38,7 @@ const Navbar = () => {
                 <Radar className="h-6 w-6 text-primary" />
                 <Signal className="h-4 w-4 text-primary/70 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
               </div>
-              <span className="font-mono">RFP GLOBAL</span>
+              <span className="font-typewriter">RFP GLOBAL</span>
             </Link>
           </div>
 
