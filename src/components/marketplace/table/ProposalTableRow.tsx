@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { TableRow, TableCell } from "@/components/ui/table";
 import { FinanceProposal } from "@/types/marketplace";
+import { useNavigate } from "react-router-dom";
 
 interface ProposalTableRowProps {
   proposal: FinanceProposal;
@@ -12,6 +13,15 @@ interface ProposalTableRowProps {
 }
 
 const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) => {
+  const navigate = useNavigate();
+  
+  const handleViewDetails = () => {
+    // Call the onViewDetails function for backward compatibility
+    onViewDetails(proposal.id);
+    // Navigate to the proposal details page
+    navigate(`/proposal/${proposal.id}`);
+  };
+
   return (
     <TableRow key={proposal.id} className="border-gray-700 hover:bg-gray-800/20">
       <TableCell className="text-center py-3">
@@ -20,7 +30,7 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
             variant="ghost"
             size="icon"
             className="h-8 w-8 text-gray-400 hover:text-white hover:bg-gray-700/50"
-            onClick={() => onViewDetails(proposal.id)}
+            onClick={handleViewDetails}
           >
             <Eye className="h-5 w-5" />
           </Button>

@@ -15,6 +15,7 @@ import LenderSignUp from "./pages/LenderSignUp";
 import EnterpriseDashboard from "./pages/EnterpriseDashboard";
 import LenderDashboard from "./pages/LenderDashboard";
 import Intelligence from "./pages/Intelligence";
+import ProposalDetails from "./pages/ProposalDetails";
 import FullscreenButton from "./components/FullscreenButton";
 
 const App = () => {
@@ -30,6 +31,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/marketplace" element={<Marketplace />} />
+            <Route path="/proposal/:id" element={<ProposalDetails />} />
             <Route path="/access" element={<Access />} />
             <Route path="/enterprise-login" element={<EnterpriseLogin />} />
             <Route path="/lender-login" element={<LenderLogin />} />
