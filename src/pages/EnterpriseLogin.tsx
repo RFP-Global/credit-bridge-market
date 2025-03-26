@@ -27,7 +27,7 @@ const EnterpriseLogin = () => {
           title: "Access Granted",
           description: "Welcome to the Enterprise Portal",
         });
-        navigate("/");
+        navigate("/enterprise-dashboard");
       } else {
         toast({
           title: "Authentication Failed",

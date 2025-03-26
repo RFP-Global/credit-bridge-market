@@ -10,6 +10,7 @@ import Access from "./pages/Access";
 import NotFound from "./pages/NotFound";
 import EnterpriseLogin from "./pages/EnterpriseLogin";
 import LenderLogin from "./pages/LenderLogin";
+import EnterpriseDashboard from "./pages/EnterpriseDashboard";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/access" element={<Access />} />
           <Route path="/enterprise-login" element={<EnterpriseLogin />} />
           <Route path="/lender-login" element={<LenderLogin />} />
+          <Route path="/enterprise-dashboard" element={<EnterpriseDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
