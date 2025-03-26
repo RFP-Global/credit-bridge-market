@@ -11,7 +11,6 @@ const LenderDashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
   
-  // Simulated data
   const activeDeals = [
     { id: 1, name: "Riverside Development", company: "TerraForge Inc.", amount: "$2.4M", status: "Review" },
     { id: 2, name: "Green Energy Initiative", company: "EcoSystems LLC", amount: "$5.7M", status: "Approved" },
@@ -33,8 +32,15 @@ const LenderDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Dashboard Header */}
+    <div className="min-h-screen bg-background text-foreground relative grid-bg">
+      <div className="absolute inset-0 z-0">
+        <div className="radar-pulse bg-blue-500/10"></div>
+        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "1s" }}></div>
+        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "2s" }}></div>
+      </div>
+      
+      <div className="scanline z-10"></div>
+      
       <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-primary/20">
         <div className="container mx-auto px-6 py-3">
           <div className="flex items-center justify-between">
@@ -68,10 +74,8 @@ const LenderDashboard = () => {
         </div>
       </header>
       
-      {/* Dashboard Content */}
-      <div className="container mx-auto px-6 py-8">
+      <div className="container mx-auto px-6 py-8 relative z-10">
         <div className="flex flex-col md:flex-row gap-6">
-          {/* Sidebar */}
           <aside className="w-full md:w-64 space-y-6">
             <Card className="border border-primary/20 bg-background/50 backdrop-blur-sm overflow-hidden">
               <CardHeader className="pb-3">
@@ -123,7 +127,6 @@ const LenderDashboard = () => {
             </nav>
           </aside>
           
-          {/* Main Content */}
           <main className="flex-1">
             <div className="border-b border-primary/10 pb-4 mb-6">
               <h1 className="text-2xl font-mono">Lender Dashboard</h1>
@@ -138,7 +141,6 @@ const LenderDashboard = () => {
               </TabsList>
               
               <TabsContent value="overview" className="space-y-6">
-                {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Card className="border-primary/20 bg-background/50">
                     <CardHeader className="pb-2">
@@ -169,8 +171,7 @@ const LenderDashboard = () => {
                   </Card>
                 </div>
                 
-                {/* Active Deals */}
-                <Card className="border-primary/20 bg-background/50">
+                <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle className="text-sm font-mono">ACTIVE DEALS</CardTitle>
                     <CardDescription>Your current financing deals</CardDescription>
@@ -207,8 +208,7 @@ const LenderDashboard = () => {
                   </CardFooter>
                 </Card>
                 
-                {/* Performance Metrics */}
-                <Card className="border-primary/20 bg-background/50">
+                <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle className="text-sm font-mono">PERFORMANCE METRICS</CardTitle>
                     <CardDescription>Your financing activity</CardDescription>
@@ -237,7 +237,7 @@ const LenderDashboard = () => {
               </TabsContent>
               
               <TabsContent value="deals" className="space-y-4">
-                <Card className="border-primary/20 bg-background/50">
+                <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle className="text-sm font-mono">ALL ACTIVE DEALS</CardTitle>
                     <CardDescription>Manage your financing deals</CardDescription>
@@ -252,7 +252,7 @@ const LenderDashboard = () => {
               </TabsContent>
               
               <TabsContent value="notifications" className="space-y-4">
-                <Card className="border-primary/20 bg-background/50">
+                <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle className="text-sm font-mono">NOTIFICATIONS</CardTitle>
                     <CardDescription>Recent activity and alerts</CardDescription>
