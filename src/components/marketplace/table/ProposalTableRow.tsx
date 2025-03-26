@@ -23,14 +23,21 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
   };
 
   return (
-    <TableRow key={proposal.id} className="border-gray-700/30 hover:bg-gray-800/20 bg-black/20 backdrop-blur-sm">
+    <TableRow 
+      key={proposal.id} 
+      className="border-gray-700/30 hover:bg-gray-800/20 bg-black/20 backdrop-blur-sm cursor-pointer"
+      onClick={handleViewDetails}
+    >
       <TableCell className="text-center py-3">
         <div className="flex justify-center items-center">
           <Button
             variant="ghost"
             size="icon"
             className="h-8 w-8 text-gray-400 hover:text-white hover:bg-gray-700/50"
-            onClick={handleViewDetails}
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent row click from triggering
+              handleViewDetails();
+            }}
           >
             <Eye className="h-5 w-5" />
           </Button>
