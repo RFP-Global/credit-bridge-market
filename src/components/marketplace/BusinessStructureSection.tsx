@@ -11,7 +11,8 @@ import {
   YAxis, 
   CartesianGrid, 
   Tooltip, 
-  Legend 
+  Legend,
+  Cell 
 } from "recharts";
 import IntelligenceAnalyticsCard from "@/components/IntelligenceAnalyticsCard";
 import CustomTooltip from "./CustomTooltip";
