@@ -32,7 +32,7 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
         <Button 
           variant="outline" 
           size="sm"
-          className="px-2 py-1 h-8 text-xs"
+          className="px-2 py-1 h-8 text-xs hover:bg-cyan-500/20 hover:text-cyan-300 hover:border-cyan-500/50 transition-colors"
           onClick={handleBidClick}
         >
           Bid <ArrowRightIcon className="ml-1 h-3 w-3" />

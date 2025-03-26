@@ -1,3 +1,4 @@
+
 import { useMemo } from "react";
 import Navbar from "@/components/Navbar";
 import FullscreenButton from "@/components/FullscreenButton";
@@ -8,6 +9,7 @@ import MarketplacePagination from "@/components/marketplace/MarketplacePaginatio
 import { useMarketplace } from "@/hooks/useMarketplace";
 import { financeProposals } from "@/data/marketplaceProposals";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import RadarScreen from "@/components/RadarScreen";
 
 const Marketplace = () => {
   // Extract unique values for filters
@@ -48,12 +50,8 @@ const Marketplace = () => {
       <Navbar />
       <FullscreenButton />
       
-      {/* Sonar pulse elements */}
-      <div className="absolute inset-0 z-0">
-        <div className="radar-pulse bg-blue-500/10"></div>
-        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "1s" }}></div>
-        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "2s" }}></div>
-      </div>
+      {/* Replace radar pulse with radar screen */}
+      <RadarScreen className="z-0" />
       
       <div className="scanline z-10"></div>
       
