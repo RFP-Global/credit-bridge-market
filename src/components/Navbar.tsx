@@ -1,14 +1,8 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Menu, X, Terminal, Power, Radar, Signal, BarChart3 } from 'lucide-react';
+import { Menu, X, Terminal, Radar, Signal } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -74,29 +68,6 @@ const Navbar = () => {
                 ACCESS
               </Link>
             </Button>
-            
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className="rounded-none px-6 text-sm font-mono">
-                  <Power className="h-4 w-4 mr-2" />
-                  ACTIVATE
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-background/95 backdrop-blur-md border border-primary/30 rounded-none mt-1 min-w-[180px] z-[100]">
-                <DropdownMenuItem asChild>
-                  <Link to="/enterprise-signup" className="flex items-center cursor-pointer py-2 font-mono text-sm">
-                    <Radar className="h-4 w-4 mr-2 text-primary" />
-                    Enterprise Sign Up
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/lender-signup" className="flex items-center cursor-pointer py-2 font-mono text-sm">
-                    <Terminal className="h-4 w-4 mr-2 text-primary" />
-                    Lender Sign Up
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
 
           <div className="md:hidden">
@@ -158,22 +129,6 @@ const Navbar = () => {
                 ACCESS
               </Link>
             </Button>
-            
-            <div className="space-y-2">
-              <Link to="/enterprise-signup">
-                <Button className="rounded-none w-full font-mono text-sm bg-primary/80 hover:bg-primary">
-                  <Radar className="h-4 w-4 mr-2" />
-                  Enterprise Sign Up
-                </Button>
-              </Link>
-              
-              <Link to="/lender-signup">
-                <Button className="rounded-none w-full font-mono text-sm bg-primary/80 hover:bg-primary">
-                  <Terminal className="h-4 w-4 mr-2" />
-                  Lender Sign Up
-                </Button>
-              </Link>
-            </div>
           </div>
         </div>
       </div>
