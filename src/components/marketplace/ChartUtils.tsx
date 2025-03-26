@@ -30,5 +30,5 @@ export const renderCustomizedLabel = ({
   );
 };
 
-export const COLORS = ['#33bbef', '#8B5CF6', '#10b981', '#F97316', '#fbd024'];
-export const DARK_COLORS = ['#0284c7', '#6d28d9', '#059669', '#c2410c', '#ca8a04'];
+export const COLORS = ['#33bbef', '#0ea5e9', '#38bdf8', '#0284c7', '#7dd3fc'];
+export const DARK_COLORS = ['#0284c7', '#0369a1', '#075985', '#0c4a6e', '#082f49'];

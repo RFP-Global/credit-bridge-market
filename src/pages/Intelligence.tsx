@@ -9,35 +9,35 @@ import BusinessStructureAnalytics from "@/components/intelligence/BusinessStruct
 import GeographyAnalytics from "@/components/intelligence/GeographyAnalytics";
 import FullscreenButton from "@/components/FullscreenButton";
 
-// Updated chart colors to match homepage UX
+// Updated chart colors to use blue shades
 export const CHART_COLORS = {
   // Primary colors
-  workingCapital: "#33bbef", // Blue
-  expansion: "#10b981",      // Green
-  equipment: "#8B5CF6",      // Purple
-  other: "#F97316",          // Orange
+  workingCapital: "#33bbef", // Bright blue
+  expansion: "#0284c7",      // Medium blue
+  equipment: "#0ea5e9",      // Ocean blue
+  other: "#38bdf8",          // Sky blue
   
   // Status colors
-  approved: "#10b981",       // Green
-  rejected: "#F97316",       // Orange
-  pending: "#fbd024",        // Yellow
+  approved: "#0ea5e9",       // Ocean blue
+  rejected: "#0369a1",       // Deep blue
+  pending: "#7dd3fc",        // Light blue
   
   // Business size colors
-  small: "#33bbef",          // Blue
-  medium: "#10b981",         // Green
-  large: "#F97316",          // Orange
+  small: "#38bdf8",          // Sky blue
+  medium: "#0ea5e9",         // Ocean blue
+  large: "#0284c7",          // Medium blue
   
   // Industry colors
-  retail: "#fbd024",         // Yellow
-  tech: "#33bbef",           // Blue
-  construction: "#F97316",   // Orange
-  manufacturing: "#10b981",  // Green
-  healthcare: "#8B5CF6",     // Purple
+  retail: "#7dd3fc",         // Light blue
+  tech: "#38bdf8",           // Sky blue
+  construction: "#0ea5e9",   // Ocean blue
+  manufacturing: "#0284c7",  // Medium blue
+  healthcare: "#0369a1",     // Deep blue
   
   // Structure colors
-  llc: "#33bbef",            // Blue
-  corporate: "#10b981",      // Green
-  partnership: "#F97316"     // Orange
+  llc: "#38bdf8",            // Sky blue
+  corporate: "#0ea5e9",      // Ocean blue
+  partnership: "#0284c7"     // Medium blue
 };
 
 const Intelligence = () => {
