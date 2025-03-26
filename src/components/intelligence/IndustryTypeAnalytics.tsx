@@ -1,196 +1,248 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChevronDown, Cpu } from "lucide-react";
-import IntelligenceAnalyticsCard from "@/components/IntelligenceAnalyticsCard";
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { 
   BarChart, 
-  LineChart, 
-  PieChart, 
   Bar, 
-  Line, 
+  PieChart, 
   Pie, 
+  LineChart, 
+  Line,
   XAxis, 
   YAxis, 
   CartesianGrid, 
   Tooltip, 
   Legend, 
-  Cell, 
-  ResponsiveContainer 
+  Cell,
+  ResponsiveContainer
 } from "recharts";
-import { renderCustomizedLabel, COLORS } from "@/components/charts/ChartUtils";
-import { CustomTooltip } from "@/components/charts/CustomTooltip";
+import { TimeFilterRow } from "@/components/intelligence/TimeFilterRow";
+import { IntelligenceCard } from "@/components/intelligence/IntelligenceCard";
 
 interface IndustryTypeAnalyticsProps {
   timeFilter: string;
   onTimeFilterChange: (value: string) => void;
   industryStackedData: any[];
-  industryData: any[];
-  industryLoanTermData: any[];
+  industryDefaultRateData: any[];
+  industryTermsData: any[];
   industryPieData: any[];
+  colors: Record<string, string>;
 }
 
 const IndustryTypeAnalytics = ({ 
   timeFilter, 
   onTimeFilterChange,
   industryStackedData,
-  industryData,
-  industryLoanTermData,
-  industryPieData
+  industryDefaultRateData,
+  industryTermsData,
+  industryPieData,
+  colors
 }: IndustryTypeAnalyticsProps) => {
+  const [expanded, setExpanded] = useState(true);
+
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }: any) => {
+    const RADIAN = Math.PI / 180;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  
+    return (
+      <text 
+        x={x} 
+        y={y} 
+        fill="#ffffff" 
+        textAnchor={x > cx ? 'start' : 'end'} 
+        dominantBaseline="central"
+        fontSize={12}
+        fontWeight="bold"
+      >
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
+  };
+
+  if (!expanded) {
+    return (
+      <div className="bg-gray-900 border border-gray-800 rounded mb-3 p-2">
+        <div 
+          className="flex items-center justify-between cursor-pointer" 
+          onClick={() => setExpanded(true)}
+        >
+          <h3 className="text-sm font-mono text-gray-300">Industry Type Analytics</h3>
+          <ChevronDown className="h-4 w-4 text-gray-500" />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <Card className="bg-black/20 border-green-900 shadow-lg">
-      <CardHeader className="p-3 border-b border-green-900 bg-black/40 flex flex-row items-center justify-between">
-        <CardTitle className="text-sm font-mono text-green-500 flex items-center">
-          <Cpu className="h-4 w-4 mr-2" />
-          INDUSTRY_ANALYTICS
-          <ChevronDown className="ml-2 h-4 w-4" />
-        </CardTitle>
-        <div className="flex space-x-2 text-xs text-green-600 font-mono">
-          <span className="border-b border-green-500 px-1">YEAR_BACK</span>
-          <span className="px-1">SIX_MONTHS</span>
-          <span className="px-1">MONTH_BACK</span>
-          <span className="px-1">WEEK_BACK</span>
-          <span className="px-1">TODAY</span>
-        </div>
-      </CardHeader>
-      <CardContent className="p-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <IntelligenceAnalyticsCard 
-            title="LOAN_USAGE//BY_INDUSTRY"
-            timeFilter={timeFilter}
-            onTimeFilterChange={onTimeFilterChange}
-          >
-            <BarChart
-              width={450}
-              height={220}
-              data={industryStackedData}
-              layout="vertical"
-              margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#0f3328" />
-              <XAxis type="number" stroke="#3dcd8b" />
-              <YAxis dataKey="name" type="category" stroke="#3dcd8b" />
-              <Tooltip content={<CustomTooltip />} />
-              <Legend />
-              <Bar dataKey="workingCapital" name="Working Capital" stackId="a" fill="#33bbef" />
-              <Bar dataKey="expansion" name="Expansion" stackId="a" fill="#8B5CF6" />
-              <Bar dataKey="equipment" name="Equipment" stackId="a" fill="#10b981" />
-              <Bar dataKey="other" name="Other" stackId="a" fill="#F97316" />
-            </BarChart>
-          </IntelligenceAnalyticsCard>
-
-          <IntelligenceAnalyticsCard 
-            title="DEFAULT_RATE//INDUSTRY"
-            timeFilter={timeFilter}
-            onTimeFilterChange={onTimeFilterChange}
-          >
-            <BarChart 
-              width={450} 
-              height={220} 
-              data={industryData}
-              margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#0f3328" vertical={false} />
-              <XAxis dataKey="name" stroke="#3dcd8b" />
-              <YAxis stroke="#3dcd8b" />
-              <Tooltip content={<CustomTooltip />} />
-              <Legend />
-              <Bar dataKey="value" fill="#33bbef">
-                {industryData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Bar>
-            </BarChart>
-          </IntelligenceAnalyticsCard>
-
-          <IntelligenceAnalyticsCard 
-            title="LOAN_TERM//INDUSTRY_PREFS"
-            timeFilter={timeFilter}
-            onTimeFilterChange={onTimeFilterChange}
-          >
-            <LineChart 
-              width={450} 
-              height={220} 
-              data={industryLoanTermData}
-              margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#0f3328" />
-              <XAxis dataKey="month" stroke="#3dcd8b" />
-              <YAxis stroke="#3dcd8b" />
-              <Tooltip content={<CustomTooltip />} />
-              <Legend />
-              <Line 
-                type="monotone" 
-                dataKey="retail" 
-                name="Retail" 
-                stroke="#F97316" 
-                strokeWidth={2}
-                dot={{ r: 3 }} 
-              />
-              <Line 
-                type="monotone" 
-                dataKey="tech" 
-                name="Tech" 
-                stroke="#10b981" 
-                strokeWidth={2}
-                dot={{ r: 3 }} 
-              />
-              <Line 
-                type="monotone" 
-                dataKey="construction" 
-                name="Construction" 
-                stroke="#8B5CF6" 
-                strokeWidth={2}
-                dot={{ r: 3 }} 
-              />
-              <Line 
-                type="monotone" 
-                dataKey="manufacturing" 
-                name="Manufacturing" 
-                stroke="#33bbef" 
-                strokeWidth={2}
-                dot={{ r: 3 }} 
-              />
-            </LineChart>
-          </IntelligenceAnalyticsCard>
-
-          <IntelligenceAnalyticsCard 
-            title="LOAN_VOLUME//INDUSTRY_DIST"
-            timeFilter={timeFilter}
-            onTimeFilterChange={onTimeFilterChange}
-          >
-            <PieChart width={450} height={220}>
-              <Pie
-                data={industryPieData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                outerRadius={80}
-                innerRadius={50}
-                fill="#8884d8"
-                dataKey="value"
-                label={renderCustomizedLabel}
-              >
-                {industryPieData.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={COLORS[index % COLORS.length]} 
-                    stroke="rgba(0,0,0,0.3)"
-                  />
-                ))}
-              </Pie>
-              <Tooltip content={<CustomTooltip />} />
-              <Legend 
+    <div className="bg-gray-900 border border-gray-800 rounded mb-3">
+      <div 
+        className="flex items-center justify-between p-2 cursor-pointer border-b border-gray-800" 
+        onClick={() => setExpanded(false)}
+      >
+        <h3 className="text-sm font-mono text-gray-300">Industry Type Analytics</h3>
+        <ChevronDown className="h-4 w-4 text-gray-500 transform rotate-180" />
+      </div>
+      
+      <div className="p-3">
+        <TimeFilterRow activeFilter={timeFilter} onFilterChange={onTimeFilterChange} />
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+          <IntelligenceCard title="Loan Usage Trends by Industry" timeFilter={timeFilter}>
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart 
+                data={industryStackedData} 
                 layout="vertical" 
-                verticalAlign="middle" 
-                align="right"
-                wrapperStyle={{ right: 10, top: 0, fontSize: '12px' }}
-              />
-            </PieChart>
-          </IntelligenceAnalyticsCard>
+                margin={{ top: 5, right: 20, left: 80, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                <XAxis type="number" stroke="#888" />
+                <YAxis type="category" dataKey="name" stroke="#888" />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#111', border: '1px solid #333' }}
+                  itemStyle={{ color: '#fff' }}
+                  labelStyle={{ color: '#fff' }}
+                />
+                <Legend />
+                <Bar dataKey="workingCapital" name="Working Capital" stackId="a" fill={colors.workingCapital} />
+                <Bar dataKey="expansion" name="Expansion" stackId="a" fill={colors.expansion} />
+                <Bar dataKey="equipment" name="Equipment" stackId="a" fill={colors.equipment} />
+                <Bar dataKey="other" name="Other" stackId="a" fill={colors.other} />
+              </BarChart>
+            </ResponsiveContainer>
+          </IntelligenceCard>
+
+          <IntelligenceCard title="Loan Default Rates By Industry" timeFilter={timeFilter}>
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={industryDefaultRateData} margin={{ top: 5, right: 20, left: 5, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#444" vertical={false} />
+                <XAxis dataKey="name" stroke="#888" />
+                <YAxis stroke="#888" domain={[0, 12]} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#111', border: '1px solid #333' }}
+                  itemStyle={{ color: '#fff' }}
+                  labelStyle={{ color: '#fff' }}
+                />
+                <Legend />
+                <Bar dataKey="value" name="Default Rate %" fill={colors.equipment}>
+                  {industryDefaultRateData.map((entry, index) => (
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={
+                        index === 0 ? colors.retail : 
+                        index === 1 ? colors.tech : 
+                        index === 2 ? colors.construction : 
+                        index === 3 ? colors.healthcare : 
+                        colors.manufacturing
+                      } 
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </IntelligenceCard>
+
+          <IntelligenceCard title="Loan Term Preferences By Industry" timeFilter={timeFilter}>
+            <ResponsiveContainer width="100%" height={220}>
+              <LineChart data={industryTermsData} margin={{ top: 5, right: 20, left: 5, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                <XAxis dataKey="month" stroke="#888" />
+                <YAxis stroke="#888" domain={[0, 50]} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#111', border: '1px solid #333' }}
+                  itemStyle={{ color: '#fff' }}
+                  labelStyle={{ color: '#fff' }}
+                />
+                <Legend />
+                <Line 
+                  type="monotone" 
+                  dataKey="retail" 
+                  name="Retail" 
+                  stroke={colors.retail} 
+                  activeDot={{ r: 8 }} 
+                  strokeWidth={2}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="tech" 
+                  name="Tech" 
+                  stroke={colors.tech} 
+                  activeDot={{ r: 8 }} 
+                  strokeWidth={2}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="construction" 
+                  name="Construction" 
+                  stroke={colors.construction} 
+                  activeDot={{ r: 8 }} 
+                  strokeWidth={2}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="healthcare" 
+                  name="Healthcare" 
+                  stroke={colors.healthcare} 
+                  activeDot={{ r: 8 }} 
+                  strokeWidth={2}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="manufacturing" 
+                  name="Manufacturing" 
+                  stroke={colors.manufacturing} 
+                  activeDot={{ r: 8 }} 
+                  strokeWidth={2}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </IntelligenceCard>
+
+          <IntelligenceCard title="Industry-Specific Loan Volume Distribution" timeFilter={timeFilter}>
+            <ResponsiveContainer width="100%" height={220}>
+              <PieChart>
+                <Pie
+                  data={industryPieData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={renderCustomizedLabel}
+                  outerRadius={80}
+                  innerRadius={40}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {industryPieData.map((entry, index) => (
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={
+                        index === 0 ? colors.manufacturing : 
+                        index === 1 ? colors.construction : 
+                        index === 2 ? colors.tech : 
+                        index === 3 ? colors.retail : 
+                        colors.healthcare
+                      } 
+                    />
+                  ))}
+                </Pie>
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#111', border: '1px solid #333' }}
+                  itemStyle={{ color: '#fff' }}
+                  labelStyle={{ color: '#fff' }}
+                />
+                <Legend
+                  layout="vertical"
+                  verticalAlign="middle"
+                  align="right"
+                  wrapperStyle={{ fontSize: '12px' }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </IntelligenceCard>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

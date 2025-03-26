@@ -1,232 +1,234 @@
 
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Download, Settings, Filter, Terminal, Shield } from "lucide-react";
+import { ChevronDown, Settings, Filter, Download, Globe, Store, Briefcase, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BusinessSizeAnalytics from "@/components/intelligence/BusinessSizeAnalytics";
 import IndustryTypeAnalytics from "@/components/intelligence/IndustryTypeAnalytics";
 import BusinessStructureAnalytics from "@/components/intelligence/BusinessStructureAnalytics";
 import GeographyAnalytics from "@/components/intelligence/GeographyAnalytics";
-import { COLORS } from "@/components/charts/ChartUtils";
+import FullscreenButton from "@/components/FullscreenButton";
 
-// Mock data for the charts
-const businessSizeData = [
-  { name: 'Small Business', pending: 45, approved: 78, rejected: 23, rate: 0.32 },
-  { name: 'Medium Business', approved: 65, pending: 32, rejected: 12, rate: 0.36 },
-  { name: 'Large Business', approved: 88, pending: 45, rejected: 34, rate: 0.32 }
-];
-
-const pieBusinessSizeData = [
-  { name: 'Small Business', value: 40 },
-  { name: 'Medium Business', value: 25 },
-  { name: 'Large Business', value: 35 }
-];
-
-const industryData = [
-  { name: 'Manufacturing', value: 30, color: '#33bbef' },
-  { name: 'Construction', value: 25, color: '#8B5CF6' },
-  { name: 'Tech', value: 20, color: '#10b981' },
-  { name: 'Retail', value: 15, color: '#F97316' },
-  { name: 'Healthcare', value: 10, color: '#fbd024' }
-];
-
-const industryPieData = [
-  { name: 'Manufacturing', value: 22 },
-  { name: 'Construction', value: 28 },
-  { name: 'Tech', value: 22 },
-  { name: 'Retail', value: 18 },
-  { name: 'Healthcare', value: 10 }
-];
-
-const industryStackedData = [
-  { 
-    name: 'Manufacturing', 
-    workingCapital: 200, 
-    expansion: 300, 
-    equipment: 150, 
-    other: 100 
-  },
-  { 
-    name: 'Construction', 
-    workingCapital: 150, 
-    expansion: 250, 
-    equipment: 200, 
-    other: 180 
-  },
-  { 
-    name: 'Tech', 
-    workingCapital: 100, 
-    expansion: 200, 
-    equipment: 150, 
-    other: 120 
-  },
-  { 
-    name: 'Retail', 
-    workingCapital: 120, 
-    expansion: 180, 
-    equipment: 90, 
-    other: 60 
-  },
-  { 
-    name: 'Healthcare', 
-    workingCapital: 80, 
-    expansion: 120, 
-    equipment: 70, 
-    other: 50 
-  }
-];
-
-const timeSeriesData = [
-  { month: 'Jan', small: 20, medium: 30, large: 45 },
-  { month: 'Feb', small: 25, medium: 35, large: 50 },
-  { month: 'Mar', small: 30, medium: 40, large: 55 },
-  { month: 'Apr', small: 35, medium: 45, large: 60 },
-  { month: 'May', small: 40, medium: 50, large: 65 },
-  { month: 'Jun', small: 45, medium: 55, large: 40 }
-];
-
-const loanRequestData = [
-  { name: 'Small', pending: 40, approved: 75, rejected: 20 },
-  { name: 'Medium', pending: 35, approved: 60, rejected: 25 },
-  { name: 'Large', pending: 55, approved: 80, rejected: 30 }
-];
-
-const loanApprovalData = [
-  { category: 'Small Business', approved: 65, rejected: 35 },
-  { category: 'Medium Business', approved: 78, rejected: 22 },
-  { category: 'Large Business', approved: 85, rejected: 15 }
-];
-
-const structureData = [
-  { type: 'LLC', workingCapital: 42, expansion: 35, equipment: 23, rate: 7.5 },
-  { type: 'Corporate', workingCapital: 28, expansion: 45, equipment: 32, rate: 6.2 },
-  { type: 'Partnership', workingCapital: 30, expansion: 25, equipment: 28, rate: 8.1 }
-];
-
-const structureLoanTermData = [
-  { month: 'Jan', llc: 30, corporate: 45, partnership: 25 },
-  { month: 'Feb', llc: 35, corporate: 50, partnership: 30 },
-  { month: 'Mar', llc: 45, corporate: 40, partnership: 35 },
-  { month: 'Apr', llc: 40, corporate: 35, partnership: 30 },
-  { month: 'May', llc: 30, corporate: 30, partnership: 35 },
-  { month: 'Jun', llc: 35, corporate: 25, partnership: 30 }
-];
-
-// Add the industryLoanTermData
-const industryLoanTermData = [
-  { month: 'Jan', retail: 30, tech: 45, construction: 25, manufacturing: 35 },
-  { month: 'Feb', retail: 35, tech: 50, construction: 30, manufacturing: 40 },
-  { month: 'Mar', retail: 45, tech: 40, construction: 35, manufacturing: 35 },
-  { month: 'Apr', retail: 40, tech: 35, construction: 45, manufacturing: 30 },
-  { month: 'May', retail: 30, tech: 30, construction: 40, manufacturing: 35 },
-  { month: 'Jun', retail: 35, tech: 25, construction: 30, manufacturing: 45 }
-];
+// Colors for charts
+export const CHART_COLORS = {
+  workingCapital: "#33EF89",
+  expansion: "#F2E063",
+  equipment: "#339BEF",
+  other: "#EF6333",
+  approved: "#33EF89",
+  rejected: "#EF6333",
+  pending: "#F2E063",
+  small: "#33EF89", 
+  medium: "#339BEF",
+  large: "#EF6333",
+  retail: "#F2E063",
+  tech: "#339BEF",
+  construction: "#EF6333",
+  manufacturing: "#33EF89",
+  healthcare: "#8033EF",
+  llc: "#33EF89",
+  corporate: "#339BEF",
+  partnership: "#EF6333"
+};
 
 const Intelligence = () => {
+  const [activeTab, setActiveTab] = useState("business");
   const [timeFilter, setTimeFilter] = useState("last-year");
-  const [scanline, setScanline] = useState(true);
+
+  // Mock data for business size analytics
+  const businessSizeData = [
+    { name: 'Small', workingCapital: 40, expansion: 70, equipment: 30, rate: 5.2 },
+    { name: 'Medium', workingCapital: 100, expansion: 40, equipment: 55, rate: 4.8 },
+    { name: 'Large', workingCapital: 60, expansion: 180, equipment: 150, rate: 3.5 }
+  ];
+
+  const businessSizeDefaultData = [
+    { name: 'Small Business', value: 45.5 },
+    { name: 'Medium Business', value: 32.5 },
+    { name: 'Large Business', value: 22.0 }
+  ];
+
+  const loanApprovalData = [
+    { category: 'Small', approved: 60, rejected: 40 },
+    { category: 'Medium', approved: 70, rejected: 30 },
+    { category: 'Large', approved: 80, rejected: 20 }
+  ];
+
+  const businessSizeTermsData = [
+    { month: 'Jan', small: 20, medium: 15, large: 12 },
+    { month: 'Feb', small: 18, medium: 22, large: 16 },
+    { month: 'Mar', small: 25, medium: 18, large: 20 },
+    { month: 'Apr', small: 30, medium: 15, large: 25 },
+    { month: 'May', small: 22, medium: 25, large: 18 },
+    { month: 'Jun', small: 15, medium: 30, large: 22 }
+  ];
+
+  // Mock data for industry analytics
+  const industryStackedData = [
+    { 
+      name: 'Manufacturing', 
+      workingCapital: 150, 
+      expansion: 200, 
+      equipment: 350, 
+      other: 100 
+    },
+    { 
+      name: 'Construction', 
+      workingCapital: 200, 
+      expansion: 250, 
+      equipment: 300, 
+      other: 120 
+    },
+    { 
+      name: 'Technology', 
+      workingCapital: 300, 
+      expansion: 350, 
+      equipment: 200, 
+      other: 150 
+    },
+    { 
+      name: 'Retail', 
+      workingCapital: 250, 
+      expansion: 150, 
+      equipment: 180, 
+      other: 200 
+    },
+    { 
+      name: 'Healthcare', 
+      workingCapital: 180, 
+      expansion: 220, 
+      equipment: 150, 
+      other: 120 
+    }
+  ];
+
+  const industryDefaultRateData = [
+    { name: 'Retail', value: 2.5 },
+    { name: 'Tech', value: 10.5 },
+    { name: 'Construction', value: 7.5 },
+    { name: 'Healthcare', value: 3.0 },
+    { name: 'Manufacturing', value: 1.5 }
+  ];
+
+  const industryPieData = [
+    { name: 'Manufacturing', value: 22 },
+    { name: 'Construction', value: 26 },
+    { name: 'Tech', value: 20 },
+    { name: 'Retail', value: 20 },
+    { name: 'Healthcare', value: 12 }
+  ];
+
+  const industryTermsData = [
+    { month: 'Jan', retail: 15, tech: 25, construction: 20, healthcare: 18, manufacturing: 22 },
+    { month: 'Feb', retail: 18, tech: 22, construction: 25, healthcare: 20, manufacturing: 24 },
+    { month: 'Mar', retail: 20, tech: 18, construction: 22, healthcare: 25, manufacturing: 28 },
+    { month: 'Apr', retail: 25, tech: 15, construction: 18, healthcare: 22, manufacturing: 30 },
+    { month: 'May', retail: 22, tech: 20, construction: 15, healthcare: 18, manufacturing: 35 },
+    { month: 'Jun', retail: 18, tech: 25, construction: 20, healthcare: 22, manufacturing: 42 }
+  ];
+
+  // Mock data for business structure analytics
+  const structureData = [
+    { type: 'LLC', workingCapital: 60, expansion: 90, equipment: 30, rate: 7.5 },
+    { type: 'Corporate', workingCapital: 80, expansion: 70, equipment: 85, rate: 5.5 },
+    { type: 'Partnership', workingCapital: 40, expansion: 60, equipment: 75, rate: 9.5 }
+  ];
+
+  const structureTermsData = [
+    { month: 'Jan', llc: 15, corporate: 25, partnership: 20 },
+    { month: 'Feb', llc: 20, corporate: 22, partnership: 25 },
+    { month: 'Mar', llc: 30, corporate: 18, partnership: 22 },
+    { month: 'Apr', llc: 25, corporate: 25, partnership: 18 },
+    { month: 'May', llc: 20, corporate: 42, partnership: 25 },
+    { month: 'Jun', llc: 30, corporate: 35, partnership: 28 }
+  ];
+
+  const structureApprovalData = [
+    { type: 'LLC', approved: 65, rejected: 35 },
+    { type: 'Corporate', approved: 45, rejected: 55 },
+    { type: 'Partnership', approved: 75, rejected: 25 }
+  ];
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden relative">
-      {scanline && <div className="scanline"></div>}
-      <div className="radar-pulse"></div>
+    <div className="min-h-screen bg-black text-gray-300 overflow-x-hidden">
       <Navbar />
+      <FullscreenButton />
       
-      <div className="container mx-auto px-6 py-16 mt-16 section-animate">
+      <div className="container mx-auto px-4 py-8 mt-16">
         <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center">
-            <Terminal className="h-6 w-6 mr-3 text-primary" />
-            <h1 className="text-3xl font-typewriter tracking-tighter">
-              INTELLIGENCE_DASHBOARD
-            </h1>
+          <div className="flex items-center space-x-2">
+            <Store className="h-6 w-6 text-gray-400" />
+            <h1 className="text-2xl font-mono text-gray-200">Analytice</h1>
           </div>
           
           <div className="flex items-center space-x-3">
             <Button 
               variant="outline" 
-              className="flex items-center h-10 bg-background/60 border-primary/30 text-foreground/80 hover:bg-primary/10 font-mono text-sm"
+              className="flex items-center h-8 bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-800 font-mono text-xs"
             >
-              <Filter className="h-4 w-4 mr-2" />
-              FILTER
+              <Filter className="h-3.5 w-3.5 mr-2" />
+              Filters
             </Button>
             
             <Button 
               variant="outline" 
-              className="flex items-center h-10 bg-background/60 border-primary/30 text-foreground/80 hover:bg-primary/10 font-mono text-sm"
+              className="flex items-center h-8 bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-800 font-mono text-xs"
             >
-              <Download className="h-4 w-4 mr-2" />
-              EXPORT
+              <Download className="h-3.5 w-3.5 mr-2" />
+              Export
             </Button>
             
             <Button 
               variant="outline" 
-              className="flex items-center h-10 bg-background/60 border-primary/30 text-foreground/80 hover:bg-primary/10 font-mono text-sm"
+              className="flex items-center h-8 bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-800 font-mono text-xs"
             >
-              <Settings className="h-4 w-4 mr-2" />
-              CONFIG
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              onClick={() => setScanline(!scanline)}
-              className="flex items-center h-10 bg-background/60 border-primary/30 text-foreground/80 hover:bg-primary/10 font-mono text-sm"
-            >
-              <Shield className="h-4 w-4 mr-2" />
-              {scanline ? "HIDE_SCAN" : "SHOW_SCAN"}
+              <Settings className="h-3.5 w-3.5 mr-2" />
+              Settings
             </Button>
           </div>
         </div>
 
-        <div className="terminal-card mb-6 section-animate">
-          <div className="terminal-header">
-            <div className="terminal-dot bg-destructive"></div>
-            <div className="terminal-dot bg-accent"></div>
-            <div className="terminal-dot bg-primary"></div>
-            <span className="ml-2 text-xs font-mono text-foreground/80">terminal@intelligence-system</span>
-          </div>
-          <div className="terminal-content font-mono text-sm text-foreground/80">
-            <div className="mb-1">$ initializing intelligence protocol...</div>
-            <div className="mb-1">$ analyzing market vectors...</div>
-            <div className="mb-1">$ decrypting trend patterns...</div>
-            <div className="mb-1 blink">$ system_ready_</div>
-          </div>
-        </div>
-
-        <Tabs defaultValue="business" className="w-full">
-          <TabsList className="mb-4 bg-background/40 border border-primary/20">
-            <TabsTrigger 
-              value="business" 
-              className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary font-mono text-sm"
-            >
-              MARKET_INTELLIGENCE
-            </TabsTrigger>
-          </TabsList>
-
-          <div className="space-y-4 section-animate">
+        <Tabs defaultValue="business" className="w-full" value={activeTab} onValueChange={setActiveTab}>
+          <div className="bg-gray-900 rounded-sm p-2 mb-6 border border-gray-800">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center space-x-2">
+                <Briefcase className="h-4 w-4 text-gray-400" />
+                <h2 className="text-sm font-mono text-gray-300">Business Demographic Analytics</h2>
+                <ChevronDown className="h-4 w-4 text-gray-500" />
+              </div>
+              <div className="text-xs text-gray-500 font-mono">
+                Customize
+              </div>
+            </div>
+            
             <BusinessSizeAnalytics 
               timeFilter={timeFilter}
               onTimeFilterChange={setTimeFilter}
-              loanRequestData={loanRequestData}
-              pieBusinessSizeData={pieBusinessSizeData}
-              timeSeriesData={timeSeriesData}
+              businessSizeData={businessSizeData}
+              businessSizeDefaultData={businessSizeDefaultData}
+              businessSizeTermsData={businessSizeTermsData}
               loanApprovalData={loanApprovalData}
+              colors={CHART_COLORS}
             />
 
             <IndustryTypeAnalytics 
               timeFilter={timeFilter}
               onTimeFilterChange={setTimeFilter}
               industryStackedData={industryStackedData}
-              industryData={industryData}
-              industryLoanTermData={industryLoanTermData}
+              industryDefaultRateData={industryDefaultRateData}
+              industryTermsData={industryTermsData}
               industryPieData={industryPieData}
+              colors={CHART_COLORS}
             />
 
             <BusinessStructureAnalytics 
               timeFilter={timeFilter}
               onTimeFilterChange={setTimeFilter}
               structureData={structureData}
-              structureLoanTermData={structureLoanTermData}
+              structureTermsData={structureTermsData}
+              structureApprovalData={structureApprovalData}
+              colors={CHART_COLORS}
             />
 
             <GeographyAnalytics 
