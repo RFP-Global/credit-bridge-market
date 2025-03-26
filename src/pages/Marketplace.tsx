@@ -11,7 +11,7 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import { Eye, Filter, Check, X, ChevronUp, ChevronDown } from "lucide-react";
+import { Eye, Filter, Check, X, ChevronUp, ChevronDown, Columns } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -38,6 +38,11 @@ import {
   CollapsibleContent
 } from "@/components/ui/collapsible";
 import { toast } from "sonner";
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from "@/components/ui/resizable";
 
 const marketplaceData = [
   {
@@ -135,11 +140,20 @@ const Marketplace = () => {
     status: []
   });
   
-  // Column visibility state
+  // Enhanced column visibility state
   const [columnVisibility, setColumnVisibility] = useState({
     projectName: true,
     facilityType: true,
-    financing: true
+    financing: true,
+    principal: true,
+    rateType: true,
+    targetRate: true,
+    term: true,
+    status: true,
+    deadline: true,
+    lender: true,
+    industry: true,
+    bidVolume: true
   });
   
   // Toggle column visibility
@@ -149,6 +163,9 @@ const Marketplace = () => {
       [column]: !prev[column]
     }));
   };
+
+  // Column management popover
+  const [showColumnsMenu, setShowColumnsMenu] = useState(false);
   
   // Apply filters and search to the data
   useEffect(() => {
@@ -241,6 +258,14 @@ const Marketplace = () => {
   const handleViewProject = (projectId) => {
     toast.info(`Viewing details for project ${projectId}`);
   };
+
+  // Toggle all columns
+  const toggleAllColumns = (value) => {
+    const newState = Object.fromEntries(
+      Object.keys(columnVisibility).map(key => [key, value])
+    );
+    setColumnVisibility(newState);
+  };
   
   return (
     <div className="min-h-screen bg-background">
@@ -277,6 +302,70 @@ const Marketplace = () => {
                 </svg>
               </div>
             </div>
+            
+            {/* Column Management Button */}
+            <Popover open={showColumnsMenu} onOpenChange={setShowColumnsMenu}>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="gap-2 font-mono text-xs border-primary/30">
+                  <Columns className="h-4 w-4" />
+                  Manage Columns
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[240px] p-2 rounded-md border border-primary/30 bg-background">
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center mb-2">
+                    <p className="text-xs font-mono font-semibold">TABLE COLUMNS</p>
+                    <div className="flex gap-1">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-6 px-2 text-xs" 
+                        onClick={() => toggleAllColumns(true)}
+                      >
+                        Show All
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-6 px-2 text-xs" 
+                        onClick={() => toggleAllColumns(false)}
+                      >
+                        Hide All
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="space-y-1 max-h-[300px] overflow-y-auto">
+                    {Object.entries({
+                      projectName: "Project Name",
+                      facilityType: "Facility Type",
+                      financing: "Financing",
+                      principal: "Principal",
+                      rateType: "Rate Type",
+                      targetRate: "Target Rate",
+                      term: "Term",
+                      status: "Status",
+                      deadline: "Deadline",
+                      lender: "Lender",
+                      industry: "Industry",
+                      bidVolume: "Bid Volume"
+                    }).map(([key, label]) => (
+                      <div 
+                        key={key}
+                        className="flex items-center justify-between p-2 text-xs rounded-sm cursor-pointer hover:bg-primary/5"
+                        onClick={() => toggleColumn(key)}
+                      >
+                        <span>{label}</span>
+                        {columnVisibility[key] ? (
+                          <Check className="h-4 w-4 text-primary" />
+                        ) : (
+                          <X className="h-4 w-4 text-muted-foreground opacity-50" />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
             
             {/* Facility Type Filter */}
             <Popover>
@@ -480,90 +569,208 @@ const Marketplace = () => {
                       </TableHead>
                       
                       {/* Project Name Column with Collapsible */}
-                      <TableHead className="text-xs text-muted-foreground font-mono">
-                        <Collapsible
-                          open={columnVisibility.projectName}
-                          onOpenChange={() => toggleColumn('projectName')}
-                          className="flex items-center"
-                        >
+                      {columnVisibility.projectName && (
+                        <TableHead className="text-xs text-muted-foreground font-mono">
                           <div className="flex items-center gap-1">
-                            <CollapsibleTrigger asChild>
-                              <Button variant="ghost" size="sm" className="h-5 w-5 p-0">
-                                {columnVisibility.projectName ? (
-                                  <ChevronUp className="h-3 w-3" />
-                                ) : (
-                                  <ChevronDown className="h-3 w-3" />
-                                )}
-                              </Button>
-                            </CollapsibleTrigger>
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-5 w-5 p-0"
+                              onClick={() => toggleColumn('projectName')}
+                            >
+                              <ChevronUp className="h-3 w-3" />
+                            </Button>
                             <span>PROJECT<br/>NAME</span>
                           </div>
-                        </Collapsible>
-                      </TableHead>
+                        </TableHead>
+                      )}
                       
-                      {/* Facility Type Column with Collapsible */}
-                      <TableHead className="text-xs text-muted-foreground font-mono">
-                        <Collapsible
-                          open={columnVisibility.facilityType}
-                          onOpenChange={() => toggleColumn('facilityType')}
-                          className="flex items-center"
-                        >
+                      {/* Facility Type Column */}
+                      {columnVisibility.facilityType && (
+                        <TableHead className="text-xs text-muted-foreground font-mono">
                           <div className="flex items-center gap-1">
-                            <CollapsibleTrigger asChild>
-                              <Button variant="ghost" size="sm" className="h-5 w-5 p-0">
-                                {columnVisibility.facilityType ? (
-                                  <ChevronUp className="h-3 w-3" />
-                                ) : (
-                                  <ChevronDown className="h-3 w-3" />
-                                )}
-                              </Button>
-                            </CollapsibleTrigger>
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-5 w-5 p-0"
+                              onClick={() => toggleColumn('facilityType')}
+                            >
+                              <ChevronUp className="h-3 w-3" />
+                            </Button>
                             <span>FACILITY<br/>TYPE</span>
                           </div>
-                        </Collapsible>
-                      </TableHead>
+                        </TableHead>
+                      )}
                       
-                      {/* Financing Column with Collapsible */}
-                      <TableHead className="text-xs text-muted-foreground font-mono">
-                        <Collapsible
-                          open={columnVisibility.financing}
-                          onOpenChange={() => toggleColumn('financing')}
-                          className="flex items-center"
-                        >
+                      {/* Financing Column */}
+                      {columnVisibility.financing && (
+                        <TableHead className="text-xs text-muted-foreground font-mono">
                           <div className="flex items-center gap-1">
-                            <CollapsibleTrigger asChild>
-                              <Button variant="ghost" size="sm" className="h-5 w-5 p-0">
-                                {columnVisibility.financing ? (
-                                  <ChevronUp className="h-3 w-3" />
-                                ) : (
-                                  <ChevronDown className="h-3 w-3" />
-                                )}
-                              </Button>
-                            </CollapsibleTrigger>
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-5 w-5 p-0"
+                              onClick={() => toggleColumn('financing')}
+                            >
+                              <ChevronUp className="h-3 w-3" />
+                            </Button>
                             <span>NEW FINANCING<br/>OR<br/>REFINANCING</span>
                           </div>
-                        </Collapsible>
-                      </TableHead>
+                        </TableHead>
+                      )}
                       
-                      <TableHead className="text-xs text-muted-foreground font-mono">
-                        TARGET<br/>PRINCIPAL
-                      </TableHead>
-                      <TableHead className="text-xs text-muted-foreground font-mono">
-                        INTEREST RATE<br/>TYPE
-                      </TableHead>
-                      <TableHead className="text-xs text-muted-foreground font-mono">
-                        TARGET<br/>INTEREST<br/>RATE
-                      </TableHead>
-                      <TableHead className="text-xs text-muted-foreground font-mono">
-                        TARGET<br/>TERM
-                      </TableHead>
-                      <TableHead className="text-xs text-muted-foreground font-mono">STATUS</TableHead>
-                      <TableHead className="text-xs text-muted-foreground font-mono">BID DEADLINE</TableHead>
-                      <TableHead className="text-xs text-muted-foreground font-mono">
-                        LENDER<br/>PREFERENCES
-                      </TableHead>
-                      <TableHead className="text-xs text-muted-foreground font-mono">INDUSTRY</TableHead>
-                      <TableHead className="text-xs text-muted-foreground font-mono">BID VOLUME</TableHead>
+                      {/* Principal Column */}
+                      {columnVisibility.principal && (
+                        <TableHead className="text-xs text-muted-foreground font-mono">
+                          <div className="flex items-center gap-1">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-5 w-5 p-0"
+                              onClick={() => toggleColumn('principal')}
+                            >
+                              <ChevronUp className="h-3 w-3" />
+                            </Button>
+                            <span>TARGET<br/>PRINCIPAL</span>
+                          </div>
+                        </TableHead>
+                      )}
+                      
+                      {/* Rate Type Column */}
+                      {columnVisibility.rateType && (
+                        <TableHead className="text-xs text-muted-foreground font-mono">
+                          <div className="flex items-center gap-1">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-5 w-5 p-0"
+                              onClick={() => toggleColumn('rateType')}
+                            >
+                              <ChevronUp className="h-3 w-3" />
+                            </Button>
+                            <span>INTEREST RATE<br/>TYPE</span>
+                          </div>
+                        </TableHead>
+                      )}
+                      
+                      {/* Target Rate Column */}
+                      {columnVisibility.targetRate && (
+                        <TableHead className="text-xs text-muted-foreground font-mono">
+                          <div className="flex items-center gap-1">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-5 w-5 p-0"
+                              onClick={() => toggleColumn('targetRate')}
+                            >
+                              <ChevronUp className="h-3 w-3" />
+                            </Button>
+                            <span>TARGET<br/>INTEREST<br/>RATE</span>
+                          </div>
+                        </TableHead>
+                      )}
+                      
+                      {/* Term Column */}
+                      {columnVisibility.term && (
+                        <TableHead className="text-xs text-muted-foreground font-mono">
+                          <div className="flex items-center gap-1">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-5 w-5 p-0"
+                              onClick={() => toggleColumn('term')}
+                            >
+                              <ChevronUp className="h-3 w-3" />
+                            </Button>
+                            <span>TARGET<br/>TERM</span>
+                          </div>
+                        </TableHead>
+                      )}
+                      
+                      {/* Status Column */}
+                      {columnVisibility.status && (
+                        <TableHead className="text-xs text-muted-foreground font-mono">
+                          <div className="flex items-center gap-1">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-5 w-5 p-0"
+                              onClick={() => toggleColumn('status')}
+                            >
+                              <ChevronUp className="h-3 w-3" />
+                            </Button>
+                            <span>STATUS</span>
+                          </div>
+                        </TableHead>
+                      )}
+                      
+                      {/* Deadline Column */}
+                      {columnVisibility.deadline && (
+                        <TableHead className="text-xs text-muted-foreground font-mono">
+                          <div className="flex items-center gap-1">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-5 w-5 p-0"
+                              onClick={() => toggleColumn('deadline')}
+                            >
+                              <ChevronUp className="h-3 w-3" />
+                            </Button>
+                            <span>BID DEADLINE</span>
+                          </div>
+                        </TableHead>
+                      )}
+                      
+                      {/* Lender Column */}
+                      {columnVisibility.lender && (
+                        <TableHead className="text-xs text-muted-foreground font-mono">
+                          <div className="flex items-center gap-1">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-5 w-5 p-0"
+                              onClick={() => toggleColumn('lender')}
+                            >
+                              <ChevronUp className="h-3 w-3" />
+                            </Button>
+                            <span>LENDER<br/>PREFERENCES</span>
+                          </div>
+                        </TableHead>
+                      )}
+                      
+                      {/* Industry Column */}
+                      {columnVisibility.industry && (
+                        <TableHead className="text-xs text-muted-foreground font-mono">
+                          <div className="flex items-center gap-1">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-5 w-5 p-0"
+                              onClick={() => toggleColumn('industry')}
+                            >
+                              <ChevronUp className="h-3 w-3" />
+                            </Button>
+                            <span>INDUSTRY</span>
+                          </div>
+                        </TableHead>
+                      )}
+                      
+                      {/* Bid Volume Column */}
+                      {columnVisibility.bidVolume && (
+                        <TableHead className="text-xs text-muted-foreground font-mono">
+                          <div className="flex items-center gap-1">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-5 w-5 p-0"
+                              onClick={() => toggleColumn('bidVolume')}
+                            >
+                              <ChevronUp className="h-3 w-3" />
+                            </Button>
+                            <span>BID VOLUME</span>
+                          </div>
+                        </TableHead>
+                      )}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -598,43 +805,84 @@ const Marketplace = () => {
                           </TableCell>
                           
                           {/* Project Name Cell */}
-                          <TableCell className="font-mono text-foreground py-3">
-                            {columnVisibility.projectName ? item.projectName : '...'}
-                          </TableCell>
+                          {columnVisibility.projectName && (
+                            <TableCell className="font-mono text-foreground py-3">
+                              {item.projectName}
+                            </TableCell>
+                          )}
                           
                           {/* Facility Type Cell */}
-                          <TableCell className="font-mono text-foreground py-3">
-                            {columnVisibility.facilityType ? item.facilityType : '...'}
-                          </TableCell>
+                          {columnVisibility.facilityType && (
+                            <TableCell className="font-mono text-foreground py-3">
+                              {item.facilityType}
+                            </TableCell>
+                          )}
                           
                           {/* Financing Cell */}
-                          <TableCell className="font-mono text-foreground py-3">
-                            {columnVisibility.financing ? item.financing : '...'}
-                          </TableCell>
+                          {columnVisibility.financing && (
+                            <TableCell className="font-mono text-foreground py-3">
+                              {item.financing}
+                            </TableCell>
+                          )}
                           
-                          <TableCell className="font-mono text-foreground py-3">{item.principal}</TableCell>
-                          <TableCell className="font-mono text-foreground py-3">{item.rateType}</TableCell>
-                          <TableCell className="font-mono text-foreground py-3">{item.targetRate}</TableCell>
-                          <TableCell className="font-mono text-foreground py-3">{item.term}</TableCell>
-                          <TableCell className="py-3">
-                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-mono
-                              ${item.status === 'OPEN' ? 'bg-emerald-400/10 text-emerald-400' :
-                                item.status === 'COMPLETED' ? 'bg-blue-400/10 text-blue-400' :
-                                'bg-gray-400/10 text-gray-400'}`}>
-                              {item.status}
-                            </span>
-                          </TableCell>
-                          <TableCell className="font-mono text-foreground py-3">{item.deadline}</TableCell>
-                          <TableCell className="font-mono text-foreground py-3">{item.lender}</TableCell>
-                          <TableCell className="font-mono text-foreground py-3">{item.industry}</TableCell>
-                          <TableCell className="py-3">
-                            <div className="w-24 bg-muted rounded-full h-2">
-                              <div 
-                                className="bg-primary h-full rounded-full" 
-                                style={{ width: `${item.bidVolume}%` }}
-                              />
-                            </div>
-                          </TableCell>
+                          {/* Principal Cell */}
+                          {columnVisibility.principal && (
+                            <TableCell className="font-mono text-foreground py-3">{item.principal}</TableCell>
+                          )}
+                          
+                          {/* Rate Type Cell */}
+                          {columnVisibility.rateType && (
+                            <TableCell className="font-mono text-foreground py-3">{item.rateType}</TableCell>
+                          )}
+                          
+                          {/* Target Rate Cell */}
+                          {columnVisibility.targetRate && (
+                            <TableCell className="font-mono text-foreground py-3">{item.targetRate}</TableCell>
+                          )}
+                          
+                          {/* Term Cell */}
+                          {columnVisibility.term && (
+                            <TableCell className="font-mono text-foreground py-3">{item.term}</TableCell>
+                          )}
+                          
+                          {/* Status Cell */}
+                          {columnVisibility.status && (
+                            <TableCell className="py-3">
+                              <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-mono
+                                ${item.status === 'OPEN' ? 'bg-emerald-400/10 text-emerald-400' :
+                                  item.status === 'COMPLETED' ? 'bg-blue-400/10 text-blue-400' :
+                                  'bg-gray-400/10 text-gray-400'}`}>
+                                {item.status}
+                              </span>
+                            </TableCell>
+                          )}
+                          
+                          {/* Deadline Cell */}
+                          {columnVisibility.deadline && (
+                            <TableCell className="font-mono text-foreground py-3">{item.deadline}</TableCell>
+                          )}
+                          
+                          {/* Lender Cell */}
+                          {columnVisibility.lender && (
+                            <TableCell className="font-mono text-foreground py-3">{item.lender}</TableCell>
+                          )}
+                          
+                          {/* Industry Cell */}
+                          {columnVisibility.industry && (
+                            <TableCell className="font-mono text-foreground py-3">{item.industry}</TableCell>
+                          )}
+                          
+                          {/* Bid Volume Cell */}
+                          {columnVisibility.bidVolume && (
+                            <TableCell className="py-3">
+                              <div className="w-24 bg-muted rounded-full h-2">
+                                <div 
+                                  className="bg-primary h-full rounded-full" 
+                                  style={{ width: `${item.bidVolume}%` }}
+                                />
+                              </div>
+                            </TableCell>
+                          )}
                         </TableRow>
                       ))
                     )}
