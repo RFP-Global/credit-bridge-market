@@ -55,7 +55,7 @@ const CustomTreemapContent = (props: any) => {
   );
 };
 
-const CustomTreemapChart = ({ 
+const TreemapChart = ({ 
   data, 
   width = 450, 
   height = 220 
@@ -75,4 +75,4 @@ const CustomTreemapChart = ({
   );
 };
 
-export default CustomTreemapChart;
+export default TreemapChart;
