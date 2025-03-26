@@ -41,7 +41,7 @@ const LenderDashboard = () => {
       
       <div className="scanline z-10"></div>
       
-      <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-primary/20">
+      <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm">
         <div className="container mx-auto px-6 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
@@ -66,7 +66,7 @@ const LenderDashboard = () => {
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="rounded-none font-mono border-primary/30 text-xs"
+                className="rounded-none font-mono text-xs"
                 onClick={handleLogout}
               >
                 LOGOUT
@@ -79,7 +79,7 @@ const LenderDashboard = () => {
       <div className="container mx-auto px-6 py-8 relative z-10">
         <div className="flex flex-col md:flex-row gap-6">
           <aside className="w-full md:w-64 space-y-6">
-            <Card className="border border-primary/20 bg-background/50 backdrop-blur-sm overflow-hidden">
+            <Card className="bg-background/50 backdrop-blur-sm overflow-hidden">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-mono">LENDER ACCOUNT</CardTitle>
               </CardHeader>
@@ -136,7 +136,7 @@ const LenderDashboard = () => {
             </div>
             
             <Tabs defaultValue="overview" className="space-y-6" onValueChange={setActiveTab}>
-              <TabsList className="bg-background/50 border border-primary/20">
+              <TabsList className="bg-background/50">
                 <TabsTrigger value="overview" className="font-mono text-xs">OVERVIEW</TabsTrigger>
                 <TabsTrigger value="deals" className="font-mono text-xs">ACTIVE DEALS</TabsTrigger>
                 <TabsTrigger value="notifications" className="font-mono text-xs">NOTIFICATIONS</TabsTrigger>
@@ -144,7 +144,7 @@ const LenderDashboard = () => {
               
               <TabsContent value="overview" className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Card className="border-primary/20 bg-background/50">
+                  <Card className="bg-background/50">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-sm font-mono">ACTIVE DEALS</CardTitle>
                     </CardHeader>
@@ -153,7 +153,7 @@ const LenderDashboard = () => {
                       <p className="text-xs text-muted-foreground mt-1">+3 from last month</p>
                     </CardContent>
                   </Card>
-                  <Card className="border-primary/20 bg-background/50">
+                  <Card className="bg-background/50">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-sm font-mono">AVAILABLE RFPs</CardTitle>
                     </CardHeader>
@@ -162,7 +162,7 @@ const LenderDashboard = () => {
                       <p className="text-xs text-muted-foreground mt-1">+8 in the last 7 days</p>
                     </CardContent>
                   </Card>
-                  <Card className="border-primary/20 bg-background/50">
+                  <Card className="bg-background/50">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-sm font-mono">PORTFOLIO VALUE</CardTitle>
                     </CardHeader>
@@ -173,7 +173,7 @@ const LenderDashboard = () => {
                   </Card>
                 </div>
                 
-                <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
+                <Card className="bg-background/50 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle className="text-sm font-mono">ACTIVE DEALS</CardTitle>
                     <CardDescription>Your current financing deals</CardDescription>
@@ -203,14 +203,14 @@ const LenderDashboard = () => {
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <Button variant="outline" size="sm" className="w-full font-mono text-xs rounded-none border-primary/20">
+                    <Button variant="outline" size="sm" className="w-full font-mono text-xs rounded-none">
                       VIEW ALL DEALS
                       <ArrowUpRight className="ml-2 h-3 w-3" />
                     </Button>
                   </CardFooter>
                 </Card>
                 
-                <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
+                <Card className="bg-background/50 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle className="text-sm font-mono">PERFORMANCE METRICS</CardTitle>
                     <CardDescription>Your financing activity</CardDescription>
@@ -239,7 +239,7 @@ const LenderDashboard = () => {
               </TabsContent>
               
               <TabsContent value="deals" className="space-y-4">
-                <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
+                <Card className="bg-background/50 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle className="text-sm font-mono">ALL ACTIVE DEALS</CardTitle>
                     <CardDescription>Manage your financing deals</CardDescription>
@@ -254,7 +254,7 @@ const LenderDashboard = () => {
               </TabsContent>
               
               <TabsContent value="notifications" className="space-y-4">
-                <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
+                <Card className="bg-background/50 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle className="text-sm font-mono">NOTIFICATIONS</CardTitle>
                     <CardDescription>Recent activity and alerts</CardDescription>
@@ -277,7 +277,7 @@ const LenderDashboard = () => {
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <Button variant="outline" size="sm" className="w-full font-mono text-xs rounded-none border-primary/20">
+                    <Button variant="outline" size="sm" className="w-full font-mono text-xs rounded-none">
                       VIEW ALL NOTIFICATIONS
                       <ArrowUpRight className="ml-2 h-3 w-3" />
                     </Button>
