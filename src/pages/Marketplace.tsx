@@ -1,925 +1,700 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChevronDown, Download, Settings, Filter } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import IntelligenceAnalyticsCard from "@/components/IntelligenceAnalyticsCard";
+import GeoMap from "@/components/GeoMap";
 import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from "@/components/ui/table";
-import { Eye, Filter, Check, X, ChevronUp, ChevronDown, Columns } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-  PaginationEllipsis,
-} from "@/components/ui/pagination";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Collapsible,
-  CollapsibleTrigger,
-  CollapsibleContent
-} from "@/components/ui/collapsible";
-import { toast } from "sonner";
-import {
-  ResizablePanelGroup,
-  ResizablePanel,
-  ResizableHandle,
-} from "@/components/ui/resizable";
+  BarChart, 
+  LineChart, 
+  PieChart, 
+  Bar, 
+  Line, 
+  Pie, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend, 
+  Cell, 
+  ResponsiveContainer 
+} from "recharts";
 
-const marketplaceData = [
-  {
-    id: "75",
-    projectName: "Project A",
-    facilityType: "Term Loan",
-    financing: "New Financing",
-    principal: "$500,000",
-    rateType: "Fixed",
-    targetRate: "12.00%",
-    term: "36 Months",
-    status: "OPEN",
-    deadline: "21:08:30",
-    lender: "Regional Bank",
-    industry: "Construction",
-    bidVolume: 75
+// Mock data for the charts
+const businessSizeData = [
+  { name: 'Small Business', pending: 45, approved: 78, rejected: 23, rate: 0.32 },
+  { name: 'Medium Business', approved: 65, pending: 32, rejected: 12, rate: 0.36 },
+  { name: 'Large Business', approved: 88, pending: 45, rejected: 34, rate: 0.32 }
+];
+
+const pieBusinessSizeData = [
+  { name: 'Small Business', value: 40 },
+  { name: 'Medium Business', value: 25 },
+  { name: 'Large Business', value: 35 }
+];
+
+const industryData = [
+  { name: 'Manufacturing', value: 30, color: '#33bbef' },
+  { name: 'Construction', value: 25, color: '#8B5CF6' },
+  { name: 'Tech', value: 20, color: '#10b981' },
+  { name: 'Retail', value: 15, color: '#F97316' },
+  { name: 'Healthcare', value: 10, color: '#fbd024' }
+];
+
+const industryPieData = [
+  { name: 'Manufacturing', value: 22 },
+  { name: 'Construction', value: 28 },
+  { name: 'Tech', value: 22 },
+  { name: 'Retail', value: 18 },
+  { name: 'Healthcare', value: 10 }
+];
+
+const industryStackedData = [
+  { 
+    name: 'Manufacturing', 
+    workingCapital: 200, 
+    expansion: 300, 
+    equipment: 150, 
+    other: 100 
   },
-  {
-    id: "82",
-    projectName: "Project B",
-    facilityType: "364-Day Revolver",
-    financing: "Refinancing",
-    principal: "$1,500,000",
-    rateType: "Fixed",
-    targetRate: "10.175%",
-    term: "12 Months",
-    status: "OPEN",
-    deadline: "00:05:35",
-    lender: "Community Bank",
-    industry: "Real Estate",
-    bidVolume: 85
+  { 
+    name: 'Construction', 
+    workingCapital: 150, 
+    expansion: 250, 
+    equipment: 200, 
+    other: 180 
   },
-  {
-    id: "54",
-    projectName: "Project C",
-    facilityType: "Asset-Based Loan",
-    financing: "Refinancing",
-    principal: "$250,000",
-    rateType: "Floating",
-    targetRate: "SOFR + 350",
-    term: "14 Months",
-    status: "OPEN",
-    deadline: "02:11:10",
-    lender: "National Bank",
-    industry: "Healthcare",
-    bidVolume: 60
+  { 
+    name: 'Tech', 
+    workingCapital: 100, 
+    expansion: 200, 
+    equipment: 150, 
+    other: 120 
   },
-  {
-    id: "94",
-    projectName: "Project D",
-    facilityType: "SBA Loan",
-    financing: "New Financing",
-    principal: "$5,000,000",
-    rateType: "Floating",
-    targetRate: "SOFR + 200",
-    term: "24 Months",
-    status: "COMPLETED",
-    deadline: "Closed",
-    lender: "FinTech",
-    industry: "Manufacturing",
-    bidVolume: 90
+  { 
+    name: 'Retail', 
+    workingCapital: 120, 
+    expansion: 180, 
+    equipment: 90, 
+    other: 60 
   },
-  {
-    id: "47",
-    projectName: "Project E",
-    facilityType: "Equipment Financing",
-    financing: "Refinancing",
-    principal: "$7,500,000",
-    rateType: "Floating",
-    targetRate: "8.750%",
-    term: "60 Months",
-    status: "EXPIRED",
-    deadline: "Closed",
-    lender: "Private Credit",
-    industry: "Manufacturing",
-    bidVolume: 45
+  { 
+    name: 'Healthcare', 
+    workingCapital: 80, 
+    expansion: 120, 
+    equipment: 70, 
+    other: 50 
   }
 ];
 
-const facilityTypes = ["Term Loan", "364-Day Revolver", "Asset-Based Loan", "SBA Loan", "Equipment Financing"];
-const rateTypes = ["Fixed", "Floating"];
-const financingTypes = ["New Financing", "Refinancing"];
-const industries = ["Construction", "Real Estate", "Healthcare", "Manufacturing"];
-const statuses = ["OPEN", "COMPLETED", "EXPIRED"];
+const timeSeriesData = [
+  { month: 'Jan', small: 20, medium: 30, large: 45 },
+  { month: 'Feb', small: 25, medium: 35, large: 50 },
+  { month: 'Mar', small: 30, medium: 40, large: 55 },
+  { month: 'Apr', small: 35, medium: 45, large: 60 },
+  { month: 'May', small: 40, medium: 50, large: 65 },
+  { month: 'Jun', small: 45, medium: 55, large: 40 }
+];
 
-const Marketplace = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [filteredData, setFilteredData] = useState(marketplaceData);
-  const [filters, setFilters] = useState({
-    facilityType: [],
-    financing: [],
-    rateType: [],
-    industry: [],
-    status: []
-  });
-  
-  const [columnVisibility, setColumnVisibility] = useState({
-    projectName: true,
-    facilityType: true,
-    financing: true,
-    principal: true,
-    rateType: true,
-    targetRate: true,
-    term: true,
-    status: true,
-    deadline: true,
-    lender: true,
-    industry: true,
-    bidVolume: true
-  });
-  
-  const toggleColumn = (column) => {
-    setColumnVisibility(prev => ({
-      ...prev,
-      [column]: !prev[column]
-    }));
-  };
+const loanRequestData = [
+  { name: 'Small', pending: 40, approved: 75, rejected: 20 },
+  { name: 'Medium', pending: 35, approved: 60, rejected: 25 },
+  { name: 'Large', pending: 55, approved: 80, rejected: 30 }
+];
 
-  const [showColumnsMenu, setShowColumnsMenu] = useState(false);
-  
-  useEffect(() => {
-    let result = [...marketplaceData];
-    
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      result = result.filter(item => 
-        item.projectName.toLowerCase().includes(query) ||
-        item.facilityType.toLowerCase().includes(query) ||
-        item.principal.toLowerCase().includes(query) ||
-        item.industry.toLowerCase().includes(query) ||
-        item.lender.toLowerCase().includes(query)
-      );
-    }
-    
-    if (filters.facilityType.length > 0) {
-      result = result.filter(item => filters.facilityType.includes(item.facilityType));
-    }
-    
-    if (filters.financing.length > 0) {
-      result = result.filter(item => filters.financing.includes(item.financing));
-    }
-    
-    if (filters.rateType.length > 0) {
-      result = result.filter(item => filters.rateType.includes(item.rateType));
-    }
-    
-    if (filters.industry.length > 0) {
-      result = result.filter(item => filters.industry.includes(item.industry));
-    }
-    
-    if (filters.status.length > 0) {
-      result = result.filter(item => filters.status.includes(item.status));
-    }
-    
-    setFilteredData(result);
-    setCurrentPage(1);
-  }, [searchQuery, filters]);
+const loanApprovalData = [
+  { category: 'Small Business', approved: 65, rejected: 35 },
+  { category: 'Medium Business', approved: 78, rejected: 22 },
+  { category: 'Large Business', approved: 85, rejected: 15 }
+];
 
-  const toggleFilter = (category, value) => {
-    setFilters(prev => {
-      const updatedCategory = [...prev[category]];
-      
-      if (updatedCategory.includes(value)) {
-        const index = updatedCategory.indexOf(value);
-        updatedCategory.splice(index, 1);
-      } else {
-        updatedCategory.push(value);
-      }
-      
-      return {
-        ...prev,
-        [category]: updatedCategory
-      };
-    });
-  };
+const structureData = [
+  { type: 'LLC', workingCapital: 42, expansion: 35, equipment: 23, rate: 7.5 },
+  { type: 'Corporate', workingCapital: 28, expansion: 45, equipment: 32, rate: 6.2 },
+  { type: 'Partnership', workingCapital: 30, expansion: 25, equipment: 28, rate: 8.1 }
+];
 
-  const clearFilters = () => {
-    setFilters({
-      facilityType: [],
-      financing: [],
-      rateType: [],
-      industry: [],
-      status: []
-    });
-    setSearchQuery("");
-    toast.success("All filters have been cleared.");
-  };
+const loanTermData = [
+  { entity: 'Small', shortTerm: 25, mediumTerm: 40, longTerm: 35 },
+  { entity: 'Medium', shortTerm: 30, mediumTerm: 45, longTerm: 25 },
+  { entity: 'Large', shortTerm: 20, mediumTerm: 30, longTerm: 50 }
+];
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
+const structureLoanTermData = [
+  { month: 'Jan', llc: 30, corporate: 45, partnership: 25 },
+  { month: 'Feb', llc: 35, corporate: 50, partnership: 30 },
+  { month: 'Mar', llc: 45, corporate: 40, partnership: 35 },
+  { month: 'Apr', llc: 40, corporate: 35, partnership: 30 },
+  { month: 'May', llc: 30, corporate: 30, partnership: 35 },
+  { month: 'Jun', llc: 35, corporate: 25, partnership: 30 }
+];
 
-  const handleViewProject = (projectId) => {
-    toast.info(`Viewing details for project ${projectId}`);
-  };
+const industryLoanTermData = [
+  { month: 'Jan', retail: 30, tech: 45, construction: 25, healthcare: 20, manufacturing: 35 },
+  { month: 'Feb', retail: 35, tech: 50, construction: 30, healthcare: 25, manufacturing: 40 },
+  { month: 'Mar', retail: 45, tech: 40, construction: 35, healthcare: 30, manufacturing: 35 },
+  { month: 'Apr', retail: 40, tech: 35, construction: 45, healthcare: 20, manufacturing: 30 },
+  { month: 'May', retail: 30, tech: 30, construction: 40, healthcare: 25, manufacturing: 35 },
+  { month: 'Jun', retail: 35, tech: 25, construction: 30, healthcare: 40, manufacturing: 45 }
+];
 
-  const toggleAllColumns = (value: boolean) => {
-    setColumnVisibility({
-      projectName: value,
-      facilityType: value,
-      financing: value,
-      principal: value,
-      rateType: value,
-      targetRate: value,
-      term: value,
-      status: value,
-      deadline: value,
-      lender: value,
-      industry: value,
-      bidVolume: value
-    });
-  };
-  
+const COLORS = ['#33bbef', '#8B5CF6', '#10b981', '#F97316', '#fbd024'];
+const DARK_COLORS = ['#0284c7', '#6d28d9', '#059669', '#c2410c', '#ca8a04'];
+
+const Intelligence = () => {
+  const [timeFilter, setTimeFilter] = useState("last-year");
+  const [chartType, setChartType] = useState("bar");
+  const [businessSize, setBusinessSize] = useState("all");
+  const [industry, setIndustry] = useState("all");
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-black text-gray-200 overflow-x-hidden">
       <Navbar />
-      
-      <main className="container mx-auto px-6 pt-24 pb-16">
-        <div className="space-y-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight text-primary mb-2">
-                Proposals
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Browse and engage with active loan requests from businesses seeking financing
-              </p>
-            </div>
-            <Button variant="default" className="font-mono text-xs" onClick={() => toast.info("New proposal functionality coming soon")}>
-              New Proposal
+      <div className="container mx-auto px-2 py-6 mt-16">
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-2xl font-bold text-cyan-400">Analytic Intelligence</h1>
+          <div className="flex items-center space-x-3">
+            <Button variant="outline" className="flex items-center h-8 bg-black/60 border-gray-700 text-gray-300 hover:bg-gray-800">
+              <Filter className="h-3.5 w-3.5 mr-1.5" />
+              Filters
+            </Button>
+            <Button variant="outline" className="flex items-center h-8 bg-black/60 border-gray-700 text-gray-300 hover:bg-gray-800">
+              <Download className="h-3.5 w-3.5 mr-1.5" />
+              Export
+            </Button>
+            <Button variant="outline" className="flex items-center h-8 bg-black/60 border-gray-700 text-gray-300 hover:bg-gray-800">
+              <Settings className="h-3.5 w-3.5 mr-1.5" />
+              Settings
             </Button>
           </div>
-
-          <div className="flex flex-col md:flex-row gap-4 items-center">
-            <div className="flex-1 relative">
-              <Input
-                type="search"
-                placeholder="Search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full border-primary/30 text-foreground pl-10"
-              />
-              <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-muted-foreground">
-                  <path d="M10 6.5C10 8.433 8.433 10 6.5 10C4.567 10 3 8.433 3 6.5C3 4.567 4.567 3 6.5 3C8.433 3 10 4.567 10 6.5ZM9.30884 10.0159C8.53901 10.6318 7.56251 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5C11 7.56251 10.6318 8.53901 10.0159 9.30884L12.8536 12.1464C13.0488 12.3417 13.0488 12.6583 12.8536 12.8536C12.6583 13.0488 12.3417 13.0488 12.1464 12.8536L9.30884 10.0159Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path>
-                </svg>
-              </div>
-            </div>
-            
-            <Popover open={showColumnsMenu} onOpenChange={setShowColumnsMenu}>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="gap-2 font-mono text-xs border-primary/30">
-                  <Columns className="h-4 w-4" />
-                  Manage Columns
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[240px] p-2 rounded-md border border-primary/30 bg-background">
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center mb-2">
-                    <p className="text-xs font-mono font-semibold">TABLE COLUMNS</p>
-                    <div className="flex gap-1">
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="h-6 px-2 text-xs" 
-                        onClick={() => toggleAllColumns(true)}
-                      >
-                        Show All
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="h-6 px-2 text-xs" 
-                        onClick={() => toggleAllColumns(false)}
-                      >
-                        Hide All
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="space-y-1 max-h-[300px] overflow-y-auto">
-                    {Object.entries({
-                      projectName: "Project Name",
-                      facilityType: "Facility Type",
-                      financing: "Financing",
-                      principal: "Principal",
-                      rateType: "Rate Type",
-                      targetRate: "Target Rate",
-                      term: "Term",
-                      status: "Status",
-                      deadline: "Deadline",
-                      lender: "Lender",
-                      industry: "Industry",
-                      bidVolume: "Bid Volume"
-                    }).map(([key, label]) => (
-                      <div 
-                        key={key}
-                        className="flex items-center justify-between p-2 text-xs rounded-sm cursor-pointer hover:bg-primary/5"
-                        onClick={() => toggleColumn(key)}
-                      >
-                        <span>{label}</span>
-                        {columnVisibility[key] ? (
-                          <Check className="h-4 w-4 text-primary" />
-                        ) : (
-                          <X className="h-4 w-4 text-muted-foreground opacity-50" />
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
-            
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="gap-2 font-mono text-xs border-primary/30">
-                  <Filter className="h-4 w-4" />
-                  Loan Request Type
-                  {filters.facilityType.length > 0 && (
-                    <span className="ml-1 rounded-full bg-primary w-5 h-5 flex items-center justify-center text-[10px] text-primary-foreground">
-                      {filters.facilityType.length}
-                    </span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-2 rounded-md border border-primary/30 bg-background">
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <p className="text-xs font-mono font-semibold">FACILITY TYPE</p>
-                    {filters.facilityType.length > 0 && (
-                      <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => setFilters(prev => ({...prev, facilityType: []}))}>
-                        Clear
-                      </Button>
-                    )}
-                  </div>
-                  <div className="space-y-1">
-                    {facilityTypes.map(type => (
-                      <div 
-                        key={type}
-                        className="flex items-center justify-between p-2 text-xs rounded-sm cursor-pointer hover:bg-primary/5"
-                        onClick={() => toggleFilter('facilityType', type)}
-                      >
-                        <span>{type}</span>
-                        {filters.facilityType.includes(type) ? (
-                          <Check className="h-4 w-4 text-primary" />
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
-            
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="gap-2 font-mono text-xs border-primary/30">
-                  <Filter className="h-4 w-4" />
-                  Target Terms
-                  {(filters.financing.length > 0 || filters.rateType.length > 0) && (
-                    <span className="ml-1 rounded-full bg-primary w-5 h-5 flex items-center justify-center text-[10px] text-primary-foreground">
-                      {filters.financing.length + filters.rateType.length}
-                    </span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-2 rounded-md border border-primary/30 bg-background">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <p className="text-xs font-mono font-semibold">FINANCING</p>
-                      {filters.financing.length > 0 && (
-                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => setFilters(prev => ({...prev, financing: []}))}>
-                          Clear
-                        </Button>
-                      )}
-                    </div>
-                    <div className="space-y-1">
-                      {financingTypes.map(type => (
-                        <div 
-                          key={type}
-                          className="flex items-center justify-between p-2 text-xs rounded-sm cursor-pointer hover:bg-primary/5"
-                          onClick={() => toggleFilter('financing', type)}
-                        >
-                          <span>{type}</span>
-                          {filters.financing.includes(type) ? (
-                            <Check className="h-4 w-4 text-primary" />
-                          ) : null}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <p className="text-xs font-mono font-semibold">RATE TYPE</p>
-                      {filters.rateType.length > 0 && (
-                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => setFilters(prev => ({...prev, rateType: []}))}>
-                          Clear
-                        </Button>
-                      )}
-                    </div>
-                    <div className="space-y-1">
-                      {rateTypes.map(type => (
-                        <div 
-                          key={type}
-                          className="flex items-center justify-between p-2 text-xs rounded-sm cursor-pointer hover:bg-primary/5"
-                          onClick={() => toggleFilter('rateType', type)}
-                        >
-                          <span>{type}</span>
-                          {filters.rateType.includes(type) ? (
-                            <Check className="h-4 w-4 text-primary" />
-                          ) : null}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
-            
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="gap-2 font-mono text-xs border-primary/30">
-                  <Filter className="h-4 w-4" />
-                  Deal Activity Metrics
-                  {(filters.industry.length > 0 || filters.status.length > 0) && (
-                    <span className="ml-1 rounded-full bg-primary w-5 h-5 flex items-center justify-center text-[10px] text-primary-foreground">
-                      {filters.industry.length + filters.status.length}
-                    </span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-2 rounded-md border border-primary/30 bg-background">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <p className="text-xs font-mono font-semibold">INDUSTRY</p>
-                      {filters.industry.length > 0 && (
-                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => setFilters(prev => ({...prev, industry: []}))}>
-                          Clear
-                        </Button>
-                      )}
-                    </div>
-                    <div className="space-y-1">
-                      {industries.map(type => (
-                        <div 
-                          key={type}
-                          className="flex items-center justify-between p-2 text-xs rounded-sm cursor-pointer hover:bg-primary/5"
-                          onClick={() => toggleFilter('industry', type)}
-                        >
-                          <span>{type}</span>
-                          {filters.industry.includes(type) ? (
-                            <Check className="h-4 w-4 text-primary" />
-                          ) : null}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <p className="text-xs font-mono font-semibold">STATUS</p>
-                      {filters.status.length > 0 && (
-                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => setFilters(prev => ({...prev, status: []}))}>
-                          Clear
-                        </Button>
-                      )}
-                    </div>
-                    <div className="space-y-1">
-                      {statuses.map(type => (
-                        <div 
-                          key={type}
-                          className="flex items-center justify-between p-2 text-xs rounded-sm cursor-pointer hover:bg-primary/5"
-                          onClick={() => toggleFilter('status', type)}
-                        >
-                          <span>{type}</span>
-                          {filters.status.includes(type) ? (
-                            <Check className="h-4 w-4 text-primary" />
-                          ) : null}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
-            
-            {(Object.values(filters).some(array => array.length > 0) || searchQuery) && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="gap-1 text-xs text-destructive hover:text-destructive hover:bg-destructive/10"
-                onClick={clearFilters}
-              >
-                <X className="h-3 w-3" />
-                Clear All
-              </Button>
-            )}
-          </div>
-
-          <Card className="terminal-card border border-primary/30">
-            <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="hover:bg-transparent border-primary/20">
-                      <TableHead className="text-xs text-muted-foreground font-mono w-[50px]"></TableHead>
-                      <TableHead className="text-xs text-muted-foreground font-mono">
-                        RFP<br/>CREDIT<br/>RATING
-                      </TableHead>
-                      
-                      {columnVisibility.projectName && (
-                        <TableHead className="text-xs text-muted-foreground font-mono">
-                          <div className="flex items-center gap-1">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="h-5 w-5 p-0"
-                              onClick={() => toggleColumn('projectName')}
-                            >
-                              <ChevronUp className="h-3 w-3" />
-                            </Button>
-                            <span>PROJECT<br/>NAME</span>
-                          </div>
-                        </TableHead>
-                      )}
-                      
-                      {columnVisibility.facilityType && (
-                        <TableHead className="text-xs text-muted-foreground font-mono">
-                          <div className="flex items-center gap-1">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="h-5 w-5 p-0"
-                              onClick={() => toggleColumn('facilityType')}
-                            >
-                              <ChevronUp className="h-3 w-3" />
-                            </Button>
-                            <span>FACILITY<br/>TYPE</span>
-                          </div>
-                        </TableHead>
-                      )}
-                      
-                      {columnVisibility.financing && (
-                        <TableHead className="text-xs text-muted-foreground font-mono">
-                          <div className="flex items-center gap-1">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="h-5 w-5 p-0"
-                              onClick={() => toggleColumn('financing')}
-                            >
-                              <ChevronUp className="h-3 w-3" />
-                            </Button>
-                            <span>NEW FINANCING<br/>OR<br/>REFINANCING</span>
-                          </div>
-                        </TableHead>
-                      )}
-                      
-                      {columnVisibility.principal && (
-                        <TableHead className="text-xs text-muted-foreground font-mono">
-                          <div className="flex items-center gap-1">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="h-5 w-5 p-0"
-                              onClick={() => toggleColumn('principal')}
-                            >
-                              <ChevronUp className="h-3 w-3" />
-                            </Button>
-                            <span>TARGET<br/>PRINCIPAL</span>
-                          </div>
-                        </TableHead>
-                      )}
-                      
-                      {columnVisibility.rateType && (
-                        <TableHead className="text-xs text-muted-foreground font-mono">
-                          <div className="flex items-center gap-1">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="h-5 w-5 p-0"
-                              onClick={() => toggleColumn('rateType')}
-                            >
-                              <ChevronUp className="h-3 w-3" />
-                            </Button>
-                            <span>INTEREST RATE<br/>TYPE</span>
-                          </div>
-                        </TableHead>
-                      )}
-                      
-                      {columnVisibility.targetRate && (
-                        <TableHead className="text-xs text-muted-foreground font-mono">
-                          <div className="flex items-center gap-1">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="h-5 w-5 p-0"
-                              onClick={() => toggleColumn('targetRate')}
-                            >
-                              <ChevronUp className="h-3 w-3" />
-                            </Button>
-                            <span>TARGET<br/>INTEREST<br/>RATE</span>
-                          </div>
-                        </TableHead>
-                      )}
-                      
-                      {columnVisibility.term && (
-                        <TableHead className="text-xs text-muted-foreground font-mono">
-                          <div className="flex items-center gap-1">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="h-5 w-5 p-0"
-                              onClick={() => toggleColumn('term')}
-                            >
-                              <ChevronUp className="h-3 w-3" />
-                            </Button>
-                            <span>TARGET<br/>TERM</span>
-                          </div>
-                        </TableHead>
-                      )}
-                      
-                      {columnVisibility.status && (
-                        <TableHead className="text-xs text-muted-foreground font-mono">
-                          <div className="flex items-center gap-1">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="h-5 w-5 p-0"
-                              onClick={() => toggleColumn('status')}
-                            >
-                              <ChevronUp className="h-3 w-3" />
-                            </Button>
-                            <span>STATUS</span>
-                          </div>
-                        </TableHead>
-                      )}
-                      
-                      {columnVisibility.deadline && (
-                        <TableHead className="text-xs text-muted-foreground font-mono">
-                          <div className="flex items-center gap-1">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="h-5 w-5 p-0"
-                              onClick={() => toggleColumn('deadline')}
-                            >
-                              <ChevronUp className="h-3 w-3" />
-                            </Button>
-                            <span>BID DEADLINE</span>
-                          </div>
-                        </TableHead>
-                      )}
-                      
-                      {columnVisibility.lender && (
-                        <TableHead className="text-xs text-muted-foreground font-mono">
-                          <div className="flex items-center gap-1">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="h-5 w-5 p-0"
-                              onClick={() => toggleColumn('lender')}
-                            >
-                              <ChevronUp className="h-3 w-3" />
-                            </Button>
-                            <span>LENDER<br/>PREFERENCES</span>
-                          </div>
-                        </TableHead>
-                      )}
-                      
-                      {columnVisibility.industry && (
-                        <TableHead className="text-xs text-muted-foreground font-mono">
-                          <div className="flex items-center gap-1">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="h-5 w-5 p-0"
-                              onClick={() => toggleColumn('industry')}
-                            >
-                              <ChevronUp className="h-3 w-3" />
-                            </Button>
-                            <span>INDUSTRY</span>
-                          </div>
-                        </TableHead>
-                      )}
-                      
-                      {columnVisibility.bidVolume && (
-                        <TableHead className="text-xs text-muted-foreground font-mono">
-                          <div className="flex items-center gap-1">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="h-5 w-5 p-0"
-                              onClick={() => toggleColumn('bidVolume')}
-                            >
-                              <ChevronUp className="h-3 w-3" />
-                            </Button>
-                            <span>BID VOLUME</span>
-                          </div>
-                        </TableHead>
-                      )}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {paginatedData.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={14} className="text-center py-8 text-muted-foreground">
-                          No results found. Try adjusting your search or filters.
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      paginatedData.map((item) => (
-                        <TableRow 
-                          key={item.id}
-                          className="hover:bg-primary/5 border-primary/20"
-                        >
-                          <TableCell className="py-3">
-                            <Button 
-                              variant="ghost" 
-                              size="icon" 
-                              className="h-8 w-8"
-                              onClick={() => handleViewProject(item.id)}
-                            >
-                              <Eye className="h-4 w-4 text-primary/80" />
-                            </Button>
-                          </TableCell>
-                          <TableCell className="font-mono py-3">
-                            <div className="flex items-center justify-center">
-                              <div className="h-7 w-7 rounded-full bg-secondary flex items-center justify-center text-primary text-xs">
-                                {item.id}
-                              </div>
-                            </div>
-                          </TableCell>
-                          
-                          {columnVisibility.projectName && (
-                            <TableCell className="font-mono text-foreground py-3">
-                              {item.projectName}
-                            </TableCell>
-                          )}
-                          
-                          {columnVisibility.facilityType && (
-                            <TableCell className="font-mono text-foreground py-3">
-                              {item.facilityType}
-                            </TableCell>
-                          )}
-                          
-                          {columnVisibility.financing && (
-                            <TableCell className="font-mono text-foreground py-3">
-                              {item.financing}
-                            </TableCell>
-                          )}
-                          
-                          {columnVisibility.principal && (
-                            <TableCell className="font-mono text-foreground py-3">{item.principal}</TableCell>
-                          )}
-                          
-                          {columnVisibility.rateType && (
-                            <TableCell className="font-mono text-foreground py-3">{item.rateType}</TableCell>
-                          )}
-                          
-                          {columnVisibility.targetRate && (
-                            <TableCell className="font-mono text-foreground py-3">{item.targetRate}</TableCell>
-                          )}
-                          
-                          {columnVisibility.term && (
-                            <TableCell className="font-mono text-foreground py-3">{item.term}</TableCell>
-                          )}
-                          
-                          {columnVisibility.status && (
-                            <TableCell className="py-3">
-                              <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-mono
-                                ${item.status === 'OPEN' ? 'bg-emerald-400/10 text-emerald-400' :
-                                  item.status === 'COMPLETED' ? 'bg-blue-400/10 text-blue-400' :
-                                  'bg-gray-400/10 text-gray-400'}`}>
-                                {item.status}
-                              </span>
-                            </TableCell>
-                          )}
-                          
-                          {columnVisibility.deadline && (
-                            <TableCell className="font-mono text-foreground py-3">{item.deadline}</TableCell>
-                          )}
-                          
-                          {columnVisibility.lender && (
-                            <TableCell className="font-mono text-foreground py-3">{item.lender}</TableCell>
-                          )}
-                          
-                          {columnVisibility.industry && (
-                            <TableCell className="font-mono text-foreground py-3">{item.industry}</TableCell>
-                          )}
-                          
-                          {columnVisibility.bidVolume && (
-                            <TableCell className="py-3">
-                              <div className="w-24 bg-muted rounded-full h-2">
-                                <div 
-                                  className="bg-primary h-full rounded-full" 
-                                  style={{ width: `${item.bidVolume}%` }}
-                                />
-                              </div>
-                            </TableCell>
-                          )}
-                        </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-
-          {pageCount > 1 && (
-            <div className="flex justify-center mt-6">
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious 
-                      onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-                      className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                    />
-                  </PaginationItem>
-                  
-                  {Array.from({ length: Math.min(5, pageCount) }).map((_, i) => {
-                    let pageNum;
-                    if (pageCount <= 5) {
-                      pageNum = i + 1;
-                    } else if (currentPage <= 3) {
-                      pageNum = i + 1;
-                    } else if (currentPage >= pageCount - 2) {
-                      pageNum = pageCount - 4 + i;
-                    } else {
-                      pageNum = currentPage - 2 + i;
-                    }
-                    
-                    return (
-                      <PaginationItem key={i}>
-                        <PaginationLink 
-                          onClick={() => handlePageChange(pageNum)}
-                          isActive={currentPage === pageNum}
-                          className="cursor-pointer"
-                        >
-                          {pageNum}
-                        </PaginationLink>
-                      </PaginationItem>
-                    );
-                  })}
-                  
-                  {pageCount > 5 && currentPage < pageCount - 2 && (
-                    <PaginationItem>
-                      <PaginationEllipsis />
-                    </PaginationItem>
-                  )}
-                  
-                  {pageCount > 5 && currentPage < pageCount - 1 && (
-                    <PaginationItem>
-                      <PaginationLink 
-                        onClick={() => handlePageChange(pageCount)}
-                        className="cursor-pointer"
-                      >
-                        {pageCount}
-                      </PaginationLink>
-                    </PaginationItem>
-                  )}
-                  
-                  <PaginationItem>
-                    <PaginationNext 
-                      onClick={() => handlePageChange(Math.min(pageCount, currentPage + 1))}
-                      className={currentPage === pageCount ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            </div>
-          )}
         </div>
-      </main>
+
+        <Tabs defaultValue="business" className="w-full">
+          <TabsList className="mb-4 bg-black/40 border border-gray-800">
+            <TabsTrigger 
+              value="business" 
+              className="data-[state=active]:bg-gray-800 data-[state=active]:text-cyan-400"
+            >
+              Business Demographic Analytics
+            </TabsTrigger>
+          </TabsList>
+
+          <div className="space-y-4">
+            {/* Business Size Analytics */}
+            <Card className="bg-black/20 border-gray-800 shadow-lg">
+              <CardHeader className="p-3 border-b border-gray-800 bg-black/40 flex flex-row items-center justify-between">
+                <CardTitle className="text-sm font-medium text-cyan-400 flex items-center">
+                  Business Size Analytics
+                  <ChevronDown className="ml-2 h-4 w-4" />
+                </CardTitle>
+                <div className="flex space-x-2 text-xs text-gray-400">
+                  <span className="border-b border-cyan-400 px-1">Last Year</span>
+                  <span className="px-1">6 Months</span>
+                  <span className="px-1">Last Month</span>
+                  <span className="px-1">Last Week</span>
+                  <span className="px-1">Today</span>
+                </div>
+              </CardHeader>
+              <CardContent className="p-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <IntelligenceAnalyticsCard 
+                    title="Loan Request Patterns by Size"
+                    timeFilter={timeFilter}
+                    onTimeFilterChange={setTimeFilter}
+                  >
+                    <BarChart 
+                      width={450} 
+                      height={220} 
+                      data={loanRequestData}
+                      margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#444" vertical={false} />
+                      <XAxis dataKey="name" stroke="#888" />
+                      <YAxis stroke="#888" />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Bar dataKey="pending" name="Pending Loans" fill="#33bbef" />
+                      <Bar dataKey="approved" name="Approved" fill="#10b981" />
+                      <Bar dataKey="rejected" name="Rejected" fill="#F97316" />
+                    </BarChart>
+                  </IntelligenceAnalyticsCard>
+
+                  <IntelligenceAnalyticsCard 
+                    title="Loan Default Distribution By Business Size"
+                    timeFilter={timeFilter}
+                    onTimeFilterChange={setTimeFilter}
+                  >
+                    <PieChart width={450} height={220}>
+                      <Pie
+                        data={pieBusinessSizeData}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        outerRadius={80}
+                        innerRadius={50}
+                        fill="#8884d8"
+                        dataKey="value"
+                        label={renderCustomizedLabel}
+                      >
+                        {pieBusinessSizeData.map((entry, index) => (
+                          <Cell 
+                            key={`cell-${index}`} 
+                            fill={COLORS[index % COLORS.length]} 
+                            stroke="rgba(0,0,0,0.3)"
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend 
+                        layout="vertical" 
+                        verticalAlign="middle" 
+                        align="right"
+                        wrapperStyle={{ right: 10, top: 0, fontSize: '12px' }}
+                      />
+                    </PieChart>
+                  </IntelligenceAnalyticsCard>
+
+                  <IntelligenceAnalyticsCard 
+                    title="Loan Terms By Business Size"
+                    timeFilter={timeFilter}
+                    onTimeFilterChange={setTimeFilter}
+                  >
+                    <LineChart 
+                      width={450} 
+                      height={220} 
+                      data={timeSeriesData}
+                      margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                      <XAxis dataKey="month" stroke="#888" />
+                      <YAxis stroke="#888" />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Line 
+                        type="monotone" 
+                        dataKey="small" 
+                        name="Small Business" 
+                        stroke="#33bbef" 
+                        strokeWidth={2}
+                        dot={{ r: 4 }} 
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="medium" 
+                        name="Medium Business" 
+                        stroke="#10b981" 
+                        strokeWidth={2}
+                        dot={{ r: 4 }} 
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="large" 
+                        name="Large Business" 
+                        stroke="#F97316" 
+                        strokeWidth={2}
+                        dot={{ r: 4 }} 
+                      />
+                    </LineChart>
+                  </IntelligenceAnalyticsCard>
+
+                  <IntelligenceAnalyticsCard 
+                    title="Loan Approval and Rejection Rates"
+                    timeFilter={timeFilter}
+                    onTimeFilterChange={setTimeFilter}
+                  >
+                    <BarChart 
+                      width={450} 
+                      height={220} 
+                      data={loanApprovalData}
+                      margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#444" vertical={false} />
+                      <XAxis dataKey="category" stroke="#888" />
+                      <YAxis stroke="#888" />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Bar dataKey="approved" name="Approved" fill="#10b981" />
+                      <Bar dataKey="rejected" name="Rejected" fill="#F97316" />
+                    </BarChart>
+                  </IntelligenceAnalyticsCard>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Industry Type Analytics */}
+            <Card className="bg-black/20 border-gray-800 shadow-lg">
+              <CardHeader className="p-3 border-b border-gray-800 bg-black/40 flex flex-row items-center justify-between">
+                <CardTitle className="text-sm font-medium text-cyan-400 flex items-center">
+                  Industry Type Analytics
+                  <ChevronDown className="ml-2 h-4 w-4" />
+                </CardTitle>
+                <div className="flex space-x-2 text-xs text-gray-400">
+                  <span className="border-b border-cyan-400 px-1">Last Year</span>
+                  <span className="px-1">6 Months</span>
+                  <span className="px-1">Last Month</span>
+                  <span className="px-1">Last Week</span>
+                  <span className="px-1">Today</span>
+                </div>
+              </CardHeader>
+              <CardContent className="p-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <IntelligenceAnalyticsCard 
+                    title="Loan Usage Trends by Industry"
+                    timeFilter={timeFilter}
+                    onTimeFilterChange={setTimeFilter}
+                  >
+                    <BarChart
+                      width={450}
+                      height={220}
+                      data={industryStackedData}
+                      layout="vertical"
+                      margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                      <XAxis type="number" stroke="#888" />
+                      <YAxis dataKey="name" type="category" stroke="#888" />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Bar dataKey="workingCapital" name="Working Capital" stackId="a" fill="#33bbef" />
+                      <Bar dataKey="expansion" name="Expansion" stackId="a" fill="#8B5CF6" />
+                      <Bar dataKey="equipment" name="Equipment" stackId="a" fill="#10b981" />
+                      <Bar dataKey="other" name="Other" stackId="a" fill="#F97316" />
+                    </BarChart>
+                  </IntelligenceAnalyticsCard>
+
+                  <IntelligenceAnalyticsCard 
+                    title="Loan Default Rates By Industry"
+                    timeFilter={timeFilter}
+                    onTimeFilterChange={setTimeFilter}
+                  >
+                    <BarChart 
+                      width={450} 
+                      height={220} 
+                      data={industryData}
+                      margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#444" vertical={false} />
+                      <XAxis dataKey="name" stroke="#888" />
+                      <YAxis stroke="#888" />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Bar dataKey="value" fill="#33bbef">
+                        {industryData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </IntelligenceAnalyticsCard>
+
+                  <IntelligenceAnalyticsCard 
+                    title="Loan Term Preferences By Industry"
+                    timeFilter={timeFilter}
+                    onTimeFilterChange={setTimeFilter}
+                  >
+                    <LineChart 
+                      width={450} 
+                      height={220} 
+                      data={industryLoanTermData}
+                      margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                      <XAxis dataKey="month" stroke="#888" />
+                      <YAxis stroke="#888" />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Line 
+                        type="monotone" 
+                        dataKey="retail" 
+                        name="Retail" 
+                        stroke="#F97316" 
+                        strokeWidth={2}
+                        dot={{ r: 3 }} 
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="tech" 
+                        name="Tech" 
+                        stroke="#10b981" 
+                        strokeWidth={2}
+                        dot={{ r: 3 }} 
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="construction" 
+                        name="Construction" 
+                        stroke="#8B5CF6" 
+                        strokeWidth={2}
+                        dot={{ r: 3 }} 
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="manufacturing" 
+                        name="Manufacturing" 
+                        stroke="#33bbef" 
+                        strokeWidth={2}
+                        dot={{ r: 3 }} 
+                      />
+                    </LineChart>
+                  </IntelligenceAnalyticsCard>
+
+                  <IntelligenceAnalyticsCard 
+                    title="Industry-Specific Loan Volume Distribution"
+                    timeFilter={timeFilter}
+                    onTimeFilterChange={setTimeFilter}
+                  >
+                    <PieChart width={450} height={220}>
+                      <Pie
+                        data={industryPieData}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        outerRadius={80}
+                        innerRadius={50}
+                        fill="#8884d8"
+                        dataKey="value"
+                        label={renderCustomizedLabel}
+                      >
+                        {industryPieData.map((entry, index) => (
+                          <Cell 
+                            key={`cell-${index}`} 
+                            fill={COLORS[index % COLORS.length]} 
+                            stroke="rgba(0,0,0,0.3)"
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend 
+                        layout="vertical" 
+                        verticalAlign="middle" 
+                        align="right"
+                        wrapperStyle={{ right: 10, top: 0, fontSize: '12px' }}
+                      />
+                    </PieChart>
+                  </IntelligenceAnalyticsCard>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Business Structure Analytics */}
+            <Card className="bg-black/20 border-gray-800 shadow-lg">
+              <CardHeader className="p-3 border-b border-gray-800 bg-black/40 flex flex-row items-center justify-between">
+                <CardTitle className="text-sm font-medium text-cyan-400 flex items-center">
+                  Loan Volume by Business Structure
+                  <ChevronDown className="ml-2 h-4 w-4" />
+                </CardTitle>
+                <div className="flex space-x-2 text-xs text-gray-400">
+                  <span className="border-b border-cyan-400 px-1">Last Year</span>
+                  <span className="px-1">6 Months</span>
+                  <span className="px-1">Last Month</span>
+                  <span className="px-1">Last Week</span>
+                  <span className="px-1">Today</span>
+                </div>
+              </CardHeader>
+              <CardContent className="p-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <IntelligenceAnalyticsCard 
+                    title="Loan Usage Trends by Structure"
+                    timeFilter={timeFilter}
+                    onTimeFilterChange={setTimeFilter}
+                  >
+                    <BarChart 
+                      width={450} 
+                      height={220} 
+                      data={structureData}
+                      margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#444" vertical={false} />
+                      <XAxis dataKey="type" stroke="#888" />
+                      <YAxis stroke="#888" />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Bar dataKey="workingCapital" name="Working Capital" fill="#33bbef" />
+                      <Bar dataKey="expansion" name="Expansion" fill="#8B5CF6" />
+                      <Bar dataKey="equipment" name="Equipment" fill="#10b981" />
+                    </BarChart>
+                  </IntelligenceAnalyticsCard>
+
+                  <IntelligenceAnalyticsCard 
+                    title="Loan Default Rates By Structure"
+                    timeFilter={timeFilter}
+                    onTimeFilterChange={setTimeFilter}
+                  >
+                    <BarChart 
+                      width={450} 
+                      height={220} 
+                      data={structureData}
+                      margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#444" vertical={false} />
+                      <XAxis dataKey="type" stroke="#888" />
+                      <YAxis stroke="#888" />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Bar dataKey="rate" fill="#33bbef" />
+                    </BarChart>
+                  </IntelligenceAnalyticsCard>
+
+                  <IntelligenceAnalyticsCard 
+                    title="Loan Term Preferences By Structure"
+                    timeFilter={timeFilter}
+                    onTimeFilterChange={setTimeFilter}
+                  >
+                    <LineChart 
+                      width={450} 
+                      height={220} 
+                      data={structureLoanTermData}
+                      margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                      <XAxis dataKey="month" stroke="#888" />
+                      <YAxis stroke="#888" />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Line 
+                        type="monotone" 
+                        dataKey="llc" 
+                        name="LLC" 
+                        stroke="#33bbef" 
+                        strokeWidth={2}
+                        dot={{ r: 3 }} 
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="corporate" 
+                        name="Corporate" 
+                        stroke="#10b981" 
+                        strokeWidth={2}
+                        dot={{ r: 3 }} 
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="partnership" 
+                        name="Partnership" 
+                        stroke="#F97316" 
+                        strokeWidth={2}
+                        dot={{ r: 3 }} 
+                      />
+                    </LineChart>
+                  </IntelligenceAnalyticsCard>
+
+                  <IntelligenceAnalyticsCard 
+                    title="Loan Application And Approval Trends"
+                    timeFilter={timeFilter}
+                    onTimeFilterChange={setTimeFilter}
+                  >
+                    <BarChart 
+                      width={450} 
+                      height={220} 
+                      data={structureData}
+                      margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#444" vertical={false} />
+                      <XAxis dataKey="type" stroke="#888" />
+                      <YAxis stroke="#888" />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Bar dataKey="workingCapital" name="Approved" fill="#33bbef" />
+                      <Bar dataKey="equipment" name="Rejected" fill="#F97316" />
+                    </BarChart>
+                  </IntelligenceAnalyticsCard>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Geographic Analytics */}
+            <Card className="bg-black/20 border-gray-800 shadow-lg">
+              <CardHeader className="p-3 border-b border-gray-800 bg-black/40 flex flex-row items-center justify-between">
+                <CardTitle className="text-sm font-medium text-cyan-400 flex items-center">
+                  Geography
+                  <ChevronDown className="ml-2 h-4 w-4" />
+                </CardTitle>
+                <div className="flex space-x-2 text-xs text-gray-400">
+                  <span className="border-b border-cyan-400 px-1">Last Year</span>
+                  <span className="px-1">6 Months</span>
+                  <span className="px-1">Last Month</span>
+                  <span className="px-1">Last Week</span>
+                  <span className="px-1">Today</span>
+                </div>
+              </CardHeader>
+              <CardContent className="p-4">
+                <Card className="bg-black/30 border-gray-800 shadow-lg">
+                  <CardHeader className="p-3 border-b border-gray-800 bg-black/40">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-sm font-medium text-cyan-400">Loan Demand by Region</CardTitle>
+                      <Select defaultValue="last-year" onValueChange={setTimeFilter}>
+                        <SelectTrigger className="h-8 w-[120px] text-xs bg-black/60 border-gray-700 text-gray-300">
+                          <SelectValue placeholder="Last Year" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-black/90 border-gray-700 text-gray-300">
+                          <SelectItem value="last-day">Last Day</SelectItem>
+                          <SelectItem value="last-week">Last Week</SelectItem>
+                          <SelectItem value="last-month">Last Month</SelectItem>
+                          <SelectItem value="last-year">Last Year</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-3">
+                    <GeoMap timeFilter={timeFilter} />
+                  </CardContent>
+                </Card>
+              </CardContent>
+            </Card>
+          </div>
+        </Tabs>
+      </div>
     </div>
   );
 };
 
-export default Marketplace;
+// Function to render the customized label for pie charts
+const renderCustomizedLabel = ({ 
+  cx, 
+  cy, 
+  midAngle, 
+  innerRadius, 
+  outerRadius, 
+  percent, 
+  index 
+}: any) => {
+  const RADIAN = Math.PI / 180;
+  const radius = outerRadius * 1.1;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  return (
+    <text 
+      x={x} 
+      y={y} 
+      fill="#fff" 
+      textAnchor={x > cx ? 'start' : 'end'} 
+      dominantBaseline="central"
+      fontSize={12}
+    >
+      {`${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
+};
+
+// Custom tooltip component for charts
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-black/90 border border-gray-700 p-2 shadow-lg backdrop-blur-sm text-xs">
+        <p className="text-gray-200 font-medium mb-1">{label}</p>
+        {payload.map((entry: any, index: number) => (
+          <p key={`item-${index}`} style={{ color: entry.color }}>
+            {`${entry.name}: ${entry.value}`}
+          </p>
+        ))}
+      </div>
+    );
+  }
+
+  return null;
+};
+
+export default Intelligence;

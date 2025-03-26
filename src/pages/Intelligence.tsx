@@ -6,6 +6,7 @@ import { ChevronDown, Download, Settings, Filter } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import IntelligenceAnalyticsCard from "@/components/IntelligenceAnalyticsCard";
+import GeoMap from "@/components/GeoMap";
 import { 
   BarChart, 
   LineChart, 
@@ -623,7 +624,7 @@ const Intelligence = () => {
                   <CardHeader className="p-3 border-b border-gray-800 bg-black/40">
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-sm font-medium text-cyan-400">Loan Demand by Region</CardTitle>
-                      <Select defaultValue="last-year">
+                      <Select defaultValue="last-year" onValueChange={setTimeFilter}>
                         <SelectTrigger className="h-8 w-[120px] text-xs bg-black/60 border-gray-700 text-gray-300">
                           <SelectValue placeholder="Last Year" />
                         </SelectTrigger>
@@ -637,9 +638,7 @@ const Intelligence = () => {
                     </div>
                   </CardHeader>
                   <CardContent className="p-3">
-                    <div className="relative h-[350px] bg-black w-full flex items-center justify-center rounded border border-gray-800">
-                      <p className="text-gray-500">Geographic Heat Map Visualization Coming Soon</p>
-                    </div>
+                    <GeoMap timeFilter={timeFilter} />
                   </CardContent>
                 </Card>
               </CardContent>
@@ -699,3 +698,4 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export default Intelligence;
+
