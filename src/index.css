@@ -145,7 +145,11 @@
   }
 
   .market-ticker {
-    @apply bg-black/60 border-y border-green-900/30 flex overflow-hidden;
+    @apply bg-black/60 border-y border-green-900/30 flex overflow-hidden w-full;
+  }
+
+  .animate-data-stream {
+    animation: scroll 60s linear infinite;
   }
 
   @keyframes blink {
