@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,7 +10,6 @@ const EnterpriseDashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
   
-  // Simulated data
   const recentProjects = [
     { id: 1, name: "Riverside Development", type: "Commercial Real Estate", status: "Under Review", amount: "$2.4M" },
     { id: 2, name: "Green Energy Initiative", type: "Renewable Energy", status: "Approved", amount: "$5.7M" },
@@ -33,8 +31,15 @@ const EnterpriseDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Dashboard Header */}
+    <div className="min-h-screen bg-background text-foreground relative grid-bg">
+      <div className="absolute inset-0 z-0">
+        <div className="radar-pulse bg-blue-500/10"></div>
+        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "1s" }}></div>
+        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "2s" }}></div>
+      </div>
+      
+      <div className="scanline z-10"></div>
+      
       <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-primary/20">
         <div className="container mx-auto px-6 py-3">
           <div className="flex items-center justify-between">
@@ -68,10 +73,8 @@ const EnterpriseDashboard = () => {
         </div>
       </header>
       
-      {/* Dashboard Content */}
-      <div className="container mx-auto px-6 py-8">
+      <div className="container mx-auto px-6 py-8 relative z-10">
         <div className="flex flex-col md:flex-row gap-6">
-          {/* Sidebar */}
           <aside className="w-full md:w-64 space-y-6">
             <Card className="border border-primary/20 bg-background/50 backdrop-blur-sm overflow-hidden">
               <CardHeader className="pb-3">
@@ -127,7 +130,6 @@ const EnterpriseDashboard = () => {
             </nav>
           </aside>
           
-          {/* Main Content */}
           <main className="flex-1">
             <div className="border-b border-primary/10 pb-4 mb-6">
               <h1 className="text-2xl font-mono">Dashboard</h1>
@@ -142,7 +144,6 @@ const EnterpriseDashboard = () => {
               </TabsList>
               
               <TabsContent value="overview" className="space-y-6">
-                {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Card className="border-primary/20 bg-background/50">
                     <CardHeader className="pb-2">
@@ -173,8 +174,7 @@ const EnterpriseDashboard = () => {
                   </Card>
                 </div>
                 
-                {/* Recent Projects */}
-                <Card className="border-primary/20 bg-background/50">
+                <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle className="text-sm font-mono">RECENT PROJECTS</CardTitle>
                     <CardDescription>Your latest financing projects</CardDescription>
@@ -213,7 +213,7 @@ const EnterpriseDashboard = () => {
               </TabsContent>
               
               <TabsContent value="projects" className="space-y-4">
-                <Card className="border-primary/20 bg-background/50">
+                <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle className="text-sm font-mono">ALL PROJECTS</CardTitle>
                     <CardDescription>Manage your financing projects</CardDescription>
@@ -228,7 +228,7 @@ const EnterpriseDashboard = () => {
               </TabsContent>
               
               <TabsContent value="notifications" className="space-y-4">
-                <Card className="border-primary/20 bg-background/50">
+                <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle className="text-sm font-mono">NOTIFICATIONS</CardTitle>
                     <CardDescription>Recent activity and alerts</CardDescription>
@@ -267,4 +267,3 @@ const EnterpriseDashboard = () => {
 };
 
 export default EnterpriseDashboard;
-
