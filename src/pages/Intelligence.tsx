@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import { ChevronDown, Settings, Filter, Download, Globe, Store, Briefcase, Map } from "lucide-react";
@@ -10,26 +9,35 @@ import BusinessStructureAnalytics from "@/components/intelligence/BusinessStruct
 import GeographyAnalytics from "@/components/intelligence/GeographyAnalytics";
 import FullscreenButton from "@/components/FullscreenButton";
 
-// Colors for charts
+// Updated chart colors to match homepage UX
 export const CHART_COLORS = {
-  workingCapital: "#33EF89",
-  expansion: "#F2E063",
-  equipment: "#339BEF",
-  other: "#EF6333",
-  approved: "#33EF89",
-  rejected: "#EF6333",
-  pending: "#F2E063",
-  small: "#33EF89", 
-  medium: "#339BEF",
-  large: "#EF6333",
-  retail: "#F2E063",
-  tech: "#339BEF",
-  construction: "#EF6333",
-  manufacturing: "#33EF89",
-  healthcare: "#8033EF",
-  llc: "#33EF89",
-  corporate: "#339BEF",
-  partnership: "#EF6333"
+  // Primary colors
+  workingCapital: "#33bbef", // Blue
+  expansion: "#10b981",      // Green
+  equipment: "#8B5CF6",      // Purple
+  other: "#F97316",          // Orange
+  
+  // Status colors
+  approved: "#10b981",       // Green
+  rejected: "#F97316",       // Orange
+  pending: "#fbd024",        // Yellow
+  
+  // Business size colors
+  small: "#33bbef",          // Blue
+  medium: "#10b981",         // Green
+  large: "#F97316",          // Orange
+  
+  // Industry colors
+  retail: "#fbd024",         // Yellow
+  tech: "#33bbef",           // Blue
+  construction: "#F97316",   // Orange
+  manufacturing: "#10b981",  // Green
+  healthcare: "#8B5CF6",     // Purple
+  
+  // Structure colors
+  llc: "#33bbef",            // Blue
+  corporate: "#10b981",      // Green
+  partnership: "#F97316"     // Orange
 };
 
 const Intelligence = () => {

@@ -24,7 +24,7 @@ const GeographyAnalytics = ({
           onClick={() => setExpanded(true)}
         >
           <div className="flex items-center gap-2">
-            <Globe className="h-4 w-4 text-green-500" />
+            <Globe className="h-4 w-4 text-cyan-500" />
             <h3 className="text-sm font-mono text-gray-300">Geography</h3>
           </div>
           <ChevronDown className="h-4 w-4 text-gray-500" />
@@ -40,7 +40,7 @@ const GeographyAnalytics = ({
         onClick={() => setExpanded(false)}
       >
         <div className="flex items-center gap-2">
-          <Globe className="h-4 w-4 text-green-500" />
+          <Globe className="h-4 w-4 text-cyan-500" />
           <h3 className="text-sm font-mono text-gray-300">Geography</h3>
         </div>
         <ChevronDown className="h-4 w-4 text-gray-500 transform rotate-180" />

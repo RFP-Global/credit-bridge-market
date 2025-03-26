@@ -30,5 +30,6 @@ export const renderCustomizedLabel = ({
   );
 };
 
-export const COLORS = ['#33bbef', '#8B5CF6', '#10b981', '#F97316', '#fbd024'];
-export const DARK_COLORS = ['#0284c7', '#6d28d9', '#059669', '#c2410c', '#ca8a04'];
+// Updated colors to match the homepage UX
+export const COLORS = ['#33bbef', '#10b981', '#8B5CF6', '#F97316', '#fbd024'];
+export const DARK_COLORS = ['#0284c7', '#059669', '#6d28d9', '#c2410c', '#ca8a04'];
