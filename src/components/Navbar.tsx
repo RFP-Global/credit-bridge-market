@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Menu, X, Terminal, Radar, Signal } from 'lucide-react';
@@ -42,7 +41,7 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-4">
             <Link to="/marketplace" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
               MARKETPLACE
             </Link>
