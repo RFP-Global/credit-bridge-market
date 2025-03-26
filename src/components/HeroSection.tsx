@@ -54,7 +54,7 @@ const HeroSection = () => {
       <div className="scanline z-10"></div>
       
       {/* Full-width ticker container */}
-      <div className="w-full absolute top-[15px] left-0 right-0 z-10">
+      <div className="w-full absolute top-[100px] left-0 right-0 z-10">
         <div className="market-ticker animate-data-stream">
           <div className="data-row whitespace-nowrap flex-shrink-0" style={{ animationDelay: "0s" }}>
             {Array.from({ length: 4 }).map((_, i) => (
