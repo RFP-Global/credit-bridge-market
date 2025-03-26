@@ -1,8 +1,7 @@
-
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Download, Settings, Filter, Terminal, Shield, Database } from "lucide-react";
+import { Download, Settings, Filter, Terminal, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BusinessSizeAnalytics from "@/components/intelligence/BusinessSizeAnalytics";
 import IndustryTypeAnalytics from "@/components/intelligence/IndustryTypeAnalytics";
@@ -113,96 +112,87 @@ const structureLoanTermData = [
   { month: 'Jun', llc: 35, corporate: 25, partnership: 30 }
 ];
 
-const industryLoanTermData = [
-  { month: 'Jan', retail: 30, tech: 45, construction: 25, healthcare: 20, manufacturing: 35 },
-  { month: 'Feb', retail: 35, tech: 50, construction: 30, healthcare: 25, manufacturing: 40 },
-  { month: 'Mar', retail: 45, tech: 40, construction: 35, healthcare: 30, manufacturing: 35 },
-  { month: 'Apr', retail: 40, tech: 35, construction: 45, healthcare: 20, manufacturing: 30 },
-  { month: 'May', retail: 30, tech: 30, construction: 40, healthcare: 25, manufacturing: 35 },
-  { month: 'Jun', retail: 35, tech: 25, construction: 30, healthcare: 40, manufacturing: 45 }
-];
-
 const Intelligence = () => {
   const [timeFilter, setTimeFilter] = useState("last-year");
-  const [chartType, setChartType] = useState("bar");
-  const [businessSize, setBusinessSize] = useState("all");
-  const [industry, setIndustry] = useState("all");
   const [scanline, setScanline] = useState(true);
 
   return (
-    <div className="min-h-screen bg-black text-green-400 overflow-x-hidden grid-bg relative">
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden relative">
       {scanline && <div className="scanline"></div>}
       <div className="radar-pulse"></div>
       <Navbar />
-      <div className="container mx-auto px-2 py-6 mt-16">
+      
+      <div className="container mx-auto px-6 py-16 mt-16 section-animate">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center">
-            <Terminal className="h-5 w-5 mr-2 text-green-500" />
-            <h1 className="text-2xl font-mono text-green-500 border-b-2 border-green-500/30">ANALYTIC_INTEL//</h1>
+            <Terminal className="h-6 w-6 mr-3 text-primary" />
+            <h1 className="text-3xl font-typewriter tracking-tighter">
+              INTELLIGENCE_DASHBOARD
+            </h1>
           </div>
+          
           <div className="flex items-center space-x-3">
-            <Button variant="outline" className="flex items-center h-8 bg-black/60 border-green-800 text-green-400 hover:bg-green-900/20 font-mono text-xs">
-              <Filter className="h-3.5 w-3.5 mr-1.5" />
-              FILTER_OPS
+            <Button 
+              variant="outline" 
+              className="flex items-center h-10 bg-background/60 border-primary/30 text-foreground/80 hover:bg-primary/10 font-mono text-sm"
+            >
+              <Filter className="h-4 w-4 mr-2" />
+              FILTER
             </Button>
-            <Button variant="outline" className="flex items-center h-8 bg-black/60 border-green-800 text-green-400 hover:bg-green-900/20 font-mono text-xs">
-              <Download className="h-3.5 w-3.5 mr-1.5" />
-              EXPORT_DATA
+            
+            <Button 
+              variant="outline" 
+              className="flex items-center h-10 bg-background/60 border-primary/30 text-foreground/80 hover:bg-primary/10 font-mono text-sm"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              EXPORT
             </Button>
-            <Button variant="outline" className="flex items-center h-8 bg-black/60 border-green-800 text-green-400 hover:bg-green-900/20 font-mono text-xs">
-              <Settings className="h-3.5 w-3.5 mr-1.5" />
+            
+            <Button 
+              variant="outline" 
+              className="flex items-center h-10 bg-background/60 border-primary/30 text-foreground/80 hover:bg-primary/10 font-mono text-sm"
+            >
+              <Settings className="h-4 w-4 mr-2" />
               CONFIG
             </Button>
-            <Button variant="outline" 
-              onClick={() => setScanline(!scanline)} 
-              className="flex items-center h-8 bg-black/60 border-green-800 text-green-400 hover:bg-green-900/20 font-mono text-xs"
+            
+            <Button 
+              variant="outline" 
+              onClick={() => setScanline(!scanline)}
+              className="flex items-center h-10 bg-background/60 border-primary/30 text-foreground/80 hover:bg-primary/10 font-mono text-sm"
             >
-              <Shield className="h-3.5 w-3.5 mr-1.5" />
+              <Shield className="h-4 w-4 mr-2" />
               {scanline ? "HIDE_SCAN" : "SHOW_SCAN"}
             </Button>
           </div>
         </div>
 
-        <div className="terminal-card mb-6">
+        <div className="terminal-card mb-6 section-animate">
           <div className="terminal-header">
-            <div className="terminal-dot bg-red-500"></div>
-            <div className="terminal-dot bg-yellow-500"></div>
-            <div className="terminal-dot bg-green-500"></div>
-            <span className="ml-2 text-xs font-mono text-green-400">terminal@intel-system</span>
+            <div className="terminal-dot bg-destructive"></div>
+            <div className="terminal-dot bg-accent"></div>
+            <div className="terminal-dot bg-primary"></div>
+            <span className="ml-2 text-xs font-mono text-foreground/80">terminal@intelligence-system</span>
           </div>
-          <div className="terminal-content font-mono text-sm text-green-400">
-            <div className="mb-1">$ initiating intel analysis sequence...</div>
-            <div className="mb-1">$ loading demographic patterns...</div>
-            <div className="mb-1">$ decrypting market trends...</div>
-            <div className="mb-1 blink">$ ready_</div>
-          </div>
-        </div>
-
-        <div className="market-ticker mb-6">
-          <div className="data-row animate-[scroll_20s_linear_infinite]">
-            {Array.from({ length: 10 }).map((_, i) => (
-              <div key={i} className="data-item font-mono text-xs text-green-400">
-                <span className="text-green-600 mr-2">{`[${String(i).padStart(2, '0')}]`}</span>
-                <span>{`SECTOR_${i}_SCAN::`}</span>
-                <span className="text-green-300">{` ${(Math.random() * 100).toFixed(2)}%`}</span>
-              </div>
-            ))}
+          <div className="terminal-content font-mono text-sm text-foreground/80">
+            <div className="mb-1">$ initializing intelligence protocol...</div>
+            <div className="mb-1">$ analyzing market vectors...</div>
+            <div className="mb-1">$ decrypting trend patterns...</div>
+            <div className="mb-1 blink">$ system_ready_</div>
           </div>
         </div>
 
         <Tabs defaultValue="business" className="w-full">
-          <TabsList className="mb-4 bg-black/40 border border-green-900">
+          <TabsList className="mb-4 bg-background/40 border border-primary/20">
             <TabsTrigger 
               value="business" 
-              className="data-[state=active]:bg-green-900/30 data-[state=active]:text-green-400 font-mono text-xs"
+              className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary font-mono text-sm"
             >
-              <Database className="h-3.5 w-3.5 mr-1.5" />
-              DEMOGRAPHIC_INTEL
+              MARKET_INTELLIGENCE
             </TabsTrigger>
           </TabsList>
 
-          <div className="space-y-4">
-            {/* Business Size Analytics */}
+          <div className="space-y-4 section-animate">
             <BusinessSizeAnalytics 
               timeFilter={timeFilter}
               onTimeFilterChange={setTimeFilter}
@@ -212,7 +202,6 @@ const Intelligence = () => {
               loanApprovalData={loanApprovalData}
             />
 
-            {/* Industry Type Analytics */}
             <IndustryTypeAnalytics 
               timeFilter={timeFilter}
               onTimeFilterChange={setTimeFilter}
@@ -222,7 +211,6 @@ const Intelligence = () => {
               industryPieData={industryPieData}
             />
 
-            {/* Business Structure Analytics */}
             <BusinessStructureAnalytics 
               timeFilter={timeFilter}
               onTimeFilterChange={setTimeFilter}
@@ -230,7 +218,6 @@ const Intelligence = () => {
               structureLoanTermData={structureLoanTermData}
             />
 
-            {/* Geographic Analytics */}
             <GeographyAnalytics 
               timeFilter={timeFilter}
               onTimeFilterChange={setTimeFilter}
