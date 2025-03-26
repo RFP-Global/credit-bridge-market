@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
-import { Card, CardContent } from "@/components/ui/card";
 
+// Sample data for US states with loan demand values
 const stateData = [
   { state: 'California', value: 87, color: '#33bbef' },
   { state: 'Texas', value: 72, color: '#8B5CF6' },
@@ -210,15 +210,21 @@ const GeoMap = ({ timeFilter }: { timeFilter: string }) => {
 
   const detectHoveredState = (x: number, y: number) => {
     // This is a simplified example - in a real app, you'd do proper hit-testing
-    // For the example, we'll just return a random state when near the center
+    // For now, we'll return a random state when near the center of a shape
+    const centerX = canvasRef.current?.width ? canvasRef.current.width / (2 * window.devicePixelRatio) : 0;
+    const centerY = canvasRef.current?.height ? canvasRef.current.height / (2 * window.devicePixelRatio) : 0;
+    
+    // Get distance from center
     const centerDistance = Math.sqrt(
-      Math.pow(x - canvasRef.current!.width / (2 * window.devicePixelRatio), 2) + 
-      Math.pow(y - canvasRef.current!.height / (2 * window.devicePixelRatio), 2)
+      Math.pow(x - centerX, 2) + 
+      Math.pow(y - centerY, 2)
     );
     
-    if (centerDistance < 100) {
-      const index = Math.floor(Math.random() * stateData.length);
-      return stateData[index].state;
+    // Generate random state names based on position
+    const stateIndex = Math.floor((Math.atan2(y - centerY, x - centerX) + Math.PI) / (2 * Math.PI) * stateData.length);
+    
+    if (centerDistance < 150 && centerDistance > 40) {
+      return stateData[stateIndex % stateData.length].state;
     }
     
     return null;

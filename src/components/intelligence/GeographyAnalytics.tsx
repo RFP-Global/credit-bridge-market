@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronDown } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import IntelligenceAnalyticsCard from "@/components/IntelligenceAnalyticsCard";
 import GeoMap from "@/components/GeoMap";
 
 interface GeographyAnalyticsProps {
@@ -9,7 +9,10 @@ interface GeographyAnalyticsProps {
   onTimeFilterChange: (value: string) => void;
 }
 
-const GeographyAnalytics = ({ timeFilter, onTimeFilterChange }: GeographyAnalyticsProps) => {
+const GeographyAnalytics = ({ 
+  timeFilter, 
+  onTimeFilterChange 
+}: GeographyAnalyticsProps) => {
   return (
     <Card className="bg-black/20 border-gray-800 shadow-lg">
       <CardHeader className="p-3 border-b border-gray-800 bg-black/40 flex flex-row items-center justify-between">
@@ -26,27 +29,13 @@ const GeographyAnalytics = ({ timeFilter, onTimeFilterChange }: GeographyAnalyti
         </div>
       </CardHeader>
       <CardContent className="p-4">
-        <Card className="bg-black/30 border-gray-800 shadow-lg">
-          <CardHeader className="p-3 border-b border-gray-800 bg-black/40">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-cyan-400">Loan Demand by Region</CardTitle>
-              <Select value={timeFilter} onValueChange={onTimeFilterChange}>
-                <SelectTrigger className="h-8 w-[120px] text-xs bg-black/60 border-gray-700 text-gray-300">
-                  <SelectValue placeholder="Last Year" />
-                </SelectTrigger>
-                <SelectContent className="bg-black/90 border-gray-700 text-gray-300">
-                  <SelectItem value="last-day">Last Day</SelectItem>
-                  <SelectItem value="last-week">Last Week</SelectItem>
-                  <SelectItem value="last-month">Last Month</SelectItem>
-                  <SelectItem value="last-year">Last Year</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardHeader>
-          <CardContent className="p-3">
-            <GeoMap timeFilter={timeFilter} />
-          </CardContent>
-        </Card>
+        <IntelligenceAnalyticsCard 
+          title="Loan Demand by Region"
+          timeFilter={timeFilter}
+          onTimeFilterChange={onTimeFilterChange}
+        >
+          <GeoMap timeFilter={timeFilter} />
+        </IntelligenceAnalyticsCard>
       </CardContent>
     </Card>
   );
