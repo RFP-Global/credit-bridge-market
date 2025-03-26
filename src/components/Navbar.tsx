@@ -49,6 +49,9 @@ const Navbar = () => {
             <Link to="/enterprise-dashboard" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
               ENTERPRISE DASHBOARD
             </Link>
+            <Link to="/lender-dashboard" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
+              LENDER DASHBOARD
+            </Link>
             <Link to="#" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
               INTELLIGENCE
             </Link>
@@ -103,6 +106,13 @@ const Navbar = () => {
               onClick={() => setMobileMenuOpen(false)}
             >
               ENTERPRISE DASHBOARD
+            </Link>
+            <Link 
+              to="/lender-dashboard" 
+              className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              LENDER DASHBOARD
             </Link>
             <Link 
               to="#" 
