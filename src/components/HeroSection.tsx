@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown, Terminal, Shield, Database, FileText, BarChart3, Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -85,12 +86,16 @@ const HeroSection = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="rounded-none px-8 py-6 text-md group">
-                Business Access
-                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+              <Button size="lg" className="rounded-none px-8 py-6 text-md group" asChild>
+                <Link to="/access">
+                  Business Access
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </Link>
               </Button>
-              <Button variant="outline" size="lg" className="rounded-none px-8 py-6 text-md border-primary/30">
-                Lender Portal
+              <Button variant="outline" size="lg" className="rounded-none px-8 py-6 text-md border-primary/30" asChild>
+                <Link to="/access">
+                  Lender Portal
+                </Link>
               </Button>
             </div>
             
