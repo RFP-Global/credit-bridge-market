@@ -52,7 +52,7 @@ const MarketplaceFilters = ({
           <SelectValue placeholder="Facility Type" />
         </SelectTrigger>
         <SelectContent className="bg-black/80 border-gray-700/50 text-gray-300">
-          <SelectItem value="all-facility-types">All Facility Types</SelectItem>
+          <SelectItem value="all">All Facility Types</SelectItem>
           {facilityTypes.map(type => (
             <SelectItem key={type} value={type}>{type}</SelectItem>
           ))}
@@ -64,7 +64,7 @@ const MarketplaceFilters = ({
           <SelectValue placeholder="Financing Type" />
         </SelectTrigger>
         <SelectContent className="bg-black/80 border-gray-700/50 text-gray-300">
-          <SelectItem value="all-financing-types">All Financing Types</SelectItem>
+          <SelectItem value="all">All Financing Types</SelectItem>
           <SelectItem value="New Financing">New Financing</SelectItem>
           <SelectItem value="Refinancing">Refinancing</SelectItem>
         </SelectContent>
@@ -75,7 +75,7 @@ const MarketplaceFilters = ({
           <SelectValue placeholder="Status" />
         </SelectTrigger>
         <SelectContent className="bg-black/80 border-gray-700/50 text-gray-300">
-          <SelectItem value="all-statuses">All Statuses</SelectItem>
+          <SelectItem value="all">All Statuses</SelectItem>
           <SelectItem value="OPEN">Open</SelectItem>
           <SelectItem value="COMPLETED">Completed</SelectItem>
           <SelectItem value="EXPIRED">Expired</SelectItem>
@@ -87,7 +87,7 @@ const MarketplaceFilters = ({
           <SelectValue placeholder="Industry" />
         </SelectTrigger>
         <SelectContent className="bg-black/80 border-gray-700/50 text-gray-300">
-          <SelectItem value="all-industries">All Industries</SelectItem>
+          <SelectItem value="all">All Industries</SelectItem>
           {industries.map(industry => (
             <SelectItem key={industry} value={industry}>{industry}</SelectItem>
           ))}

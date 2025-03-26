@@ -5,10 +5,10 @@ import { toast } from "sonner";
 
 export const useMarketplace = (proposals: FinanceProposal[]) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [facilityTypeFilter, setFacilityTypeFilter] = useState<string>("");
-  const [financingTypeFilter, setFinancingTypeFilter] = useState<string>("");
-  const [statusFilter, setStatusFilter] = useState<string>("");
-  const [industryFilter, setIndustryFilter] = useState<string>("");
+  const [facilityTypeFilter, setFacilityTypeFilter] = useState<string>("all");
+  const [financingTypeFilter, setFinancingTypeFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [industryFilter, setIndustryFilter] = useState<string>("all");
   const [sortField, setSortField] = useState<keyof FinanceProposal | "">("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,19 +29,19 @@ export const useMarketplace = (proposals: FinanceProposal[]) => {
     }
 
     // Apply dropdown filters
-    if (facilityTypeFilter && facilityTypeFilter !== "all-facility-types") {
+    if (facilityTypeFilter && facilityTypeFilter !== "all") {
       result = result.filter(proposal => proposal.facilityType === facilityTypeFilter);
     }
 
-    if (financingTypeFilter && financingTypeFilter !== "all-financing-types") {
+    if (financingTypeFilter && financingTypeFilter !== "all") {
       result = result.filter(proposal => proposal.financingType === financingTypeFilter);
     }
 
-    if (statusFilter && statusFilter !== "all-statuses") {
+    if (statusFilter && statusFilter !== "all") {
       result = result.filter(proposal => proposal.status === statusFilter);
     }
 
-    if (industryFilter && industryFilter !== "all-industries") {
+    if (industryFilter && industryFilter !== "all") {
       result = result.filter(proposal => proposal.industry === industryFilter);
     }
 
@@ -107,10 +107,10 @@ export const useMarketplace = (proposals: FinanceProposal[]) => {
   // Reset all filters
   const clearFilters = () => {
     setSearchTerm("");
-    setFacilityTypeFilter("");
-    setFinancingTypeFilter("");
-    setStatusFilter("");
-    setIndustryFilter("");
+    setFacilityTypeFilter("all");
+    setFinancingTypeFilter("all");
+    setStatusFilter("all");
+    setIndustryFilter("all");
     setSortField("");
     setSortDirection("asc");
     setCurrentPage(1);
