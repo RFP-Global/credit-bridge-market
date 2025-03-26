@@ -25,7 +25,7 @@ const Footer = () => {
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-16">
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold">RFP Global</h3>
+            <h3 className="text-2xl font-bold">CreditBridge</h3>
             <p className="text-white/70">
               Connecting sophisticated investors with premium private credit opportunities.
             </p>
@@ -131,7 +131,7 @@ const Footer = () => {
         <div className="border-t border-white/10 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-white/70 mb-4 md:mb-0">
-              © 2023 RFP Global. All rights reserved.
+              © 2023 CreditBridge. All rights reserved.
             </p>
             <p className="text-white/70 flex items-center">
               Made with <Heart className="h-4 w-4 mx-1 text-red-400" /> for sophisticated investors
