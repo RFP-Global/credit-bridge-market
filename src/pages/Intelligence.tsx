@@ -1,7 +1,5 @@
-
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { 
   ChartContainer, 
@@ -682,7 +680,6 @@ const Intelligence = () => {
           </div>
         </Tabs>
       </div>
-      <Footer />
     </div>
   );
 };
