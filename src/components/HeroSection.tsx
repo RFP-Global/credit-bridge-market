@@ -43,7 +43,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 grid-bg">
+    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20 grid-bg">
       <FullscreenButton />
       
       <div className="absolute inset-0 z-0">
@@ -54,8 +54,9 @@ const HeroSection = () => {
       
       <div className="scanline z-10"></div>
       
-      <div className="container mx-auto px-6 py-16 z-10">
-        <div className="market-ticker animate-data-stream mb-6">
+      {/* Full-width ticker container */}
+      <div className="w-full z-10 mb-6">
+        <div className="market-ticker animate-data-stream">
           <div className="data-row whitespace-nowrap flex-shrink-0" style={{ animationDelay: "0s" }}>
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="flex animate-data-stream">
@@ -73,7 +74,9 @@ const HeroSection = () => {
             ))}
           </div>
         </div>
-        
+      </div>
+      
+      <div className="container mx-auto px-6 py-8 z-10">
         <div ref={sectionRef} className="section-animate flex flex-col md:flex-row items-center justify-between gap-10">
           <div className="w-full md:w-1/2 lg:w-5/12 space-y-8 stagger-animate">
             <div className="inline-block">
