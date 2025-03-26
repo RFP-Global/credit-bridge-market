@@ -1,5 +1,6 @@
+
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ChevronDown, Terminal, Shield, Database, FileText, BarChart3, Search } from "lucide-react";
+import { ArrowRight, ChevronDown, Terminal, Shield, Database, FileText, BarChart3, Search, Radio } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -96,7 +97,7 @@ const HeroSection = () => {
                   <Shield className="mr-2 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-opacity" />
                   Enterprise Portal
                   <div className="ml-3 h-4 w-px bg-primary/30 group-hover:bg-primary/50 transition-colors"></div>
-                  <Radio className="ml-3 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-colors" />
+                  <Radio className="ml-3 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-opacity" />
                 </Link>
               </Button>
               
@@ -110,7 +111,7 @@ const HeroSection = () => {
                   <Radio className="mr-2 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-opacity" />
                   Lender Portal
                   <div className="ml-3 h-4 w-px bg-primary/30 group-hover:bg-primary/50 transition-colors"></div>
-                  <Shield className="ml-3 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-colors" />
+                  <Shield className="ml-3 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-opacity" />
                 </Link>
               </Button>
             </div>
