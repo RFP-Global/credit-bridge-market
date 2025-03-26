@@ -34,7 +34,7 @@ const FullscreenButton = () => {
     <Button
       variant="ghost"
       size="icon"
-      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-background/20 backdrop-blur-sm hover:bg-background/40 border border-primary/20"
+      className="absolute top-6 right-6 z-50 bg-background/20 backdrop-blur-sm hover:bg-background/40 border border-primary/20"
       onClick={toggleFullscreen}
       title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
     >
