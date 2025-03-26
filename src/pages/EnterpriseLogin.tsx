@@ -55,7 +55,7 @@ const EnterpriseLogin = () => {
           
           <div className="flex items-center mb-6">
             <Shield className="h-6 w-6 text-primary mr-3" />
-            <h1 className="text-xl font-semibold tracking-tight text-foreground/90">Enterprise Account Access</h1>
+            <h1 className="text-xl font-mono tracking-tight text-foreground/90">Enterprise Account Access</h1>
           </div>
           
           <div className="text-xs font-mono text-muted-foreground mb-6 border-b border-primary/10 pb-4">
