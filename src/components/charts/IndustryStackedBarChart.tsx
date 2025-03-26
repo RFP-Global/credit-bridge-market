@@ -27,9 +27,9 @@ const IndustryStackedBarChart = ({ data }: IndustryStackedBarChartProps) => {
       <Tooltip content={<CustomTooltip />} />
       <Legend />
       <Bar dataKey="workingCapital" name="Working Capital" stackId="a" fill="#33bbef" />
-      <Bar dataKey="expansion" name="Expansion" stackId="a" fill="#8B5CF6" />
-      <Bar dataKey="equipment" name="Equipment" stackId="a" fill="#10b981" />
-      <Bar dataKey="other" name="Other" stackId="a" fill="#F97316" />
+      <Bar dataKey="expansion" name="Expansion" stackId="a" fill="#0ea5e9" />
+      <Bar dataKey="equipment" name="Equipment" stackId="a" fill="#38bdf8" />
+      <Bar dataKey="other" name="Other" stackId="a" fill="#0284c7" />
     </BarChart>
   );
 };

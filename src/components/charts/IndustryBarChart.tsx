@@ -6,7 +6,7 @@ interface IndustryBarChartProps {
   data: Array<{
     name: string;
     value: number;
-    color: string;
+    color?: string;
   }>;
 }
 
@@ -25,7 +25,7 @@ const IndustryBarChart = ({ data }: IndustryBarChartProps) => {
       <Legend />
       <Bar dataKey="value" fill="#33bbef">
         {data.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={entry.color} />
+          <Cell key={`cell-${index}`} fill={entry.color || '#33bbef'} />
         ))}
       </Bar>
     </BarChart>
