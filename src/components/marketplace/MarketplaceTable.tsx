@@ -5,7 +5,7 @@ import {
   TableBody,
 } from "@/components/ui/table";
 import { FinanceProposal } from "@/types/marketplace";
-import { Radar, Check } from "lucide-react";
+import { Radar, Check, ArrowDown, ArrowUp } from "lucide-react";
 import ProposalTableRow from "./table/ProposalTableRow";
 import EmptyTableRow from "./table/EmptyTableRow";
 import { 
@@ -15,8 +15,11 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Toggle } from "@/components/ui/toggle";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useState, useEffect, useMemo } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 interface MarketplaceTableProps {
   proposals: FinanceProposal[];
@@ -158,7 +161,9 @@ const MarketplaceTable = ({
                       <Button 
                         variant="ghost" 
                         size="icon" 
-                        className={`h-5 w-5 p-0 rounded-full hover:bg-cyan-400/20 ${columnFilters[column.key]?.length > 0 ? 'text-cyan-400' : 'text-gray-500'}`}
+                        className={`h-5 w-5 p-0 rounded-full hover:bg-cyan-400/20 ${
+                          columnFilters[column.key]?.length > 0 || sortField === column.key ? 'text-cyan-400' : 'text-gray-500'
+                        }`}
                       >
                         <Radar className="h-3.5 w-3.5" />
                       </Button>
@@ -166,6 +171,56 @@ const MarketplaceTable = ({
                     <PopoverContent className="w-72 p-3 bg-black/90 border-gray-700/50 backdrop-blur-sm">
                       <div className="space-y-3">
                         <h4 className="font-medium text-sm text-cyan-400">Filter {column.label}</h4>
+                        
+                        {/* Sort Options */}
+                        <div>
+                          <h5 className="text-xs text-gray-400 mb-1">Sort</h5>
+                          <ToggleGroup type="single" variant="outline" className="flex justify-between border-gray-700/50 rounded-md p-0.5 bg-black/50 w-full">
+                            <ToggleGroupItem 
+                              value="asc" 
+                              size="sm"
+                              className={`flex-1 text-xs h-8 ${sortField === column.key && sortDirection === 'asc' ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30' : 'text-gray-400'}`}
+                              onClick={() => {
+                                if (sortField === column.key && sortDirection === 'asc') {
+                                  // Unset the sort if it's already set to this field and direction
+                                  handleSort("" as keyof FinanceProposal);
+                                } else {
+                                  // Set the field and direction
+                                  handleSort(column.key as keyof FinanceProposal);
+                                  if (sortDirection !== 'asc') {
+                                    // Force asc
+                                    handleSort(column.key as keyof FinanceProposal);
+                                  }
+                                }
+                              }}
+                            >
+                              <ArrowUp className="h-3 w-3 mr-1" /> Ascending
+                            </ToggleGroupItem>
+                            <ToggleGroupItem 
+                              value="desc" 
+                              size="sm"
+                              className={`flex-1 text-xs h-8 ${sortField === column.key && sortDirection === 'desc' ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30' : 'text-gray-400'}`}
+                              onClick={() => {
+                                if (sortField === column.key && sortDirection === 'desc') {
+                                  // Unset the sort if it's already set to this field and direction
+                                  handleSort("" as keyof FinanceProposal);
+                                } else {
+                                  // Set the field
+                                  handleSort(column.key as keyof FinanceProposal);
+                                  // If we're already on this field but in asc, this will toggle to desc
+                                  // If we're on a different field, we need to toggle twice to get to desc
+                                  if (sortField !== column.key) {
+                                    handleSort(column.key as keyof FinanceProposal);
+                                  }
+                                }
+                              }}
+                            >
+                              <ArrowDown className="h-3 w-3 mr-1" /> Descending
+                            </ToggleGroupItem>
+                          </ToggleGroup>
+                        </div>
+
+                        <Separator className="bg-gray-700/30" />
                         
                         <div className="flex justify-between">
                           <Button 
@@ -229,6 +284,15 @@ const MarketplaceTable = ({
                   </Popover>
                 </div>
                 {column.label}
+                {sortField === column.key && (
+                  <div className="absolute -right-1 top-3">
+                    {sortDirection === 'asc' ? (
+                      <ArrowUp className="h-3 w-3 text-cyan-400" />
+                    ) : (
+                      <ArrowDown className="h-3 w-3 text-cyan-400" />
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           ))}
