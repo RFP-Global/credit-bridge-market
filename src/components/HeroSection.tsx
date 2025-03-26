@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown, Terminal, Database, FileText, BarChart3, Search, Radio, Radar, Signal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -127,7 +128,7 @@ const HeroSection = () => {
           </div>
           
           <div className="w-full md:w-1/2 lg:w-7/12 relative">
-            <div className="terminal-card overflow-hidden">
+            <div className="terminal-card overflow-hidden border-blue-900/50 bg-black/70">
               <div className="terminal-header">
                 <div className="terminal-dot bg-red-500"></div>
                 <div className="terminal-dot bg-yellow-500"></div>
@@ -166,7 +167,7 @@ const HeroSection = () => {
                   </div>
                 </div>
                 
-                <div className="text-xs font-mono border border-primary/20 bg-primary/5 p-3 relative">
+                <div className="text-xs font-mono border border-blue-900/50 bg-blue-900/5 p-3 relative">
                   <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-background/50"></div>
                   <p>
                     Established manufacturing company seeking growth capital for equipment expansion and increased production capacity. Strong 7-year operating history with consistent revenue growth and healthy margins. Pre-qualified through RFP's underwriting process...
