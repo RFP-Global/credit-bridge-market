@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Menu, X, Terminal, Radar, Signal } from 'lucide-react';
+import { Menu, X, Terminal, Radar, Signal, Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { 
   DropdownMenu, 
@@ -70,6 +69,12 @@ const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-background/95 backdrop-blur-md border border-primary/20 rounded-none w-48">
                 <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
+                  <Link to="/">
+                    <Home className="h-4 w-4 mr-2" />
+                    HOME PAGE
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
                   <Link to="/marketplace">MARKETPLACE</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
@@ -104,6 +109,13 @@ const Navbar = () => {
       }`}>
         <div className="container mx-auto px-6 py-4 space-y-6">
           <nav className="flex flex-col space-y-4">
+            <Link 
+              to="/" 
+              className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              HOME PAGE
+            </Link>
             <Link 
               to="/marketplace" 
               className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
