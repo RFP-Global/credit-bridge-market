@@ -20,7 +20,7 @@ const MarketplaceHeader = ({
           <Button 
             variant="outline" 
             size="sm" 
-            className="border-gray-700 text-gray-300"
+            className="border-gray-700/50 text-gray-300 bg-transparent"
             onClick={clearFilters}
           >
             <SlidersHorizontal className="mr-2 h-4 w-4" />

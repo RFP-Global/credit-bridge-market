@@ -23,7 +23,7 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
   };
 
   return (
-    <TableRow key={proposal.id} className="border-gray-700 hover:bg-gray-800/20">
+    <TableRow key={proposal.id} className="border-gray-700/30 hover:bg-gray-800/20 bg-black/20 backdrop-blur-sm">
       <TableCell className="text-center py-3">
         <div className="flex justify-center items-center">
           <Button

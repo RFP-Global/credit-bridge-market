@@ -49,9 +49,18 @@ const Marketplace = () => {
       <Navbar />
       <FullscreenButton />
       
-      <div className="container mx-auto px-4 py-6 pt-24 h-screen flex flex-col">
+      {/* Sonar pulse elements */}
+      <div className="absolute inset-0 z-0">
+        <div className="radar-pulse bg-blue-500/10"></div>
+        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "1s" }}></div>
+        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "2s" }}></div>
+      </div>
+      
+      <div className="scanline z-10"></div>
+      
+      <div className="container mx-auto px-4 py-6 pt-24 h-screen flex flex-col relative z-10">
         {/* Header section */}
-        <div className="bg-black pb-4 z-30">
+        <div className="bg-transparent pb-4 z-30">
           <MarketplaceHeader 
             resultsCount={filteredProposals.length}
             clearFilters={clearFilters}
@@ -89,7 +98,7 @@ const Marketplace = () => {
         </div>
 
         {/* Fixed pagination at the bottom */}
-        <div className="mt-4 bg-black pt-2">
+        <div className="mt-4 bg-transparent pt-2">
           <MarketplacePagination 
             currentPage={currentPage}
             totalPages={totalPages}

@@ -41,17 +41,17 @@ const MarketplaceFilters = ({
         <Input 
           type="text" 
           placeholder="Search..." 
-          className="pl-10 bg-black/60 border-gray-700 text-gray-300 w-full"
+          className="pl-10 bg-black/30 backdrop-blur-sm border-gray-700/50 text-gray-300 w-full"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 
       <Select value={facilityTypeFilter} onValueChange={setFacilityTypeFilter}>
-        <SelectTrigger className="w-[180px] bg-black/60 border-gray-700 text-gray-300">
+        <SelectTrigger className="w-[180px] bg-black/30 backdrop-blur-sm border-gray-700/50 text-gray-300">
           <SelectValue placeholder="Facility Type" />
         </SelectTrigger>
-        <SelectContent className="bg-black/90 border-gray-700 text-gray-300">
+        <SelectContent className="bg-black/80 border-gray-700/50 text-gray-300">
           <SelectItem value="all-facility-types">All Facility Types</SelectItem>
           {facilityTypes.map(type => (
             <SelectItem key={type} value={type}>{type}</SelectItem>
@@ -60,10 +60,10 @@ const MarketplaceFilters = ({
       </Select>
 
       <Select value={financingTypeFilter} onValueChange={setFinancingTypeFilter}>
-        <SelectTrigger className="w-[180px] bg-black/60 border-gray-700 text-gray-300">
+        <SelectTrigger className="w-[180px] bg-black/30 backdrop-blur-sm border-gray-700/50 text-gray-300">
           <SelectValue placeholder="Financing Type" />
         </SelectTrigger>
-        <SelectContent className="bg-black/90 border-gray-700 text-gray-300">
+        <SelectContent className="bg-black/80 border-gray-700/50 text-gray-300">
           <SelectItem value="all-financing-types">All Financing Types</SelectItem>
           <SelectItem value="New Financing">New Financing</SelectItem>
           <SelectItem value="Refinancing">Refinancing</SelectItem>
@@ -71,10 +71,10 @@ const MarketplaceFilters = ({
       </Select>
 
       <Select value={statusFilter} onValueChange={setStatusFilter}>
-        <SelectTrigger className="w-[180px] bg-black/60 border-gray-700 text-gray-300">
+        <SelectTrigger className="w-[180px] bg-black/30 backdrop-blur-sm border-gray-700/50 text-gray-300">
           <SelectValue placeholder="Status" />
         </SelectTrigger>
-        <SelectContent className="bg-black/90 border-gray-700 text-gray-300">
+        <SelectContent className="bg-black/80 border-gray-700/50 text-gray-300">
           <SelectItem value="all-statuses">All Statuses</SelectItem>
           <SelectItem value="OPEN">Open</SelectItem>
           <SelectItem value="COMPLETED">Completed</SelectItem>
@@ -83,10 +83,10 @@ const MarketplaceFilters = ({
       </Select>
 
       <Select value={industryFilter} onValueChange={setIndustryFilter}>
-        <SelectTrigger className="w-[180px] bg-black/60 border-gray-700 text-gray-300">
+        <SelectTrigger className="w-[180px] bg-black/30 backdrop-blur-sm border-gray-700/50 text-gray-300">
           <SelectValue placeholder="Industry" />
         </SelectTrigger>
-        <SelectContent className="bg-black/90 border-gray-700 text-gray-300">
+        <SelectContent className="bg-black/80 border-gray-700/50 text-gray-300">
           <SelectItem value="all-industries">All Industries</SelectItem>
           {industries.map(industry => (
             <SelectItem key={industry} value={industry}>{industry}</SelectItem>
