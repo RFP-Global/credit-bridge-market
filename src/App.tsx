@@ -28,6 +28,7 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <FullscreenButton />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/marketplace" element={<Marketplace />} />
