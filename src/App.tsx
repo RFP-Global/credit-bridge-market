@@ -16,6 +16,7 @@ import EnterpriseDashboard from "./pages/EnterpriseDashboard";
 import LenderDashboard from "./pages/LenderDashboard";
 import Intelligence from "./pages/Intelligence";
 import ProposalDetails from "./pages/ProposalDetails";
+import BidSubmission from "./pages/BidSubmission";
 import FullscreenButton from "./components/FullscreenButton";
 
 const App = () => {
@@ -33,6 +34,7 @@ const App = () => {
             <Route path="/" element={<Index />} />
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="/proposal/:id" element={<ProposalDetails />} />
+            <Route path="/proposal/:id/bid" element={<BidSubmission />} />
             <Route path="/access" element={<Access />} />
             <Route path="/enterprise-login" element={<EnterpriseLogin />} />
             <Route path="/lender-login" element={<LenderLogin />} />
