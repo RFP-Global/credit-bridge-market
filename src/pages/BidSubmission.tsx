@@ -29,9 +29,6 @@ const BidSubmission = () => {
   const [acceptOriginalTerms, setAcceptOriginalTerms] = useState(true);
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [companyDescription, setCompanyDescription] = useState("");
-  const [transactionDescription, setTransactionDescription] = useState("");
-  const [banksOpenness, setBanksOpenness] = useState("");
   const [additionalInfo, setAdditionalInfo] = useState("");
   const [daysLeft, setDaysLeft] = useState(0);
   
@@ -40,22 +37,6 @@ const BidSubmission = () => {
   const [interestRate, setInterestRate] = useState("");
   const [term, setTerm] = useState("");
   const [loanType, setLoanType] = useState("");
-  
-  // Financial ratios
-  const financialRatios = {
-    currentRatio: "",
-    quickRatio: "",
-    cashRatio: "",
-    grossProfitMargin: "",
-    netProfitMargin: "",
-    returnOnAssets: "",
-    returnOnEquity: "",
-    assetTurnoverRatio: "",
-    inventoryTurnoverRatio: "",
-    accountsReceivableTurnover: ""
-  };
-  
-  const [ratios, setRatios] = useState(financialRatios);
   
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -235,133 +216,6 @@ const BidSubmission = () => {
                     className="bg-gray-900/50 border-gray-700"
                   />
                 </div>
-              </div>
-              
-              {/* Company Description */}
-              <div>
-                <Label htmlFor="company-description" className="text-xs text-gray-400 mb-2 block">Company Description</Label>
-                <Textarea 
-                  id="company-description" 
-                  value={companyDescription}
-                  onChange={(e) => setCompanyDescription(e.target.value)}
-                  placeholder="Enter company description and background information..."
-                  className="bg-gray-900/50 border-gray-700 min-h-[120px]"
-                />
-              </div>
-              
-              {/* Transaction Description & Use of Proceeds */}
-              <div>
-                <Label htmlFor="transaction-description" className="text-xs text-gray-400 mb-2 block">Transaction Description & Use of Proceeds</Label>
-                <Textarea 
-                  id="transaction-description" 
-                  value={transactionDescription}
-                  onChange={(e) => setTransactionDescription(e.target.value)}
-                  placeholder="Describe the transaction and how the proceeds will be used..."
-                  className="bg-gray-900/50 border-gray-700 min-h-[120px]"
-                />
-              </div>
-              
-              {/* Financial Ratios */}
-              <div>
-                <Label className="text-xs text-gray-400 mb-2 block">Financial Ratios</Label>
-                <div className="bg-gray-900/50 border border-gray-700 rounded-md p-4">
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <div>
-                      <p className="text-xs text-gray-400 mb-1">Current Ratio</p>
-                      <Input 
-                        value={ratios.currentRatio}
-                        onChange={(e) => setRatios({...ratios, currentRatio: e.target.value})}
-                        className="bg-black border-gray-800 h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-400 mb-1">Gross Profit Margin</p>
-                      <Input 
-                        value={ratios.grossProfitMargin}
-                        onChange={(e) => setRatios({...ratios, grossProfitMargin: e.target.value})}
-                        className="bg-black border-gray-800 h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-400 mb-1">Asset Turnover Ratio</p>
-                      <Input 
-                        value={ratios.assetTurnoverRatio}
-                        onChange={(e) => setRatios({...ratios, assetTurnoverRatio: e.target.value})}
-                        className="bg-black border-gray-800 h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-400 mb-1">Quick Ratio</p>
-                      <Input 
-                        value={ratios.quickRatio}
-                        onChange={(e) => setRatios({...ratios, quickRatio: e.target.value})}
-                        className="bg-black border-gray-800 h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-400 mb-1">Net Profit Margin</p>
-                      <Input 
-                        value={ratios.netProfitMargin}
-                        onChange={(e) => setRatios({...ratios, netProfitMargin: e.target.value})}
-                        className="bg-black border-gray-800 h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-400 mb-1">Inventory Turnover Ratio</p>
-                      <Input 
-                        value={ratios.inventoryTurnoverRatio}
-                        onChange={(e) => setRatios({...ratios, inventoryTurnoverRatio: e.target.value})}
-                        className="bg-black border-gray-800 h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-400 mb-1">Cash Ratio</p>
-                      <Input 
-                        value={ratios.cashRatio}
-                        onChange={(e) => setRatios({...ratios, cashRatio: e.target.value})}
-                        className="bg-black border-gray-800 h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-400 mb-1">Return on Assets</p>
-                      <Input 
-                        value={ratios.returnOnAssets}
-                        onChange={(e) => setRatios({...ratios, returnOnAssets: e.target.value})}
-                        className="bg-black border-gray-800 h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-400 mb-1">Accounts Receivable Turnover</p>
-                      <Input 
-                        value={ratios.accountsReceivableTurnover}
-                        onChange={(e) => setRatios({...ratios, accountsReceivableTurnover: e.target.value})}
-                        className="bg-black border-gray-800 h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-400 mb-1">Return on Equity</p>
-                      <Input 
-                        value={ratios.returnOnEquity}
-                        onChange={(e) => setRatios({...ratios, returnOnEquity: e.target.value})}
-                        className="bg-black border-gray-800 h-8 text-sm"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Openness to moving bank accounts */}
-              <div>
-                <Label htmlFor="bank-openness" className="text-xs text-gray-400 mb-2 block">
-                  Openness to moving bank accounts, ancillary banking products
-                </Label>
-                <Textarea 
-                  id="bank-openness" 
-                  value={banksOpenness}
-                  onChange={(e) => setBanksOpenness(e.target.value)}
-                  placeholder="Describe willingness to move banking relationships..."
-                  className="bg-gray-900/50 border-gray-700 min-h-[120px]"
-                />
               </div>
             </div>
             
@@ -614,27 +468,6 @@ const BidSubmission = () => {
                   <Separator className="my-6" />
                   
                   <div className="space-y-4">
-                    <div>
-                      <h3 className="text-sm font-semibold mb-2 text-gray-400">Company Description</h3>
-                      <p className="text-sm bg-gray-900/30 p-3 rounded-md">
-                        {companyDescription || "No company description provided."}
-                      </p>
-                    </div>
-                    
-                    <div>
-                      <h3 className="text-sm font-semibold mb-2 text-gray-400">Transaction Description & Use of Proceeds</h3>
-                      <p className="text-sm bg-gray-900/30 p-3 rounded-md">
-                        {transactionDescription || "No transaction description provided."}
-                      </p>
-                    </div>
-                    
-                    <div>
-                      <h3 className="text-sm font-semibold mb-2 text-gray-400">Banking Relationships</h3>
-                      <p className="text-sm bg-gray-900/30 p-3 rounded-md">
-                        {banksOpenness || "No information on banking relationships provided."}
-                      </p>
-                    </div>
-                    
                     <div>
                       <h3 className="text-sm font-semibold mb-2 text-gray-400">Additional Information</h3>
                       <p className="text-sm bg-gray-900/30 p-3 rounded-md">
