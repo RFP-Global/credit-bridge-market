@@ -110,7 +110,7 @@ const HeroSection = () => {
                 className="rounded-none px-8 py-6 text-md border-primary/30 group hover:bg-primary/10 transition-colors" 
                 asChild
               >
-                <Link to="/access" className="flex items-center">
+                <Link to="/lender-login" className="flex items-center">
                   <Radio className="mr-2 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-opacity" />
                   Lender Portal
                   <div className="ml-3 h-4 w-px bg-primary/30 group-hover:bg-primary/50 transition-colors"></div>
