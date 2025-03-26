@@ -1,7 +1,14 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Menu, X, Terminal, Radar, Signal } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -41,19 +48,30 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <nav className="hidden md:flex items-center space-x-4">
-            <Link to="/marketplace" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
-              MARKETPLACE
-            </Link>
-            <Link to="/enterprise-dashboard" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
-              ENTERPRISE DASHBOARD
-            </Link>
-            <Link to="/lender-dashboard" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
-              LENDER DASHBOARD
-            </Link>
-            <Link to="/intelligence" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
-              INTELLIGENCE
-            </Link>
+          <nav className="hidden md:flex items-center">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="p-2 hover:bg-primary/10 rounded-sm focus:outline-none">
+                <div className="flex flex-col gap-1">
+                  <div className="h-0.5 w-5 bg-foreground/80"></div>
+                  <div className="h-0.5 w-5 bg-foreground/80"></div>
+                  <div className="h-0.5 w-5 bg-foreground/80"></div>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="bg-background/95 backdrop-blur-md border border-primary/20 rounded-none w-48">
+                <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
+                  <Link to="/marketplace">MARKETPLACE</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
+                  <Link to="/enterprise-dashboard">ENTERPRISE DASHBOARD</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
+                  <Link to="/lender-dashboard">LENDER DASHBOARD</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
+                  <Link to="/intelligence">INTELLIGENCE</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
