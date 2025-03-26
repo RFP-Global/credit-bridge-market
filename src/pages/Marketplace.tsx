@@ -134,7 +134,7 @@ const Marketplace = () => {
     <div className="min-h-screen bg-black text-gray-200">
       <Navbar />
 
-      <div className="container mx-auto px-4 py-6 mt-20">  {/* Increased top margin from mt-16 to mt-20 */}
+      <div className="container mx-auto px-4 py-6 pt-24">  {/* Changed mt-20 to pt-24 for better spacing */}
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-cyan-400 mb-4">Proposals</h1>
           <div className="flex justify-between items-center">
