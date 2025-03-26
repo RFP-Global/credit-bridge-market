@@ -46,9 +46,9 @@ const HeroSection = () => {
       <FullscreenButton />
       
       <div className="absolute inset-0 z-0">
-        <div className="radar-pulse"></div>
-        <div className="radar-pulse" style={{ animationDelay: "1s" }}></div>
-        <div className="radar-pulse" style={{ animationDelay: "2s" }}></div>
+        <div className="radar-pulse bg-blue-500/10"></div>
+        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "1s" }}></div>
+        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "2s" }}></div>
       </div>
       
       <div className="scanline z-10"></div>
