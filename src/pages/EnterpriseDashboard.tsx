@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -104,9 +103,12 @@ const EnterpriseDashboard = () => {
                 <BarChart3 className="h-4 w-4 mr-3" />
                 Dashboard
               </Button>
-              <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3">
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3"
+              >
                 <FileText className="h-4 w-4 mr-3" />
-                Projects
+                Proposals
               </Button>
               <Button 
                 variant="ghost" 
@@ -142,7 +144,7 @@ const EnterpriseDashboard = () => {
             <Tabs defaultValue="overview" className="space-y-6" onValueChange={setActiveTab}>
               <TabsList className="bg-background/50 border border-primary/20">
                 <TabsTrigger value="overview" className="font-mono text-xs">OVERVIEW</TabsTrigger>
-                <TabsTrigger value="projects" className="font-mono text-xs">PROJECTS</TabsTrigger>
+                <TabsTrigger value="proposals" className="font-mono text-xs">PROPOSALS</TabsTrigger>
                 <TabsTrigger value="notifications" className="font-mono text-xs">NOTIFICATIONS</TabsTrigger>
               </TabsList>
               
@@ -215,16 +217,16 @@ const EnterpriseDashboard = () => {
                 </Card>
               </TabsContent>
               
-              <TabsContent value="projects" className="space-y-4">
+              <TabsContent value="proposals" className="space-y-4">
                 <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
                   <CardHeader>
-                    <CardTitle className="text-sm font-mono">ALL PROJECTS</CardTitle>
-                    <CardDescription>Manage your financing projects</CardDescription>
+                    <CardTitle className="text-sm font-mono">ALL PROPOSALS</CardTitle>
+                    <CardDescription>Manage your financing proposals</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="text-center py-8 px-4">
-                      <p className="text-muted-foreground">Projects tab content would be displayed here.</p>
-                      <p className="text-sm mt-2">This is a placeholder for the projects listing and management interface.</p>
+                      <p className="text-muted-foreground">Proposals tab content would be displayed here.</p>
+                      <p className="text-sm mt-2">This is a placeholder for the proposals listing and management interface.</p>
                     </div>
                   </CardContent>
                 </Card>
