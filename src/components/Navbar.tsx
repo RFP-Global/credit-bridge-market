@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Menu, X, Shield, Terminal, Power } from 'lucide-react';
@@ -54,9 +55,15 @@ const Navbar = () => {
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="outline" className="rounded-none px-6 text-sm font-mono border-primary/30">
-              <Terminal className="h-4 w-4 mr-2" />
-              ACCESS
+            <Button 
+              variant="outline" 
+              className="rounded-none px-6 text-sm font-mono border-primary/30" 
+              asChild
+            >
+              <Link to="/access">
+                <Terminal className="h-4 w-4 mr-2" />
+                ACCESS
+              </Link>
             </Button>
             <Button className="rounded-none px-6 text-sm font-mono">
               <Power className="h-4 w-4 mr-2" />
@@ -64,6 +71,7 @@ const Navbar = () => {
             </Button>
           </div>
 
+          {/* Mobile menu ACCESS button */}
           <div className="md:hidden">
             <button 
               onClick={toggleMobileMenu}
@@ -76,6 +84,7 @@ const Navbar = () => {
         </div>
       </div>
 
+      {/* Mobile menu */}
       <div className={`md:hidden transition-all duration-300 ease-in-out ${
         mobileMenuOpen 
           ? 'max-h-screen opacity-100 visible bg-background/95 backdrop-blur-lg border-b border-primary/20' 
@@ -113,9 +122,15 @@ const Navbar = () => {
             </Link>
           </nav>
           <div className="flex flex-col space-y-4">
-            <Button variant="outline" className="rounded-none w-full font-mono text-sm border-primary/30">
-              <Terminal className="h-4 w-4 mr-2" />
-              ACCESS
+            <Button 
+              variant="outline" 
+              className="rounded-none w-full font-mono text-sm border-primary/30" 
+              asChild
+            >
+              <Link to="/access">
+                <Terminal className="h-4 w-4 mr-2" />
+                ACCESS
+              </Link>
             </Button>
             <Button className="rounded-none w-full font-mono text-sm">
               <Power className="h-4 w-4 mr-2" />
