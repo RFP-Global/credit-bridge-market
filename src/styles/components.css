@@ -1,0 +1,65 @@
+
+@layer components {
+  .glass-card {
+    @apply bg-background/80 backdrop-blur-md border border-border/50 shadow-lg;
+  }
+  
+  .hover-scale {
+    @apply transition-transform duration-300 hover:scale-[1.01];
+  }
+  
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .terminal-card {
+    @apply border border-blue-900/50 bg-black/70 rounded-md p-4 shadow-[0_0_15px_rgba(0,100,200,0.15)] relative;
+  }
+
+  .terminal-header {
+    @apply absolute top-0 left-0 right-0 border-b border-blue-900/50 py-1 px-3 flex items-center;
+  }
+
+  .terminal-dot {
+    @apply w-2 h-2 rounded-full mr-1;
+  }
+
+  .terminal-content {
+    @apply pt-8;
+  }
+
+  .data-grid {
+    @apply grid grid-cols-2 gap-3 text-sm;
+  }
+
+  .data-grid-item {
+    @apply flex flex-col;
+  }
+
+  .data-label {
+    @apply text-muted-foreground text-xs uppercase tracking-wider;
+  }
+
+  .data-value {
+    @apply font-medium;
+  }
+
+  .rfp-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-sm bg-primary/10 text-primary text-xs font-mono uppercase tracking-wider border border-primary/30;
+  }
+
+  .data-row {
+    @apply flex whitespace-nowrap;
+  }
+  
+  .data-item {
+    @apply px-4 py-1 border-r border-blue-900/30 flex-shrink-0;
+  }
+
+  .market-ticker {
+    @apply bg-black/60 border-y border-blue-900/30 w-full;
+    position: relative;
+    left: 0;
+    right: 0;
+  }
+}
