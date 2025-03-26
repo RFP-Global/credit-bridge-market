@@ -136,6 +136,17 @@ const Intelligence = () => {
     { month: 'Jun', retail: 18, tech: 25, construction: 20, healthcare: 22, manufacturing: 42 }
   ];
 
+  // New industry loan request data with 7 industries
+  const industryLoanRequestData = [
+    { name: 'Manufacturing', size: 350 },
+    { name: 'Construction', size: 300 },
+    { name: 'Technology', size: 280 },
+    { name: 'Retail', size: 220 },
+    { name: 'Healthcare', size: 180 },
+    { name: 'Financial Services', size: 150 },
+    { name: 'Hospitality', size: 120 }
+  ];
+
   // Mock data for business structure analytics
   const structureData = [
     { type: 'LLC', workingCapital: 60, expansion: 90, equipment: 30, rate: 7.5 },
@@ -227,6 +238,7 @@ const Intelligence = () => {
               industryDefaultRateData={industryDefaultRateData}
               industryTermsData={industryTermsData}
               industryPieData={industryPieData}
+              industryLoanRequestData={industryLoanRequestData}
               colors={CHART_COLORS}
             />
 

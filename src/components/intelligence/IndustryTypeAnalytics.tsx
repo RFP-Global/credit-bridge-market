@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { 
@@ -18,6 +17,7 @@ import {
 } from "recharts";
 import { TimeFilterRow } from "@/components/intelligence/TimeFilterRow";
 import { IntelligenceCard } from "@/components/intelligence/IntelligenceCard";
+import TreemapChart from "@/components/charts/TreemapChart";
 
 interface IndustryTypeAnalyticsProps {
   timeFilter: string;
@@ -26,6 +26,7 @@ interface IndustryTypeAnalyticsProps {
   industryDefaultRateData: any[];
   industryTermsData: any[];
   industryPieData: any[];
+  industryLoanRequestData: any[];
   colors: Record<string, string>;
 }
 
@@ -36,6 +37,7 @@ const IndustryTypeAnalytics = ({
   industryDefaultRateData,
   industryTermsData,
   industryPieData,
+  industryLoanRequestData,
   colors
 }: IndustryTypeAnalyticsProps) => {
   const [expanded, setExpanded] = useState(true);
@@ -89,27 +91,9 @@ const IndustryTypeAnalytics = ({
         <TimeFilterRow activeFilter={timeFilter} onFilterChange={onTimeFilterChange} />
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
-          <IntelligenceCard title="Loan Usage Trends by Industry" timeFilter={timeFilter}>
+          <IntelligenceCard title="Loan Request By Industry" timeFilter={timeFilter}>
             <ResponsiveContainer width="100%" height={220}>
-              <BarChart 
-                data={industryStackedData} 
-                layout="vertical" 
-                margin={{ top: 5, right: 20, left: 80, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-                <XAxis type="number" stroke="#888" />
-                <YAxis type="category" dataKey="name" stroke="#888" />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#111', border: '1px solid #333' }}
-                  itemStyle={{ color: '#fff' }}
-                  labelStyle={{ color: '#fff' }}
-                />
-                <Legend />
-                <Bar dataKey="workingCapital" name="Working Capital" stackId="a" fill={colors.workingCapital} />
-                <Bar dataKey="expansion" name="Expansion" stackId="a" fill={colors.expansion} />
-                <Bar dataKey="equipment" name="Equipment" stackId="a" fill={colors.equipment} />
-                <Bar dataKey="other" name="Other" stackId="a" fill={colors.other} />
-              </BarChart>
+              <TreemapChart data={industryLoanRequestData} />
             </ResponsiveContainer>
           </IntelligenceCard>
 
