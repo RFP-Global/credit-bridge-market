@@ -1,55 +1,9 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { 
-  ChartContainer, 
-  ChartTooltip, 
-  ChartTooltipContent 
-} from "@/components/ui/chart";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "@/components/ui/select";
-import { 
-  BarChart, 
-  LineChart, 
-  PieChart, 
-  Bar, 
-  Line, 
-  Pie, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend, 
-  Cell, 
-  ResponsiveContainer 
-} from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { 
-  ChevronDown, 
-  Download, 
-  Settings, 
-  Filter
-} from "lucide-react";
-import IntelligenceAnalyticsCard from "@/components/IntelligenceAnalyticsCard";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from "@/components/ui/table";
-import { 
-  ResizablePanelGroup, 
-  ResizablePanel, 
-  ResizableHandle 
-} from "@/components/ui/resizable";
+import { ChevronDown } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // Mock data for the charts
 const businessSizeData = [
@@ -667,11 +621,7 @@ const Intelligence = () => {
                   </CardHeader>
                   <CardContent className="p-3">
                     <div className="relative h-[350px] bg-black w-full flex items-center justify-center rounded border border-gray-800">
-                      <img 
-                        src="/lovable-uploads/4c06f33d-061e-4476-a8a9-c1da823dc62e.png" 
-                        alt="Geographic heat map" 
-                        className="max-w-full h-auto"
-                      />
+                      <p className="text-gray-500">Geographic Heat Map Visualization Coming Soon</p>
                     </div>
                   </CardContent>
                 </Card>
