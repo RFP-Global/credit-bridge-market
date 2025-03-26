@@ -1,3 +1,4 @@
+
 import { useMemo } from "react";
 import Navbar from "@/components/Navbar";
 import FullscreenButton from "@/components/FullscreenButton";
@@ -44,7 +45,7 @@ const Marketplace = () => {
   } = useMarketplace(financeProposals);
 
   return (
-    <div className="min-h-screen bg-black text-gray-200 relative">
+    <div className="min-h-screen bg-black text-gray-200 relative grid-bg">
       <Navbar />
       <FullscreenButton />
       
