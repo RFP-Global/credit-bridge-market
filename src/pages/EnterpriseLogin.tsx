@@ -1,8 +1,9 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Shield, Terminal, ArrowLeft, Lock } from "lucide-react";
+import { Radar, Signal, Terminal, ArrowLeft, Lock } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import { Label } from "@/components/ui/label";
@@ -54,7 +55,10 @@ const EnterpriseLogin = () => {
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/50 to-transparent"></div>
           
           <div className="flex items-center mb-6">
-            <Shield className="h-6 w-6 text-primary mr-3" />
+            <div className="relative mr-3">
+              <Radar className="h-6 w-6 text-primary" />
+              <Signal className="h-4 w-4 text-primary/70 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+            </div>
             <h1 className="text-xl font-mono tracking-tight text-foreground/90">Enterprise Account Access</h1>
           </div>
           
