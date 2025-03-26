@@ -34,6 +34,16 @@ const Marketplace = () => {
     setStatusFilter,
     industryFilter,
     setIndustryFilter,
+    interestRateTypeFilter,
+    setInterestRateTypeFilter,
+    lenderPreferencesFilter,
+    setLenderPreferencesFilter,
+    creditRatingFilter,
+    setCreditRatingFilter,
+    principalFilter,
+    setPrincipalFilter,
+    termFilter,
+    setTermFilter,
     sortField,
     sortDirection,
     currentPage,
@@ -74,6 +84,17 @@ const Marketplace = () => {
             setStatusFilter={setStatusFilter}
             industryFilter={industryFilter}
             setIndustryFilter={setIndustryFilter}
+            interestRateTypeFilter={interestRateTypeFilter}
+            setInterestRateTypeFilter={setInterestRateTypeFilter}
+            lenderPreferencesFilter={lenderPreferencesFilter}
+            setLenderPreferencesFilter={setLenderPreferencesFilter}
+            creditRatingFilter={creditRatingFilter}
+            setCreditRatingFilter={setCreditRatingFilter}
+            principalFilter={principalFilter}
+            setPrincipalFilter={setPrincipalFilter}
+            termFilter={termFilter}
+            setTermFilter={setTermFilter}
+            proposals={financeProposals}
             facilityTypes={facilityTypes}
             industries={industries}
             clearFilters={clearFilters}

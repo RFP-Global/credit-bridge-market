@@ -9,6 +9,11 @@ export const useMarketplace = (proposals: FinanceProposal[]) => {
   const [financingTypeFilter, setFinancingTypeFilter] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [industryFilter, setIndustryFilter] = useState<string>("");
+  const [interestRateTypeFilter, setInterestRateTypeFilter] = useState<string>("");
+  const [lenderPreferencesFilter, setLenderPreferencesFilter] = useState<string>("");
+  const [creditRatingFilter, setCreditRatingFilter] = useState<[number, number]>([0, 10]);
+  const [principalFilter, setPrincipalFilter] = useState<string>("");
+  const [termFilter, setTermFilter] = useState<string>("");
   const [sortField, setSortField] = useState<keyof FinanceProposal | "">("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,20 +34,46 @@ export const useMarketplace = (proposals: FinanceProposal[]) => {
     }
 
     // Apply dropdown filters
-    if (facilityTypeFilter && facilityTypeFilter !== "all-facility-types") {
+    if (facilityTypeFilter) {
       result = result.filter(proposal => proposal.facilityType === facilityTypeFilter);
     }
 
-    if (financingTypeFilter && financingTypeFilter !== "all-financing-types") {
+    if (financingTypeFilter) {
       result = result.filter(proposal => proposal.financingType === financingTypeFilter);
     }
 
-    if (statusFilter && statusFilter !== "all-statuses") {
+    if (statusFilter) {
       result = result.filter(proposal => proposal.status === statusFilter);
     }
 
-    if (industryFilter && industryFilter !== "all-industries") {
+    if (industryFilter) {
       result = result.filter(proposal => proposal.industry === industryFilter);
+    }
+
+    // Apply new column filters
+    if (interestRateTypeFilter) {
+      result = result.filter(proposal => proposal.interestRateType === interestRateTypeFilter);
+    }
+
+    if (lenderPreferencesFilter) {
+      result = result.filter(proposal => proposal.lenderPreferences === lenderPreferencesFilter);
+    }
+
+    if (principalFilter) {
+      result = result.filter(proposal => proposal.principal === principalFilter);
+    }
+
+    if (termFilter) {
+      result = result.filter(proposal => proposal.term === termFilter);
+    }
+
+    // Apply credit rating filter (range)
+    if (creditRatingFilter[0] > 0 || creditRatingFilter[1] < 10) {
+      result = result.filter(
+        proposal => 
+          proposal.creditRating >= creditRatingFilter[0] && 
+          proposal.creditRating <= creditRatingFilter[1]
+      );
     }
 
     // Apply sorting
@@ -71,7 +102,12 @@ export const useMarketplace = (proposals: FinanceProposal[]) => {
     facilityTypeFilter, 
     financingTypeFilter, 
     statusFilter, 
-    industryFilter, 
+    industryFilter,
+    interestRateTypeFilter,
+    lenderPreferencesFilter,
+    creditRatingFilter,
+    principalFilter,
+    termFilter,
     sortField, 
     sortDirection
   ]);
@@ -111,6 +147,11 @@ export const useMarketplace = (proposals: FinanceProposal[]) => {
     setFinancingTypeFilter("");
     setStatusFilter("");
     setIndustryFilter("");
+    setInterestRateTypeFilter("");
+    setLenderPreferencesFilter("");
+    setCreditRatingFilter([0, 10]);
+    setPrincipalFilter("");
+    setTermFilter("");
     setSortField("");
     setSortDirection("asc");
     setCurrentPage(1);
@@ -128,6 +169,16 @@ export const useMarketplace = (proposals: FinanceProposal[]) => {
     setStatusFilter,
     industryFilter,
     setIndustryFilter,
+    interestRateTypeFilter,
+    setInterestRateTypeFilter,
+    lenderPreferencesFilter,
+    setLenderPreferencesFilter,
+    creditRatingFilter,
+    setCreditRatingFilter,
+    principalFilter,
+    setPrincipalFilter,
+    termFilter,
+    setTermFilter,
     sortField,
     sortDirection,
     currentPage,
