@@ -32,8 +32,8 @@ const MarketplaceTable = ({
   return (
     <div className="border-none rounded-sm overflow-hidden mb-4 relative">
       <Table>
-        <TableHeader className="sticky top-0 z-20 bg-transparent">
-          <TableRow className="border-none hover:bg-transparent bg-transparent">
+        <TableHeader className="sticky top-0 z-20 bg-transparent/0">
+          <TableRow className="border-none hover:bg-transparent bg-transparent/0">
             <StaticTableHeader title="" />
             <SortableTableHeader 
               title="RFP CREDIT RATING" 
