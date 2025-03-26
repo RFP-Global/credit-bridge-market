@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { SendHorizontal, Mail, Phone, MapPin } from "lucide-react";
+import { SendHorizontal, Mail, Phone, MapPin, Terminal, Database } from "lucide-react";
 
 const ContactSection = () => {
   const { toast } = useToast();
@@ -51,10 +51,24 @@ const ContactSection = () => {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-b from-secondary to-white">
-      <div className="container mx-auto px-6">
+    <section className="py-20 relative grid-bg overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <div className="radar-pulse bg-blue-500/10"></div>
+        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "1s" }}></div>
+        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "2s" }}></div>
+      </div>
+      
+      <div className="scanline z-10"></div>
+      
+      <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12 stagger-animate">
+            <div className="inline-block mb-4">
+              <span className="rfp-badge">
+                <Terminal className="h-3 w-3 mr-2" />
+                Investment Access Portal
+              </span>
+            </div>
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
               Start Your Investment Journey
             </h2>
@@ -65,64 +79,69 @@ const ContactSection = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
             <div className="lg:col-span-2 space-y-8">
-              <div className="space-y-6">
-                <div className="flex items-start">
-                  <div className="mr-4 bg-primary/10 p-3 rounded-full">
-                    <Mail className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium mb-1">Email Us</h3>
-                    <p className="text-muted-foreground">
-                      Our team is here to help
-                    </p>
-                    <a 
-                      href="mailto:info@creditbridge.com" 
-                      className="text-primary hover:text-primary/80 font-medium transition-colors mt-1 block"
-                    >
-                      info@creditbridge.com
-                    </a>
-                  </div>
+              <div className="terminal-card overflow-hidden border-blue-900/50 bg-black/70">
+                <div className="terminal-header">
+                  <div className="terminal-dot bg-red-500"></div>
+                  <div className="terminal-dot bg-yellow-500"></div>
+                  <div className="terminal-dot bg-green-500"></div>
+                  <div className="flex-1 text-center text-xs text-muted-foreground font-mono">RFP CONTACT // SECURE CHANNEL</div>
                 </div>
-
-                <div className="flex items-start">
-                  <div className="mr-4 bg-primary/10 p-3 rounded-full">
-                    <Phone className="h-6 w-6 text-primary" />
+                <div className="terminal-content">
+                  <div className="mb-4 font-mono text-primary text-sm">
+                    <span className="text-muted-foreground">&gt;</span> Initializing contact portal...
                   </div>
-                  <div>
-                    <h3 className="text-lg font-medium mb-1">Call Us</h3>
-                    <p className="text-muted-foreground">
-                      Mon-Fri from 9am to 5pm
+                  
+                  <div className="text-xs font-mono text-muted-foreground mb-2">SUPPORT CHANNELS</div>
+                  
+                  <div className="data-grid mb-4">
+                    <div className="data-grid-item">
+                      <span className="data-label">EMAIL</span>
+                      <span className="data-value flex items-center">
+                        <Mail className="h-3 w-3 mr-1 text-primary" />
+                        info@creditbridge.com
+                      </span>
+                    </div>
+                    <div className="data-grid-item">
+                      <span className="data-label">PHONE</span>
+                      <span className="data-value flex items-center">
+                        <Phone className="h-3 w-3 mr-1 text-primary" />
+                        +1 (800) 555-1234
+                      </span>
+                    </div>
+                    <div className="data-grid-item">
+                      <span className="data-label">LOCATION</span>
+                      <span className="data-value flex items-center">
+                        <MapPin className="h-3 w-3 mr-1 text-primary" />
+                        New York, NY
+                      </span>
+                    </div>
+                    <div className="data-grid-item">
+                      <span className="data-label">BUSINESS HOURS</span>
+                      <span className="data-value flex items-center">
+                        <Database className="h-3 w-3 mr-1 text-primary" />
+                        Mon-Fri, 9am-5pm
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="text-xs font-mono border border-blue-900/50 bg-blue-900/5 p-3 relative">
+                    <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-background/50"></div>
+                    <p>
+                      Our team of financial experts is ready to assist with your investment questions. Please use the secure form to submit your inquiry...
+                      <span className="text-primary blink">_</span>
                     </p>
-                    <a 
-                      href="tel:+18005551234" 
-                      className="text-primary hover:text-primary/80 font-medium transition-colors mt-1 block"
-                    >
-                      +1 (800) 555-1234
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start">
-                  <div className="mr-4 bg-primary/10 p-3 rounded-full">
-                    <MapPin className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium mb-1">Visit Us</h3>
-                    <p className="text-muted-foreground">
-                      Our headquarters location
-                    </p>
-                    <address className="not-italic text-primary/80 mt-1">
-                      100 Financial Street<br />
-                      New York, NY 10001
-                    </address>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="lg:col-span-3 glass-card rounded-2xl overflow-hidden">
+            <div className="lg:col-span-3 glass-card rounded-none border border-primary/20 bg-background/50 backdrop-blur-sm">
               <div className="p-8">
-                <h3 className="text-2xl font-semibold mb-6">Send us a message</h3>
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/50 to-transparent"></div>
+                <h3 className="text-2xl font-semibold mb-6 flex items-center">
+                  <Terminal className="h-5 w-5 mr-2 text-primary" />
+                  Send us a message
+                </h3>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
@@ -134,7 +153,7 @@ const ContactSection = () => {
                         value={formData.name}
                         onChange={handleChange}
                         required
-                        className="rounded-lg"
+                        className="rounded-none border-primary/30"
                       />
                     </div>
                     <div className="space-y-2">
@@ -147,7 +166,7 @@ const ContactSection = () => {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="rounded-lg"
+                        className="rounded-none border-primary/30"
                       />
                     </div>
                   </div>
@@ -160,7 +179,7 @@ const ContactSection = () => {
                       placeholder="Your phone number (optional)"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="rounded-lg"
+                      className="rounded-none border-primary/30"
                     />
                   </div>
                   
@@ -174,14 +193,14 @@ const ContactSection = () => {
                       value={formData.message}
                       onChange={handleChange}
                       required
-                      className="rounded-lg"
+                      className="rounded-none border-primary/30"
                     />
                   </div>
                   
                   <Button 
                     type="submit"
                     disabled={loading}
-                    className="w-full rounded-lg"
+                    className="w-full rounded-none font-mono"
                   >
                     {loading ? "Sending..." : "Send Message"}
                     <SendHorizontal className="ml-2 h-5 w-5" />
