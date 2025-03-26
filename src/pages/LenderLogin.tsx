@@ -1,9 +1,8 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Radio, ArrowLeft, Building, Lock } from "lucide-react";
+import { Radio, ArrowLeft, Lock } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import { Label } from "@/components/ui/label";
@@ -108,16 +107,6 @@ const LenderLogin = () => {
               )}
             </Button>
           </form>
-          
-          <div className="flex justify-between items-center pt-6 mt-6 border-t border-primary/10 text-xs text-muted-foreground">
-            <span className="flex items-center">
-              <Building className="h-3 w-3 mr-1 text-primary" />
-              Lender Portal
-            </span>
-            <Link to="/" className="hover:text-primary transition-colors">
-              Request Access
-            </Link>
-          </div>
         </div>
       </div>
     </div>
