@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import {
   Table,
@@ -33,19 +34,25 @@ const MarketplaceTable = ({
       {/* Separate fixed header */}
       <div className="sticky top-0 z-20 bg-black/90 border-b border-gray-700/30 mb-1">
         <div className="flex w-full">
-          <div className="font-mono text-xs text-center text-cyan-400 flex-1 px-4 py-3">CREDIT RATING</div>
-          <div className="font-medium text-center text-cyan-400 flex-1 px-4 py-3">PROJECT NAME</div>
-          <div className="text-center text-cyan-400 flex-1 px-4 py-3">FACILITY TYPE</div>
-          <div className="text-center text-cyan-400 flex-1 px-4 py-3">FINANCING TYPE</div>
-          <div className="text-center text-cyan-400 flex-1 px-4 py-3">TARGET PRINCIPAL</div>
-          <div className="text-center text-cyan-400 flex-1 px-4 py-3">INTEREST RATE TYPE</div>
-          <div className="text-center text-cyan-400 flex-1 px-4 py-3">TARGET INTEREST RATE</div>
-          <div className="text-center text-cyan-400 flex-1 px-4 py-3">TARGET TERM</div>
-          <div className="text-center text-cyan-400 flex-1 px-4 py-3">STATUS</div>
-          <div className="text-center text-cyan-400 flex-1 px-4 py-3">BID DEADLINE</div>
-          <div className="text-center text-cyan-400 flex-1 px-4 py-3">LENDER PREFERENCES</div>
-          <div className="text-center text-cyan-400 flex-1 px-4 py-3">INDUSTRY</div>
-          <div className="text-center text-cyan-400 flex-1 px-4 py-3">BID VOLUME</div>
+          {[
+            "CREDIT RATING",
+            "PROJECT NAME",
+            "FACILITY TYPE", 
+            "FINANCING TYPE", 
+            "TARGET PRINCIPAL", 
+            "INTEREST RATE TYPE", 
+            "TARGET INTEREST RATE", 
+            "TARGET TERM", 
+            "STATUS", 
+            "BID DEADLINE", 
+            "LENDER PREFERENCES", 
+            "INDUSTRY", 
+            "BID VOLUME"
+          ].map((header) => (
+            <div key={header} className="flex-1 text-center text-xs font-medium text-cyan-400 px-4 py-3">
+              {header}
+            </div>
+          ))}
         </div>
       </div>
 
