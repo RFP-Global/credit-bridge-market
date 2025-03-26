@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +11,7 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import { Eye, Filter } from "lucide-react";
+import { Eye, Filter, Check, X } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -26,6 +27,12 @@ import {
   PaginationPrevious,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { toast } from "sonner";
 
 const marketplaceData = [
   {
@@ -105,8 +112,115 @@ const marketplaceData = [
   }
 ];
 
+const facilityTypes = ["Term Loan", "364-Day Revolver", "Asset-Based Loan", "SBA Loan", "Equipment Financing"];
+const rateTypes = ["Fixed", "Floating"];
+const financingTypes = ["New Financing", "Refinancing"];
+const industries = ["Construction", "Real Estate", "Healthcare", "Manufacturing"];
+const statuses = ["OPEN", "COMPLETED", "EXPIRED"];
+
 const Marketplace = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filteredData, setFilteredData] = useState(marketplaceData);
+  const [filters, setFilters] = useState({
+    facilityType: [],
+    financing: [],
+    rateType: [],
+    industry: [],
+    status: []
+  });
+  
+  // Apply filters and search to the data
+  useEffect(() => {
+    let result = [...marketplaceData];
+    
+    // Apply search
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(item => 
+        item.projectName.toLowerCase().includes(query) ||
+        item.facilityType.toLowerCase().includes(query) ||
+        item.principal.toLowerCase().includes(query) ||
+        item.industry.toLowerCase().includes(query) ||
+        item.lender.toLowerCase().includes(query)
+      );
+    }
+    
+    // Apply filters
+    if (filters.facilityType.length > 0) {
+      result = result.filter(item => filters.facilityType.includes(item.facilityType));
+    }
+    
+    if (filters.financing.length > 0) {
+      result = result.filter(item => filters.financing.includes(item.financing));
+    }
+    
+    if (filters.rateType.length > 0) {
+      result = result.filter(item => filters.rateType.includes(item.rateType));
+    }
+    
+    if (filters.industry.length > 0) {
+      result = result.filter(item => filters.industry.includes(item.industry));
+    }
+    
+    if (filters.status.length > 0) {
+      result = result.filter(item => filters.status.includes(item.status));
+    }
+    
+    setFilteredData(result);
+    setCurrentPage(1); // Reset to first page when filters change
+  }, [searchQuery, filters]);
+
+  // Handle filter changes
+  const toggleFilter = (category, value) => {
+    setFilters(prev => {
+      const updatedCategory = [...prev[category]];
+      
+      if (updatedCategory.includes(value)) {
+        // Remove the value
+        const index = updatedCategory.indexOf(value);
+        updatedCategory.splice(index, 1);
+      } else {
+        // Add the value
+        updatedCategory.push(value);
+      }
+      
+      return {
+        ...prev,
+        [category]: updatedCategory
+      };
+    });
+  };
+
+  // Clear all filters
+  const clearFilters = () => {
+    setFilters({
+      facilityType: [],
+      financing: [],
+      rateType: [],
+      industry: [],
+      status: []
+    });
+    setSearchQuery("");
+    toast.success("All filters have been cleared.");
+  };
+
+  // Handle pagination
+  const itemsPerPage = 5;
+  const pageCount = Math.ceil(filteredData.length / itemsPerPage);
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  // Handle view project
+  const handleViewProject = (projectId) => {
+    toast.info(`Viewing details for project ${projectId}`);
+  };
   
   return (
     <div className="min-h-screen bg-background">
@@ -123,7 +237,7 @@ const Marketplace = () => {
                 Browse and engage with active loan requests from businesses seeking financing
               </p>
             </div>
-            <Button variant="default" className="font-mono text-xs">
+            <Button variant="default" className="font-mono text-xs" onClick={() => toast.info("New proposal functionality coming soon")}>
               New Proposal
             </Button>
           </div>
@@ -143,18 +257,195 @@ const Marketplace = () => {
                 </svg>
               </div>
             </div>
-            <Button variant="outline" className="gap-2 font-mono text-xs border-primary/30">
-              <Filter className="h-4 w-4" />
-              Loan Request Type
-            </Button>
-            <Button variant="outline" className="gap-2 font-mono text-xs border-primary/30">
-              <Filter className="h-4 w-4" />
-              Target Terms
-            </Button>
-            <Button variant="outline" className="gap-2 font-mono text-xs border-primary/30">
-              <Filter className="h-4 w-4" />
-              Deal Activity Metrics
-            </Button>
+            
+            {/* Facility Type Filter */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="gap-2 font-mono text-xs border-primary/30">
+                  <Filter className="h-4 w-4" />
+                  Loan Request Type
+                  {filters.facilityType.length > 0 && (
+                    <span className="ml-1 rounded-full bg-primary w-5 h-5 flex items-center justify-center text-[10px] text-primary-foreground">
+                      {filters.facilityType.length}
+                    </span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[200px] p-2 rounded-md border border-primary/30 bg-background">
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <p className="text-xs font-mono font-semibold">FACILITY TYPE</p>
+                    {filters.facilityType.length > 0 && (
+                      <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => setFilters(prev => ({...prev, facilityType: []}))}>
+                        Clear
+                      </Button>
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    {facilityTypes.map(type => (
+                      <div 
+                        key={type}
+                        className="flex items-center justify-between p-2 text-xs rounded-sm cursor-pointer hover:bg-primary/5"
+                        onClick={() => toggleFilter('facilityType', type)}
+                      >
+                        <span>{type}</span>
+                        {filters.facilityType.includes(type) ? (
+                          <Check className="h-4 w-4 text-primary" />
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+            
+            {/* Target Terms Filter */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="gap-2 font-mono text-xs border-primary/30">
+                  <Filter className="h-4 w-4" />
+                  Target Terms
+                  {(filters.financing.length > 0 || filters.rateType.length > 0) && (
+                    <span className="ml-1 rounded-full bg-primary w-5 h-5 flex items-center justify-center text-[10px] text-primary-foreground">
+                      {filters.financing.length + filters.rateType.length}
+                    </span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[200px] p-2 rounded-md border border-primary/30 bg-background">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <p className="text-xs font-mono font-semibold">FINANCING</p>
+                      {filters.financing.length > 0 && (
+                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => setFilters(prev => ({...prev, financing: []}))}>
+                          Clear
+                        </Button>
+                      )}
+                    </div>
+                    <div className="space-y-1">
+                      {financingTypes.map(type => (
+                        <div 
+                          key={type}
+                          className="flex items-center justify-between p-2 text-xs rounded-sm cursor-pointer hover:bg-primary/5"
+                          onClick={() => toggleFilter('financing', type)}
+                        >
+                          <span>{type}</span>
+                          {filters.financing.includes(type) ? (
+                            <Check className="h-4 w-4 text-primary" />
+                          ) : null}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <p className="text-xs font-mono font-semibold">RATE TYPE</p>
+                      {filters.rateType.length > 0 && (
+                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => setFilters(prev => ({...prev, rateType: []}))}>
+                          Clear
+                        </Button>
+                      )}
+                    </div>
+                    <div className="space-y-1">
+                      {rateTypes.map(type => (
+                        <div 
+                          key={type}
+                          className="flex items-center justify-between p-2 text-xs rounded-sm cursor-pointer hover:bg-primary/5"
+                          onClick={() => toggleFilter('rateType', type)}
+                        >
+                          <span>{type}</span>
+                          {filters.rateType.includes(type) ? (
+                            <Check className="h-4 w-4 text-primary" />
+                          ) : null}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+            
+            {/* Deal Activity Filter */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="gap-2 font-mono text-xs border-primary/30">
+                  <Filter className="h-4 w-4" />
+                  Deal Activity Metrics
+                  {(filters.industry.length > 0 || filters.status.length > 0) && (
+                    <span className="ml-1 rounded-full bg-primary w-5 h-5 flex items-center justify-center text-[10px] text-primary-foreground">
+                      {filters.industry.length + filters.status.length}
+                    </span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[200px] p-2 rounded-md border border-primary/30 bg-background">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <p className="text-xs font-mono font-semibold">INDUSTRY</p>
+                      {filters.industry.length > 0 && (
+                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => setFilters(prev => ({...prev, industry: []}))}>
+                          Clear
+                        </Button>
+                      )}
+                    </div>
+                    <div className="space-y-1">
+                      {industries.map(type => (
+                        <div 
+                          key={type}
+                          className="flex items-center justify-between p-2 text-xs rounded-sm cursor-pointer hover:bg-primary/5"
+                          onClick={() => toggleFilter('industry', type)}
+                        >
+                          <span>{type}</span>
+                          {filters.industry.includes(type) ? (
+                            <Check className="h-4 w-4 text-primary" />
+                          ) : null}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <p className="text-xs font-mono font-semibold">STATUS</p>
+                      {filters.status.length > 0 && (
+                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => setFilters(prev => ({...prev, status: []}))}>
+                          Clear
+                        </Button>
+                      )}
+                    </div>
+                    <div className="space-y-1">
+                      {statuses.map(type => (
+                        <div 
+                          key={type}
+                          className="flex items-center justify-between p-2 text-xs rounded-sm cursor-pointer hover:bg-primary/5"
+                          onClick={() => toggleFilter('status', type)}
+                        >
+                          <span>{type}</span>
+                          {filters.status.includes(type) ? (
+                            <Check className="h-4 w-4 text-primary" />
+                          ) : null}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+            
+            {(Object.values(filters).some(array => array.length > 0) || searchQuery) && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="gap-1 text-xs text-destructive hover:text-destructive hover:bg-destructive/10"
+                onClick={clearFilters}
+              >
+                <X className="h-3 w-3" />
+                Clear All
+              </Button>
+            )}
           </div>
 
           <Card className="terminal-card border border-primary/30">
@@ -198,90 +489,134 @@ const Marketplace = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {marketplaceData.map((item) => (
-                      <TableRow 
-                        key={item.id}
-                        className="hover:bg-primary/5 border-primary/20"
-                      >
-                        <TableCell className="py-3">
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <Eye className="h-4 w-4 text-primary/80" />
-                          </Button>
-                        </TableCell>
-                        <TableCell className="font-mono py-3">
-                          <div className="flex items-center justify-center">
-                            <div className="h-7 w-7 rounded-full bg-secondary flex items-center justify-center text-primary text-xs">
-                              {item.id}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="font-mono text-foreground py-3">{item.projectName}</TableCell>
-                        <TableCell className="font-mono text-foreground py-3">{item.facilityType}</TableCell>
-                        <TableCell className="font-mono text-foreground py-3">{item.financing}</TableCell>
-                        <TableCell className="font-mono text-foreground py-3">{item.principal}</TableCell>
-                        <TableCell className="font-mono text-foreground py-3">{item.rateType}</TableCell>
-                        <TableCell className="font-mono text-foreground py-3">{item.targetRate}</TableCell>
-                        <TableCell className="font-mono text-foreground py-3">{item.term}</TableCell>
-                        <TableCell className="py-3">
-                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-mono
-                            ${item.status === 'OPEN' ? 'bg-emerald-400/10 text-emerald-400' :
-                              item.status === 'COMPLETED' ? 'bg-blue-400/10 text-blue-400' :
-                              'bg-gray-400/10 text-gray-400'}`}>
-                            {item.status}
-                          </span>
-                        </TableCell>
-                        <TableCell className="font-mono text-foreground py-3">{item.deadline}</TableCell>
-                        <TableCell className="font-mono text-foreground py-3">{item.lender}</TableCell>
-                        <TableCell className="font-mono text-foreground py-3">{item.industry}</TableCell>
-                        <TableCell className="py-3">
-                          <div className="w-24 bg-muted rounded-full h-2">
-                            <div 
-                              className="bg-primary h-full rounded-full" 
-                              style={{ width: `${item.bidVolume}%` }}
-                            />
-                          </div>
+                    {paginatedData.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={14} className="text-center py-8 text-muted-foreground">
+                          No results found. Try adjusting your search or filters.
                         </TableCell>
                       </TableRow>
-                    ))}
+                    ) : (
+                      paginatedData.map((item) => (
+                        <TableRow 
+                          key={item.id}
+                          className="hover:bg-primary/5 border-primary/20"
+                        >
+                          <TableCell className="py-3">
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-8 w-8"
+                              onClick={() => handleViewProject(item.id)}
+                            >
+                              <Eye className="h-4 w-4 text-primary/80" />
+                            </Button>
+                          </TableCell>
+                          <TableCell className="font-mono py-3">
+                            <div className="flex items-center justify-center">
+                              <div className="h-7 w-7 rounded-full bg-secondary flex items-center justify-center text-primary text-xs">
+                                {item.id}
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="font-mono text-foreground py-3">{item.projectName}</TableCell>
+                          <TableCell className="font-mono text-foreground py-3">{item.facilityType}</TableCell>
+                          <TableCell className="font-mono text-foreground py-3">{item.financing}</TableCell>
+                          <TableCell className="font-mono text-foreground py-3">{item.principal}</TableCell>
+                          <TableCell className="font-mono text-foreground py-3">{item.rateType}</TableCell>
+                          <TableCell className="font-mono text-foreground py-3">{item.targetRate}</TableCell>
+                          <TableCell className="font-mono text-foreground py-3">{item.term}</TableCell>
+                          <TableCell className="py-3">
+                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-mono
+                              ${item.status === 'OPEN' ? 'bg-emerald-400/10 text-emerald-400' :
+                                item.status === 'COMPLETED' ? 'bg-blue-400/10 text-blue-400' :
+                                'bg-gray-400/10 text-gray-400'}`}>
+                              {item.status}
+                            </span>
+                          </TableCell>
+                          <TableCell className="font-mono text-foreground py-3">{item.deadline}</TableCell>
+                          <TableCell className="font-mono text-foreground py-3">{item.lender}</TableCell>
+                          <TableCell className="font-mono text-foreground py-3">{item.industry}</TableCell>
+                          <TableCell className="py-3">
+                            <div className="w-24 bg-muted rounded-full h-2">
+                              <div 
+                                className="bg-primary h-full rounded-full" 
+                                style={{ width: `${item.bidVolume}%` }}
+                              />
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
                   </TableBody>
                 </Table>
               </div>
             </CardContent>
           </Card>
 
-          <div className="flex justify-center mt-6">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious href="#" />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#" isActive>1</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">2</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">3</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">4</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">5</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">10</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext href="#" />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
+          {pageCount > 1 && (
+            <div className="flex justify-center mt-6">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                      className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+                  
+                  {Array.from({ length: Math.min(5, pageCount) }).map((_, i) => {
+                    // Show first page, last page, and pages around current page
+                    let pageNum;
+                    if (pageCount <= 5) {
+                      pageNum = i + 1;
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1;
+                    } else if (currentPage >= pageCount - 2) {
+                      pageNum = pageCount - 4 + i;
+                    } else {
+                      pageNum = currentPage - 2 + i;
+                    }
+                    
+                    return (
+                      <PaginationItem key={i}>
+                        <PaginationLink 
+                          onClick={() => handlePageChange(pageNum)}
+                          isActive={currentPage === pageNum}
+                          className="cursor-pointer"
+                        >
+                          {pageNum}
+                        </PaginationLink>
+                      </PaginationItem>
+                    );
+                  })}
+                  
+                  {pageCount > 5 && currentPage < pageCount - 2 && (
+                    <PaginationItem>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  )}
+                  
+                  {pageCount > 5 && currentPage < pageCount - 1 && (
+                    <PaginationItem>
+                      <PaginationLink 
+                        onClick={() => handlePageChange(pageCount)}
+                        className="cursor-pointer"
+                      >
+                        {pageCount}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )}
+                  
+                  <PaginationItem>
+                    <PaginationNext 
+                      onClick={() => handlePageChange(Math.min(pageCount, currentPage + 1))}
+                      className={currentPage === pageCount ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          )}
         </div>
       </main>
     </div>
