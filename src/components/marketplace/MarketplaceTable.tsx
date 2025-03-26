@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import {
   Table,
@@ -30,7 +29,7 @@ const MarketplaceTable = ({
   };
 
   return (
-    <div className="mb-4 relative">
+    <div className="mb-4 relative font-typewriter">
       {/* Separate fixed header */}
       <div className="sticky top-0 z-20 bg-black/90 border-b border-gray-700/30 mb-1">
         <div className="flex w-full">

@@ -46,7 +46,7 @@ const Marketplace = () => {
   } = useMarketplace(financeProposals);
 
   return (
-    <div className="min-h-screen bg-black/90 text-gray-200 relative grid-bg">
+    <div className="min-h-screen bg-black/90 text-gray-200 relative grid-bg font-typewriter">
       <Navbar />
       <FullscreenButton />
       
