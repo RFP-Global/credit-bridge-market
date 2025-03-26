@@ -7,7 +7,7 @@ interface StaticTableHeaderProps {
 
 const StaticTableHeader = ({ title }: StaticTableHeaderProps) => {
   return (
-    <TableHead className="text-center text-xs font-medium text-cyan-400 bg-black sticky top-0 z-10">
+    <TableHead className="text-center text-xs font-medium text-cyan-400 bg-transparent sticky top-0 z-10">
       {title}
     </TableHead>
   );
