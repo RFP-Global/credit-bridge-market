@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Building, Users, Calendar, DollarSign, Percent, BarChart4, TrendingUp, FileText, BadgeInfo, BarChart, PieChart, Scale, Briefcase, Calculator, HelpCircle } from "lucide-react";
@@ -16,7 +15,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { TimeSeriesLineChart, IndustryBarChart } from "@/components/charts";
 import { timeSeriesData, timeSeriesLines, industryBarData } from "@/data/chartMockData";
 
-// Add types for financial data that will be displayed on this page
 interface FinancialRatios {
   debtServiceCoverageRatio: number;
   currentRatio: number;
@@ -72,13 +70,10 @@ const ProposalDetails = () => {
 
   useEffect(() => {
     if (id) {
-      // Find the proposal in our data
       const foundProposal = financeProposals.find(p => p.id === id);
       if (foundProposal) {
         setProposal(foundProposal);
         
-        // In a real application, these would be fetched from an API
-        // For this demo, we'll generate some realistic sample data
         setFinancialRatios({
           debtServiceCoverageRatio: 1.35,
           currentRatio: 1.8,
@@ -112,7 +107,7 @@ const ProposalDetails = () => {
         });
         
         setCreditHistory({
-          creditScore: foundProposal.creditRating * 100, // Scale from 0-10 to 0-1000
+          creditScore: foundProposal.creditRating * 100,
           paymentHistory: 98,
           delinquencies: 0,
           bankruptcies: 0,
@@ -162,7 +157,6 @@ const ProposalDetails = () => {
       <Navbar />
       
       <div className="container mx-auto px-4 py-6 pt-24">
-        {/* Back button and header */}
         <div className="mb-6">
           <Button variant="outline" size="sm" asChild className="mb-4">
             <Link to="/marketplace" className="flex items-center">
@@ -223,7 +217,6 @@ const ProposalDetails = () => {
           </div>
         </div>
         
-        {/* Main content */}
         <Tabs defaultValue="overview" className="w-full">
           <TabsList className="grid grid-cols-4 mb-6">
             <TabsTrigger value="overview" className="font-mono text-xs">OVERVIEW</TabsTrigger>
@@ -319,7 +312,8 @@ const ProposalDetails = () => {
                       <p className="text-xs text-gray-400 mb-1">DEBT SERVICE COVERAGE</p>
                       <div className="flex items-center">
                         <span className="font-semibold mr-2">{financialRatios.debtServiceCoverageRatio.toFixed(2)}x</span>
-                        <CustomBadge variant={financialRatios.debtServiceCoverageRatio > 1.25 ? "success" : "destructive"} className="text-xs">
+                        <CustomBadge variant={financialRatios.debtServiceCoverageRatio > 1.25 ? "success" : "destructive"} 
+                          className="text-xs">
                           {financialRatios.debtServiceCoverageRatio > 1.25 ? "STRONG" : "WEAK"}
                         </CustomBadge>
                       </div>
@@ -814,7 +808,7 @@ const ProposalDetails = () => {
               className="w-full font-mono text-sm"
             >
               <Briefcase className="mr-2 h-4 w-4" />
-              SUBMIT PROPOSAL
+              SUBMIT BID
             </Button>
           </TabsContent>
         </Tabs>
