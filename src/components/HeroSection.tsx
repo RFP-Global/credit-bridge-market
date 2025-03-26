@@ -53,8 +53,8 @@ const HeroSection = () => {
       
       <div className="scanline z-10"></div>
       
-      <div className="absolute top-0 left-0 w-full z-20">
-        <div className="market-ticker animate-data-stream">
+      <div className="container mx-auto px-6 py-16 z-10">
+        <div className="market-ticker animate-data-stream mb-6">
           <div className="data-row whitespace-nowrap flex-shrink-0" style={{ animationDelay: "0s" }}>
             {Array.from({ length: 2 }).map((_, i) => (
               <div key={i} className="flex animate-data-stream">
@@ -68,10 +68,8 @@ const HeroSection = () => {
             ))}
           </div>
         </div>
-      </div>
-      
-      <div className="container mx-auto px-6 py-16 z-10 relative">
-        <div className="section-animate flex flex-col md:flex-row items-center justify-between gap-10">
+        
+        <div ref={sectionRef} className="section-animate flex flex-col md:flex-row items-center justify-between gap-10">
           <div className="w-full md:w-1/2 lg:w-5/12 space-y-8 stagger-animate">
             <div className="inline-block">
               <span className="rfp-badge">
