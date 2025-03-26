@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Menu, X, Shield, Terminal, Power } from 'lucide-react';
@@ -40,9 +39,6 @@ const Navbar = () => {
           </div>
 
           <nav className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
-              ASSETS
-            </Link>
             <Link to="/marketplace" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
               MARKETPLACE
             </Link>
@@ -71,7 +67,6 @@ const Navbar = () => {
             </Button>
           </div>
 
-          {/* Mobile menu ACCESS button */}
           <div className="md:hidden">
             <button 
               onClick={toggleMobileMenu}
@@ -84,7 +79,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
       <div className={`md:hidden transition-all duration-300 ease-in-out ${
         mobileMenuOpen 
           ? 'max-h-screen opacity-100 visible bg-background/95 backdrop-blur-lg border-b border-primary/20' 
@@ -92,13 +86,6 @@ const Navbar = () => {
       }`}>
         <div className="container mx-auto px-6 py-4 space-y-6">
           <nav className="flex flex-col space-y-4">
-            <Link 
-              to="/" 
-              className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              ASSETS
-            </Link>
             <Link 
               to="/marketplace" 
               className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
