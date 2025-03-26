@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Menu, X, Shield, Terminal, Power } from 'lucide-react';
+import { Menu, X, Terminal, Power, Radar, Signal } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
@@ -33,7 +34,10 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Link to="/" className="text-xl font-bold tracking-tighter flex items-center">
-              <Shield className="h-5 w-5 mr-2 text-primary" />
+              <div className="relative mr-2">
+                <Radar className="h-6 w-6 text-primary" />
+                <Signal className="h-4 w-4 text-primary/70 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+              </div>
               <span className="font-mono">RFP GLOBAL</span>
             </Link>
           </div>

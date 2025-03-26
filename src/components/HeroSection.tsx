@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ChevronDown, Terminal, Shield, Database, FileText, BarChart3, Search, Radio } from "lucide-react";
+import { ArrowRight, ChevronDown, Terminal, Database, FileText, BarChart3, Search, Radio, Radar, Signal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import FullscreenButton from "./FullscreenButton";
@@ -74,7 +74,7 @@ const HeroSection = () => {
           <div className="w-full md:w-1/2 lg:w-5/12 space-y-8 stagger-animate">
             <div className="inline-block">
               <span className="rfp-badge">
-                <Terminal className="h-3 w-3 mr-2" />
+                <Radar className="h-3 w-3 mr-2" />
                 RFP Global Access
               </span>
             </div>
@@ -97,7 +97,7 @@ const HeroSection = () => {
                 asChild
               >
                 <Link to="/enterprise-login" className="flex items-center">
-                  <Shield className="mr-2 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-opacity" />
+                  <Radar className="mr-2 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-opacity" />
                   Enterprise Portal
                   <div className="ml-3 h-4 w-px bg-primary/30 group-hover:bg-primary/50 transition-colors"></div>
                   <Radio className="ml-3 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-opacity" />
@@ -114,7 +114,7 @@ const HeroSection = () => {
                   <Radio className="mr-2 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-opacity" />
                   Lender Portal
                   <div className="ml-3 h-4 w-px bg-primary/30 group-hover:bg-primary/50 transition-colors"></div>
-                  <Shield className="ml-3 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-opacity" />
+                  <Radar className="ml-3 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-opacity" />
                 </Link>
               </Button>
             </div>
@@ -150,7 +150,7 @@ const HeroSection = () => {
                   <div className="data-grid-item">
                     <span className="data-label">FUNDING CATEGORY</span>
                     <span className="data-value flex items-center">
-                      <Shield className="h-3 w-3 mr-1 text-primary" />
+                      <Radar className="h-3 w-3 mr-1 text-primary" />
                       Growth Capital
                     </span>
                   </div>
