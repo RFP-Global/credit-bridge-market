@@ -12,7 +12,7 @@ export const useMarketplace = (proposals: FinanceProposal[]) => {
   const [sortField, setSortField] = useState<keyof FinanceProposal | "">("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [currentPage, setCurrentPage] = useState(1);
-  const [columnFilters, setColumnFilters] = useState<Record<string, string>>({});
+  const [columnFilters, setColumnFilters] = useState<Record<string, string[]>>({});
   const itemsPerPage = 10; // Increased from 5 to 10 for better pagination with 50+ items
 
   // Filter and sort the proposals
@@ -46,14 +46,12 @@ export const useMarketplace = (proposals: FinanceProposal[]) => {
       result = result.filter(proposal => proposal.industry === industryFilter);
     }
 
-    // Apply column-specific filters
-    Object.entries(columnFilters).forEach(([column, value]) => {
-      if (value) {
-        const filterValue = value.toLowerCase();
+    // Apply column-specific filters - modified to support multiple values
+    Object.entries(columnFilters).forEach(([column, values]) => {
+      if (values.length > 0) {
         result = result.filter(proposal => {
-          const propValue = proposal[column as keyof FinanceProposal];
-          return propValue !== undefined && 
-                 String(propValue).toLowerCase().includes(filterValue);
+          const propValue = String(proposal[column as keyof FinanceProposal]);
+          return values.includes(propValue);
         });
       }
     });
