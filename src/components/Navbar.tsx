@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Menu, X, Terminal, Radar, Signal, Home } from 'lucide-react';
+import { Menu, X, Terminal, Radar, Signal } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { 
   DropdownMenu, 
@@ -70,7 +70,6 @@ const Navbar = () => {
               <DropdownMenuContent align="end" className="bg-background/95 backdrop-blur-md border border-primary/20 rounded-none w-48">
                 <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
                   <Link to="/">
-                    <Home className="h-4 w-4 mr-2" />
                     HOME PAGE
                   </Link>
                 </DropdownMenuItem>
