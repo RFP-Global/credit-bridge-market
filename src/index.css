@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Special+Elite&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -78,7 +78,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-mono;
+    @apply bg-background text-foreground font-sans;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
   }
 }
@@ -156,16 +156,25 @@
 
 /* Custom Styles */
 body {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Roboto', sans-serif;
+  letter-spacing: -0.01em;
+  line-height: 1.6;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Inter', sans-serif;
   letter-spacing: -0.025em;
+  font-weight: 500;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .font-typewriter {
-  font-family: 'Special Elite', cursive;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.05em;
 }
 
 button, a {
@@ -271,4 +280,3 @@ button, a {
     opacity: 0;
   }
 }
-
