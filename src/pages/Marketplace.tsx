@@ -8,6 +8,7 @@ import MarketplaceTable from "@/components/marketplace/MarketplaceTable";
 import MarketplacePagination from "@/components/marketplace/MarketplacePagination";
 import { useMarketplace } from "@/hooks/useMarketplace";
 import { financeProposals } from "@/data/marketplaceProposals";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Marketplace = () => {
   // Extract unique values for filters
@@ -48,7 +49,7 @@ const Marketplace = () => {
       <Navbar />
       <FullscreenButton />
       
-      <div className="container mx-auto px-4 py-6 pt-24">
+      <div className="container mx-auto px-4 py-6 pt-24 h-screen flex flex-col">
         <MarketplaceHeader 
           resultsCount={filteredProposals.length}
           clearFilters={clearFilters}
@@ -70,18 +71,24 @@ const Marketplace = () => {
           clearFilters={clearFilters}
         />
 
-        <MarketplaceTable 
-          proposals={paginatedProposals}
-          sortField={sortField}
-          sortDirection={sortDirection}
-          handleSort={handleSort}
-        />
+        <div className="flex-1 overflow-hidden">
+          <ScrollArea className="h-[calc(100vh-340px)]">
+            <MarketplaceTable 
+              proposals={paginatedProposals}
+              sortField={sortField}
+              sortDirection={sortDirection}
+              handleSort={handleSort}
+            />
+          </ScrollArea>
+        </div>
 
-        <MarketplacePagination 
-          currentPage={currentPage}
-          totalPages={totalPages}
-          handlePageChange={handlePageChange}
-        />
+        <div className="mt-4">
+          <MarketplacePagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            handlePageChange={handlePageChange}
+          />
+        </div>
       </div>
     </div>
   );
