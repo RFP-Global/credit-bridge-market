@@ -12,6 +12,7 @@ import EnterpriseLogin from "./pages/EnterpriseLogin";
 import LenderLogin from "./pages/LenderLogin";
 import EnterpriseDashboard from "./pages/EnterpriseDashboard";
 import LenderDashboard from "./pages/LenderDashboard";
+import Intelligence from "./pages/Intelligence";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/lender-login" element={<LenderLogin />} />
           <Route path="/enterprise-dashboard" element={<EnterpriseDashboard />} />
           <Route path="/lender-dashboard" element={<LenderDashboard />} />
+          <Route path="/intelligence" element={<Intelligence />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Menu, X, Terminal, Power, Radar, Signal } from 'lucide-react';
+import { Menu, X, Terminal, Power, Radar, Signal, BarChart3 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
@@ -52,7 +52,7 @@ const Navbar = () => {
             <Link to="/lender-dashboard" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
               LENDER DASHBOARD
             </Link>
-            <Link to="#" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
+            <Link to="/intelligence" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
               INTELLIGENCE
             </Link>
           </nav>
@@ -115,7 +115,7 @@ const Navbar = () => {
               LENDER DASHBOARD
             </Link>
             <Link 
-              to="#" 
+              to="/intelligence" 
               className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
               onClick={() => setMobileMenuOpen(false)}
             >
