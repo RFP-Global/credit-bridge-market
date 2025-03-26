@@ -5,15 +5,15 @@ import { toast } from "sonner";
 
 export const useMarketplace = (proposals: FinanceProposal[]) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [facilityTypeFilter, setFacilityTypeFilter] = useState<string>("");
-  const [financingTypeFilter, setFinancingTypeFilter] = useState<string>("");
-  const [statusFilter, setStatusFilter] = useState<string>("");
-  const [industryFilter, setIndustryFilter] = useState<string>("");
-  const [interestRateTypeFilter, setInterestRateTypeFilter] = useState<string>("");
-  const [lenderPreferencesFilter, setLenderPreferencesFilter] = useState<string>("");
+  const [facilityTypeFilter, setFacilityTypeFilter] = useState<string>("all-facility-types");
+  const [financingTypeFilter, setFinancingTypeFilter] = useState<string>("all-financing-types");
+  const [statusFilter, setStatusFilter] = useState<string>("all-statuses");
+  const [industryFilter, setIndustryFilter] = useState<string>("all-industries");
+  const [interestRateTypeFilter, setInterestRateTypeFilter] = useState<string>("all-rate-types");
+  const [lenderPreferencesFilter, setLenderPreferencesFilter] = useState<string>("all-preferences");
   const [creditRatingFilter, setCreditRatingFilter] = useState<[number, number]>([0, 10]);
-  const [principalFilter, setPrincipalFilter] = useState<string>("");
-  const [termFilter, setTermFilter] = useState<string>("");
+  const [principalFilter, setPrincipalFilter] = useState<string>("all-principals");
+  const [termFilter, setTermFilter] = useState<string>("all-terms");
   const [sortField, setSortField] = useState<keyof FinanceProposal | "">("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,37 +33,37 @@ export const useMarketplace = (proposals: FinanceProposal[]) => {
       );
     }
 
-    // Apply dropdown filters
-    if (facilityTypeFilter) {
+    // Apply dropdown filters with the new filter values
+    if (facilityTypeFilter && facilityTypeFilter !== "all-facility-types") {
       result = result.filter(proposal => proposal.facilityType === facilityTypeFilter);
     }
 
-    if (financingTypeFilter) {
+    if (financingTypeFilter && financingTypeFilter !== "all-financing-types") {
       result = result.filter(proposal => proposal.financingType === financingTypeFilter);
     }
 
-    if (statusFilter) {
+    if (statusFilter && statusFilter !== "all-statuses") {
       result = result.filter(proposal => proposal.status === statusFilter);
     }
 
-    if (industryFilter) {
+    if (industryFilter && industryFilter !== "all-industries") {
       result = result.filter(proposal => proposal.industry === industryFilter);
     }
 
-    // Apply new column filters
-    if (interestRateTypeFilter) {
+    // Apply new column filters with the new filter values
+    if (interestRateTypeFilter && interestRateTypeFilter !== "all-rate-types") {
       result = result.filter(proposal => proposal.interestRateType === interestRateTypeFilter);
     }
 
-    if (lenderPreferencesFilter) {
+    if (lenderPreferencesFilter && lenderPreferencesFilter !== "all-preferences") {
       result = result.filter(proposal => proposal.lenderPreferences === lenderPreferencesFilter);
     }
 
-    if (principalFilter) {
+    if (principalFilter && principalFilter !== "all-principals") {
       result = result.filter(proposal => proposal.principal === principalFilter);
     }
 
-    if (termFilter) {
+    if (termFilter && termFilter !== "all-terms") {
       result = result.filter(proposal => proposal.term === termFilter);
     }
 
@@ -143,15 +143,15 @@ export const useMarketplace = (proposals: FinanceProposal[]) => {
   // Reset all filters
   const clearFilters = () => {
     setSearchTerm("");
-    setFacilityTypeFilter("");
-    setFinancingTypeFilter("");
-    setStatusFilter("");
-    setIndustryFilter("");
-    setInterestRateTypeFilter("");
-    setLenderPreferencesFilter("");
+    setFacilityTypeFilter("all-facility-types");
+    setFinancingTypeFilter("all-financing-types");
+    setStatusFilter("all-statuses");
+    setIndustryFilter("all-industries");
+    setInterestRateTypeFilter("all-rate-types");
+    setLenderPreferencesFilter("all-preferences");
     setCreditRatingFilter([0, 10]);
-    setPrincipalFilter("");
-    setTermFilter("");
+    setPrincipalFilter("all-principals");
+    setTermFilter("all-terms");
     setSortField("");
     setSortDirection("asc");
     setCurrentPage(1);
