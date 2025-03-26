@@ -137,7 +137,7 @@
   }
 
   .data-row {
-    @apply flex overflow-hidden whitespace-nowrap;
+    @apply flex whitespace-nowrap;
   }
   
   .data-item {
@@ -145,7 +145,7 @@
   }
 
   .market-ticker {
-    @apply bg-black/60 border-y border-blue-900/30 flex overflow-hidden w-full;
+    @apply bg-black/60 border-y border-blue-900/30 w-full;
     position: relative;
     left: 0;
     right: 0;
@@ -153,6 +153,7 @@
 
   .animate-data-stream {
     animation: scroll 60s linear infinite;
+    display: inline-flex;
   }
 
   @keyframes blink {
@@ -162,7 +163,7 @@
   
   @keyframes scroll {
     0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+    100% { transform: translateX(-100%); }
   }
 
   .scanline {

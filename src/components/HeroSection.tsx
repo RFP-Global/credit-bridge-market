@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown, Terminal, Database, FileText, BarChart3, Search, Radio, Radar, Signal } from "lucide-react";
@@ -55,22 +54,32 @@ const HeroSection = () => {
       <div className="scanline z-10"></div>
       
       <div className="w-full absolute top-0 left-0 right-0 z-10">
-        <div className="market-ticker animate-data-stream">
-          <div className="data-row whitespace-nowrap flex-shrink-0" style={{ animationDelay: "0s" }}>
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="flex animate-data-stream">
-                <span className="data-item text-base font-mono text-sky-300"><BarChart3 className="h-3 w-3 inline mr-1" /> FACILITY_TYPE: TERM LOAN • APR: 7.5% • AMOUNT: $2.5M • TERM: 60M</span>
-                <span className="data-item text-base font-mono text-sky-300"><Search className="h-3 w-3 inline mr-1" /> INDUSTRY: MANUFACTURING • REVENUE: $12M • EBITDA: $1.8M</span>
-                <span className="data-item text-base font-mono text-sky-300"><FileText className="h-3 w-3 inline mr-1" /> FACILITY_TYPE: LINE OF CREDIT • APR: 8.2% • AMOUNT: $750K • TERM: 12M</span>
-                <span className="data-item text-base font-mono text-sky-300"><Search className="h-3 w-3 inline mr-1" /> INDUSTRY: TECHNOLOGY • REVENUE: $5.2M • EBITDA: $900K</span>
-                <span className="data-item text-base font-mono text-sky-300"><BarChart3 className="h-3 w-3 inline mr-1" /> FACILITY_TYPE: EQUIPMENT FINANCE • APR: 6.8% • AMOUNT: $1.2M • TERM: 48M</span>
-                <span className="data-item text-base font-mono text-sky-300"><Search className="h-3 w-3 inline mr-1" /> INDUSTRY: HEALTHCARE • REVENUE: $8.7M • EBITDA: $1.3M</span>
-                <span className="data-item text-base font-mono text-sky-300"><FileText className="h-3 w-3 inline mr-1" /> FACILITY_TYPE: ACQUISITION LOAN • APR: 9.1% • AMOUNT: $4.5M • TERM: 84M</span>
-                <span className="data-item text-base font-mono text-sky-300"><Search className="h-3 w-3 inline mr-1" /> INDUSTRY: RETAIL • REVENUE: $7.3M • EBITDA: $1.1M</span>
-                <span className="data-item text-base font-mono text-sky-300"><BarChart3 className="h-3 w-3 inline mr-1" /> FACILITY_TYPE: BRIDGE LOAN • APR: 10.2% • AMOUNT: $1.8M • TERM: 24M</span>
-                <span className="data-item text-base font-mono text-sky-300"><Search className="h-3 w-3 inline mr-1" /> INDUSTRY: REAL ESTATE • REVENUE: $3.9M • EBITDA: $2.2M</span>
-              </div>
-            ))}
+        <div className="market-ticker overflow-hidden whitespace-nowrap">
+          <div className="flex">
+            <div className="data-row flex-nowrap inline-flex animate-data-stream">
+              <span className="data-item text-base font-mono text-sky-300"><BarChart3 className="h-3 w-3 inline mr-1" /> FACILITY_TYPE: TERM LOAN • APR: 7.5% • AMOUNT: $2.5M • TERM: 60M</span>
+              <span className="data-item text-base font-mono text-sky-300"><Search className="h-3 w-3 inline mr-1" /> INDUSTRY: MANUFACTURING • REVENUE: $12M • EBITDA: $1.8M</span>
+              <span className="data-item text-base font-mono text-sky-300"><FileText className="h-3 w-3 inline mr-1" /> FACILITY_TYPE: LINE OF CREDIT • APR: 8.2% • AMOUNT: $750K • TERM: 12M</span>
+              <span className="data-item text-base font-mono text-sky-300"><Search className="h-3 w-3 inline mr-1" /> INDUSTRY: TECHNOLOGY • REVENUE: $5.2M • EBITDA: $900K</span>
+              <span className="data-item text-base font-mono text-sky-300"><BarChart3 className="h-3 w-3 inline mr-1" /> FACILITY_TYPE: EQUIPMENT FINANCE • APR: 6.8% • AMOUNT: $1.2M • TERM: 48M</span>
+              <span className="data-item text-base font-mono text-sky-300"><Search className="h-3 w-3 inline mr-1" /> INDUSTRY: HEALTHCARE • REVENUE: $8.7M • EBITDA: $1.3M</span>
+              <span className="data-item text-base font-mono text-sky-300"><FileText className="h-3 w-3 inline mr-1" /> FACILITY_TYPE: ACQUISITION LOAN • APR: 9.1% • AMOUNT: $4.5M • TERM: 84M</span>
+              <span className="data-item text-base font-mono text-sky-300"><Search className="h-3 w-3 inline mr-1" /> INDUSTRY: RETAIL • REVENUE: $7.3M • EBITDA: $1.1M</span>
+              <span className="data-item text-base font-mono text-sky-300"><BarChart3 className="h-3 w-3 inline mr-1" /> FACILITY_TYPE: BRIDGE LOAN • APR: 10.2% • AMOUNT: $1.8M • TERM: 24M</span>
+              <span className="data-item text-base font-mono text-sky-300"><Search className="h-3 w-3 inline mr-1" /> INDUSTRY: REAL ESTATE • REVENUE: $3.9M • EBITDA: $2.2M</span>
+            </div>
+            <div className="data-row flex-nowrap inline-flex animate-data-stream">
+              <span className="data-item text-base font-mono text-sky-300"><BarChart3 className="h-3 w-3 inline mr-1" /> FACILITY_TYPE: TERM LOAN • APR: 7.5% • AMOUNT: $2.5M • TERM: 60M</span>
+              <span className="data-item text-base font-mono text-sky-300"><Search className="h-3 w-3 inline mr-1" /> INDUSTRY: MANUFACTURING • REVENUE: $12M • EBITDA: $1.8M</span>
+              <span className="data-item text-base font-mono text-sky-300"><FileText className="h-3 w-3 inline mr-1" /> FACILITY_TYPE: LINE OF CREDIT • APR: 8.2% • AMOUNT: $750K • TERM: 12M</span>
+              <span className="data-item text-base font-mono text-sky-300"><Search className="h-3 w-3 inline mr-1" /> INDUSTRY: TECHNOLOGY • REVENUE: $5.2M • EBITDA: $900K</span>
+              <span className="data-item text-base font-mono text-sky-300"><BarChart3 className="h-3 w-3 inline mr-1" /> FACILITY_TYPE: EQUIPMENT FINANCE • APR: 6.8% • AMOUNT: $1.2M • TERM: 48M</span>
+              <span className="data-item text-base font-mono text-sky-300"><Search className="h-3 w-3 inline mr-1" /> INDUSTRY: HEALTHCARE • REVENUE: $8.7M • EBITDA: $1.3M</span>
+              <span className="data-item text-base font-mono text-sky-300"><FileText className="h-3 w-3 inline mr-1" /> FACILITY_TYPE: ACQUISITION LOAN • APR: 9.1% • AMOUNT: $4.5M • TERM: 84M</span>
+              <span className="data-item text-base font-mono text-sky-300"><Search className="h-3 w-3 inline mr-1" /> INDUSTRY: RETAIL • REVENUE: $7.3M • EBITDA: $1.1M</span>
+              <span className="data-item text-base font-mono text-sky-300"><BarChart3 className="h-3 w-3 inline mr-1" /> FACILITY_TYPE: BRIDGE LOAN • APR: 10.2% • AMOUNT: $1.8M • TERM: 24M</span>
+              <span className="data-item text-base font-mono text-sky-300"><Search className="h-3 w-3 inline mr-1" /> INDUSTRY: REAL ESTATE • REVENUE: $3.9M • EBITDA: $2.2M</span>
+            </div>
           </div>
         </div>
       </div>
