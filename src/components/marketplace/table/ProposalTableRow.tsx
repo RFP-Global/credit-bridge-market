@@ -21,12 +21,12 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
     navigate(`/proposal/${proposal.id}/bid`);
   };
 
-  // Common class for all cells to ensure consistent alignment
-  const cellClass = "text-center px-4 py-2";
+  // Common class for all cells to ensure consistent alignment with headers
+  const cellClass = "flex-1 text-center px-4 py-2";
 
   return (
     <TableRow 
-      className="border-gray-700/30 hover:bg-gray-800/20 cursor-pointer transition-colors"
+      className="border-gray-700/30 hover:bg-gray-800/20 cursor-pointer transition-colors flex w-full"
       onClick={handleViewClick}
     >
       <TableCell className={`font-mono text-xs ${cellClass}`}>{proposal.creditRating.toFixed(1)}</TableCell>
