@@ -1,4 +1,7 @@
 
+import React from 'react';
+
+// Function to render the customized label for pie charts
 export const renderCustomizedLabel = ({ 
   cx, 
   cy, 
