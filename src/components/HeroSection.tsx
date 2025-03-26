@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown, Terminal, Shield, Database, FileText, BarChart3, Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -87,14 +86,31 @@ const HeroSection = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="outline" size="lg" className="rounded-none px-8 py-6 text-md border-primary/30" asChild>
-                <Link to="/access">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="rounded-none px-8 py-6 text-md border-primary/30 group hover:bg-primary/10 transition-colors" 
+                asChild
+              >
+                <Link to="/access" className="flex items-center">
+                  <Shield className="mr-2 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-opacity" />
                   Enterprise Portal
+                  <div className="ml-3 h-4 w-px bg-primary/30 group-hover:bg-primary/50 transition-colors"></div>
+                  <Radio className="ml-3 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-colors" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" className="rounded-none px-8 py-6 text-md border-primary/30" asChild>
-                <Link to="/access">
+              
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="rounded-none px-8 py-6 text-md border-primary/30 group hover:bg-primary/10 transition-colors" 
+                asChild
+              >
+                <Link to="/access" className="flex items-center">
+                  <Radio className="mr-2 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-opacity" />
                   Lender Portal
+                  <div className="ml-3 h-4 w-px bg-primary/30 group-hover:bg-primary/50 transition-colors"></div>
+                  <Shield className="ml-3 h-5 w-5 text-primary opacity-70 group-hover:opacity-100 transition-colors" />
                 </Link>
               </Button>
             </div>
