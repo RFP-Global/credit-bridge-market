@@ -113,12 +113,10 @@ const EnterpriseDashboard = () => {
               <Button 
                 variant="ghost" 
                 className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3"
-                asChild
+                onClick={() => navigate("/marketplace")}
               >
-                <Link to="/marketplace">
-                  <ShoppingCart className="h-4 w-4 mr-3" />
-                  Marketplace
-                </Link>
+                <ShoppingCart className="h-4 w-4 mr-3" />
+                Marketplace
               </Button>
               <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3">
                 <Building className="h-4 w-4 mr-3" />
