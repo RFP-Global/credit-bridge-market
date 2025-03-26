@@ -10,6 +10,8 @@ import Access from "./pages/Access";
 import NotFound from "./pages/NotFound";
 import EnterpriseLogin from "./pages/EnterpriseLogin";
 import LenderLogin from "./pages/LenderLogin";
+import EnterpriseSignUp from "./pages/EnterpriseSignUp";
+import LenderSignUp from "./pages/LenderSignUp";
 import EnterpriseDashboard from "./pages/EnterpriseDashboard";
 import LenderDashboard from "./pages/LenderDashboard";
 import Intelligence from "./pages/Intelligence";
@@ -31,6 +33,8 @@ const App = () => {
             <Route path="/access" element={<Access />} />
             <Route path="/enterprise-login" element={<EnterpriseLogin />} />
             <Route path="/lender-login" element={<LenderLogin />} />
+            <Route path="/enterprise-signup" element={<EnterpriseSignUp />} />
+            <Route path="/lender-signup" element={<LenderSignUp />} />
             <Route path="/enterprise-dashboard" element={<EnterpriseDashboard />} />
             <Route path="/lender-dashboard" element={<LenderDashboard />} />
             <Route path="/intelligence" element={<Intelligence />} />
