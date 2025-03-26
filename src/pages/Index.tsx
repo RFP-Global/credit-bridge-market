@@ -5,7 +5,7 @@ import HeroSection from "@/components/HeroSection";
 import FeaturedListings from "@/components/FeaturedListings";
 import BenefitsSection from "@/components/BenefitCard";
 import ContactSection from "@/components/ContactSection";
-// Footer is no longer imported or used
+import Footer from "@/components/Footer";
 
 const Index = () => {
   useEffect(() => {
@@ -38,7 +38,7 @@ const Index = () => {
       <FeaturedListings />
       <BenefitsSection />
       <ContactSection />
-      {/* Footer component removed */}
+      <Footer />
     </div>
   );
 };

@@ -3,26 +3,16 @@ import { useNavigate } from "react-router-dom";
 import {
   Table,
   TableBody,
-  TableHeader,
-  TableRow
 } from "@/components/ui/table";
 import { FinanceProposal } from "@/types/marketplace";
-import { Radar, Check, ArrowDown, ArrowUp, ArrowDownAZ, ArrowUpAZ, ArrowDownZA, ArrowUpZA } from "lucide-react";
+import { Radar, Check, ArrowDown, ArrowUp } from "lucide-react";
 import ProposalTableRow from "./table/ProposalTableRow";
 import EmptyTableRow from "./table/EmptyTableRow";
-import SortableTableHeader from "./table/SortableTableHeader";
 import { 
   Popover, 
   PopoverContent, 
   PopoverTrigger 
 } from "@/components/ui/popover";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Toggle } from "@/components/ui/toggle";
@@ -30,7 +20,6 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useState, useEffect, useMemo } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { toast } from "sonner";
 
 interface MarketplaceTableProps {
   proposals: FinanceProposal[];
@@ -158,33 +147,6 @@ const MarketplaceTable = ({
     });
   }, [columnFilters]);
 
-  // Simple sort handler with notification
-  const handleSortWithNotification = (field: keyof FinanceProposal, direction?: "asc" | "desc") => {
-    // If direction is specified, we'll set that direction
-    if (direction) {
-      if (sortField === field && sortDirection === direction) {
-        // If already sorting by this field and direction, clear sort
-        handleSort("" as keyof FinanceProposal);
-        toast.info(`Cleared sorting`);
-      } else {
-        // Set field and handle direction toggle if needed
-        handleSort(field);
-        if (sortField === field && sortDirection !== direction) {
-          // Toggle once more to get desired direction
-          handleSort(field);
-        } else if (sortField !== field && sortDirection !== direction) {
-          // Toggle once more to get desired direction after setting new field
-          handleSort(field);
-        }
-        toast.info(`Sorted by ${field} ${direction === 'asc' ? 'ascending' : 'descending'}`);
-      }
-    } else {
-      // Just toggle as normal
-      handleSort(field);
-      toast.info(`Toggled sort on ${field}`);
-    }
-  };
-
   return (
     <div className="mb-4 relative font-typewriter">
       {/* Separate fixed header */}
@@ -218,7 +180,19 @@ const MarketplaceTable = ({
                               value="asc" 
                               size="sm"
                               className={`flex-1 text-xs h-8 ${sortField === column.key && sortDirection === 'asc' ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30' : 'text-gray-400'}`}
-                              onClick={() => handleSortWithNotification(column.key as keyof FinanceProposal, 'asc')}
+                              onClick={() => {
+                                if (sortField === column.key && sortDirection === 'asc') {
+                                  // Unset the sort if it's already set to this field and direction
+                                  handleSort("" as keyof FinanceProposal);
+                                } else {
+                                  // Set the field and direction
+                                  handleSort(column.key as keyof FinanceProposal);
+                                  if (sortDirection !== 'asc') {
+                                    // Force asc
+                                    handleSort(column.key as keyof FinanceProposal);
+                                  }
+                                }
+                              }}
                             >
                               <ArrowUp className="h-3 w-3 mr-1" /> Ascending
                             </ToggleGroupItem>
@@ -226,7 +200,20 @@ const MarketplaceTable = ({
                               value="desc" 
                               size="sm"
                               className={`flex-1 text-xs h-8 ${sortField === column.key && sortDirection === 'desc' ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30' : 'text-gray-400'}`}
-                              onClick={() => handleSortWithNotification(column.key as keyof FinanceProposal, 'desc')}
+                              onClick={() => {
+                                if (sortField === column.key && sortDirection === 'desc') {
+                                  // Unset the sort if it's already set to this field and direction
+                                  handleSort("" as keyof FinanceProposal);
+                                } else {
+                                  // Set the field
+                                  handleSort(column.key as keyof FinanceProposal);
+                                  // If we're already on this field but in asc, this will toggle to desc
+                                  // If we're on a different field, we need to toggle twice to get to desc
+                                  if (sortField !== column.key) {
+                                    handleSort(column.key as keyof FinanceProposal);
+                                  }
+                                }
+                              }}
                             >
                               <ArrowDown className="h-3 w-3 mr-1" /> Descending
                             </ToggleGroupItem>
@@ -295,59 +282,17 @@ const MarketplaceTable = ({
                       </div>
                     </PopoverContent>
                   </Popover>
-                  
-                  {/* Add dropdown menu for quick sort */}
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-5 w-5 p-0 ml-1 rounded-full hover:bg-cyan-400/20 text-gray-500 hover:text-cyan-400"
-                      >
-                        {sortField === column.key ? (
-                          sortDirection === 'asc' ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />
-                        ) : (
-                          <ArrowUpDown className="h-3 w-3" />
-                        )}
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent 
-                      className="w-48 bg-black/90 border-gray-700/50 backdrop-blur-sm text-xs"
-                      align="end"
-                    >
-                      <DropdownMenuItem 
-                        className={`${sortField === column.key && sortDirection === 'asc' ? 'bg-cyan-500/20 text-cyan-400' : 'text-gray-300'}`}
-                        onClick={() => handleSortWithNotification(column.key as keyof FinanceProposal, 'asc')}
-                      >
-                        <ArrowUpAZ className="h-3.5 w-3.5 mr-2" /> Sort A → Z
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        className={`${sortField === column.key && sortDirection === 'desc' ? 'bg-cyan-500/20 text-cyan-400' : 'text-gray-300'}`}
-                        onClick={() => handleSortWithNotification(column.key as keyof FinanceProposal, 'desc')}
-                      >
-                        <ArrowDownZA className="h-3.5 w-3.5 mr-2" /> Sort Z → A
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator className="bg-gray-700/30" />
-                      <DropdownMenuItem 
-                        className="text-gray-300"
-                        onClick={() => {
-                          handleSort("" as keyof FinanceProposal);
-                          toast.info(`Cleared sorting on ${column.key}`);
-                        }}
-                      >
-                        <ArrowUpDown className="h-3.5 w-3.5 mr-2" /> Clear Sort
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
                 </div>
-                <div className="flex items-center">
-                  {column.label}
-                  {sortField === column.key && (
-                    <span className="ml-1 text-cyan-400">
-                      {sortDirection === 'asc' ? '↑' : '↓'}
-                    </span>
-                  )}
-                </div>
+                {column.label}
+                {sortField === column.key && (
+                  <div className="absolute -right-1 top-3">
+                    {sortDirection === 'asc' ? (
+                      <ArrowUp className="h-3 w-3 text-cyan-400" />
+                    ) : (
+                      <ArrowDown className="h-3 w-3 text-cyan-400" />
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           ))}
