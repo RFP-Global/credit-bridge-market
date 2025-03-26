@@ -16,12 +16,14 @@ const MarketplaceContent = ({
   handleSort,
 }: MarketplaceContentProps) => {
   return (
-    <MarketplaceTable 
-      proposals={proposals}
-      sortField={sortField}
-      sortDirection={sortDirection}
-      handleSort={handleSort}
-    />
+    <div className="glass-card p-2 rounded-md">
+      <MarketplaceTable 
+        proposals={proposals}
+        sortField={sortField}
+        sortDirection={sortDirection}
+        handleSort={handleSort}
+      />
+    </div>
   );
 };
 
