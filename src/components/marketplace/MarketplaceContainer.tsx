@@ -1,4 +1,3 @@
-
 import { ReactNode, useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import FullscreenButton from "@/components/FullscreenButton";
@@ -24,12 +23,10 @@ const MarketplaceContainer = ({
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [sonarPulses, setSonarPulses] = useState<Array<{ id: number; x: number; y: number; timestamp: number }>>([]);
   
-  // Handle mouse movement for interactive effect
   const handleMouseMove = (e: React.MouseEvent) => {
     setMousePosition({ x: e.clientX, y: e.clientY });
   };
   
-  // Create a new pulse on click
   const handleClick = (e: React.MouseEvent) => {
     const newPulse = {
       id: Date.now(),
@@ -41,7 +38,6 @@ const MarketplaceContainer = ({
     setSonarPulses((prevPulses) => [...prevPulses, newPulse]);
   };
   
-  // Clean up old pulses
   useEffect(() => {
     const cleanupInterval = setInterval(() => {
       const now = Date.now();
@@ -62,12 +58,9 @@ const MarketplaceContainer = ({
       <Navbar />
       <FullscreenButton />
       
-      {/* Sonar beacon effect */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        {/* Subtle animated background gradient */}
         <div className="absolute inset-0 bg-[#0e253c] opacity-40"></div>
         
-        {/* Continuous sonar ping from center */}
         <div className="absolute top-1/2 left-1/2 w-4 h-4 rounded-full bg-[#33C3F0]">
           <div className="radar-pulse"></div>
           <div className="radar-pulse" style={{ animationDelay: '1s' }}></div>
@@ -75,7 +68,6 @@ const MarketplaceContainer = ({
           <div className="radar-pulse" style={{ animationDelay: '3s' }}></div>
         </div>
         
-        {/* Interactive pulses on click */}
         {sonarPulses.map((pulse) => (
           <div 
             key={pulse.id}
@@ -92,7 +84,6 @@ const MarketplaceContainer = ({
           </div>
         ))}
         
-        {/* Mouse tracking sonar line */}
         <div 
           className="absolute w-[400px] h-[400px] rounded-full border border-[#33C3F0] opacity-20 pointer-events-none"
           style={{
@@ -102,18 +93,15 @@ const MarketplaceContainer = ({
           }}
         ></div>
         
-        {/* Scan line effect */}
         <div className="scanline"></div>
       </div>
       
       <div className="container mx-auto px-4 py-6 pt-24 h-screen flex flex-col relative z-10">
-        {/* Header section */}
-        <div className="bg-background/80 backdrop-blur-sm pb-4 z-30 rounded-md">
+        <div className="bg-transparent backdrop-blur-sm pb-4 z-30 rounded-md border border-cyan-900/30">
           {headerSection}
         </div>
 
-        {/* Scrollable table area with fixed headers */}
-        <div className="flex-1 overflow-hidden backdrop-blur-sm bg-background/70 rounded-md mt-2">
+        <div className="flex-1 overflow-hidden backdrop-blur-sm bg-transparent rounded-md mt-2 border border-cyan-900/30">
           <ScrollArea className="h-[calc(100vh-340px)]">
             <div className="min-w-max">
               {children}
@@ -121,8 +109,7 @@ const MarketplaceContainer = ({
           </ScrollArea>
         </div>
 
-        {/* Fixed pagination at the bottom */}
-        <div className="mt-4 bg-background/80 backdrop-blur-sm pt-2 rounded-md">
+        <div className="mt-4 bg-transparent backdrop-blur-sm pt-2 rounded-md border border-cyan-900/30">
           <MarketplacePagination 
             currentPage={currentPage}
             totalPages={totalPages}

@@ -16,7 +16,7 @@ const MarketplaceContent = ({
   handleSort,
 }: MarketplaceContentProps) => {
   return (
-    <div className="glass-card p-2 rounded-md">
+    <div className="glass-card p-2 rounded-md bg-transparent backdrop-blur-sm border border-cyan-900/30">
       <MarketplaceTable 
         proposals={proposals}
         sortField={sortField}
