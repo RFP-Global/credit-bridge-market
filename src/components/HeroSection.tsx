@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown, Terminal, Shield, Database, FileText, BarChart3, Search, Radio } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import FullscreenButton from "./FullscreenButton";
 
 const HeroSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -43,6 +44,8 @@ const HeroSection = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 grid-bg">
+      <FullscreenButton />
+      
       <div className="absolute inset-0 z-0">
         <div className="radar-pulse"></div>
         <div className="radar-pulse" style={{ animationDelay: "1s" }}></div>
