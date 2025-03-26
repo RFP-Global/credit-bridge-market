@@ -110,24 +110,6 @@ const Marketplace = () => {
                 sortField={sortField}
                 sortDirection={sortDirection}
                 handleSort={handleSort}
-                facilityTypeFilter={facilityTypeFilter}
-                setFacilityTypeFilter={setFacilityTypeFilter}
-                financingTypeFilter={financingTypeFilter}
-                setFinancingTypeFilter={setFinancingTypeFilter}
-                statusFilter={statusFilter}
-                setStatusFilter={setStatusFilter}
-                industryFilter={industryFilter}
-                setIndustryFilter={setIndustryFilter}
-                interestRateTypeFilter={interestRateTypeFilter}
-                setInterestRateTypeFilter={setInterestRateTypeFilter}
-                lenderPreferencesFilter={lenderPreferencesFilter}
-                setLenderPreferencesFilter={setLenderPreferencesFilter}
-                principalFilter={principalFilter}
-                setPrincipalFilter={setPrincipalFilter}
-                termFilter={termFilter}
-                setTermFilter={setTermFilter}
-                facilityTypes={facilityTypes}
-                industries={industries}
               />
             </div>
           </ScrollArea>
