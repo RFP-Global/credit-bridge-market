@@ -1,0 +1,85 @@
+
+import { FinanceProposal } from "@/types/marketplace";
+
+export const financeProposals: FinanceProposal[] = [
+  {
+    id: "1",
+    creditRating: 7.5,
+    projectName: "Project A",
+    facilityType: "Term Loan",
+    financingType: "New Financing",
+    principal: "$500,000",
+    interestRateType: "Fixed",
+    interestRate: "12.00%",
+    term: "36 Months",
+    status: "OPEN",
+    bidDeadline: "21:08:30",
+    lenderPreferences: "Regional Bank",
+    industry: "Construction",
+    bidVolume: 65
+  },
+  {
+    id: "2",
+    creditRating: 8.2,
+    projectName: "Project B",
+    facilityType: "364-Day Revolver",
+    financingType: "Refinancing",
+    principal: "$1,500,000",
+    interestRateType: "Fixed",
+    interestRate: "10.175%",
+    term: "12 Months",
+    status: "OPEN",
+    bidDeadline: "00:05:35",
+    lenderPreferences: "Community Bank",
+    industry: "Real Estate",
+    bidVolume: 45
+  },
+  {
+    id: "3",
+    creditRating: 5.4,
+    projectName: "Project C",
+    facilityType: "Asset-Based Loan",
+    financingType: "Refinancing",
+    principal: "$250,000",
+    interestRateType: "Floating",
+    interestRate: "SOFR + 350",
+    term: "14 Months",
+    status: "OPEN",
+    bidDeadline: "02:11:10",
+    lenderPreferences: "National Bank",
+    industry: "Healthcare",
+    bidVolume: 35
+  },
+  {
+    id: "4",
+    creditRating: 9.4,
+    projectName: "Project D",
+    facilityType: "SBA Loan",
+    financingType: "New Financing",
+    principal: "$5,000,000",
+    interestRateType: "Floating",
+    interestRate: "SOFR + 200",
+    term: "24 Months",
+    status: "COMPLETED",
+    bidDeadline: "Closed",
+    lenderPreferences: "FinTech",
+    industry: "Manufacturing",
+    bidVolume: 90
+  },
+  {
+    id: "5",
+    creditRating: 4.7,
+    projectName: "Project E",
+    facilityType: "Equipment Financing",
+    financingType: "Refinancing",
+    principal: "$7,500,000",
+    interestRateType: "Floating",
+    interestRate: "8.750%",
+    term: "60 Months",
+    status: "EXPIRED",
+    bidDeadline: "Closed",
+    lenderPreferences: "Private Credit",
+    industry: "Manufacturing",
+    bidVolume: 78
+  }
+];
