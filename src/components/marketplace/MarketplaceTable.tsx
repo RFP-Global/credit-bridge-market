@@ -1,3 +1,4 @@
+
 import { Eye, ArrowUpDown, CircleHelp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,13 +34,13 @@ const MarketplaceTable = ({
   return (
     <div className="border border-gray-700 rounded-sm overflow-hidden mb-4 relative">
       <Table>
-        <TableHeader className="bg-black sticky top-0 z-10">
-          <TableRow className="border-gray-700 hover:bg-transparent">
-            <TableHead className="text-center w-16 text-xs font-medium text-cyan-400 bg-black sticky top-0">
+        <TableHeader className="sticky top-0 z-20">
+          <TableRow className="border-gray-700 hover:bg-transparent bg-black">
+            <TableHead className="text-center w-16 text-xs font-medium text-cyan-400 bg-black sticky top-0 z-10">
               
             </TableHead>
             <TableHead 
-              className="text-center w-24 text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0"
+              className="text-center w-24 text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0 z-10"
               onClick={() => handleSort('creditRating')}
             >
               <div className="flex items-center justify-center">
@@ -48,7 +49,7 @@ const MarketplaceTable = ({
               </div>
             </TableHead>
             <TableHead 
-              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0"
+              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0 z-10"
               onClick={() => handleSort('projectName')}
             >
               <div className="flex items-center justify-center">
@@ -57,7 +58,7 @@ const MarketplaceTable = ({
               </div>
             </TableHead>
             <TableHead 
-              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0"
+              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0 z-10"
               onClick={() => handleSort('facilityType')}
             >
               <div className="flex items-center justify-center">
@@ -66,7 +67,7 @@ const MarketplaceTable = ({
               </div>
             </TableHead>
             <TableHead 
-              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0"
+              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0 z-10"
               onClick={() => handleSort('financingType')}
             >
               <div className="flex items-center justify-center">
@@ -74,11 +75,11 @@ const MarketplaceTable = ({
                 <ArrowUpDown className="ml-1 h-3 w-3" />
               </div>
             </TableHead>
-            <TableHead className="text-center text-xs font-medium text-cyan-400 bg-black sticky top-0">
+            <TableHead className="text-center text-xs font-medium text-cyan-400 bg-black sticky top-0 z-10">
               TARGET PRINCIPAL
             </TableHead>
             <TableHead 
-              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0"
+              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0 z-10"
               onClick={() => handleSort('interestRateType')}
             >
               <div className="flex items-center justify-center">
@@ -86,14 +87,14 @@ const MarketplaceTable = ({
                 <ArrowUpDown className="ml-1 h-3 w-3" />
               </div>
             </TableHead>
-            <TableHead className="text-center text-xs font-medium text-cyan-400 bg-black sticky top-0">
+            <TableHead className="text-center text-xs font-medium text-cyan-400 bg-black sticky top-0 z-10">
               TARGET INTEREST RATE
             </TableHead>
-            <TableHead className="text-center text-xs font-medium text-cyan-400 bg-black sticky top-0">
+            <TableHead className="text-center text-xs font-medium text-cyan-400 bg-black sticky top-0 z-10">
               TARGET TERM
             </TableHead>
             <TableHead 
-              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0"
+              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0 z-10"
               onClick={() => handleSort('status')}
             >
               <div className="flex items-center justify-center">
@@ -101,11 +102,11 @@ const MarketplaceTable = ({
                 <ArrowUpDown className="ml-1 h-3 w-3" />
               </div>
             </TableHead>
-            <TableHead className="text-center text-xs font-medium text-cyan-400 bg-black sticky top-0">
+            <TableHead className="text-center text-xs font-medium text-cyan-400 bg-black sticky top-0 z-10">
               BID DEADLINE
             </TableHead>
             <TableHead 
-              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0"
+              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0 z-10"
               onClick={() => handleSort('lenderPreferences')}
             >
               <div className="flex items-center justify-center">
@@ -114,7 +115,7 @@ const MarketplaceTable = ({
               </div>
             </TableHead>
             <TableHead 
-              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0"
+              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0 z-10"
               onClick={() => handleSort('industry')}
             >
               <div className="flex items-center justify-center">
@@ -123,7 +124,7 @@ const MarketplaceTable = ({
               </div>
             </TableHead>
             <TableHead 
-              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0"
+              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0 z-10"
               onClick={() => handleSort('bidVolume')}
             >
               <div className="flex items-center justify-center">

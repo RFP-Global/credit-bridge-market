@@ -1,4 +1,3 @@
-
 import { useMemo } from "react";
 import Navbar from "@/components/Navbar";
 import FullscreenButton from "@/components/FullscreenButton";
@@ -50,8 +49,8 @@ const Marketplace = () => {
       <FullscreenButton />
       
       <div className="container mx-auto px-4 py-6 pt-24 h-screen flex flex-col">
-        {/* Fixed header section */}
-        <div className="sticky top-0 z-10 bg-black pb-4">
+        {/* Header section */}
+        <div className="bg-black pb-4 z-30">
           <MarketplaceHeader 
             resultsCount={filteredProposals.length}
             clearFilters={clearFilters}
@@ -74,7 +73,7 @@ const Marketplace = () => {
           />
         </div>
 
-        {/* Scrollable table area */}
+        {/* Scrollable table area with fixed headers */}
         <div className="flex-1 overflow-hidden">
           <ScrollArea className="h-[calc(100vh-340px)]">
             <div className="min-w-max">
@@ -89,7 +88,7 @@ const Marketplace = () => {
         </div>
 
         {/* Fixed pagination at the bottom */}
-        <div className="mt-4 sticky bottom-0 bg-black pt-2">
+        <div className="mt-4 bg-black pt-2">
           <MarketplacePagination 
             currentPage={currentPage}
             totalPages={totalPages}
