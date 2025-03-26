@@ -48,7 +48,18 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <nav className="hidden md:flex items-center">
+          <div className="hidden md:flex items-center space-x-4">
+            <Button 
+              variant="outline" 
+              className="rounded-none px-6 text-sm font-mono border-primary/30" 
+              asChild
+            >
+              <Link to="/access">
+                <Terminal className="h-4 w-4 mr-2" />
+                ACCESS
+              </Link>
+            </Button>
+            
             <DropdownMenu>
               <DropdownMenuTrigger className="p-2 hover:bg-primary/10 rounded-sm focus:outline-none">
                 <div className="flex flex-col gap-1">
@@ -72,19 +83,6 @@ const Navbar = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </nav>
-
-          <div className="hidden md:flex items-center space-x-4">
-            <Button 
-              variant="outline" 
-              className="rounded-none px-6 text-sm font-mono border-primary/30" 
-              asChild
-            >
-              <Link to="/access">
-                <Terminal className="h-4 w-4 mr-2" />
-                ACCESS
-              </Link>
-            </Button>
           </div>
 
           <div className="md:hidden">
