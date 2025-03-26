@@ -3,8 +3,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Radar, Signal, BarChart3, FileText, Users, Building, CreditCard, ArrowUpRight, Bell, Settings } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Radar, Signal, BarChart3, FileText, Users, Building, CreditCard, ArrowUpRight, Bell, Settings, ShoppingCart } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 
 const EnterpriseDashboard = () => {
@@ -101,6 +101,16 @@ const EnterpriseDashboard = () => {
               <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3">
                 <FileText className="h-4 w-4 mr-3" />
                 Projects
+              </Button>
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3"
+                asChild
+              >
+                <Link to="/marketplace">
+                  <ShoppingCart className="h-4 w-4 mr-3" />
+                  Marketplace
+                </Link>
               </Button>
               <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3">
                 <Building className="h-4 w-4 mr-3" />
@@ -257,3 +267,4 @@ const EnterpriseDashboard = () => {
 };
 
 export default EnterpriseDashboard;
+
