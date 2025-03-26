@@ -16,11 +16,6 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
     onViewDetails(proposal.id);
   };
 
-  const handleBidClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    navigate(`/proposal/${proposal.id}/bid`);
-  };
-
   return (
     <TableRow 
       className="border-gray-700/30 hover:bg-gray-800/20 cursor-pointer transition-colors"
