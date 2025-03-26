@@ -45,9 +45,6 @@ const Navbar = () => {
             <Link to="#" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
               INTELLIGENCE
             </Link>
-            <Link to="#" className="text-foreground/80 hover:text-primary transition-colors text-sm font-mono">
-              CONTACT
-            </Link>
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
@@ -99,13 +96,6 @@ const Navbar = () => {
               onClick={() => setMobileMenuOpen(false)}
             >
               INTELLIGENCE
-            </Link>
-            <Link 
-              to="#" 
-              className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              CONTACT
             </Link>
           </nav>
           <div className="flex flex-col space-y-4">
