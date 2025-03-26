@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, Building, DollarSign, Percent, Calendar, Check, X } from "lucide-react";
+import { ArrowLeft, Building, DollarSign, Percent, Calendar, Check, X, Upload, Info, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -14,16 +14,49 @@ import { useToast } from "@/hooks/use-toast";
 import { financeProposals } from "@/data/marketplaceProposals";
 import { FinanceProposal } from "@/types/marketplace";
 import Navbar from "@/components/Navbar";
+import { 
+  Form, 
+  FormControl, 
+  FormField, 
+  FormItem, 
+  FormLabel 
+} from "@/components/ui/form";
+import { useForm } from "react-hook-form";
 
 const BidSubmission = () => {
   const { id } = useParams<{ id: string }>();
   const [proposal, setProposal] = useState<FinanceProposal | null>(null);
   const [acceptOriginalTerms, setAcceptOriginalTerms] = useState(true);
+  const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [companyDescription, setCompanyDescription] = useState("");
+  const [transactionDescription, setTransactionDescription] = useState("");
+  const [banksOpenness, setBanksOpenness] = useState("");
+  const [additionalInfo, setAdditionalInfo] = useState("");
+  const [daysLeft, setDaysLeft] = useState(0);
+  
+  // Form values for original bid terms
   const [principal, setPrincipal] = useState("");
   const [interestRate, setInterestRate] = useState("");
   const [term, setTerm] = useState("");
-  const [additionalNotes, setAdditionalNotes] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loanType, setLoanType] = useState("");
+  
+  // Financial ratios
+  const financialRatios = {
+    currentRatio: "",
+    quickRatio: "",
+    cashRatio: "",
+    grossProfitMargin: "",
+    netProfitMargin: "",
+    returnOnAssets: "",
+    returnOnEquity: "",
+    assetTurnoverRatio: "",
+    inventoryTurnoverRatio: "",
+    accountsReceivableTurnover: ""
+  };
+  
+  const [ratios, setRatios] = useState(financialRatios);
+  
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -37,6 +70,14 @@ const BidSubmission = () => {
         setPrincipal(foundProposal.principal.replace(/[^0-9.]/g, ""));
         setInterestRate(foundProposal.interestRate.replace(/[^0-9.]/g, ""));
         setTerm(foundProposal.term.split(" ")[0]);
+        setLoanType(foundProposal.facilityType);
+        
+        // Calculate days left from bid deadline
+        const deadlineDate = new Date(foundProposal.bidDeadline);
+        const today = new Date();
+        const diffTime = deadlineDate.getTime() - today.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        setDaysLeft(diffDays > 0 ? diffDays : 0);
       }
       setLoading(false);
     }
@@ -52,6 +93,33 @@ const BidSubmission = () => {
     
     // Redirect back to the marketplace
     navigate("/marketplace");
+  };
+
+  const handleSaveDraft = () => {
+    toast({
+      title: "Draft Saved",
+      description: "Your bid draft has been saved. You can continue later.",
+      variant: "default",
+    });
+  };
+
+  const handleNextStep = () => {
+    setStep(2);
+    window.scrollTo(0, 0);
+  };
+
+  const handlePreviousStep = () => {
+    setStep(1);
+    window.scrollTo(0, 0);
+  };
+
+  const handleApplyProposalTerms = () => {
+    setAcceptOriginalTerms(true);
+    toast({
+      title: "Original Terms Applied",
+      description: "You are now using the original proposal terms.",
+      variant: "default",
+    });
   };
 
   if (loading) {
@@ -90,223 +158,534 @@ const BidSubmission = () => {
       <div className="container mx-auto px-4 py-6 pt-24">
         {/* Back button and header */}
         <div className="mb-6">
-          <Button variant="outline" size="sm" asChild className="mb-4">
-            <Link to={`/proposal/${id}`} className="flex items-center">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Proposal
-            </Link>
-          </Button>
+          <div className="flex items-center space-x-2 text-sm text-gray-400 mb-4">
+            <Link to="/marketplace" className="hover:text-white">Marketplace</Link>
+            <span>&gt;</span>
+            <span>Place a Bid</span>
+            <span>&gt;</span>
+            <span className="text-white">Step {step}</span>
+          </div>
           
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-                Submit Bid for {proposal.projectName}
+                {step === 1 ? "Proposal Details" : "Bid Details"}
               </h1>
               <p className="text-gray-400 mt-1">
                 <span className="font-semibold">{proposal.industry}</span> • 
-                <span className="ml-2">{proposal.facilityType}</span>
+                <span className="ml-2">{daysLeft} days left</span>
               </p>
             </div>
+
+            {step === 1 && (
+              <Button 
+                variant="outline" 
+                className="self-start" 
+                onClick={handleApplyProposalTerms}
+              >
+                Apply Proposal Terms
+              </Button>
+            )}
           </div>
         </div>
         
-        {/* Main content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Original proposal summary */}
-          <Card className="bg-black border-gray-800">
-            <CardHeader className="border-b border-gray-800">
-              <CardTitle className="text-sm font-mono">ORIGINAL PROPOSAL TERMS</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <Building className="h-4 w-4 mr-2 text-gray-400" />
-                    <p className="text-xs text-gray-400">FACILITY TYPE</p>
-                  </div>
-                  <p className="font-semibold">{proposal.facilityType}</p>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <DollarSign className="h-4 w-4 mr-2 text-gray-400" />
-                    <p className="text-xs text-gray-400">PRINCIPAL</p>
-                  </div>
-                  <p className="font-semibold">{proposal.principal}</p>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <Percent className="h-4 w-4 mr-2 text-gray-400" />
-                    <p className="text-xs text-gray-400">INTEREST RATE</p>
-                  </div>
-                  <p className="font-semibold">{proposal.interestRate}</p>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <Calendar className="h-4 w-4 mr-2 text-gray-400" />
-                    <p className="text-xs text-gray-400">TERM</p>
-                  </div>
-                  <p className="font-semibold">{proposal.term}</p>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <p className="text-xs text-gray-400">FINANCING TYPE</p>
-                  </div>
-                  <p className="font-semibold">{proposal.financingType}</p>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <Calendar className="h-4 w-4 mr-2 text-gray-400" />
-                    <p className="text-xs text-gray-400">BID DEADLINE</p>
-                  </div>
-                  <p className="font-semibold">{proposal.bidDeadline}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          {/* Bid submission form */}
-          <Card className="lg:col-span-2 bg-black border-gray-800">
-            <CardHeader className="border-b border-gray-800">
-              <CardTitle className="text-sm font-mono">YOUR BID TERMS</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <Tabs defaultValue={acceptOriginalTerms ? "accept" : "custom"} className="w-full mb-6">
-                <TabsList className="grid grid-cols-2 mb-6">
-                  <TabsTrigger 
-                    value="accept" 
-                    className="font-mono text-xs"
-                    onClick={() => setAcceptOriginalTerms(true)}
-                  >
-                    ACCEPT ORIGINAL TERMS
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="custom" 
-                    className="font-mono text-xs"
-                    onClick={() => setAcceptOriginalTerms(false)}
-                  >
-                    PROPOSE CUSTOM TERMS
-                  </TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="accept">
-                  <div className="space-y-4">
-                    <div className="flex items-center text-green-500 mb-4">
-                      <Check className="h-5 w-5 mr-2" />
-                      <p>You are accepting the original terms as proposed.</p>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <div>
-                        <Label htmlFor="original-principal" className="text-xs text-gray-400 mb-2 block">PRINCIPAL</Label>
-                        <Input 
-                          id="original-principal" 
-                          value={proposal.principal} 
-                          disabled 
-                          className="bg-gray-900/50 border-gray-700"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="original-interest" className="text-xs text-gray-400 mb-2 block">INTEREST RATE</Label>
-                        <Input 
-                          id="original-interest" 
-                          value={proposal.interestRate} 
-                          disabled 
-                          className="bg-gray-900/50 border-gray-700"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="original-term" className="text-xs text-gray-400 mb-2 block">TERM</Label>
-                        <Input 
-                          id="original-term" 
-                          value={proposal.term} 
-                          disabled 
-                          className="bg-gray-900/50 border-gray-700"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
-                
-                <TabsContent value="custom">
-                  <div className="space-y-4">
-                    <div className="flex items-center text-blue-400 mb-4">
-                      <Percent className="h-5 w-5 mr-2" />
-                      <p>You are proposing custom terms for this request.</p>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <div>
-                        <Label htmlFor="custom-principal" className="text-xs text-gray-400 mb-2 block">PRINCIPAL ($)</Label>
-                        <Input 
-                          id="custom-principal" 
-                          value={principal} 
-                          onChange={(e) => setPrincipal(e.target.value)} 
-                          className="bg-gray-900/50 border-gray-700"
-                          placeholder="1,000,000"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="custom-interest" className="text-xs text-gray-400 mb-2 block">INTEREST RATE (%)</Label>
-                        <Input 
-                          id="custom-interest" 
-                          value={interestRate} 
-                          onChange={(e) => setInterestRate(e.target.value)} 
-                          className="bg-gray-900/50 border-gray-700"
-                          placeholder="4.5"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="custom-term" className="text-xs text-gray-400 mb-2 block">TERM (MONTHS)</Label>
-                        <Input 
-                          id="custom-term" 
-                          value={term} 
-                          onChange={(e) => setTerm(e.target.value)} 
-                          className="bg-gray-900/50 border-gray-700"
-                          placeholder="36"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
-              </Tabs>
-              
-              <div className="space-y-4 mt-6">
+        {step === 1 && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left column - Proposal details */}
+            <div className="space-y-6">
+              {/* Type of loan and amount */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="notes" className="text-xs text-gray-400 mb-2 block">ADDITIONAL NOTES</Label>
-                  <Textarea 
-                    id="notes" 
-                    value={additionalNotes} 
-                    onChange={(e) => setAdditionalNotes(e.target.value)} 
-                    className="bg-gray-900/50 border-gray-700 min-h-[120px]"
-                    placeholder="Add any additional notes or terms for your bid proposal..."
+                  <Label htmlFor="loan-type" className="text-xs text-gray-400 mb-2 block">Type of Loan</Label>
+                  <Input 
+                    id="loan-type" 
+                    value={proposal.facilityType}
+                    readOnly
+                    className="bg-gray-900/50 border-gray-700"
                   />
                 </div>
-                
-                <div className="flex justify-end mt-6">
-                  <Button 
-                    variant="outline" 
-                    className="mr-4"
-                    onClick={() => navigate(`/proposal/${id}`)}
-                  >
-                    <X className="mr-2 h-4 w-4" />
-                    Cancel
-                  </Button>
-                  <Button 
-                    onClick={handleSubmitBid} 
-                    className="bid-button"
-                  >
-                    <Check className="mr-2 h-4 w-4" />
-                    Submit Bid
-                  </Button>
+                <div>
+                  <Label htmlFor="loan-amount" className="text-xs text-gray-400 mb-2 block">Loan Target Size</Label>
+                  <Input 
+                    id="loan-amount" 
+                    value={proposal.principal}
+                    readOnly
+                    className="bg-gray-900/50 border-gray-700"
+                  />
                 </div>
               </div>
-            </CardContent>
-          </Card>
+              
+              {/* Interest rate and term */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="interest-rate" className="text-xs text-gray-400 mb-2 block">Loan Target Interest Rate</Label>
+                  <Input 
+                    id="interest-rate" 
+                    value={proposal.interestRate}
+                    readOnly
+                    className="bg-gray-900/50 border-gray-700"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="term" className="text-xs text-gray-400 mb-2 block">Period</Label>
+                  <Input 
+                    id="term" 
+                    value={proposal.term}
+                    readOnly
+                    className="bg-gray-900/50 border-gray-700"
+                  />
+                </div>
+              </div>
+              
+              {/* Company Description */}
+              <div>
+                <Label htmlFor="company-description" className="text-xs text-gray-400 mb-2 block">Company Description</Label>
+                <Textarea 
+                  id="company-description" 
+                  value={companyDescription}
+                  onChange={(e) => setCompanyDescription(e.target.value)}
+                  placeholder="Enter company description and background information..."
+                  className="bg-gray-900/50 border-gray-700 min-h-[120px]"
+                />
+              </div>
+              
+              {/* Transaction Description & Use of Proceeds */}
+              <div>
+                <Label htmlFor="transaction-description" className="text-xs text-gray-400 mb-2 block">Transaction Description & Use of Proceeds</Label>
+                <Textarea 
+                  id="transaction-description" 
+                  value={transactionDescription}
+                  onChange={(e) => setTransactionDescription(e.target.value)}
+                  placeholder="Describe the transaction and how the proceeds will be used..."
+                  className="bg-gray-900/50 border-gray-700 min-h-[120px]"
+                />
+              </div>
+              
+              {/* Financial Ratios */}
+              <div>
+                <Label className="text-xs text-gray-400 mb-2 block">Financial Ratios</Label>
+                <div className="bg-gray-900/50 border border-gray-700 rounded-md p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">Current Ratio</p>
+                      <Input 
+                        value={ratios.currentRatio}
+                        onChange={(e) => setRatios({...ratios, currentRatio: e.target.value})}
+                        className="bg-black border-gray-800 h-8 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">Gross Profit Margin</p>
+                      <Input 
+                        value={ratios.grossProfitMargin}
+                        onChange={(e) => setRatios({...ratios, grossProfitMargin: e.target.value})}
+                        className="bg-black border-gray-800 h-8 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">Asset Turnover Ratio</p>
+                      <Input 
+                        value={ratios.assetTurnoverRatio}
+                        onChange={(e) => setRatios({...ratios, assetTurnoverRatio: e.target.value})}
+                        className="bg-black border-gray-800 h-8 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">Quick Ratio</p>
+                      <Input 
+                        value={ratios.quickRatio}
+                        onChange={(e) => setRatios({...ratios, quickRatio: e.target.value})}
+                        className="bg-black border-gray-800 h-8 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">Net Profit Margin</p>
+                      <Input 
+                        value={ratios.netProfitMargin}
+                        onChange={(e) => setRatios({...ratios, netProfitMargin: e.target.value})}
+                        className="bg-black border-gray-800 h-8 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">Inventory Turnover Ratio</p>
+                      <Input 
+                        value={ratios.inventoryTurnoverRatio}
+                        onChange={(e) => setRatios({...ratios, inventoryTurnoverRatio: e.target.value})}
+                        className="bg-black border-gray-800 h-8 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">Cash Ratio</p>
+                      <Input 
+                        value={ratios.cashRatio}
+                        onChange={(e) => setRatios({...ratios, cashRatio: e.target.value})}
+                        className="bg-black border-gray-800 h-8 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">Return on Assets</p>
+                      <Input 
+                        value={ratios.returnOnAssets}
+                        onChange={(e) => setRatios({...ratios, returnOnAssets: e.target.value})}
+                        className="bg-black border-gray-800 h-8 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">Accounts Receivable Turnover</p>
+                      <Input 
+                        value={ratios.accountsReceivableTurnover}
+                        onChange={(e) => setRatios({...ratios, accountsReceivableTurnover: e.target.value})}
+                        className="bg-black border-gray-800 h-8 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">Return on Equity</p>
+                      <Input 
+                        value={ratios.returnOnEquity}
+                        onChange={(e) => setRatios({...ratios, returnOnEquity: e.target.value})}
+                        className="bg-black border-gray-800 h-8 text-sm"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Openness to moving bank accounts */}
+              <div>
+                <Label htmlFor="bank-openness" className="text-xs text-gray-400 mb-2 block">
+                  Openness to moving bank accounts, ancillary banking products
+                </Label>
+                <Textarea 
+                  id="bank-openness" 
+                  value={banksOpenness}
+                  onChange={(e) => setBanksOpenness(e.target.value)}
+                  placeholder="Describe willingness to move banking relationships..."
+                  className="bg-gray-900/50 border-gray-700 min-h-[120px]"
+                />
+              </div>
+            </div>
+            
+            {/* Right column - Bid details */}
+            <div className="space-y-6">
+              <Card className="bg-black border-gray-800">
+                <CardHeader className="border-b border-gray-800 flex flex-row items-center justify-between">
+                  <CardTitle className="text-lg font-mono">Bid Details</CardTitle>
+                  <Info className="h-5 w-5 text-gray-400" />
+                </CardHeader>
+                <CardContent className="pt-6">
+                  <Tabs defaultValue={acceptOriginalTerms ? "accept" : "custom"} className="w-full mb-6">
+                    <TabsList className="grid grid-cols-2 mb-6">
+                      <TabsTrigger 
+                        value="accept" 
+                        className="font-mono text-xs"
+                        onClick={() => setAcceptOriginalTerms(true)}
+                      >
+                        ACCEPT ORIGINAL TERMS
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="custom" 
+                        className="font-mono text-xs"
+                        onClick={() => setAcceptOriginalTerms(false)}
+                      >
+                        PROPOSE CUSTOM TERMS
+                      </TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="accept">
+                      <div className="space-y-4">
+                        <div className="flex items-center text-green-500 mb-4">
+                          <Check className="h-5 w-5 mr-2" />
+                          <p>You are accepting the original terms as proposed.</p>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div>
+                            <Label htmlFor="original-type" className="text-xs text-gray-400 mb-2 block">Type of Loan</Label>
+                            <Input 
+                              id="original-type" 
+                              value={proposal.facilityType} 
+                              disabled 
+                              className="bg-gray-900/50 border-gray-700"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="original-principal" className="text-xs text-gray-400 mb-2 block">Loan Target Size</Label>
+                            <Input 
+                              id="original-principal" 
+                              value={proposal.principal} 
+                              disabled 
+                              className="bg-gray-900/50 border-gray-700"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="original-interest" className="text-xs text-gray-400 mb-2 block">Loan Target Interest Rate</Label>
+                            <Input 
+                              id="original-interest" 
+                              value={proposal.interestRate} 
+                              disabled 
+                              className="bg-gray-900/50 border-gray-700"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="original-term" className="text-xs text-gray-400 mb-2 block">Period</Label>
+                            <Input 
+                              id="original-term" 
+                              value={proposal.term} 
+                              disabled 
+                              className="bg-gray-900/50 border-gray-700"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </TabsContent>
+                    
+                    <TabsContent value="custom">
+                      <div className="space-y-4">
+                        <div className="flex items-center text-blue-400 mb-4">
+                          <Percent className="h-5 w-5 mr-2" />
+                          <p>You are proposing custom terms for this request.</p>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div>
+                            <Label htmlFor="custom-type" className="text-xs text-gray-400 mb-2 block">Type of Loan</Label>
+                            <Input 
+                              id="custom-type" 
+                              value={loanType} 
+                              onChange={(e) => setLoanType(e.target.value)}
+                              className="bg-gray-900/50 border-gray-700"
+                              placeholder="e.g. Term Loan"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="custom-principal" className="text-xs text-gray-400 mb-2 block">Loan Target Size ($)</Label>
+                            <Input 
+                              id="custom-principal" 
+                              value={principal} 
+                              onChange={(e) => setPrincipal(e.target.value)} 
+                              className="bg-gray-900/50 border-gray-700"
+                              placeholder="1,000,000"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="custom-interest" className="text-xs text-gray-400 mb-2 block">Loan Target Interest Rate (%)</Label>
+                            <Input 
+                              id="custom-interest" 
+                              value={interestRate} 
+                              onChange={(e) => setInterestRate(e.target.value)} 
+                              className="bg-gray-900/50 border-gray-700"
+                              placeholder="4.5"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="custom-term" className="text-xs text-gray-400 mb-2 block">Period (MONTHS)</Label>
+                            <Input 
+                              id="custom-term" 
+                              value={term} 
+                              onChange={(e) => setTerm(e.target.value)} 
+                              className="bg-gray-900/50 border-gray-700"
+                              placeholder="36"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                </CardContent>
+              </Card>
+              
+              {/* Supplementary Info */}
+              <Card className="bg-black border-gray-800">
+                <CardHeader className="border-b border-gray-800 flex flex-row items-center justify-between">
+                  <CardTitle className="text-lg font-mono">Supplementary Info</CardTitle>
+                  <Info className="h-5 w-5 text-gray-400" />
+                </CardHeader>
+                <CardContent className="pt-6">
+                  <div className="space-y-6">
+                    {/* Case Studies */}
+                    <div>
+                      <div className="flex justify-between items-center mb-3">
+                        <Label className="text-sm">Case Studies</Label>
+                        <Button variant="outline" size="sm" className="text-xs h-8">
+                          <Upload className="h-3.5 w-3.5 mr-1" />
+                          Add from Portfolio
+                        </Button>
+                      </div>
+                      
+                      <div className="bg-black border border-gray-700 border-dashed rounded-md p-3 flex items-center space-x-4">
+                        <div className="border border-gray-700 rounded p-2 flex items-center justify-center h-20 w-20">
+                          <Upload className="h-6 w-6 text-gray-500" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xs text-gray-300">
+                            Drag and drop case studies or click to upload examples of similar work you've completed.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Additional Documents */}
+                    <div>
+                      <Label className="text-sm mb-3 block">Additional Documents</Label>
+                      <div className="bg-black border border-gray-700 border-dashed rounded-md p-3 flex items-center space-x-4">
+                        <div className="border border-gray-700 rounded p-2 flex items-center justify-center h-20 w-20">
+                          <FileText className="h-6 w-6 text-gray-500" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xs text-gray-300">
+                            Upload any additional documents that might be relevant to your bid.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Additional Information */}
+                    <div>
+                      <Label htmlFor="additional-info" className="text-sm mb-3 block">Additional Information</Label>
+                      <Textarea 
+                        id="additional-info" 
+                        value={additionalInfo}
+                        onChange={(e) => setAdditionalInfo(e.target.value)}
+                        placeholder="Add any additional information that might be relevant to your bid..."
+                        className="bg-gray-900/50 border-gray-700 min-h-[120px]"
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        )}
+        
+        {step === 2 && (
+          <div className="space-y-6">
+            <Card className="bg-black border-gray-800">
+              <CardHeader className="border-b border-gray-800">
+                <CardTitle className="text-lg font-mono">Review Your Bid</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+                    <div>
+                      <h3 className="text-sm font-semibold mb-2 text-gray-400">Loan Details</h3>
+                      <div className="space-y-3">
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Type:</span>
+                          <span>{acceptOriginalTerms ? proposal.facilityType : loanType}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Amount:</span>
+                          <span>{acceptOriginalTerms ? proposal.principal : `$${principal}`}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Interest Rate:</span>
+                          <span>{acceptOriginalTerms ? proposal.interestRate : `${interestRate}%`}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Term:</span>
+                          <span>{acceptOriginalTerms ? proposal.term : `${term} months`}</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-sm font-semibold mb-2 text-gray-400">Company Information</h3>
+                      <div className="space-y-3">
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Industry:</span>
+                          <span>{proposal.industry}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Financing Type:</span>
+                          <span>{proposal.financingType}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Credit Rating:</span>
+                          <span>{proposal.creditRating}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Bid Deadline:</span>
+                          <span>{proposal.bidDeadline}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Separator className="my-6" />
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="text-sm font-semibold mb-2 text-gray-400">Company Description</h3>
+                      <p className="text-sm bg-gray-900/30 p-3 rounded-md">
+                        {companyDescription || "No company description provided."}
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-sm font-semibold mb-2 text-gray-400">Transaction Description & Use of Proceeds</h3>
+                      <p className="text-sm bg-gray-900/30 p-3 rounded-md">
+                        {transactionDescription || "No transaction description provided."}
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-sm font-semibold mb-2 text-gray-400">Banking Relationships</h3>
+                      <p className="text-sm bg-gray-900/30 p-3 rounded-md">
+                        {banksOpenness || "No information on banking relationships provided."}
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-sm font-semibold mb-2 text-gray-400">Additional Information</h3>
+                      <p className="text-sm bg-gray-900/30 p-3 rounded-md">
+                        {additionalInfo || "No additional information provided."}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+        
+        {/* Footer buttons */}
+        <div className="flex justify-end mt-6 space-x-4">
+          {step === 1 && (
+            <>
+              <Button 
+                variant="outline" 
+                onClick={() => navigate(`/proposal/${id}`)}
+              >
+                <X className="mr-2 h-4 w-4" />
+                Cancel
+              </Button>
+              <Button variant="outline" onClick={handleSaveDraft}>
+                Save Draft
+              </Button>
+              <Button onClick={handleNextStep}>
+                Next
+              </Button>
+            </>
+          )}
+          
+          {step === 2 && (
+            <>
+              <Button 
+                variant="outline" 
+                onClick={handlePreviousStep}
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back
+              </Button>
+              <Button variant="outline" onClick={handleSaveDraft}>
+                Save Draft
+              </Button>
+              <Button onClick={handleSubmitBid}>
+                <Check className="mr-2 h-4 w-4" />
+                Submit Bid
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </div>
