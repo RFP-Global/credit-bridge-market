@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Building, DollarSign, Percent, Calendar, Check, X, Upload, Info, FileText } from "lucide-react";
@@ -172,7 +171,7 @@ const BidSubmission = () => {
         
         {step === 1 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Left column - Proposal details */}
+            {/* Left column - Proposal details and Supplementary info */}
             <div className="space-y-6">
               {/* Type of loan and amount */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -217,6 +216,66 @@ const BidSubmission = () => {
                   />
                 </div>
               </div>
+
+              {/* Supplementary Info - Moved from right column to here */}
+              <Card className="bg-black border-gray-800">
+                <CardHeader className="border-b border-gray-800 flex flex-row items-center justify-between">
+                  <CardTitle className="text-lg font-mono">Supplementary Info</CardTitle>
+                  <Info className="h-5 w-5 text-gray-400" />
+                </CardHeader>
+                <CardContent className="pt-6">
+                  <div className="space-y-6">
+                    {/* Case Studies */}
+                    <div>
+                      <div className="flex justify-between items-center mb-3">
+                        <Label className="text-sm">Case Studies</Label>
+                        <Button variant="outline" size="sm" className="text-xs h-8">
+                          <Upload className="h-3.5 w-3.5 mr-1" />
+                          Add from Portfolio
+                        </Button>
+                      </div>
+                      
+                      <div className="bg-black border border-gray-700 border-dashed rounded-md p-3 flex items-center space-x-4">
+                        <div className="border border-gray-700 rounded p-2 flex items-center justify-center h-20 w-20">
+                          <Upload className="h-6 w-6 text-gray-500" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xs text-gray-300">
+                            Drag and drop case studies or click to upload examples of similar work you've completed.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Additional Documents */}
+                    <div>
+                      <Label className="text-sm mb-3 block">Additional Documents</Label>
+                      <div className="bg-black border border-gray-700 border-dashed rounded-md p-3 flex items-center space-x-4">
+                        <div className="border border-gray-700 rounded p-2 flex items-center justify-center h-20 w-20">
+                          <FileText className="h-6 w-6 text-gray-500" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xs text-gray-300">
+                            Upload any additional documents that might be relevant to your bid.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Additional Information */}
+                    <div>
+                      <Label htmlFor="additional-info" className="text-sm mb-3 block">Additional Information</Label>
+                      <Textarea 
+                        id="additional-info" 
+                        value={additionalInfo}
+                        onChange={(e) => setAdditionalInfo(e.target.value)}
+                        placeholder="Add any additional information that might be relevant to your bid..."
+                        className="bg-gray-900/50 border-gray-700 min-h-[120px]"
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
             
             {/* Right column - Bid details */}
@@ -345,66 +404,6 @@ const BidSubmission = () => {
                       </div>
                     </TabsContent>
                   </Tabs>
-                </CardContent>
-              </Card>
-              
-              {/* Supplementary Info */}
-              <Card className="bg-black border-gray-800">
-                <CardHeader className="border-b border-gray-800 flex flex-row items-center justify-between">
-                  <CardTitle className="text-lg font-mono">Supplementary Info</CardTitle>
-                  <Info className="h-5 w-5 text-gray-400" />
-                </CardHeader>
-                <CardContent className="pt-6">
-                  <div className="space-y-6">
-                    {/* Case Studies */}
-                    <div>
-                      <div className="flex justify-between items-center mb-3">
-                        <Label className="text-sm">Case Studies</Label>
-                        <Button variant="outline" size="sm" className="text-xs h-8">
-                          <Upload className="h-3.5 w-3.5 mr-1" />
-                          Add from Portfolio
-                        </Button>
-                      </div>
-                      
-                      <div className="bg-black border border-gray-700 border-dashed rounded-md p-3 flex items-center space-x-4">
-                        <div className="border border-gray-700 rounded p-2 flex items-center justify-center h-20 w-20">
-                          <Upload className="h-6 w-6 text-gray-500" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-xs text-gray-300">
-                            Drag and drop case studies or click to upload examples of similar work you've completed.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Additional Documents */}
-                    <div>
-                      <Label className="text-sm mb-3 block">Additional Documents</Label>
-                      <div className="bg-black border border-gray-700 border-dashed rounded-md p-3 flex items-center space-x-4">
-                        <div className="border border-gray-700 rounded p-2 flex items-center justify-center h-20 w-20">
-                          <FileText className="h-6 w-6 text-gray-500" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-xs text-gray-300">
-                            Upload any additional documents that might be relevant to your bid.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Additional Information */}
-                    <div>
-                      <Label htmlFor="additional-info" className="text-sm mb-3 block">Additional Information</Label>
-                      <Textarea 
-                        id="additional-info" 
-                        value={additionalInfo}
-                        onChange={(e) => setAdditionalInfo(e.target.value)}
-                        placeholder="Add any additional information that might be relevant to your bid..."
-                        className="bg-gray-900/50 border-gray-700 min-h-[120px]"
-                      />
-                    </div>
-                  </div>
                 </CardContent>
               </Card>
             </div>
