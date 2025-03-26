@@ -12,7 +12,7 @@ export const useMarketplace = (proposals: FinanceProposal[]) => {
   const [sortField, setSortField] = useState<keyof FinanceProposal | "">("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10; // Increased from 5 to 10 for better pagination with 50+ items
 
   // Filter and sort the proposals
   const filteredProposals = useMemo(() => {
@@ -81,7 +81,7 @@ export const useMarketplace = (proposals: FinanceProposal[]) => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return filteredProposals.slice(startIndex, endIndex);
-  }, [filteredProposals, currentPage]);
+  }, [filteredProposals, currentPage, itemsPerPage]);
 
   // Total pages for pagination
   const totalPages = Math.max(1, Math.ceil(filteredProposals.length / itemsPerPage));
