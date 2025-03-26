@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronDown } from 'lucide-react';
@@ -19,6 +18,7 @@ import {
 import IntelligenceAnalyticsCard from "@/components/IntelligenceAnalyticsCard";
 import CustomTooltip from "./CustomTooltip";
 import { renderCustomizedLabel, COLORS } from "./ChartUtils";
+import TreemapChart from "@/components/charts/TreemapChart";
 
 interface BusinessSizeSectionProps {
   timeFilter: string;
@@ -37,6 +37,17 @@ const BusinessSizeSection: React.FC<BusinessSizeSectionProps> = ({
   timeSeriesData,
   loanApprovalData
 }) => {
+  // Industry loan request data with 7 industries
+  const industryLoanRequestData = [
+    { name: 'Manufacturing', size: 350 },
+    { name: 'Construction', size: 300 },
+    { name: 'Technology', size: 280 },
+    { name: 'Retail', size: 220 },
+    { name: 'Healthcare', size: 180 },
+    { name: 'Financial Services', size: 150 },
+    { name: 'Hospitality', size: 120 }
+  ];
+
   return (
     <Card className="bg-black/20 border-gray-800 shadow-lg">
       <CardHeader className="p-3 border-b border-gray-800 bg-black/40 flex flex-row items-center justify-between">
@@ -55,25 +66,11 @@ const BusinessSizeSection: React.FC<BusinessSizeSectionProps> = ({
       <CardContent className="p-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <IntelligenceAnalyticsCard 
-            title="Loan Request Patterns by Size"
+            title="Loan Request Size by Industry"
             timeFilter={timeFilter}
             onTimeFilterChange={setTimeFilter}
           >
-            <BarChart 
-              width={450} 
-              height={220} 
-              data={loanRequestData}
-              margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#444" vertical={false} />
-              <XAxis dataKey="name" stroke="#888" />
-              <YAxis stroke="#888" />
-              <Tooltip content={<CustomTooltip />} />
-              <Legend />
-              <Bar dataKey="pending" name="Pending Loans" fill="#33bbef" />
-              <Bar dataKey="approved" name="Approved" fill="#10b981" />
-              <Bar dataKey="rejected" name="Rejected" fill="#F97316" />
-            </BarChart>
+            <TreemapChart data={industryLoanRequestData} />
           </IntelligenceAnalyticsCard>
 
           <IntelligenceAnalyticsCard 
