@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import {
   Table,
   TableBody,
-  TableHeader,
-  TableRow,
 } from "@/components/ui/table";
 import { FinanceProposal } from "@/types/marketplace";
 import SortableTableHeader from "./table/SortableTableHeader";
@@ -32,93 +30,44 @@ const MarketplaceTable = ({
   };
 
   return (
-    <div className="rounded-sm overflow-hidden mb-4 relative border-0">
-      <Table>
-        <TableHeader className="sticky top-0 z-20">
-          <TableRow className="border-gray-700/30 hover:bg-transparent bg-transparent">
-            <SortableTableHeader 
-              title="RFP CREDIT RATING" 
-              field="creditRating" 
-              sortField={sortField}
-              sortDirection={sortDirection}
-              handleSort={handleSort}
-            />
-            <SortableTableHeader 
-              title="PROJECT NAME" 
-              field="projectName" 
-              sortField={sortField}
-              sortDirection={sortDirection}
-              handleSort={handleSort}
-            />
-            <SortableTableHeader 
-              title="FACILITY TYPE" 
-              field="facilityType" 
-              sortField={sortField}
-              sortDirection={sortDirection}
-              handleSort={handleSort}
-            />
-            <SortableTableHeader 
-              title="NEW FINANCING OR REFINANCING" 
-              field="financingType" 
-              sortField={sortField}
-              sortDirection={sortDirection}
-              handleSort={handleSort}
-            />
-            <StaticTableHeader title="TARGET PRINCIPAL" />
-            <SortableTableHeader 
-              title="INTEREST RATE TYPE" 
-              field="interestRateType" 
-              sortField={sortField}
-              sortDirection={sortDirection}
-              handleSort={handleSort}
-            />
-            <StaticTableHeader title="TARGET INTEREST RATE" />
-            <StaticTableHeader title="TARGET TERM" />
-            <SortableTableHeader 
-              title="STATUS" 
-              field="status" 
-              sortField={sortField}
-              sortDirection={sortDirection}
-              handleSort={handleSort}
-            />
-            <StaticTableHeader title="BID DEADLINE" />
-            <SortableTableHeader 
-              title="LENDER PREFERENCES" 
-              field="lenderPreferences" 
-              sortField={sortField}
-              sortDirection={sortDirection}
-              handleSort={handleSort}
-            />
-            <SortableTableHeader 
-              title="INDUSTRY" 
-              field="industry" 
-              sortField={sortField}
-              sortDirection={sortDirection}
-              handleSort={handleSort}
-            />
-            <SortableTableHeader 
-              title="BID VOLUME" 
-              field="bidVolume" 
-              sortField={sortField}
-              sortDirection={sortDirection}
-              handleSort={handleSort}
-            />
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {proposals.length > 0 ? (
-            proposals.map((proposal) => (
-              <ProposalTableRow 
-                key={proposal.id}
-                proposal={proposal} 
-                onViewDetails={viewProposalDetails} 
-              />
-            ))
-          ) : (
-            <EmptyTableRow />
-          )}
-        </TableBody>
-      </Table>
+    <div className="mb-4 relative">
+      {/* Separate fixed header */}
+      <div className="sticky top-0 z-20 bg-black/90 border-b border-gray-700/30 mb-1">
+        <div className="flex w-full">
+          <div className="font-mono text-xs text-center text-cyan-400 flex-1 px-4 py-3">CREDIT RATING</div>
+          <div className="font-medium text-center text-cyan-400 flex-1 px-4 py-3">PROJECT NAME</div>
+          <div className="text-center text-cyan-400 flex-1 px-4 py-3">FACILITY TYPE</div>
+          <div className="text-center text-cyan-400 flex-1 px-4 py-3">FINANCING TYPE</div>
+          <div className="text-center text-cyan-400 flex-1 px-4 py-3">TARGET PRINCIPAL</div>
+          <div className="text-center text-cyan-400 flex-1 px-4 py-3">INTEREST RATE TYPE</div>
+          <div className="text-center text-cyan-400 flex-1 px-4 py-3">TARGET INTEREST RATE</div>
+          <div className="text-center text-cyan-400 flex-1 px-4 py-3">TARGET TERM</div>
+          <div className="text-center text-cyan-400 flex-1 px-4 py-3">STATUS</div>
+          <div className="text-center text-cyan-400 flex-1 px-4 py-3">BID DEADLINE</div>
+          <div className="text-center text-cyan-400 flex-1 px-4 py-3">LENDER PREFERENCES</div>
+          <div className="text-center text-cyan-400 flex-1 px-4 py-3">INDUSTRY</div>
+          <div className="text-center text-cyan-400 flex-1 px-4 py-3">BID VOLUME</div>
+        </div>
+      </div>
+
+      {/* Scrollable table content */}
+      <div className="rounded-sm overflow-hidden border-0">
+        <Table>
+          <TableBody>
+            {proposals.length > 0 ? (
+              proposals.map((proposal) => (
+                <ProposalTableRow 
+                  key={proposal.id}
+                  proposal={proposal} 
+                  onViewDetails={viewProposalDetails} 
+                />
+              ))
+            ) : (
+              <EmptyTableRow />
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };

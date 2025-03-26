@@ -26,15 +26,15 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
       className="border-gray-700/30 hover:bg-gray-800/20 cursor-pointer transition-colors"
       onClick={handleViewClick}
     >
-      <TableCell className="font-mono text-xs">{proposal.creditRating.toFixed(1)}</TableCell>
-      <TableCell className="font-medium">{proposal.projectName}</TableCell>
-      <TableCell>{proposal.facilityType}</TableCell>
-      <TableCell>{proposal.financingType}</TableCell>
-      <TableCell>{proposal.principal}</TableCell>
-      <TableCell>{proposal.interestRateType}</TableCell>
-      <TableCell>{proposal.interestRate}</TableCell>
-      <TableCell>{proposal.term}</TableCell>
-      <TableCell>
+      <TableCell className="font-mono text-xs text-center">{proposal.creditRating.toFixed(1)}</TableCell>
+      <TableCell className="font-medium text-center">{proposal.projectName}</TableCell>
+      <TableCell className="text-center">{proposal.facilityType}</TableCell>
+      <TableCell className="text-center">{proposal.financingType}</TableCell>
+      <TableCell className="text-center">{proposal.principal}</TableCell>
+      <TableCell className="text-center">{proposal.interestRateType}</TableCell>
+      <TableCell className="text-center">{proposal.interestRate}</TableCell>
+      <TableCell className="text-center">{proposal.term}</TableCell>
+      <TableCell className="text-center">
         <Badge className={`
           ${proposal.status === "OPEN" ? "bg-white/10 text-white" : 
             proposal.status === "COMPLETED" ? "bg-gray-500/20 text-gray-300" : 
@@ -44,11 +44,11 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
           {proposal.status}
         </Badge>
       </TableCell>
-      <TableCell>{proposal.bidDeadline}</TableCell>
-      <TableCell>{proposal.lenderPreferences}</TableCell>
-      <TableCell>{proposal.industry}</TableCell>
-      <TableCell>
-        <div className="flex items-center">
+      <TableCell className="text-center">{proposal.bidDeadline}</TableCell>
+      <TableCell className="text-center">{proposal.lenderPreferences}</TableCell>
+      <TableCell className="text-center">{proposal.industry}</TableCell>
+      <TableCell className="text-center">
+        <div className="flex items-center justify-center">
           <div className="w-16 bg-gray-700/50 h-1 rounded-full overflow-hidden mr-2">
             <div 
               className="bg-cyan-400/80 h-full rounded-full"
