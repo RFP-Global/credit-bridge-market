@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +11,7 @@ const EnterpriseDashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
   
-  const recentProjects = [
+  const recentProposals = [
     { id: 1, name: "Riverside Development", type: "Commercial Real Estate", status: "Under Review", amount: "$2.4M" },
     { id: 2, name: "Green Energy Initiative", type: "Renewable Energy", status: "Approved", amount: "$5.7M" },
     { id: 3, name: "Medical Center Expansion", type: "Healthcare", status: "Draft", amount: "$8.1M" }
@@ -92,7 +93,7 @@ const EnterpriseDashboard = () => {
                 </div>
                 <div className="text-xs text-muted-foreground pt-2 border-t border-primary/10">
                   <p className="flex justify-between py-1"><span>Account Level:</span> <span className="font-mono">ENTERPRISE</span></p>
-                  <p className="flex justify-between py-1"><span>Active Projects:</span> <span className="font-mono">7</span></p>
+                  <p className="flex justify-between py-1"><span>Active Proposals:</span> <span className="font-mono">7</span></p>
                   <p className="flex justify-between py-1"><span>Total Financing:</span> <span className="font-mono">$28.5M</span></p>
                 </div>
               </CardContent>
@@ -106,6 +107,7 @@ const EnterpriseDashboard = () => {
               <Button 
                 variant="ghost" 
                 className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3"
+                onClick={() => navigate("/proposals-dashboard")}
               >
                 <FileText className="h-4 w-4 mr-3" />
                 Proposals
@@ -150,7 +152,7 @@ const EnterpriseDashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Card className="border-primary/20 bg-background/50">
                     <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-mono">ACTIVE PROJECTS</CardTitle>
+                      <CardTitle className="text-sm font-mono">ACTIVE PROPOSALS</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="text-3xl font-mono">7</div>
@@ -172,34 +174,34 @@ const EnterpriseDashboard = () => {
                     </CardHeader>
                     <CardContent>
                       <div className="text-3xl font-mono">$28.5M</div>
-                      <p className="text-xs text-muted-foreground mt-1">Across all active projects</p>
+                      <p className="text-xs text-muted-foreground mt-1">Across all active proposals</p>
                     </CardContent>
                   </Card>
                 </div>
                 
                 <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
                   <CardHeader>
-                    <CardTitle className="text-sm font-mono">RECENT PROJECTS</CardTitle>
-                    <CardDescription>Your latest financing projects</CardDescription>
+                    <CardTitle className="text-sm font-mono">RECENT PROPOSALS</CardTitle>
+                    <CardDescription>Your latest financing proposals</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {recentProjects.map(project => (
-                        <div key={project.id} className="border-b border-primary/10 pb-3 last:border-0 last:pb-0">
+                      {recentProposals.map(proposal => (
+                        <div key={proposal.id} className="border-b border-primary/10 pb-3 last:border-0 last:pb-0">
                           <div className="flex justify-between items-start">
                             <div>
-                              <h3 className="font-mono text-sm">{project.name}</h3>
-                              <p className="text-xs text-muted-foreground">{project.type}</p>
+                              <h3 className="font-mono text-sm">{proposal.name}</h3>
+                              <p className="text-xs text-muted-foreground">{proposal.type}</p>
                             </div>
                             <div className="text-right">
                               <span className={`text-xs px-2 py-1 font-mono ${
-                                project.status === "Approved" ? "bg-green-100 text-green-800" : 
-                                project.status === "Under Review" ? "bg-amber-100 text-amber-800" : 
+                                proposal.status === "Approved" ? "bg-green-100 text-green-800" : 
+                                proposal.status === "Under Review" ? "bg-amber-100 text-amber-800" : 
                                 "bg-blue-100 text-blue-800"
                               }`}>
-                                {project.status}
+                                {proposal.status}
                               </span>
-                              <p className="text-xs font-mono mt-1">{project.amount}</p>
+                              <p className="text-xs font-mono mt-1">{proposal.amount}</p>
                             </div>
                           </div>
                         </div>
@@ -207,8 +209,13 @@ const EnterpriseDashboard = () => {
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <Button variant="outline" size="sm" className="w-full font-mono text-xs rounded-none border-primary/20">
-                      VIEW ALL PROJECTS
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full font-mono text-xs rounded-none border-primary/20"
+                      onClick={() => navigate("/proposals-dashboard")}
+                    >
+                      VIEW ALL PROPOSALS
                       <ArrowUpRight className="ml-2 h-3 w-3" />
                     </Button>
                   </CardFooter>
@@ -225,6 +232,12 @@ const EnterpriseDashboard = () => {
                     <div className="text-center py-8 px-4">
                       <p className="text-muted-foreground">Proposals tab content would be displayed here.</p>
                       <p className="text-sm mt-2">This is a placeholder for the proposals listing and management interface.</p>
+                      <Button 
+                        className="mt-4 font-mono text-xs"
+                        onClick={() => navigate("/proposals-dashboard")}
+                      >
+                        VIEW PROPOSALS DASHBOARD
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
