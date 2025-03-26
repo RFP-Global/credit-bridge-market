@@ -2,8 +2,25 @@ import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Download, Settings, Filter } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import IntelligenceAnalyticsCard from "@/components/IntelligenceAnalyticsCard";
+import { 
+  BarChart, 
+  LineChart, 
+  PieChart, 
+  Bar, 
+  Line, 
+  Pie, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend, 
+  Cell, 
+  ResponsiveContainer 
+} from "recharts";
 
 // Mock data for the charts
 const businessSizeData = [
