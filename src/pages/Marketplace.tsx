@@ -11,7 +11,7 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import { Eye, Filter, Check, X } from "lucide-react";
+import { Eye, Filter, Check, X, ChevronUp, ChevronDown } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -32,6 +32,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent
+} from "@/components/ui/collapsible";
 import { toast } from "sonner";
 
 const marketplaceData = [
@@ -129,6 +134,21 @@ const Marketplace = () => {
     industry: [],
     status: []
   });
+  
+  // Column visibility state
+  const [columnVisibility, setColumnVisibility] = useState({
+    projectName: true,
+    facilityType: true,
+    financing: true
+  });
+  
+  // Toggle column visibility
+  const toggleColumn = (column) => {
+    setColumnVisibility(prev => ({
+      ...prev,
+      [column]: !prev[column]
+    }));
+  };
   
   // Apply filters and search to the data
   useEffect(() => {
@@ -458,15 +478,73 @@ const Marketplace = () => {
                       <TableHead className="text-xs text-muted-foreground font-mono">
                         RFP<br/>CREDIT<br/>RATING
                       </TableHead>
+                      
+                      {/* Project Name Column with Collapsible */}
                       <TableHead className="text-xs text-muted-foreground font-mono">
-                        PROJECT<br/>NAME
+                        <Collapsible
+                          open={columnVisibility.projectName}
+                          onOpenChange={() => toggleColumn('projectName')}
+                          className="flex items-center"
+                        >
+                          <div className="flex items-center gap-1">
+                            <CollapsibleTrigger asChild>
+                              <Button variant="ghost" size="sm" className="h-5 w-5 p-0">
+                                {columnVisibility.projectName ? (
+                                  <ChevronUp className="h-3 w-3" />
+                                ) : (
+                                  <ChevronDown className="h-3 w-3" />
+                                )}
+                              </Button>
+                            </CollapsibleTrigger>
+                            <span>PROJECT<br/>NAME</span>
+                          </div>
+                        </Collapsible>
                       </TableHead>
+                      
+                      {/* Facility Type Column with Collapsible */}
                       <TableHead className="text-xs text-muted-foreground font-mono">
-                        FACILITY<br/>TYPE
+                        <Collapsible
+                          open={columnVisibility.facilityType}
+                          onOpenChange={() => toggleColumn('facilityType')}
+                          className="flex items-center"
+                        >
+                          <div className="flex items-center gap-1">
+                            <CollapsibleTrigger asChild>
+                              <Button variant="ghost" size="sm" className="h-5 w-5 p-0">
+                                {columnVisibility.facilityType ? (
+                                  <ChevronUp className="h-3 w-3" />
+                                ) : (
+                                  <ChevronDown className="h-3 w-3" />
+                                )}
+                              </Button>
+                            </CollapsibleTrigger>
+                            <span>FACILITY<br/>TYPE</span>
+                          </div>
+                        </Collapsible>
                       </TableHead>
+                      
+                      {/* Financing Column with Collapsible */}
                       <TableHead className="text-xs text-muted-foreground font-mono">
-                        NEW FINANCING<br/>OR<br/>REFINANCING
+                        <Collapsible
+                          open={columnVisibility.financing}
+                          onOpenChange={() => toggleColumn('financing')}
+                          className="flex items-center"
+                        >
+                          <div className="flex items-center gap-1">
+                            <CollapsibleTrigger asChild>
+                              <Button variant="ghost" size="sm" className="h-5 w-5 p-0">
+                                {columnVisibility.financing ? (
+                                  <ChevronUp className="h-3 w-3" />
+                                ) : (
+                                  <ChevronDown className="h-3 w-3" />
+                                )}
+                              </Button>
+                            </CollapsibleTrigger>
+                            <span>NEW FINANCING<br/>OR<br/>REFINANCING</span>
+                          </div>
+                        </Collapsible>
                       </TableHead>
+                      
                       <TableHead className="text-xs text-muted-foreground font-mono">
                         TARGET<br/>PRINCIPAL
                       </TableHead>
@@ -518,9 +596,22 @@ const Marketplace = () => {
                               </div>
                             </div>
                           </TableCell>
-                          <TableCell className="font-mono text-foreground py-3">{item.projectName}</TableCell>
-                          <TableCell className="font-mono text-foreground py-3">{item.facilityType}</TableCell>
-                          <TableCell className="font-mono text-foreground py-3">{item.financing}</TableCell>
+                          
+                          {/* Project Name Cell */}
+                          <TableCell className="font-mono text-foreground py-3">
+                            {columnVisibility.projectName ? item.projectName : '...'}
+                          </TableCell>
+                          
+                          {/* Facility Type Cell */}
+                          <TableCell className="font-mono text-foreground py-3">
+                            {columnVisibility.facilityType ? item.facilityType : '...'}
+                          </TableCell>
+                          
+                          {/* Financing Cell */}
+                          <TableCell className="font-mono text-foreground py-3">
+                            {columnVisibility.financing ? item.financing : '...'}
+                          </TableCell>
+                          
                           <TableCell className="font-mono text-foreground py-3">{item.principal}</TableCell>
                           <TableCell className="font-mono text-foreground py-3">{item.rateType}</TableCell>
                           <TableCell className="font-mono text-foreground py-3">{item.targetRate}</TableCell>
