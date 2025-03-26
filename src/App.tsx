@@ -15,30 +15,32 @@ import LenderDashboard from "./pages/LenderDashboard";
 import Intelligence from "./pages/Intelligence";
 import FullscreenButton from "./components/FullscreenButton";
 
-const queryClient = new QueryClient();
+const App = () => {
+  // Create a client inside the component
+  const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <FullscreenButton />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/marketplace" element={<Marketplace />} />
-          <Route path="/access" element={<Access />} />
-          <Route path="/enterprise-login" element={<EnterpriseLogin />} />
-          <Route path="/lender-login" element={<LenderLogin />} />
-          <Route path="/enterprise-dashboard" element={<EnterpriseDashboard />} />
-          <Route path="/lender-dashboard" element={<LenderDashboard />} />
-          <Route path="/intelligence" element={<Intelligence />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/marketplace" element={<Marketplace />} />
+            <Route path="/access" element={<Access />} />
+            <Route path="/enterprise-login" element={<EnterpriseLogin />} />
+            <Route path="/lender-login" element={<LenderLogin />} />
+            <Route path="/enterprise-dashboard" element={<EnterpriseDashboard />} />
+            <Route path="/lender-dashboard" element={<LenderDashboard />} />
+            <Route path="/intelligence" element={<Intelligence />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
