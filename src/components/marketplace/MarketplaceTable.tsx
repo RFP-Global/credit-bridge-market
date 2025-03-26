@@ -1,18 +1,16 @@
 
-import { Eye, ArrowUpDown, CircleHelp } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+import { toast } from "sonner";
 import {
   Table,
   TableBody,
-  TableCell,
-  TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { FinanceProposal } from "@/types/marketplace";
-import { toast } from "sonner";
+import SortableTableHeader from "./table/SortableTableHeader";
+import StaticTableHeader from "./table/StaticTableHeader";
+import ProposalTableRow from "./table/ProposalTableRow";
+import EmptyTableRow from "./table/EmptyTableRow";
 
 interface MarketplaceTableProps {
   proposals: FinanceProposal[];
@@ -36,179 +34,87 @@ const MarketplaceTable = ({
       <Table>
         <TableHeader className="sticky top-0 z-20">
           <TableRow className="border-gray-700 hover:bg-transparent bg-black">
-            <TableHead className="text-center w-16 text-xs font-medium text-cyan-400 bg-black sticky top-0 z-10">
-              
-            </TableHead>
-            <TableHead 
-              className="text-center w-24 text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0 z-10"
-              onClick={() => handleSort('creditRating')}
-            >
-              <div className="flex items-center justify-center">
-                RFP CREDIT RATING
-                <ArrowUpDown className="ml-1 h-3 w-3" />
-              </div>
-            </TableHead>
-            <TableHead 
-              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0 z-10"
-              onClick={() => handleSort('projectName')}
-            >
-              <div className="flex items-center justify-center">
-                PROJECT NAME
-                <ArrowUpDown className="ml-1 h-3 w-3" />
-              </div>
-            </TableHead>
-            <TableHead 
-              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0 z-10"
-              onClick={() => handleSort('facilityType')}
-            >
-              <div className="flex items-center justify-center">
-                FACILITY TYPE
-                <ArrowUpDown className="ml-1 h-3 w-3" />
-              </div>
-            </TableHead>
-            <TableHead 
-              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0 z-10"
-              onClick={() => handleSort('financingType')}
-            >
-              <div className="flex items-center justify-center">
-                NEW FINANCING OR REFINANCING
-                <ArrowUpDown className="ml-1 h-3 w-3" />
-              </div>
-            </TableHead>
-            <TableHead className="text-center text-xs font-medium text-cyan-400 bg-black sticky top-0 z-10">
-              TARGET PRINCIPAL
-            </TableHead>
-            <TableHead 
-              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0 z-10"
-              onClick={() => handleSort('interestRateType')}
-            >
-              <div className="flex items-center justify-center">
-                INTEREST RATE TYPE
-                <ArrowUpDown className="ml-1 h-3 w-3" />
-              </div>
-            </TableHead>
-            <TableHead className="text-center text-xs font-medium text-cyan-400 bg-black sticky top-0 z-10">
-              TARGET INTEREST RATE
-            </TableHead>
-            <TableHead className="text-center text-xs font-medium text-cyan-400 bg-black sticky top-0 z-10">
-              TARGET TERM
-            </TableHead>
-            <TableHead 
-              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0 z-10"
-              onClick={() => handleSort('status')}
-            >
-              <div className="flex items-center justify-center">
-                STATUS
-                <ArrowUpDown className="ml-1 h-3 w-3" />
-              </div>
-            </TableHead>
-            <TableHead className="text-center text-xs font-medium text-cyan-400 bg-black sticky top-0 z-10">
-              BID DEADLINE
-            </TableHead>
-            <TableHead 
-              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0 z-10"
-              onClick={() => handleSort('lenderPreferences')}
-            >
-              <div className="flex items-center justify-center">
-                LENDER PREFERENCES
-                <ArrowUpDown className="ml-1 h-3 w-3" />
-              </div>
-            </TableHead>
-            <TableHead 
-              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0 z-10"
-              onClick={() => handleSort('industry')}
-            >
-              <div className="flex items-center justify-center">
-                INDUSTRY
-                <ArrowUpDown className="ml-1 h-3 w-3" />
-              </div>
-            </TableHead>
-            <TableHead 
-              className="text-center text-xs font-medium text-cyan-400 cursor-pointer hover:text-white bg-black sticky top-0 z-10"
-              onClick={() => handleSort('bidVolume')}
-            >
-              <div className="flex items-center justify-center">
-                BID VOLUME
-                <ArrowUpDown className="ml-1 h-3 w-3" />
-              </div>
-            </TableHead>
+            <StaticTableHeader title="" />
+            <SortableTableHeader 
+              title="RFP CREDIT RATING" 
+              field="creditRating" 
+              sortField={sortField}
+              sortDirection={sortDirection}
+              handleSort={handleSort}
+            />
+            <SortableTableHeader 
+              title="PROJECT NAME" 
+              field="projectName" 
+              sortField={sortField}
+              sortDirection={sortDirection}
+              handleSort={handleSort}
+            />
+            <SortableTableHeader 
+              title="FACILITY TYPE" 
+              field="facilityType" 
+              sortField={sortField}
+              sortDirection={sortDirection}
+              handleSort={handleSort}
+            />
+            <SortableTableHeader 
+              title="NEW FINANCING OR REFINANCING" 
+              field="financingType" 
+              sortField={sortField}
+              sortDirection={sortDirection}
+              handleSort={handleSort}
+            />
+            <StaticTableHeader title="TARGET PRINCIPAL" />
+            <SortableTableHeader 
+              title="INTEREST RATE TYPE" 
+              field="interestRateType" 
+              sortField={sortField}
+              sortDirection={sortDirection}
+              handleSort={handleSort}
+            />
+            <StaticTableHeader title="TARGET INTEREST RATE" />
+            <StaticTableHeader title="TARGET TERM" />
+            <SortableTableHeader 
+              title="STATUS" 
+              field="status" 
+              sortField={sortField}
+              sortDirection={sortDirection}
+              handleSort={handleSort}
+            />
+            <StaticTableHeader title="BID DEADLINE" />
+            <SortableTableHeader 
+              title="LENDER PREFERENCES" 
+              field="lenderPreferences" 
+              sortField={sortField}
+              sortDirection={sortDirection}
+              handleSort={handleSort}
+            />
+            <SortableTableHeader 
+              title="INDUSTRY" 
+              field="industry" 
+              sortField={sortField}
+              sortDirection={sortDirection}
+              handleSort={handleSort}
+            />
+            <SortableTableHeader 
+              title="BID VOLUME" 
+              field="bidVolume" 
+              sortField={sortField}
+              sortDirection={sortDirection}
+              handleSort={handleSort}
+            />
           </TableRow>
         </TableHeader>
         <TableBody>
           {proposals.length > 0 ? (
             proposals.map((proposal) => (
-              <TableRow key={proposal.id} className="border-gray-700 hover:bg-gray-800/20">
-                <TableCell className="text-center py-3">
-                  <div className="flex justify-center items-center">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-gray-400 hover:text-white hover:bg-gray-700/50"
-                      onClick={() => viewProposalDetails(proposal.id)}
-                    >
-                      <Eye className="h-5 w-5" />
-                    </Button>
-                  </div>
-                </TableCell>
-                <TableCell className="text-center py-3">
-                  <div className="flex justify-center items-center gap-2">
-                    <CircleHelp className="h-5 w-5 text-gray-400" />
-                    <span>{proposal.creditRating}</span>
-                  </div>
-                </TableCell>
-                <TableCell className="text-center py-3">
-                  {proposal.projectName}
-                </TableCell>
-                <TableCell className="text-center py-3">
-                  {proposal.facilityType}
-                </TableCell>
-                <TableCell className="text-center py-3">
-                  {proposal.financingType}
-                </TableCell>
-                <TableCell className="text-center py-3">
-                  {proposal.principal}
-                </TableCell>
-                <TableCell className="text-center py-3">
-                  {proposal.interestRateType}
-                </TableCell>
-                <TableCell className="text-center py-3">
-                  {proposal.interestRate}
-                </TableCell>
-                <TableCell className="text-center py-3">
-                  {proposal.term}
-                </TableCell>
-                <TableCell className="text-center py-3">
-                  <Badge 
-                    className={`
-                      ${proposal.status === "OPEN" ? "bg-white/10 text-white" : 
-                        proposal.status === "COMPLETED" ? "bg-gray-500/20 text-gray-300" : 
-                        "bg-gray-400/10 text-gray-400"}
-                      rounded-full px-3
-                    `}
-                  >
-                    {proposal.status}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-center py-3">
-                  {proposal.bidDeadline}
-                </TableCell>
-                <TableCell className="text-center py-3">
-                  {proposal.lenderPreferences}
-                </TableCell>
-                <TableCell className="text-center py-3">
-                  {proposal.industry}
-                </TableCell>
-                <TableCell className="text-center py-3">
-                  <Progress value={proposal.bidVolume} className="h-2 w-32 bg-cyan-950/40" />
-                </TableCell>
-              </TableRow>
+              <ProposalTableRow 
+                key={proposal.id}
+                proposal={proposal} 
+                onViewDetails={viewProposalDetails} 
+              />
             ))
           ) : (
-            <TableRow>
-              <TableCell colSpan={14} className="text-center py-10 text-gray-400">
-                No results found. Try adjusting your filters.
-              </TableCell>
-            </TableRow>
+            <EmptyTableRow />
           )}
         </TableBody>
       </Table>
