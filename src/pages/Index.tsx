@@ -5,7 +5,8 @@ import HeroSection from "@/components/HeroSection";
 import FeaturedListings from "@/components/FeaturedListings";
 import BenefitsSection from "@/components/BenefitCard";
 import ContactSection from "@/components/ContactSection";
-import Footer from "@/components/Footer";
+// Removing Footer import
+// import Footer from "@/components/Footer";
 
 const Index = () => {
   useEffect(() => {
@@ -38,9 +39,11 @@ const Index = () => {
       <FeaturedListings />
       <BenefitsSection />
       <ContactSection />
-      <Footer />
+      {/* Removing Footer component */}
+      {/* <Footer /> */}
     </div>
   );
 };
 
 export default Index;
+
