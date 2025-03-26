@@ -37,7 +37,7 @@ const Navbar = () => {
       scrolled ? 'bg-background/90 backdrop-blur-md border-b border-primary/20' : 'bg-transparent'
     }`}>
       <div className="container mx-auto px-6 py-3">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between pt-[25px]">
           <div className="flex items-center">
             <Link to="/" className="text-xl font-bold tracking-tighter flex items-center">
               <div className="relative mr-2">
