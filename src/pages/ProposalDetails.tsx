@@ -7,12 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { CustomBadge } from "@/components/ui/custom-badge";
 import { Progress } from "@/components/ui/progress";
 import Navbar from "@/components/Navbar";
 import { financeProposals } from "@/data/marketplaceProposals";
 import { FinanceProposal } from "@/types/marketplace";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TimeSeriesLineChart, IndustryBarChart } from "@/components/charts";
+import { timeSeriesData, timeSeriesLines, industryBarData } from "@/data/chartMockData";
 
 // Add types for financial data that will be displayed on this page
 interface FinancialRatios {
@@ -317,9 +319,9 @@ const ProposalDetails = () => {
                       <p className="text-xs text-gray-400 mb-1">DEBT SERVICE COVERAGE</p>
                       <div className="flex items-center">
                         <span className="font-semibold mr-2">{financialRatios.debtServiceCoverageRatio.toFixed(2)}x</span>
-                        <Badge variant={financialRatios.debtServiceCoverageRatio > 1.25 ? "success" : "destructive"} className="text-xs">
+                        <CustomBadge variant={financialRatios.debtServiceCoverageRatio > 1.25 ? "success" : "destructive"} className="text-xs">
                           {financialRatios.debtServiceCoverageRatio > 1.25 ? "STRONG" : "WEAK"}
-                        </Badge>
+                        </CustomBadge>
                       </div>
                     </div>
                   </div>
@@ -332,7 +334,7 @@ const ProposalDetails = () => {
                 <CardTitle className="text-sm font-mono">HISTORICAL PERFORMANCE</CardTitle>
               </CardHeader>
               <CardContent className="pt-6 h-80">
-                <TimeSeriesLineChart />
+                <TimeSeriesLineChart data={timeSeriesData} lines={timeSeriesLines} />
               </CardContent>
             </Card>
           </TabsContent>
@@ -356,12 +358,12 @@ const ProposalDetails = () => {
                         </div>
                         <div className="flex justify-between items-center">
                           <p className="font-semibold">{financialRatios.currentRatio.toFixed(2)}</p>
-                          <Badge variant={financialRatios.currentRatio >= 1.5 ? "success" : 
+                          <CustomBadge variant={financialRatios.currentRatio >= 1.5 ? "success" : 
                             financialRatios.currentRatio >= 1 ? "warning" : "destructive"} 
                             className="text-xs">
                             {financialRatios.currentRatio >= 1.5 ? "STRONG" : 
                               financialRatios.currentRatio >= 1 ? "ADEQUATE" : "WEAK"}
-                          </Badge>
+                          </CustomBadge>
                         </div>
                         <Progress value={financialRatios.currentRatio * 33.3} className="h-1 mt-1 bg-gray-800" />
                       </div>
@@ -373,12 +375,12 @@ const ProposalDetails = () => {
                         </div>
                         <div className="flex justify-between items-center">
                           <p className="font-semibold">{financialRatios.quickRatio.toFixed(2)}</p>
-                          <Badge variant={financialRatios.quickRatio >= 1 ? "success" : 
+                          <CustomBadge variant={financialRatios.quickRatio >= 1 ? "success" : 
                             financialRatios.quickRatio >= 0.7 ? "warning" : "destructive"} 
                             className="text-xs">
                             {financialRatios.quickRatio >= 1 ? "STRONG" : 
                               financialRatios.quickRatio >= 0.7 ? "ADEQUATE" : "WEAK"}
-                          </Badge>
+                          </CustomBadge>
                         </div>
                         <Progress value={financialRatios.quickRatio * 50} className="h-1 mt-1 bg-gray-800" />
                       </div>
@@ -400,12 +402,12 @@ const ProposalDetails = () => {
                         </div>
                         <div className="flex justify-between items-center">
                           <p className="font-semibold">{financialRatios.debtServiceCoverageRatio.toFixed(2)}x</p>
-                          <Badge variant={financialRatios.debtServiceCoverageRatio >= 1.25 ? "success" : 
+                          <CustomBadge variant={financialRatios.debtServiceCoverageRatio >= 1.25 ? "success" : 
                             financialRatios.debtServiceCoverageRatio >= 1 ? "warning" : "destructive"} 
                             className="text-xs">
                             {financialRatios.debtServiceCoverageRatio >= 1.25 ? "STRONG" : 
                               financialRatios.debtServiceCoverageRatio >= 1 ? "ADEQUATE" : "WEAK"}
-                          </Badge>
+                          </CustomBadge>
                         </div>
                         <Progress value={financialRatios.debtServiceCoverageRatio * 40} className="h-1 mt-1 bg-gray-800" />
                       </div>
@@ -417,12 +419,12 @@ const ProposalDetails = () => {
                         </div>
                         <div className="flex justify-between items-center">
                           <p className="font-semibold">{financialRatios.debtToEquityRatio.toFixed(2)}</p>
-                          <Badge variant={financialRatios.debtToEquityRatio <= 0.5 ? "success" : 
+                          <CustomBadge variant={financialRatios.debtToEquityRatio <= 0.5 ? "success" : 
                             financialRatios.debtToEquityRatio <= 1 ? "warning" : "destructive"} 
                             className="text-xs">
                             {financialRatios.debtToEquityRatio <= 0.5 ? "LOW RISK" : 
                               financialRatios.debtToEquityRatio <= 1 ? "MODERATE" : "HIGH RISK"}
-                          </Badge>
+                          </CustomBadge>
                         </div>
                         <Progress value={(1 - financialRatios.debtToEquityRatio/2) * 100} className="h-1 mt-1 bg-gray-800" />
                       </div>
@@ -543,12 +545,12 @@ const ProposalDetails = () => {
                     </div>
                     <div className="flex justify-between items-center">
                       <p className="font-semibold">{financialRatios.zScore.toFixed(2)}</p>
-                      <Badge variant={financialRatios.zScore > 2.99 ? "success" : 
+                      <CustomBadge variant={financialRatios.zScore > 2.99 ? "success" : 
                         financialRatios.zScore > 1.8 ? "warning" : "destructive"} 
                         className="text-xs">
                         {financialRatios.zScore > 2.99 ? "SAFE" : 
                           financialRatios.zScore > 1.8 ? "CAUTION" : "DISTRESS RISK"}
-                      </Badge>
+                      </CustomBadge>
                     </div>
                   </div>
                 </div>
@@ -573,12 +575,12 @@ const ProposalDetails = () => {
                         <div className="w-full">
                           <div className="flex justify-between mb-1">
                             <span className="font-semibold">{proposal.creditRating.toFixed(1)}/10</span>
-                            <Badge variant={proposal.creditRating >= 7 ? "success" : 
+                            <CustomBadge variant={proposal.creditRating >= 7 ? "success" : 
                               proposal.creditRating >= 5 ? "warning" : "destructive"} 
                               className="text-xs">
                               {proposal.creditRating >= 7 ? "EXCELLENT" : 
                                 proposal.creditRating >= 5 ? "MODERATE" : "HIGH RISK"}
-                            </Badge>
+                            </CustomBadge>
                           </div>
                           <Progress value={proposal.creditRating * 10} className="h-1 bg-gray-800" />
                         </div>
@@ -591,12 +593,12 @@ const ProposalDetails = () => {
                         <div className="w-full">
                           <div className="flex justify-between mb-1">
                             <span className="font-semibold">{creditHistory.creditScore.toFixed(0)}/1000</span>
-                            <Badge variant={creditHistory.creditScore >= 700 ? "success" : 
+                            <CustomBadge variant={creditHistory.creditScore >= 700 ? "success" : 
                               creditHistory.creditScore >= 600 ? "warning" : "destructive"} 
                               className="text-xs">
                               {creditHistory.creditScore >= 700 ? "EXCELLENT" : 
                                 creditHistory.creditScore >= 600 ? "MODERATE" : "POOR"}
-                            </Badge>
+                            </CustomBadge>
                           </div>
                           <Progress value={creditHistory.creditScore / 10} className="h-1 bg-gray-800" />
                         </div>
@@ -607,12 +609,12 @@ const ProposalDetails = () => {
                       <p className="text-xs text-gray-400 mb-1">PAYMENT HISTORY</p>
                       <div className="flex justify-between mb-1">
                         <span className="font-semibold">{creditHistory.paymentHistory}% On-Time</span>
-                        <Badge variant={creditHistory.paymentHistory >= 95 ? "success" : 
+                        <CustomBadge variant={creditHistory.paymentHistory >= 95 ? "success" : 
                           creditHistory.paymentHistory >= 90 ? "warning" : "destructive"} 
                           className="text-xs">
                           {creditHistory.paymentHistory >= 95 ? "EXCELLENT" : 
                             creditHistory.paymentHistory >= 90 ? "GOOD" : "POOR"}
-                        </Badge>
+                        </CustomBadge>
                       </div>
                       <Progress value={creditHistory.paymentHistory} className="h-1 bg-gray-800" />
                     </div>
@@ -660,12 +662,12 @@ const ProposalDetails = () => {
                       <p className="text-xs text-gray-400 mb-1">CREDIT UTILIZATION</p>
                       <div className="flex justify-between mb-1">
                         <span className="font-semibold">{(creditHistory.utilizationRatio * 100).toFixed(0)}%</span>
-                        <Badge variant={creditHistory.utilizationRatio <= 0.3 ? "success" : 
+                        <CustomBadge variant={creditHistory.utilizationRatio <= 0.3 ? "success" : 
                           creditHistory.utilizationRatio <= 0.7 ? "warning" : "destructive"} 
                           className="text-xs">
                           {creditHistory.utilizationRatio <= 0.3 ? "LOW" : 
                             creditHistory.utilizationRatio <= 0.7 ? "MODERATE" : "HIGH"}
-                        </Badge>
+                        </CustomBadge>
                       </div>
                       <Progress value={creditHistory.utilizationRatio * 100} className="h-1 bg-gray-800" />
                     </div>
@@ -679,7 +681,7 @@ const ProposalDetails = () => {
                       <p className="text-xs text-gray-400 mb-1">HISTORICAL DEFAULT RATE</p>
                       <div className="flex items-center">
                         <span className="font-semibold mr-2">{creditHistory.defaultRate}%</span>
-                        <Badge variant="success" className="text-xs">EXCELLENT</Badge>
+                        <CustomBadge variant="success" className="text-xs">EXCELLENT</CustomBadge>
                       </div>
                     </div>
                   </div>
@@ -692,7 +694,7 @@ const ProposalDetails = () => {
                 <CardTitle className="text-sm font-mono">CREDIT METRICS COMPARISON</CardTitle>
               </CardHeader>
               <CardContent className="pt-6 h-80">
-                <IndustryBarChart />
+                <IndustryBarChart data={industryBarData} />
               </CardContent>
             </Card>
           </TabsContent>
