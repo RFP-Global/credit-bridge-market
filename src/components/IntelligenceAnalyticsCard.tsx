@@ -1,10 +1,9 @@
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import IntelligenceTimeFilter from "./IntelligenceTimeFilter";
 
 interface IntelligenceAnalyticsCardProps {
   title: string;
-  description?: string;
   timeFilter: string;
   onTimeFilterChange: (value: string) => void;
   children: React.ReactNode;
@@ -12,21 +11,19 @@ interface IntelligenceAnalyticsCardProps {
 
 const IntelligenceAnalyticsCard = ({
   title,
-  description,
   timeFilter,
   onTimeFilterChange,
   children
 }: IntelligenceAnalyticsCardProps) => {
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="p-4">
+    <Card className="bg-black/30 border-gray-800 shadow-lg overflow-hidden">
+      <CardHeader className="p-3 border-b border-gray-800 bg-black/40">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base">{title}</CardTitle>
+          <CardTitle className="text-sm font-medium text-cyan-400">{title}</CardTitle>
           <IntelligenceTimeFilter value={timeFilter} onChange={onTimeFilterChange} />
         </div>
-        {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
-      <CardContent className="p-4 pt-0">
+      <CardContent className="p-3">
         <div className="w-full flex items-center justify-center">
           {children}
         </div>
