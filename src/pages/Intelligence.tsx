@@ -113,7 +113,7 @@ const structureLoanTermData = [
   { month: 'Jun', llc: 35, corporate: 25, partnership: 30 }
 ];
 
-// Add the missing industryLoanTermData
+// Add the industryLoanTermData
 const industryLoanTermData = [
   { month: 'Jan', retail: 30, tech: 45, construction: 25, manufacturing: 35 },
   { month: 'Feb', retail: 35, tech: 50, construction: 30, manufacturing: 40 },
