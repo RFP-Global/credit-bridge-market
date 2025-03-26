@@ -15,11 +15,7 @@ const MarketplaceHeader = ({
   return (
     <div className="mb-6">
       <h1 className="text-2xl font-bold text-cyan-400 mb-4">Proposals</h1>
-      <div className="flex justify-between items-center">
-        <Button className="bg-black border border-gray-700 hover:bg-gray-800 text-white">
-          New Proposal
-        </Button>
-        
+      <div className="flex justify-end items-center">
         <div className="flex items-center gap-2">
           <Button 
             variant="outline" 
