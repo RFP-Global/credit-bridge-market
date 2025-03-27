@@ -22,7 +22,7 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
   };
 
   // Common class for all cells to ensure consistent alignment with headers
-  const cellClass = "flex-1 text-center px-4 py-2 font-light";
+  const cellClass = "flex-1 text-center px-4 py-2 font-extralight";
 
   return (
     <TableRow 
@@ -66,4 +66,3 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
 };
 
 export default ProposalTableRow;
-
