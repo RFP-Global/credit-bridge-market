@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { 
@@ -111,6 +110,10 @@ const ProposalsDashboard = () => {
       description: "Successfully logged out of your enterprise account",
     });
     navigate("/");
+  };
+
+  const handleViewProposal = (proposalId: string) => {
+    navigate(`/proposal-bids/${proposalId}`);
   };
 
   return (
@@ -297,24 +300,35 @@ const ProposalsDashboard = () => {
                           <TableHead>Principal</TableHead>
                           <TableHead>Deadline</TableHead>
                           <TableHead>Activity</TableHead>
+                          <TableHead>Action</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {activeProposals.map((proposal) => (
-                          <TableRow key={proposal.id}>
+                          <TableRow key={proposal.id} className="cursor-pointer">
                             <TableCell className="font-mono text-xs">{proposal.id}</TableCell>
                             <TableCell>
-                              <div className="font-medium">{proposal.name}</div>
+                              <div className="font-extralight">{proposal.name}</div>
                             </TableCell>
-                            <TableCell>{proposal.industry}</TableCell>
-                            <TableCell className="font-mono">{proposal.principal}</TableCell>
-                            <TableCell className="font-mono text-xs">{proposal.bidDeadline}</TableCell>
+                            <TableCell className="font-extralight">{proposal.industry}</TableCell>
+                            <TableCell className="font-mono font-extralight">{proposal.principal}</TableCell>
+                            <TableCell className="font-mono text-xs font-extralight">{proposal.bidDeadline}</TableCell>
                             <TableCell>
-                              <div className="flex items-center space-x-3 text-xs">
+                              <div className="flex items-center space-x-3 text-xs font-extralight">
                                 <span className="flex items-center"><Eye className="h-3 w-3 mr-1" />{proposal.views}</span>
                                 <span className="flex items-center"><Target className="h-3 w-3 mr-1" />{proposal.bids}</span>
                                 <span className="flex items-center"><Bookmark className="h-3 w-3 mr-1" />{proposal.saves}</span>
                               </div>
+                            </TableCell>
+                            <TableCell>
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="font-extralight text-xs h-7 px-2"
+                                onClick={() => handleViewProposal(proposal.id)}
+                              >
+                                View Bids
+                              </Button>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -340,24 +354,35 @@ const ProposalsDashboard = () => {
                           <TableHead>Principal</TableHead>
                           <TableHead>Closed Date</TableHead>
                           <TableHead>Engagement</TableHead>
+                          <TableHead>Action</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {completedProposals.map((proposal) => (
-                          <TableRow key={proposal.id}>
+                          <TableRow key={proposal.id} className="cursor-pointer">
                             <TableCell className="font-mono text-xs">{proposal.id}</TableCell>
                             <TableCell>
-                              <div className="font-medium">{proposal.name}</div>
+                              <div className="font-extralight">{proposal.name}</div>
                             </TableCell>
-                            <TableCell>{proposal.industry}</TableCell>
-                            <TableCell className="font-mono">{proposal.principal}</TableCell>
-                            <TableCell className="font-mono text-xs">{proposal.bidDeadline}</TableCell>
+                            <TableCell className="font-extralight">{proposal.industry}</TableCell>
+                            <TableCell className="font-mono font-extralight">{proposal.principal}</TableCell>
+                            <TableCell className="font-mono text-xs font-extralight">{proposal.bidDeadline}</TableCell>
                             <TableCell>
-                              <div className="flex items-center space-x-3 text-xs">
+                              <div className="flex items-center space-x-3 text-xs font-extralight">
                                 <span className="flex items-center"><Eye className="h-3 w-3 mr-1" />{proposal.views}</span>
                                 <span className="flex items-center"><Target className="h-3 w-3 mr-1" />{proposal.bids}</span>
                                 <span className="flex items-center"><Bookmark className="h-3 w-3 mr-1" />{proposal.saves}</span>
                               </div>
+                            </TableCell>
+                            <TableCell>
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="font-extralight text-xs h-7 px-2"
+                                onClick={() => handleViewProposal(proposal.id)}
+                              >
+                                View Bids
+                              </Button>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -390,13 +415,13 @@ const ProposalsDashboard = () => {
                           <TableRow key={proposal.id}>
                             <TableCell className="font-mono text-xs">{proposal.id}</TableCell>
                             <TableCell>
-                              <div className="font-medium">{proposal.name}</div>
+                              <div className="font-extralight">{proposal.name}</div>
                             </TableCell>
-                            <TableCell>{proposal.industry}</TableCell>
-                            <TableCell className="font-mono">{proposal.principal}</TableCell>
-                            <TableCell className="font-mono text-xs">{proposal.lastEdited}</TableCell>
+                            <TableCell className="font-extralight">{proposal.industry}</TableCell>
+                            <TableCell className="font-mono font-extralight">{proposal.principal}</TableCell>
+                            <TableCell className="font-mono text-xs font-extralight">{proposal.lastEdited}</TableCell>
                             <TableCell>
-                              <Button variant="outline" size="sm" className="text-xs h-7 px-2">Edit</Button>
+                              <Button variant="outline" size="sm" className="font-extralight text-xs h-7 px-2">Edit</Button>
                             </TableCell>
                           </TableRow>
                         ))}
