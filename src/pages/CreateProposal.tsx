@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Radar, Signal, Bell, Settings, ArrowLeft, Save } from "lucide-react";
@@ -16,6 +15,8 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
+import { financeProposals } from "@/data/marketplaceProposals";
+import { FinanceProposal } from "@/types/marketplace";
 
 const CreateProposal = () => {
   const navigate = useNavigate();
@@ -31,6 +32,10 @@ const CreateProposal = () => {
   const [projectLocation, setProjectLocation] = useState("");
   const [projectTerms, setProjectTerms] = useState("");
   const [collateralDetails, setCollateralDetails] = useState("");
+  const [interestRateType, setInterestRateType] = useState("");
+  const [interestRate, setInterestRate] = useState("");
+  const [term, setTerm] = useState("");
+  const [lenderPreferences, setLenderPreferences] = useState("");
 
   const handleSaveDraft = () => {
     toast({
@@ -50,13 +55,34 @@ const CreateProposal = () => {
       return;
     }
 
-    // Here we would submit the proposal data to the server
-    // For now, we'll just show a success message and redirect
+    // Create new proposal object
+    const newProposal: FinanceProposal = {
+      id: `PROP-${Math.floor(Math.random() * 100000)}`,
+      creditRating: Math.floor(Math.random() * 5) + 1,
+      projectName,
+      facilityType,
+      financingType: financingType === "Refinancing" ? "Refinancing" : "New Financing",
+      principal: principalAmount,
+      interestRateType: interestRateType === "Floating" ? "Floating" : "Fixed",
+      interestRate: interestRate || "TBD",
+      term: term || "TBD",
+      status: "OPEN",
+      bidDeadline,
+      lenderPreferences: lenderPreferences || projectTerms || "No specific preferences",
+      industry,
+      bidVolume: 0
+    };
+
+    // In a real app, we'd send this to an API
+    // For demonstration purposes, we'll add it to our local data
+    // (Note: this change won't persist on page refresh as it's just in-memory)
+    financeProposals.unshift(newProposal);
+
     toast({
       title: "Proposal Published",
       description: "Your proposal has been published to the marketplace",
     });
-    navigate("/proposals-dashboard");
+    navigate("/marketplace");
   };
   
   const handleLogout = () => {
@@ -250,6 +276,39 @@ const CreateProposal = () => {
                     onChange={(e) => setProjectLocation(e.target.value)}
                   />
                 </div>
+                
+                <div className="space-y-3">
+                  <Label htmlFor="interestRateType">Interest Rate Type</Label>
+                  <Select value={interestRateType} onValueChange={setInterestRateType}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select interest rate type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Fixed">Fixed</SelectItem>
+                      <SelectItem value="Floating">Floating</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-3">
+                  <Label htmlFor="interestRate">Target Interest Rate</Label>
+                  <Input 
+                    id="interestRate" 
+                    placeholder="e.g. 5.25%" 
+                    value={interestRate}
+                    onChange={(e) => setInterestRate(e.target.value)}
+                  />
+                </div>
+                
+                <div className="space-y-3">
+                  <Label htmlFor="term">Term</Label>
+                  <Input 
+                    id="term" 
+                    placeholder="e.g. 60 months" 
+                    value={term}
+                    onChange={(e) => setTerm(e.target.value)}
+                  />
+                </div>
               </div>
               
               <Separator className="my-6" />
@@ -284,6 +343,17 @@ const CreateProposal = () => {
                   className="min-h-24"
                   value={collateralDetails}
                   onChange={(e) => setCollateralDetails(e.target.value)}
+                />
+              </div>
+              
+              <div className="space-y-4">
+                <Label htmlFor="lenderPreferences">Lender Preferences</Label>
+                <Textarea 
+                  id="lenderPreferences" 
+                  placeholder="Describe any preferences for lender qualifications..." 
+                  className="min-h-24"
+                  value={lenderPreferences}
+                  onChange={(e) => setLenderPreferences(e.target.value)}
                 />
               </div>
             </CardContent>
