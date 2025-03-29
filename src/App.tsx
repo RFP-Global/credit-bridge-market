@@ -20,6 +20,7 @@ import BidSubmission from "./pages/BidSubmission";
 import FullscreenButton from "./components/FullscreenButton";
 import ProposalsDashboard from "./pages/ProposalsDashboard";
 import ProposalBids from "./pages/ProposalBids";
+import CreateProposal from "./pages/CreateProposal";
 
 const App = () => {
   // Create a client inside the component
@@ -47,6 +48,7 @@ const App = () => {
             <Route path="/intelligence" element={<Intelligence />} />
             <Route path="/proposals-dashboard" element={<ProposalsDashboard />} />
             <Route path="/proposal-bids/:id" element={<ProposalBids />} />
+            <Route path="/create-proposal" element={<CreateProposal />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

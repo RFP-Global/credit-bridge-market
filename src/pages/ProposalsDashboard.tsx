@@ -14,7 +14,6 @@ const ProposalsDashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("active");
   
-  // Sample proposal data
   const activeProposals = [
     { 
       id: "RFP-2023-001", 
@@ -96,12 +95,7 @@ const ProposalsDashboard = () => {
   ];
 
   const handleCreateNewProposal = () => {
-    toast({
-      title: "Create New Proposal",
-      description: "This would navigate to a new proposal creation form",
-    });
-    // Would navigate to new proposal form
-    // navigate("/new-proposal");
+    navigate("/create-proposal");
   };
   
   const handleLogout = () => {
