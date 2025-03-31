@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Calendar, Building, Briefcase, DollarSign, PercentIcon, Clock, 
-  BuildingBank, BarChart, User, FileCheck, FileText } from "lucide-react";
+  Building as BuildingBank, BarChart, User, FileCheck, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { financeProposals } from "@/data/marketplaceProposals";
 import Navbar from "@/components/Navbar";
