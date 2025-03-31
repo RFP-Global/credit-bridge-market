@@ -24,14 +24,6 @@ const TransactionArchive = () => {
         employees: Math.floor(Math.random() * 950) + 50,
         revenue: `$${(Math.random() * 20 + 1).toFixed(1)}M`
       },
-      // Add bank/lender information
-      lenderInfo: {
-        name: `${["Alpha", "Omega", "Zenith", "Capital", "First", "Premier", "Trust", "Global"][Math.floor(Math.random() * 8)]} ${["Bank", "Financial", "Investments", "Partners", "Group", "Capital"][Math.floor(Math.random() * 6)]}`,
-        type: proposal.lenderPreferences,
-        assets: `$${(Math.random() * 100 + 10).toFixed(1)}B`,
-        founded: 1900 + Math.floor(Math.random() * 120),
-        headquarters: ["New York", "Chicago", "San Francisco", "Boston", "Los Angeles", "Dallas", "Miami", "Seattle"][Math.floor(Math.random() * 8)]
-      },
       completionDate: new Date(Date.now() - Math.random() * 10000000000).toLocaleDateString()
     })),
     []
@@ -91,16 +83,11 @@ const TransactionArchive = () => {
                     <th className="px-4 py-3">Term</th>
                     <th className="px-4 py-3">Completion Date</th>
                     <th className="px-4 py-3">Industry</th>
-                    {/* New columns for borrower information */}
+                    {/* Borrower information columns */}
                     <th className="px-4 py-3 bg-black/60">Borrower Size</th>
                     <th className="px-4 py-3 bg-black/60">Years in Business</th>
                     <th className="px-4 py-3 bg-black/60">Employees</th>
                     <th className="px-4 py-3 bg-black/60">Annual Revenue</th>
-                    {/* New columns for lender information */}
-                    <th className="px-4 py-3 bg-black/30">Lender Name</th>
-                    <th className="px-4 py-3 bg-black/30">Lender Type</th>
-                    <th className="px-4 py-3 bg-black/30">Assets Under Management</th>
-                    <th className="px-4 py-3 bg-black/30">Headquarters</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -126,16 +113,11 @@ const TransactionArchive = () => {
                         <td className="px-4 py-3 bg-cyan-900/10">{transaction.borrowerInfo.yearsInBusiness} years</td>
                         <td className="px-4 py-3 bg-cyan-900/10">{transaction.borrowerInfo.employees}</td>
                         <td className="px-4 py-3 bg-cyan-900/10">{transaction.borrowerInfo.revenue}</td>
-                        {/* Lender information cells */}
-                        <td className="px-4 py-3 bg-gray-800/10">{transaction.lenderInfo.name}</td>
-                        <td className="px-4 py-3 bg-gray-800/10">{transaction.lenderInfo.type}</td>
-                        <td className="px-4 py-3 bg-gray-800/10">{transaction.lenderInfo.assets}</td>
-                        <td className="px-4 py-3 bg-gray-800/10">{transaction.lenderInfo.headquarters}</td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={16} className="px-4 py-8 text-center text-gray-500">
+                      <td colSpan={12} className="px-4 py-8 text-center text-gray-500">
                         No completed transactions found
                       </td>
                     </tr>
