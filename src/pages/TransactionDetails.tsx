@@ -1,7 +1,7 @@
-
 import { useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Calendar, Building, Briefcase, DollarSign, PercentIcon, Clock, Bank, BarChart, User, FileCheck, FileText } from "lucide-react";
+import { ArrowLeft, Calendar, Building, Briefcase, DollarSign, PercentIcon, Clock, 
+  BuildingBank, BarChart, User, FileCheck, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { financeProposals } from "@/data/marketplaceProposals";
 import Navbar from "@/components/Navbar";
@@ -27,11 +27,9 @@ const TransactionDetails = () => {
     [id]
   );
   
-  // Generate mock transaction details
   const transactionDetails = useMemo(() => {
     if (!transaction) return null;
     
-    // Generate a random completion date in the past 6 months
     const completionDate = new Date(Date.now() - Math.random() * 15000000000);
     const startDate = new Date(completionDate.getTime() - Math.random() * 10000000000);
     
@@ -75,7 +73,6 @@ const TransactionDetails = () => {
       <div className="scanline z-10"></div>
       
       <div className="container mx-auto px-4 py-6 pt-24 h-screen flex flex-col relative z-10">
-        {/* Header section */}
         <div className="bg-transparent pb-4 z-30">
           <div className="mb-6">
             <Button 
@@ -102,7 +99,6 @@ const TransactionDetails = () => {
         
         <ScrollArea className="flex-1">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-8">
-            {/* Left column: Transaction Summary */}
             <div className="bg-black/50 border border-gray-800/50 rounded-lg p-5">
               <h2 className="text-lg font-medium text-cyan-300 mb-4 border-b border-gray-800/50 pb-2">
                 Transaction Summary
@@ -155,7 +151,7 @@ const TransactionDetails = () => {
                   </div>
                   
                   <div className="flex items-center space-x-3">
-                    <Bank className="h-4 w-4 text-cyan-400" />
+                    <BuildingBank className="h-4 w-4 text-cyan-400" />
                     <div>
                       <p className="text-xs text-gray-400">Winning Lender</p>
                       <p className="text-sm">{transactionDetails?.winningLender}</p>
@@ -165,7 +161,6 @@ const TransactionDetails = () => {
               </div>
             </div>
             
-            {/* Right column: Bid Information */}
             <div className="bg-black/50 border border-gray-800/50 rounded-lg p-5">
               <h2 className="text-lg font-medium text-cyan-300 mb-4 border-b border-gray-800/50 pb-2">
                 Bid Information
@@ -200,7 +195,7 @@ const TransactionDetails = () => {
                   </div>
                   
                   <div className="flex items-center space-x-3">
-                    <Bank className="h-4 w-4 text-cyan-400" />
+                    <BuildingBank className="h-4 w-4 text-cyan-400" />
                     <div>
                       <p className="text-xs text-gray-400">Bank Type</p>
                       <p className="text-sm">{transactionDetails?.bankType}</p>
@@ -228,7 +223,6 @@ const TransactionDetails = () => {
               </div>
             </div>
             
-            {/* Timeline */}
             <div className="bg-black/50 border border-gray-800/50 rounded-lg p-5 lg:col-span-2">
               <h2 className="text-lg font-medium text-cyan-300 mb-4 border-b border-gray-800/50 pb-2">
                 Transaction Timeline
@@ -277,7 +271,6 @@ const TransactionDetails = () => {
               </div>
             </div>
             
-            {/* Documentation */}
             <div className="bg-black/50 border border-gray-800/50 rounded-lg p-5 lg:col-span-2">
               <h2 className="text-lg font-medium text-cyan-300 mb-4 border-b border-gray-800/50 pb-2">
                 Transaction Documentation
