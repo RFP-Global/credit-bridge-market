@@ -1,7 +1,7 @@
 
 import { useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { financeProposals } from "@/data/marketplaceProposals";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +14,9 @@ import BidInformation from "@/components/transaction/BidInformation";
 import TransactionTimeline from "@/components/transaction/TransactionTimeline";
 import DocumentationTable from "@/components/transaction/DocumentationTable";
 import NotFoundMessage from "@/components/transaction/NotFoundMessage";
+import BorrowerInformation from "@/components/transaction/BorrowerInformation";
+import LenderDetails from "@/components/transaction/LenderDetails";
+import MetricsPanel from "@/components/transaction/MetricsPanel";
 
 const TransactionDetails = () => {
   const { id } = useParams();
@@ -41,6 +44,48 @@ const TransactionDetails = () => {
       bidsReceived: Math.floor(Math.random() * 10) + 3,
       winningLender: `${["Alpha", "Omega", "Zenith", "Capital", "First", "Premier", "Trust", "Global"][Math.floor(Math.random() * 8)]} ${["Bank", "Financial", "Investments", "Partners", "Group", "Capital"][Math.floor(Math.random() * 6)]}`,
       documentation: Math.floor(Math.random() * 8) + 3,
+      // Add more detailed transaction metrics
+      metrics: {
+        debtServiceCoverageRatio: (Math.random() * 2 + 1).toFixed(2),
+        loanToValueRatio: `${(Math.random() * 30 + 50).toFixed(1)}%`,
+        interestCoverageRatio: (Math.random() * 3 + 1.5).toFixed(2),
+        netOperatingIncome: `$${(Math.random() * 5 + 1).toFixed(2)}M`,
+        capitalExpenditures: `$${(Math.random() * 2).toFixed(2)}M`,
+        fundingEfficiency: `${(Math.random() * 20 + 80).toFixed(1)}%`,
+        negotiationRounds: Math.floor(Math.random() * 5) + 1
+      },
+      // Add more detailed information about the borrower
+      borrowerInfo: {
+        company: transaction.projectName.replace("Project ", "Company "),
+        size: ["Small", "Medium", "Enterprise"][Math.floor(Math.random() * 3)],
+        yearsInBusiness: Math.floor(Math.random() * 20) + 3,
+        employees: Math.floor(Math.random() * 950) + 50,
+        revenue: `$${(Math.random() * 20 + 1).toFixed(1)}M`,
+        industry: transaction.industry,
+        headquarters: ["New York", "Chicago", "San Francisco", "Boston", "Los Angeles", "Dallas", "Miami", "Seattle"][Math.floor(Math.random() * 8)],
+        creditScore: Math.floor(Math.random() * 300) + 550,
+        previousFinancings: Math.floor(Math.random() * 5),
+        publiclyTraded: Math.random() > 0.7,
+        subsidiaries: Math.floor(Math.random() * 5)
+      },
+      // Add more detailed information about the lender
+      lenderInfo: {
+        name: `${["Alpha", "Omega", "Zenith", "Capital", "First", "Premier", "Trust", "Global"][Math.floor(Math.random() * 8)]} ${["Bank", "Financial", "Investments", "Partners", "Group", "Capital"][Math.floor(Math.random() * 6)]}`,
+        type: transaction.lenderPreferences,
+        assets: `$${(Math.random() * 100 + 10).toFixed(1)}B`,
+        founded: 1900 + Math.floor(Math.random() * 120),
+        headquarters: ["New York", "Chicago", "San Francisco", "Boston", "Los Angeles", "Dallas", "Miami", "Seattle"][Math.floor(Math.random() * 8)],
+        marketShare: `${(Math.random() * 15).toFixed(1)}%`,
+        regularClient: Math.random() > 0.7,
+        specializedIn: [
+          "Commercial Real Estate",
+          "Industrial Manufacturing",
+          "Healthcare Facilities",
+          "Technology Startups",
+          "Retail Franchises"
+        ][Math.floor(Math.random() * 5)],
+        averageDealSize: `$${(Math.random() * 15 + 1).toFixed(1)}M`
+      }
     };
   }, [transaction]);
 
@@ -75,19 +120,37 @@ const TransactionDetails = () => {
                 {transaction.projectName} <span className="text-sm font-normal text-cyan-300">Transaction #{transaction.id}</span>
               </h1>
               
-              <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-700/50">
-                {transaction.status}
-              </Badge>
+              <div className="flex gap-3 items-center">
+                <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-700/50">
+                  {transaction.status}
+                </Badge>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="text-cyan-300 border-cyan-700/50"
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Export Data
+                </Button>
+              </div>
             </div>
           </div>
         </div>
         
         <ScrollArea className="flex-1">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-8">
+            {/* First row */}
             <TransactionSummary transaction={transaction} transactionDetails={transactionDetails} />
             <BidInformation transactionDetails={transactionDetails} />
-            <TransactionTimeline transactionDetails={transactionDetails} />
-            <DocumentationTable transactionDetails={transactionDetails} />
+            <MetricsPanel transactionDetails={transactionDetails} />
+            
+            {/* Second row */}
+            <BorrowerInformation transactionDetails={transactionDetails} />
+            <LenderDetails transactionDetails={transactionDetails} />
+            
+            {/* Third row - full width components */}
+            <TransactionTimeline transactionDetails={transactionDetails} className="lg:col-span-3" />
+            <DocumentationTable transactionDetails={transactionDetails} className="lg:col-span-3" />
           </div>
         </ScrollArea>
       </div>

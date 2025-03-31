@@ -1,11 +1,12 @@
 
 interface TransactionTimelineProps {
   transactionDetails: any;
+  className?: string;
 }
 
-const TransactionTimeline = ({ transactionDetails }: TransactionTimelineProps) => {
+const TransactionTimeline = ({ transactionDetails, className = "" }: TransactionTimelineProps) => {
   return (
-    <div className="bg-black/50 border border-gray-800/50 rounded-lg p-5 lg:col-span-2">
+    <div className={`bg-black/50 border border-gray-800/50 rounded-lg p-5 ${className}`}>
       <h2 className="text-lg font-medium text-cyan-300 mb-4 border-b border-gray-800/50 pb-2">
         Transaction Timeline
       </h2>
