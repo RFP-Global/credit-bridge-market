@@ -18,6 +18,10 @@ const TransactionArchive = () => {
     []
   );
 
+  const handleTransactionClick = (transactionId: string) => {
+    navigate(`/transaction/${transactionId}`);
+  };
+
   return (
     <div className="min-h-screen bg-black/90 text-gray-200 relative grid-bg font-typewriter">
       <Navbar />
@@ -75,9 +79,10 @@ const TransactionArchive = () => {
                     completedTransactions.map((transaction, index) => (
                       <tr 
                         key={transaction.id} 
-                        className={`border-b border-gray-800/30 hover:bg-gray-900/30 text-gray-300 font-mono ${
+                        className={`border-b border-gray-800/30 hover:bg-cyan-900/30 text-gray-300 font-mono cursor-pointer ${
                           index % 2 === 0 ? "bg-black/40" : "bg-black/20"
                         }`}
+                        onClick={() => handleTransactionClick(transaction.id)}
                       >
                         <td className="px-4 py-3">{transaction.id}</td>
                         <td className="px-4 py-3">{transaction.projectName}</td>
