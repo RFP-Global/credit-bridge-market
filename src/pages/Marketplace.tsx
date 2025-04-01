@@ -1,3 +1,4 @@
+
 import { useMemo } from "react";
 import Navbar from "@/components/Navbar";
 import FullscreenButton from "@/components/FullscreenButton";
@@ -6,7 +7,7 @@ import MarketplaceFilters from "@/components/marketplace/MarketplaceFilters";
 import MarketplaceTable from "@/components/marketplace/MarketplaceTable";
 import MarketplacePagination from "@/components/marketplace/MarketplacePagination";
 import { useMarketplace } from "@/hooks/useMarketplace";
-import { financeProposals } from "@/data/marketplace";
+import { financeProposals } from "@/data/marketplaceProposals";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import RadarScreen from "@/components/RadarScreen";
 

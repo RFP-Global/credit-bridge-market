@@ -1,451 +1,365 @@
-
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { Radar, Signal, Bell, Settings, ArrowLeft, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { useToast } from "@/hooks/use-toast";
-import Navbar from "@/components/Navbar";
-import { getUniqueIndustries, financeProposals } from "@/data/marketplace";
-
-// Form schema using zod
-const formSchema = z.object({
-  projectName: z.string().min(2, { message: "Project name must be at least 2 characters." }),
-  facilityType: z.string().min(1, { message: "Please select a facility type." }),
-  financingType: z.string().min(1, { message: "Please select a financing type." }),
-  industry: z.string().min(1, { message: "Please select an industry." }),
-  principal: z.string().min(1, { message: "Please enter the principal amount." }),
-  interestRate: z.number().min(0).max(30, { message: "Interest rate must be between 0% and 30%." }),
-  term: z.number().int().min(1, { message: "Term must be at least 1 month." }),
-  termUnit: z.enum(["Months", "Years"]),
-  lenderPreferences: z.string().min(1, { message: "Please select lender preferences." }),
-  description: z.string().optional(),
-  publicListing: z.boolean().default(true),
-});
+import { toast } from "@/hooks/use-toast";
+import { financeProposals } from "@/data/marketplaceProposals";
+import { FinanceProposal } from "@/types/marketplace";
 
 const CreateProposal = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Form state
+  const [projectName, setProjectName] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [facilityType, setFacilityType] = useState("");
+  const [financingType, setFinancingType] = useState("");
+  const [principalAmount, setPrincipalAmount] = useState("");
+  const [bidDeadline, setBidDeadline] = useState("");
+  const [projectDescription, setProjectDescription] = useState("");
+  const [projectLocation, setProjectLocation] = useState("");
+  const [projectTerms, setProjectTerms] = useState("");
+  const [collateralDetails, setCollateralDetails] = useState("");
+  const [interestRateType, setInterestRateType] = useState("");
+  const [interestRate, setInterestRate] = useState("");
+  const [term, setTerm] = useState("");
+  const [lenderPreferences, setLenderPreferences] = useState("");
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      projectName: "",
-      facilityType: "",
-      financingType: "",
-      industry: "",
-      principal: "",
-      interestRate: 5.0,
-      term: 12,
-      termUnit: "Months",
-      lenderPreferences: "",
-      description: "",
-      publicListing: true,
-    },
-  });
+  const handleSaveDraft = () => {
+    toast({
+      title: "Draft Saved",
+      description: "Your proposal draft has been saved",
+    });
+  };
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setIsSubmitting(true);
-    
-    // Construct the proposal object
-    const newProposal = {
-      id: `P${String(financeProposals.length + 1).padStart(3, '0')}`,
-      projectName: values.projectName,
-      facilityType: values.facilityType,
-      financingType: values.financingType,
-      principal: `$${values.principal.replace(/[^\d.]/g, '')}`,
-      interestRate: `${values.interestRate.toFixed(2)}%`,
-      term: `${values.term} ${values.termUnit}`,
-      industry: values.industry,
-      lenderPreferences: values.lenderPreferences,
+  const handleSubmitProposal = () => {
+    // Form validation
+    if (!projectName || !industry || !facilityType || !financingType || !principalAmount || !bidDeadline) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill out all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Create new proposal object
+    const newProposal: FinanceProposal = {
+      id: `PROP-${Math.floor(Math.random() * 100000)}`,
+      creditRating: Math.floor(Math.random() * 5) + 1,
+      projectName,
+      facilityType,
+      financingType: financingType === "Refinancing" ? "Refinancing" : "New Financing",
+      principal: principalAmount,
+      interestRateType: interestRateType === "Floating" ? "Floating" : "Fixed",
+      interestRate: interestRate || "TBD",
+      term: term || "TBD",
       status: "OPEN",
-      bidVolume: 0,
-      creditRating: 7.5,
-      bidDeadline: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString(),
+      bidDeadline,
+      lenderPreferences: lenderPreferences || projectTerms || "No specific preferences",
+      industry,
+      bidVolume: 0
     };
 
-    // Simulate API call delay
-    setTimeout(() => {
-      toast({
-        title: "Proposal Created",
-        description: "Your financing proposal has been successfully created.",
-      });
-      setIsSubmitting(false);
-      navigate("/proposals-dashboard");
-    }, 1500);
+    // In a real app, we'd send this to an API
+    // For demonstration purposes, we'll add it to our local data
+    // (Note: this change won't persist on page refresh as it's just in-memory)
+    financeProposals.unshift(newProposal);
+
+    toast({
+      title: "Proposal Published",
+      description: "Your proposal has been published to the marketplace",
+    });
+    navigate("/marketplace");
+  };
+  
+  const handleLogout = () => {
+    toast({
+      title: "Logged Out",
+      description: "Successfully logged out of your enterprise account",
+    });
+    navigate("/");
   };
 
   return (
-    <div className="min-h-screen bg-black">
-      <Navbar />
-      <div className="container mx-auto px-4 py-12 pt-24">
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Create New Financing Proposal</h1>
-            <p className="text-muted-foreground">
-              Create a new RFP (Request for Proposal) to find financing for your business.
-            </p>
-          </div>
-
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Project Information</CardTitle>
-                  <CardDescription>
-                    Basic information about your financing request.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <FormField
-                    control={form.control}
-                    name="projectName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Project Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="e.g., Expansion Project Phase 1" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          Enter a clear name that describes your financing need
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="facilityType"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Facility Type</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select facility type" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="Term Loan">Term Loan</SelectItem>
-                              <SelectItem value="Revolving Credit">Revolving Credit</SelectItem>
-                              <SelectItem value="Equipment Financing">Equipment Financing</SelectItem>
-                              <SelectItem value="Commercial Mortgage">Commercial Mortgage</SelectItem>
-                              <SelectItem value="Construction Loan">Construction Loan</SelectItem>
-                              <SelectItem value="Bridge Loan">Bridge Loan</SelectItem>
-                              <SelectItem value="SBA Loan">SBA Loan</SelectItem>
-                              <SelectItem value="Asset-Based Lending">Asset-Based Lending</SelectItem>
-                              <SelectItem value="Mezzanine Financing">Mezzanine Financing</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="financingType"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Financing Type</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select financing type" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="New Financing">New Financing</SelectItem>
-                              <SelectItem value="Refinancing">Refinancing</SelectItem>
-                              <SelectItem value="Additional Capital">Additional Capital</SelectItem>
-                              <SelectItem value="Debt Restructuring">Debt Restructuring</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <FormField
-                    control={form.control}
-                    name="industry"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Industry</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select your industry" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectLabel>Industries</SelectLabel>
-                              {getUniqueIndustries().map((industry) => (
-                                <SelectItem key={industry} value={industry}>
-                                  {industry}
-                                </SelectItem>
-                              ))}
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Financial Details</CardTitle>
-                  <CardDescription>
-                    Specify the financial parameters of your request
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <FormField
-                    control={form.control}
-                    name="principal"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Principal Amount ($)</FormLabel>
-                        <FormControl>
-                          <Input placeholder="e.g., 500000" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          The total amount of financing you're seeking
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="interestRate"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Target Interest Rate (%): {field.value.toFixed(2)}%</FormLabel>
-                        <FormControl>
-                          <Slider 
-                            min={0} 
-                            max={30} 
-                            step={0.1}
-                            value={[field.value]} 
-                            onValueChange={(value) => field.onChange(value[0])} 
-                          />
-                        </FormControl>
-                        <div className="flex justify-between text-xs text-muted-foreground">
-                          <span>0%</span>
-                          <span>15%</span>
-                          <span>30%</span>
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="grid grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="term"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Term</FormLabel>
-                          <FormControl>
-                            <Input 
-                              type="number" 
-                              placeholder="e.g., 12" 
-                              {...field}
-                              onChange={event => field.onChange(event.target.valueAsNumber)} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="termUnit"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Term Unit</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select unit" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="Months">Months</SelectItem>
-                              <SelectItem value="Years">Years</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Lender Preferences</CardTitle>
-                  <CardDescription>
-                    Specify your preferences for potential lenders
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <FormField
-                    control={form.control}
-                    name="lenderPreferences"
-                    render={({ field }) => (
-                      <FormItem className="space-y-3">
-                        <FormLabel>Lender Type</FormLabel>
-                        <FormControl>
-                          <RadioGroup
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                            className="flex flex-col space-y-1"
-                          >
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <RadioGroupItem value="Commercial Bank" />
-                              </FormControl>
-                              <FormLabel className="font-normal">
-                                Commercial Bank
-                              </FormLabel>
-                            </FormItem>
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <RadioGroupItem value="Credit Union" />
-                              </FormControl>
-                              <FormLabel className="font-normal">
-                                Credit Union
-                              </FormLabel>
-                            </FormItem>
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <RadioGroupItem value="Online Lender" />
-                              </FormControl>
-                              <FormLabel className="font-normal">
-                                Online Lender
-                              </FormLabel>
-                            </FormItem>
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <RadioGroupItem value="Private Equity" />
-                              </FormControl>
-                              <FormLabel className="font-normal">
-                                Private Equity
-                              </FormLabel>
-                            </FormItem>
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <RadioGroupItem value="Any" />
-                              </FormControl>
-                              <FormLabel className="font-normal">
-                                Any (No Preference)
-                              </FormLabel>
-                            </FormItem>
-                          </RadioGroup>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <Separator className="my-6" />
-
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Additional Details (Optional)</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            placeholder="Provide any additional information about your financing needs..."
-                            className="resize-none min-h-[150px]"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Add any specific requirements or information that might help lenders understand your needs
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Listing Options</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <FormField
-                    control={form.control}
-                    name="publicListing"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                        <div className="space-y-0.5">
-                          <FormLabel className="text-base">
-                            Public Marketplace Listing
-                          </FormLabel>
-                          <FormDescription>
-                            Make your proposal visible to all lenders on the marketplace
-                          </FormDescription>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </CardContent>
-                <CardFooter className="flex justify-between">
-                  <Button type="button" variant="outline" onClick={() => navigate("/proposals-dashboard")}>
-                    Cancel
-                  </Button>
-                  <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? (
-                      <>
-                        <div className="animate-spin mr-2 h-4 w-4 border-t-2 border-b-2 border-background rounded-full"></div>
-                        Creating...
-                      </>
-                    ) : (
-                      "Create Proposal"
-                    )}
-                  </Button>
-                </CardFooter>
-              </Card>
-            </form>
-          </Form>
-        </div>
+    <div className="min-h-screen bg-background text-foreground relative grid-bg">
+      <div className="absolute inset-0 z-0">
+        <div className="radar-pulse bg-blue-500/10"></div>
+        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "1s" }}></div>
+        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "2s" }}></div>
       </div>
+      
+      <div className="scanline z-10"></div>
+      
+      <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-primary/20">
+        <div className="container mx-auto px-6 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <Link to="/" className="flex items-center">
+                <div className="relative mr-2">
+                  <Radar className="h-6 w-6 text-primary" />
+                  <Signal className="h-4 w-4 text-primary/70 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                </div>
+                <span className="font-mono text-xl">RFP GLOBAL</span>
+              </Link>
+              <span className="ml-4 text-xs font-mono text-foreground/60 border-l border-primary/20 pl-4">ENTERPRISE PORTAL</span>
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              <button className="p-2 rounded-full hover:bg-primary/10 relative">
+                <Bell className="h-5 w-5" />
+                <span className="absolute top-0 right-0 h-2 w-2 bg-primary rounded-full"></span>
+              </button>
+              <button className="p-2 rounded-full hover:bg-primary/10">
+                <Settings className="h-5 w-5" />
+              </button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="rounded-none font-mono border-primary/30 text-xs"
+                onClick={handleLogout}
+              >
+                LOGOUT
+              </Button>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      <main className="container mx-auto px-6 py-8 relative z-10">
+        <div className="mb-6">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="mb-4"
+            onClick={() => navigate("/proposals-dashboard")}
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Proposals
+          </Button>
+          
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h1 className="text-2xl font-mono">Create New Proposal</h1>
+              <p className="text-sm text-muted-foreground">Create a new RFP to seek financing from qualified lenders.</p>
+            </div>
+            
+            <div className="flex space-x-2">
+              <Button 
+                variant="outline" 
+                className="font-mono text-xs"
+                onClick={handleSaveDraft}
+              >
+                <Save className="h-4 w-4 mr-2" />
+                SAVE DRAFT
+              </Button>
+              <Button 
+                className="font-mono text-xs"
+                onClick={handleSubmitProposal}
+              >
+                PUBLISH PROPOSAL
+              </Button>
+            </div>
+          </div>
+          
+          <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="text-sm font-mono">PROPOSAL DETAILS</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <Label htmlFor="projectName">Project Name <span className="text-red-500">*</span></Label>
+                  <Input 
+                    id="projectName" 
+                    placeholder="e.g. Riverside Development" 
+                    value={projectName}
+                    onChange={(e) => setProjectName(e.target.value)}
+                  />
+                </div>
+                
+                <div className="space-y-3">
+                  <Label htmlFor="industry">Industry <span className="text-red-500">*</span></Label>
+                  <Select value={industry} onValueChange={setIndustry}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select industry" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Commercial Real Estate">Commercial Real Estate</SelectItem>
+                      <SelectItem value="Residential Real Estate">Residential Real Estate</SelectItem>
+                      <SelectItem value="Healthcare">Healthcare</SelectItem>
+                      <SelectItem value="Renewable Energy">Renewable Energy</SelectItem>
+                      <SelectItem value="Infrastructure">Infrastructure</SelectItem>
+                      <SelectItem value="Technology">Technology</SelectItem>
+                      <SelectItem value="Manufacturing">Manufacturing</SelectItem>
+                      <SelectItem value="Hospitality">Hospitality</SelectItem>
+                      <SelectItem value="Retail">Retail</SelectItem>
+                      <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-3">
+                  <Label htmlFor="facilityType">Facility Type <span className="text-red-500">*</span></Label>
+                  <Select value={facilityType} onValueChange={setFacilityType}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select facility type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Term Loan">Term Loan</SelectItem>
+                      <SelectItem value="Construction Loan">Construction Loan</SelectItem>
+                      <SelectItem value="Bridge Loan">Bridge Loan</SelectItem>
+                      <SelectItem value="Mezzanine Financing">Mezzanine Financing</SelectItem>
+                      <SelectItem value="Equipment Financing">Equipment Financing</SelectItem>
+                      <SelectItem value="Real Estate Acquisition">Real Estate Acquisition</SelectItem>
+                      <SelectItem value="Working Capital">Working Capital</SelectItem>
+                      <SelectItem value="Project Finance">Project Finance</SelectItem>
+                      <SelectItem value="Credit Line">Credit Line</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-3">
+                  <Label htmlFor="financingType">Financing Type <span className="text-red-500">*</span></Label>
+                  <Select value={financingType} onValueChange={setFinancingType}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select financing type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Debt">Debt</SelectItem>
+                      <SelectItem value="Equity">Equity</SelectItem>
+                      <SelectItem value="Hybrid">Hybrid</SelectItem>
+                      <SelectItem value="Sale-Leaseback">Sale-Leaseback</SelectItem>
+                      <SelectItem value="Revenue-Based">Revenue-Based</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-3">
+                  <Label htmlFor="principalAmount">Principal Amount <span className="text-red-500">*</span></Label>
+                  <Input 
+                    id="principalAmount" 
+                    placeholder="e.g. $5,000,000" 
+                    value={principalAmount}
+                    onChange={(e) => setPrincipalAmount(e.target.value)}
+                  />
+                </div>
+                
+                <div className="space-y-3">
+                  <Label htmlFor="bidDeadline">Bid Deadline <span className="text-red-500">*</span></Label>
+                  <Input 
+                    id="bidDeadline" 
+                    type="date"
+                    value={bidDeadline}
+                    onChange={(e) => setBidDeadline(e.target.value)}
+                  />
+                </div>
+                
+                <div className="space-y-3">
+                  <Label htmlFor="projectLocation">Project Location</Label>
+                  <Input 
+                    id="projectLocation" 
+                    placeholder="e.g. Chicago, IL" 
+                    value={projectLocation}
+                    onChange={(e) => setProjectLocation(e.target.value)}
+                  />
+                </div>
+                
+                <div className="space-y-3">
+                  <Label htmlFor="interestRateType">Interest Rate Type</Label>
+                  <Select value={interestRateType} onValueChange={setInterestRateType}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select interest rate type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Fixed">Fixed</SelectItem>
+                      <SelectItem value="Floating">Floating</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-3">
+                  <Label htmlFor="interestRate">Target Interest Rate</Label>
+                  <Input 
+                    id="interestRate" 
+                    placeholder="e.g. 5.25%" 
+                    value={interestRate}
+                    onChange={(e) => setInterestRate(e.target.value)}
+                  />
+                </div>
+                
+                <div className="space-y-3">
+                  <Label htmlFor="term">Term</Label>
+                  <Input 
+                    id="term" 
+                    placeholder="e.g. 60 months" 
+                    value={term}
+                    onChange={(e) => setTerm(e.target.value)}
+                  />
+                </div>
+              </div>
+              
+              <Separator className="my-6" />
+              
+              <div className="space-y-4">
+                <Label htmlFor="projectDescription">Project Description</Label>
+                <Textarea 
+                  id="projectDescription" 
+                  placeholder="Describe your project in detail..." 
+                  className="min-h-32"
+                  value={projectDescription}
+                  onChange={(e) => setProjectDescription(e.target.value)}
+                />
+              </div>
+              
+              <div className="space-y-4">
+                <Label htmlFor="projectTerms">Financing Terms</Label>
+                <Textarea 
+                  id="projectTerms" 
+                  placeholder="Describe preferred loan terms, rates, duration, etc..." 
+                  className="min-h-24"
+                  value={projectTerms}
+                  onChange={(e) => setProjectTerms(e.target.value)}
+                />
+              </div>
+              
+              <div className="space-y-4">
+                <Label htmlFor="collateralDetails">Collateral Details</Label>
+                <Textarea 
+                  id="collateralDetails" 
+                  placeholder="Describe any collateral being offered..." 
+                  className="min-h-24"
+                  value={collateralDetails}
+                  onChange={(e) => setCollateralDetails(e.target.value)}
+                />
+              </div>
+              
+              <div className="space-y-4">
+                <Label htmlFor="lenderPreferences">Lender Preferences</Label>
+                <Textarea 
+                  id="lenderPreferences" 
+                  placeholder="Describe any preferences for lender qualifications..." 
+                  className="min-h-24"
+                  value={lenderPreferences}
+                  onChange={(e) => setLenderPreferences(e.target.value)}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
     </div>
   );
 };

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Building, Users, Calendar, DollarSign, Percent, BarChart4, TrendingUp, FileText, BadgeInfo, BarChart, PieChart, Scale, Briefcase, Calculator, HelpCircle } from "lucide-react";
@@ -10,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { CustomBadge } from "@/components/ui/custom-badge";
 import { Progress } from "@/components/ui/progress";
 import Navbar from "@/components/Navbar";
-import { financeProposals } from "@/data/marketplace";
+import { financeProposals } from "@/data/marketplaceProposals";
 import { FinanceProposal } from "@/types/marketplace";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TimeSeriesLineChart, IndustryBarChart } from "@/components/charts";
@@ -683,10 +682,10 @@ const ProposalDetails = () => {
                       <div className="flex justify-between mb-1">
                         <span className="font-semibold">{(creditHistory.utilizationRatio * 100).toFixed(0)}%</span>
                         <CustomBadge variant={creditHistory.utilizationRatio <= 0.3 ? "success" : 
-                          creditHistory.utilizationRatio <= 0.6 ? "warning" : "destructive"} 
+                          creditHistory.utilizationRatio <= 0.7 ? "warning" : "destructive"} 
                           className="text-xs">
                           {creditHistory.utilizationRatio <= 0.3 ? "LOW" : 
-                            creditHistory.utilizationRatio <= 0.6 ? "MODERATE" : "HIGH"}
+                            creditHistory.utilizationRatio <= 0.7 ? "MODERATE" : "HIGH"}
                         </CustomBadge>
                       </div>
                       <Progress value={creditHistory.utilizationRatio * 100} className="h-1 bg-gray-800" />
@@ -698,18 +697,30 @@ const ProposalDetails = () => {
                     </div>
                     
                     <div>
-                      <p className="text-xs text-gray-400 mb-1">DEFAULT RATE</p>
-                      <p className="font-semibold">{creditHistory.defaultRate}%</p>
+                      <p className="text-xs text-gray-400 mb-1">HISTORICAL DEFAULT RATE</p>
+                      <div className="flex items-center">
+                        <span className="font-semibold mr-2">{creditHistory.defaultRate}%</span>
+                        <CustomBadge variant="success" className="text-xs">EXCELLENT</CustomBadge>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
+            
+            <Card className="bg-black border-gray-800">
+              <CardHeader className="border-b border-gray-800">
+                <CardTitle className="text-sm font-mono">CREDIT METRICS COMPARISON</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6 h-80">
+                <IndustryBarChart data={industryBarData} />
+              </CardContent>
+            </Card>
           </TabsContent>
           
           <TabsContent value="company" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="bg-black border-gray-800">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="col-span-1 md:col-span-2 bg-black border-gray-800">
                 <CardHeader className="border-b border-gray-800">
                   <CardTitle className="text-sm font-mono flex items-center">
                     <Building className="mr-2 h-4 w-4" />
@@ -717,28 +728,23 @@ const ProposalDetails = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-6">
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-xs text-gray-400 mb-1">FOUNDED</p>
-                        <p className="font-semibold">{demographics.founded}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-400 mb-1">EMPLOYEES</p>
-                        <p className="font-semibold">{demographics.employees}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-400 mb-1">OWNERSHIP</p>
-                        <p className="font-semibold">{demographics.ownership}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-400 mb-1">PUBLICLY TRADED</p>
-                        <p className="font-semibold">{demographics.publiclyTraded ? "Yes" : "No"}</p>
-                      </div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">LEGAL NAME</p>
+                      <p className="font-semibold">{proposal.projectName} Inc.</p>
                     </div>
-                    
-                    <Separator className="bg-gray-800" />
-                    
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">FOUNDED</p>
+                      <p className="font-semibold">{demographics.founded}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">EMPLOYEES</p>
+                      <p className="font-semibold">{demographics.employees}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">OWNERSHIP</p>
+                      <p className="font-semibold">{demographics.ownership}</p>
+                    </div>
                     <div>
                       <p className="text-xs text-gray-400 mb-1">INDUSTRY</p>
                       <p className="font-semibold">{proposal.industry}</p>
@@ -748,8 +754,30 @@ const ProposalDetails = () => {
                       <p className="font-semibold">{demographics.industrySubsector}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-400 mb-1">HEADQUARTERS</p>
+                      <p className="text-xs text-gray-400 mb-1">LOCATION</p>
                       <p className="font-semibold">{demographics.location}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">PUBLICLY TRADED</p>
+                      <p className="font-semibold">{demographics.publiclyTraded ? "Yes" : "No"}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">ANNUAL REVENUE</p>
+                      <p className="font-semibold">{demographics.annualRevenue}</p>
+                    </div>
+                  </div>
+                  
+                  <Separator className="my-6 bg-gray-800" />
+                  
+                  <div>
+                    <p className="text-xs text-gray-400 mb-3">KEY EXECUTIVES</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {demographics.keyExecutives.map((executive, index) => (
+                        <div key={index} className="flex items-center">
+                          <Users className="h-4 w-4 mr-2 text-gray-400" />
+                          <span>{executive}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </CardContent>
@@ -758,60 +786,55 @@ const ProposalDetails = () => {
               <Card className="bg-black border-gray-800">
                 <CardHeader className="border-b border-gray-800">
                   <CardTitle className="text-sm font-mono flex items-center">
-                    <Users className="mr-2 h-4 w-4" />
-                    MANAGEMENT
+                    <FileText className="mr-2 h-4 w-4" />
+                    DOCUMENTS
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-6">
                   <div className="space-y-4">
-                    <p className="text-xs text-gray-400 mb-1">KEY EXECUTIVES</p>
-                    <div className="space-y-2">
-                      {demographics.keyExecutives.map((executive, index) => (
-                        <div key={index} className="flex items-center space-x-2 p-2 bg-gray-900/30 rounded">
-                          <div className="h-8 w-8 bg-gray-700 rounded-full flex items-center justify-center">
-                            <span className="text-xs">{executive.charAt(0)}</span>
-                          </div>
-                          <p className="text-sm">{executive}</p>
-                        </div>
-                      ))}
+                    <div className="p-3 border border-gray-800 rounded-sm flex items-center justify-between hover:bg-gray-800/20 transition cursor-pointer">
+                      <div className="flex items-center">
+                        <FileText className="h-4 w-4 mr-2 text-gray-400" />
+                        <span>Financial Statements</span>
+                      </div>
+                      <Badge variant="outline" className="font-mono text-xs">PDF</Badge>
+                    </div>
+                    
+                    <div className="p-3 border border-gray-800 rounded-sm flex items-center justify-between hover:bg-gray-800/20 transition cursor-pointer">
+                      <div className="flex items-center">
+                        <FileText className="h-4 w-4 mr-2 text-gray-400" />
+                        <span>Business Plan</span>
+                      </div>
+                      <Badge variant="outline" className="font-mono text-xs">PDF</Badge>
+                    </div>
+                    
+                    <div className="p-3 border border-gray-800 rounded-sm flex items-center justify-between hover:bg-gray-800/20 transition cursor-pointer">
+                      <div className="flex items-center">
+                        <FileText className="h-4 w-4 mr-2 text-gray-400" />
+                        <span>Tax Returns</span>
+                      </div>
+                      <Badge variant="outline" className="font-mono text-xs">PDF</Badge>
+                    </div>
+                    
+                    <div className="p-3 border border-gray-800 rounded-sm flex items-center justify-between hover:bg-gray-800/20 transition cursor-pointer">
+                      <div className="flex items-center">
+                        <FileText className="h-4 w-4 mr-2 text-gray-400" />
+                        <span>Corporate Bylaws</span>
+                      </div>
+                      <Badge variant="outline" className="font-mono text-xs">PDF</Badge>
                     </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
             
-            <Card className="bg-black border-gray-800">
-              <CardHeader className="border-b border-gray-800">
-                <CardTitle className="text-sm font-mono flex items-center">
-                  <Briefcase className="mr-2 h-4 w-4" />
-                  BUSINESS OVERVIEW
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-6">
-                <p className="text-sm mb-6">
-                  {proposal.projectName} is a {demographics.ownership.toLowerCase()} company established in {demographics.founded}, 
-                  specializing in the {proposal.industry.toLowerCase()} sector. With {demographics.employees} employees and annual 
-                  revenue of {demographics.annualRevenue}, the company has built a solid reputation in 
-                  {demographics.industrySubsector.toLowerCase()}.
-                </p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div>
-                    <IndustryBarChart data={industryBarData} />
-                  </div>
-                  <div className="col-span-2">
-                    <div className="p-4 bg-gray-900/30 rounded-lg h-full">
-                      <h4 className="text-sm font-semibold mb-3">Current Financing Need</h4>
-                      <p className="text-sm text-gray-400">
-                        The company is seeking a {proposal.facilityType.toLowerCase()} of {proposal.principal} with an interest rate 
-                        of {proposal.interestRate} over a {proposal.term.toLowerCase()} term. The funds will be utilized for business 
-                        expansion and operational improvements to maintain their competitive edge in the market.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <Button 
+              variant="default"
+              className="w-full font-mono text-sm"
+            >
+              <Briefcase className="mr-2 h-4 w-4" />
+              SUBMIT PROPOSAL
+            </Button>
           </TabsContent>
         </Tabs>
       </div>
