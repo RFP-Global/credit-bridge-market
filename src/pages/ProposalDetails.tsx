@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Building, Users, Calendar, DollarSign, Percent, BarChart4, TrendingUp, FileText, BadgeInfo, BarChart, PieChart, Scale, Briefcase, Calculator, HelpCircle } from "lucide-react";
@@ -681,4 +682,141 @@ const ProposalDetails = () => {
                       <p className="text-xs text-gray-400 mb-1">CREDIT UTILIZATION</p>
                       <div className="flex justify-between mb-1">
                         <span className="font-semibold">{(creditHistory.utilizationRatio * 100).toFixed(0)}%</span>
-                        <CustomBadge variant
+                        <CustomBadge variant={creditHistory.utilizationRatio <= 0.3 ? "success" : 
+                          creditHistory.utilizationRatio <= 0.6 ? "warning" : "destructive"} 
+                          className="text-xs">
+                          {creditHistory.utilizationRatio <= 0.3 ? "LOW" : 
+                            creditHistory.utilizationRatio <= 0.6 ? "MODERATE" : "HIGH"}
+                        </CustomBadge>
+                      </div>
+                      <Progress value={creditHistory.utilizationRatio * 100} className="h-1 bg-gray-800" />
+                    </div>
+                    
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">PREVIOUS LOANS</p>
+                      <p className="font-semibold">{creditHistory.previousLoans}</p>
+                    </div>
+                    
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">DEFAULT RATE</p>
+                      <p className="font-semibold">{creditHistory.defaultRate}%</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="company" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="bg-black border-gray-800">
+                <CardHeader className="border-b border-gray-800">
+                  <CardTitle className="text-sm font-mono flex items-center">
+                    <Building className="mr-2 h-4 w-4" />
+                    COMPANY PROFILE
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-xs text-gray-400 mb-1">FOUNDED</p>
+                        <p className="font-semibold">{demographics.founded}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400 mb-1">EMPLOYEES</p>
+                        <p className="font-semibold">{demographics.employees}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400 mb-1">OWNERSHIP</p>
+                        <p className="font-semibold">{demographics.ownership}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400 mb-1">PUBLICLY TRADED</p>
+                        <p className="font-semibold">{demographics.publiclyTraded ? "Yes" : "No"}</p>
+                      </div>
+                    </div>
+                    
+                    <Separator className="bg-gray-800" />
+                    
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">INDUSTRY</p>
+                      <p className="font-semibold">{proposal.industry}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">SUBSECTOR</p>
+                      <p className="font-semibold">{demographics.industrySubsector}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">HEADQUARTERS</p>
+                      <p className="font-semibold">{demographics.location}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-black border-gray-800">
+                <CardHeader className="border-b border-gray-800">
+                  <CardTitle className="text-sm font-mono flex items-center">
+                    <Users className="mr-2 h-4 w-4" />
+                    MANAGEMENT
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  <div className="space-y-4">
+                    <p className="text-xs text-gray-400 mb-1">KEY EXECUTIVES</p>
+                    <div className="space-y-2">
+                      {demographics.keyExecutives.map((executive, index) => (
+                        <div key={index} className="flex items-center space-x-2 p-2 bg-gray-900/30 rounded">
+                          <div className="h-8 w-8 bg-gray-700 rounded-full flex items-center justify-center">
+                            <span className="text-xs">{executive.charAt(0)}</span>
+                          </div>
+                          <p className="text-sm">{executive}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
+            <Card className="bg-black border-gray-800">
+              <CardHeader className="border-b border-gray-800">
+                <CardTitle className="text-sm font-mono flex items-center">
+                  <Briefcase className="mr-2 h-4 w-4" />
+                  BUSINESS OVERVIEW
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <p className="text-sm mb-6">
+                  {proposal.projectName} is a {demographics.ownership.toLowerCase()} company established in {demographics.founded}, 
+                  specializing in the {proposal.industry.toLowerCase()} sector. With {demographics.employees} employees and annual 
+                  revenue of {demographics.annualRevenue}, the company has built a solid reputation in 
+                  {demographics.industrySubsector.toLowerCase()}.
+                </p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div>
+                    <IndustryBarChart data={industryBarData} />
+                  </div>
+                  <div className="col-span-2">
+                    <div className="p-4 bg-gray-900/30 rounded-lg h-full">
+                      <h4 className="text-sm font-semibold mb-3">Current Financing Need</h4>
+                      <p className="text-sm text-gray-400">
+                        The company is seeking a {proposal.facilityType.toLowerCase()} of {proposal.principal} with an interest rate 
+                        of {proposal.interestRate} over a {proposal.term.toLowerCase()} term. The funds will be utilized for business 
+                        expansion and operational improvements to maintain their competitive edge in the market.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  );
+};
+
+export default ProposalDetails;
