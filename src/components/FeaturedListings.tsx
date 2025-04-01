@@ -16,6 +16,10 @@ interface DealProps {
   progress: number;
   code: string;
   industry: string;
+  subSector?: string;
+  location?: string;
+  zipCode?: string;
+  employeeCount?: number;
 }
 
 const deals: DealProps[] = [
@@ -29,7 +33,11 @@ const deals: DealProps[] = [
     badgeColor: "bg-emerald-900/20 text-emerald-500 border-emerald-500/30",
     progress: 65,
     code: "TCF-713",
-    industry: "Technology"
+    industry: "Technology",
+    subSector: "SaaS/Cloud Services",
+    location: "San Francisco, CA",
+    zipCode: "94103",
+    employeeCount: 42
   },
   {
     title: "WORKING CAPITAL",
@@ -41,7 +49,11 @@ const deals: DealProps[] = [
     badgeColor: "bg-amber-900/20 text-amber-500 border-amber-500/30",
     progress: 82,
     code: "RLC-289",
-    industry: "Healthcare"
+    industry: "Healthcare",
+    subSector: "Medical Devices",
+    location: "Boston, MA",
+    zipCode: "02115",
+    employeeCount: 78
   },
   {
     title: "EQUIPMENT FINANCE",
@@ -53,7 +65,11 @@ const deals: DealProps[] = [
     badgeColor: "bg-blue-900/20 text-blue-500 border-blue-500/30",
     progress: 98,
     code: "EQF-456",
-    industry: "Manufacturing"
+    industry: "Manufacturing",
+    subSector: "Industrial Equipment",
+    location: "Detroit, MI",
+    zipCode: "48201",
+    employeeCount: 125
   },
 ];
 
@@ -79,8 +95,15 @@ const DealCard = ({ deal }: { deal: DealProps }) => {
               <p className="text-xs text-muted-foreground mt-1 font-mono flex items-center">
                 <Building className="h-3 w-3 mr-1" /> 
                 {deal.industry}
+                {deal.subSector && <span className="ml-1">({deal.subSector})</span>}
               </p>
             </div>
+            {deal.location && (
+              <p className="text-xs text-muted-foreground mt-1 font-mono">
+                {deal.location} {deal.zipCode && <span>• {deal.zipCode}</span>}
+                {deal.employeeCount && <span> • {deal.employeeCount} employees</span>}
+              </p>
+            )}
           </div>
         </div>
       </CardHeader>

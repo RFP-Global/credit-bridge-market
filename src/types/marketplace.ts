@@ -17,7 +17,6 @@ export interface FinanceProposal {
   // Additional business details
   subSector?: string;
   zipCode?: string;
-  businessName?: string;
   businessType?: string;
   employeeCount?: number;
   annualRevenue?: string;

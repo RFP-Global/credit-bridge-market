@@ -20,6 +20,7 @@ const TransactionSummary = ({ transaction, transactionDetails }: TransactionSumm
             <div>
               <p className="text-xs text-gray-400">Industry</p>
               <p className="text-sm">{transaction.industry}</p>
+              {transaction.subSector && <p className="text-xs text-gray-400">{transaction.subSector}</p>}
             </div>
           </div>
           
