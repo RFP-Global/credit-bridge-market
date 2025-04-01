@@ -1,5 +1,5 @@
 
-import { Building, Briefcase, DollarSign, PercentIcon, Clock, Building as BuildingBank } from "lucide-react";
+import { Building, Briefcase, DollarSign, PercentIcon, Clock, Building as BuildingBank, Users, Calendar, MapPin } from "lucide-react";
 
 interface TransactionSummaryProps {
   transaction: any;
@@ -13,6 +13,15 @@ const TransactionSummary = ({ transaction, transactionDetails }: TransactionSumm
         Transaction Summary
       </h2>
       
+      {transaction.companyName && (
+        <div className="mb-4">
+          <h3 className="text-md font-medium text-cyan-200">{transaction.companyName}</h3>
+          {transaction.businessDescription && (
+            <p className="text-sm text-gray-300 mt-1">{transaction.businessDescription}</p>
+          )}
+        </div>
+      )}
+      
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="flex items-center space-x-3">
@@ -21,6 +30,7 @@ const TransactionSummary = ({ transaction, transactionDetails }: TransactionSumm
               <p className="text-xs text-gray-400">Industry</p>
               <p className="text-sm">{transaction.industry}</p>
               {transaction.subSector && <p className="text-xs text-gray-400">{transaction.subSector}</p>}
+              {transaction.businessType && <p className="text-xs text-gray-400">Type: {transaction.businessType}</p>}
             </div>
           </div>
           
@@ -32,6 +42,53 @@ const TransactionSummary = ({ transaction, transactionDetails }: TransactionSumm
             </div>
           </div>
         </div>
+        
+        {(transaction.employeeCount || transaction.annualRevenue || transaction.foundedYear) && (
+          <div className="grid grid-cols-3 gap-4">
+            {transaction.employeeCount && (
+              <div className="flex items-center space-x-3">
+                <Users className="h-4 w-4 text-cyan-400" />
+                <div>
+                  <p className="text-xs text-gray-400">Employee Count</p>
+                  <p className="text-sm">{transaction.employeeCount}</p>
+                </div>
+              </div>
+            )}
+            
+            {transaction.annualRevenue && (
+              <div className="flex items-center space-x-3">
+                <DollarSign className="h-4 w-4 text-cyan-400" />
+                <div>
+                  <p className="text-xs text-gray-400">Annual Revenue</p>
+                  <p className="text-sm">{transaction.annualRevenue}</p>
+                </div>
+              </div>
+            )}
+            
+            {transaction.foundedYear && (
+              <div className="flex items-center space-x-3">
+                <Calendar className="h-4 w-4 text-cyan-400" />
+                <div>
+                  <p className="text-xs text-gray-400">Founded</p>
+                  <p className="text-sm">{transaction.foundedYear}</p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        
+        {transaction.location && (
+          <div className="flex items-center space-x-3">
+            <MapPin className="h-4 w-4 text-cyan-400" />
+            <div>
+              <p className="text-xs text-gray-400">Location</p>
+              <p className="text-sm">
+                {transaction.location.city}, {transaction.location.state}
+                {transaction.zipCode && ` - ${transaction.zipCode}`}
+              </p>
+            </div>
+          </div>
+        )}
         
         <div className="grid grid-cols-2 gap-4">
           <div className="flex items-center space-x-3">

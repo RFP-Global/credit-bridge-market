@@ -1,4 +1,3 @@
-
 import { FinanceProposal } from "@/types/marketplace";
 
 export const financeProposals: FinanceProposal[] = [
@@ -16,7 +15,20 @@ export const financeProposals: FinanceProposal[] = [
     bidDeadline: "21:08:30",
     lenderPreferences: "Regional Bank",
     industry: "Construction",
-    bidVolume: 65
+    bidVolume: 65,
+    companyName: "BuildRight Construction Co.",
+    businessDescription: "Commercial construction firm specializing in retail spaces",
+    subSector: "Commercial Construction",
+    businessType: "LLC",
+    employeeCount: 47,
+    annualRevenue: "$8.2M",
+    foundedYear: 2008,
+    location: {
+      city: "Denver",
+      state: "CO",
+      country: "USA"
+    },
+    zipCode: "80205"
   },
   {
     id: "2",
@@ -32,7 +44,20 @@ export const financeProposals: FinanceProposal[] = [
     bidDeadline: "00:05:35",
     lenderPreferences: "Community Bank",
     industry: "Real Estate",
-    bidVolume: 45
+    bidVolume: 45,
+    companyName: "Eastside Properties",
+    businessDescription: "Residential property management and development",
+    subSector: "Residential Real Estate",
+    businessType: "S-Corporation",
+    employeeCount: 32,
+    annualRevenue: "$4.7M",
+    foundedYear: 2011,
+    location: {
+      city: "Austin",
+      state: "TX",
+      country: "USA"
+    },
+    zipCode: "78701"
   },
   {
     id: "3",

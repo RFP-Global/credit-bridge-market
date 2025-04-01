@@ -26,4 +26,6 @@ export interface FinanceProposal {
     state: string;
     country: string;
   };
+  businessDescription?: string;
+  companyName?: string;
 }

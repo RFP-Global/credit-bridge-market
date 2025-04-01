@@ -32,9 +32,17 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
 
   // Generate business details for tooltip
   const businessDetails = () => {
+    const companyStr = proposal.companyName ? 
+      `${proposal.companyName}` : 
+      "";
+
+    const businessDescStr = proposal.businessDescription ? 
+      `${proposal.businessDescription}` : 
+      "";
+      
     const locationStr = proposal.location ? 
       `${proposal.location.city}, ${proposal.location.state}` : 
-      "Location not specified";
+      "";
       
     const zipStr = proposal.zipCode ? 
       `Zip: ${proposal.zipCode}` : 
@@ -44,8 +52,8 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
       `Sub-sector: ${proposal.subSector}` : 
       "";
       
-    const businessNameStr = proposal.businessName ? 
-      `Business: ${proposal.businessName}` : 
+    const businessTypeStr = proposal.businessType ? 
+      `Type: ${proposal.businessType}` : 
       "";
       
     const employeesStr = proposal.employeeCount ? 
@@ -55,14 +63,21 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
     const revenueStr = proposal.annualRevenue ? 
       `Revenue: ${proposal.annualRevenue}` : 
       "";
+
+    const foundedStr = proposal.foundedYear ? 
+      `Founded: ${proposal.foundedYear}` : 
+      "";
       
     return [
-      businessNameStr, 
-      subSectorStr, 
+      companyStr,
+      businessDescStr, 
+      subSectorStr,
+      businessTypeStr, 
       locationStr, 
       zipStr, 
       employeesStr, 
-      revenueStr
+      revenueStr,
+      foundedStr
     ].filter(item => item).join(" • ");
   };
 
