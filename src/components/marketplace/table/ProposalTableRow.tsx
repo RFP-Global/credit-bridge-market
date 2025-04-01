@@ -30,24 +30,35 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
   // Common class for all cells to ensure consistent alignment with headers
   const cellClass = "flex-1 text-center px-4 py-2 font-extralight";
   
-  // Format business type display with fallbacks
+  // Enhanced function to display specific business types based on industry
   const displayBusinessType = () => {
     if (proposal.businessType) return proposal.businessType;
     
-    // Determine business type based on industry if available
+    // Generate specific business type based on industry
     if (proposal.industry) {
       switch(proposal.industry) {
-        case "Construction": return "LLC";
-        case "Real Estate": return "Corp";
-        case "Technology": return "Inc";
-        case "Healthcare": return "LLC";
-        case "Manufacturing": return "Corp";
-        case "Retail": return "LLC";
-        case "Energy": return "Corp";
-        case "Wholesale": return "LLC";
-        case "Hospitality": return "LP";
-        case "Agriculture": return "LLC";
-        default: return "Business";
+        case "Construction":
+          return ["Home Builder", "Commercial Constructor", "Road Construction", "Renovation Company", "Electrical Contractor"][parseInt(proposal.id) % 5];
+        case "Real Estate":
+          return ["Property Management", "Commercial Developer", "Real Estate Agency", "Apartment Complex", "Office Park"][parseInt(proposal.id) % 5];
+        case "Technology":
+          return ["Software Developer", "IT Services", "App Startup", "Cloud Provider", "Cybersecurity Firm"][parseInt(proposal.id) % 5];
+        case "Healthcare":
+          return ["Medical Practice", "Pharmacy", "Assisted Living", "Medical Equipment", "Dental Office"][parseInt(proposal.id) % 5];
+        case "Manufacturing":
+          return ["Auto Parts", "Electronics Manufacturer", "Textile Factory", "Food Processing", "Furniture Maker"][parseInt(proposal.id) % 5];
+        case "Retail":
+          return ["Clothing Store", "Grocery Chain", "Electronics Shop", "Department Store", "Specialty Boutique"][parseInt(proposal.id) % 5];
+        case "Energy":
+          return ["Solar Provider", "Wind Farm", "Oil Extraction", "Natural Gas", "Utility Company"][parseInt(proposal.id) % 5];
+        case "Wholesale":
+          return ["Food Distributor", "Building Materials", "Electronics Wholesaler", "Clothing Distributor", "Auto Parts Supplier"][parseInt(proposal.id) % 5];
+        case "Hospitality":
+          return ["Restaurant Chain", "Hotel Group", "Resort", "Catering Business", "Event Venue"][parseInt(proposal.id) % 5];
+        case "Agriculture":
+          return ["Crop Farm", "Dairy Farm", "Livestock Ranch", "Fruit Orchard", "Organic Farm"][parseInt(proposal.id) % 5];
+        default:
+          return "Business";
       }
     }
     return "Business";
@@ -89,7 +100,7 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
                 <p className="text-xs text-gray-300">{proposal.businessDescription}</p>
               ) : (
                 <p className="text-xs text-gray-300">
-                  {proposal.industry ? `${proposal.industry} business` : "No business description available"}
+                  {proposal.industry ? `${displayBusinessType()} in the ${proposal.industry} sector` : "No business description available"}
                 </p>
               )}
               {proposal.foundedYear ? (
