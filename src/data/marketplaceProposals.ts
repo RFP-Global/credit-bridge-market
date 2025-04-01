@@ -1,3 +1,4 @@
+
 import { FinanceProposal } from "@/types/marketplace";
 
 export const financeProposals: FinanceProposal[] = [
@@ -19,7 +20,7 @@ export const financeProposals: FinanceProposal[] = [
     companyName: "BuildRight Construction Co.",
     businessDescription: "Commercial construction firm specializing in retail spaces",
     subSector: "Commercial Construction",
-    businessType: "LLC",
+    businessType: "Hot Dog Stand",
     employeeCount: 47,
     annualRevenue: "$8.2M",
     foundedYear: 2008,
