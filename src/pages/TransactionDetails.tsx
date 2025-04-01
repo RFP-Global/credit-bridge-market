@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { financeProposals } from "@/data/marketplaceProposals";
+import { historicalTransactions } from "@/data/transactionArchiveData";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Navbar from "@/components/Navbar";
@@ -23,26 +23,28 @@ const TransactionDetails = () => {
   const navigate = useNavigate();
   
   const transaction = useMemo(() => 
-    financeProposals.find(proposal => proposal.id === id),
+    historicalTransactions.find(transaction => transaction.id === id),
     [id]
   );
   
   const transactionDetails = useMemo(() => {
     if (!transaction) return null;
     
-    const completionDate = new Date(Date.now() - Math.random() * 15000000000);
+    const completionDate = new Date(transaction.completionDate);
     const startDate = new Date(completionDate.getTime() - Math.random() * 10000000000);
     
     return {
       openingBid: `${(parseFloat(transaction.interestRate.replace("%", "")) + (Math.random() * 2).toFixed(2))}%`,
       closingBid: transaction.interestRate,
       timeToFunding: `${Math.floor(Math.random() * 14) + 3} days`,
-      bankType: transaction.lenderPreferences,
+      bankType: transaction.facilityType === "SBA Loan" ? "SBA Lender" : 
+                transaction.facilityType === "Venture Debt" ? "Venture Capital" : 
+                "Commercial Bank",
       startDate: startDate.toLocaleDateString(),
       completionDate: completionDate.toLocaleDateString(),
       underwritingScore: Math.floor(Math.random() * 50) + 50,
       bidsReceived: Math.floor(Math.random() * 10) + 3,
-      winningLender: `${["Alpha", "Omega", "Zenith", "Capital", "First", "Premier", "Trust", "Global"][Math.floor(Math.random() * 8)]} ${["Bank", "Financial", "Investments", "Partners", "Group", "Capital"][Math.floor(Math.random() * 6)]}`,
+      winningLender: "Anonymous Lender",
       documentation: Math.floor(Math.random() * 8) + 3,
       // Add more detailed transaction metrics
       metrics: {
@@ -54,27 +56,33 @@ const TransactionDetails = () => {
         fundingEfficiency: `${(Math.random() * 20 + 80).toFixed(1)}%`,
         negotiationRounds: Math.floor(Math.random() * 5) + 1
       },
-      // Add more detailed information about the borrower
+      // Add anonymized borrower information
       borrowerInfo: {
-        company: transaction.projectName.replace("Project ", "Company "),
+        company: "Anonymous Company",
         size: ["Small", "Medium", "Enterprise"][Math.floor(Math.random() * 3)],
         yearsInBusiness: Math.floor(Math.random() * 20) + 3,
         employees: Math.floor(Math.random() * 950) + 50,
         revenue: `$${(Math.random() * 20 + 1).toFixed(1)}M`,
         industry: transaction.industry,
-        headquarters: ["New York", "Chicago", "San Francisco", "Boston", "Los Angeles", "Dallas", "Miami", "Seattle"][Math.floor(Math.random() * 8)],
+        subSector: transaction.subSector,
+        businessType: transaction.businessType,
+        headquarters: transaction.location.city,
+        state: transaction.location.state,
+        zipCode: transaction.zipCode,
         creditScore: Math.floor(Math.random() * 300) + 550,
         previousFinancings: Math.floor(Math.random() * 5),
         publiclyTraded: Math.random() > 0.7,
         subsidiaries: Math.floor(Math.random() * 5)
       },
-      // Add more detailed information about the lender
+      // Add anonymized lender information
       lenderInfo: {
-        name: `${["Alpha", "Omega", "Zenith", "Capital", "First", "Premier", "Trust", "Global"][Math.floor(Math.random() * 8)]} ${["Bank", "Financial", "Investments", "Partners", "Group", "Capital"][Math.floor(Math.random() * 6)]}`,
-        type: transaction.lenderPreferences,
+        name: "Anonymous Financial Institution",
+        type: transaction.facilityType === "SBA Loan" ? "SBA Lender" : 
+              transaction.facilityType === "Venture Debt" ? "Venture Capital" : 
+              "Commercial Bank",
         assets: `$${(Math.random() * 100 + 10).toFixed(1)}B`,
         founded: 1900 + Math.floor(Math.random() * 120),
-        headquarters: ["New York", "Chicago", "San Francisco", "Boston", "Los Angeles", "Dallas", "Miami", "Seattle"][Math.floor(Math.random() * 8)],
+        headquarters: "Undisclosed Location",
         marketShare: `${(Math.random() * 15).toFixed(1)}%`,
         regularClient: Math.random() > 0.7,
         specializedIn: [
@@ -117,12 +125,15 @@ const TransactionDetails = () => {
             
             <div className="flex justify-between items-center mt-2">
               <h1 className="text-2xl font-bold text-cyan-400">
-                {transaction.projectName} <span className="text-sm font-normal text-cyan-300">Transaction #{transaction.id}</span>
+                {transaction.projectIndex !== undefined 
+                  ? `Project ${String.fromCharCode(65 + (transaction.projectIndex % 26))}` 
+                  : `Project ${transaction.id.substring(0, 6)}`} 
+                <span className="text-sm font-normal text-cyan-300">Transaction #{transaction.id.substring(0, 6)}</span>
               </h1>
               
               <div className="flex gap-3 items-center">
                 <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-700/50">
-                  {transaction.status}
+                  Completed
                 </Badge>
                 <Button 
                   variant="outline" 
