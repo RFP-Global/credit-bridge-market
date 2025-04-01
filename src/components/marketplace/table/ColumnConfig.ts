@@ -1,9 +1,7 @@
 
-// Centralized column configuration for marketplace tables
 export const columnConfig = [
   { key: "creditRating", label: "CREDIT RATING" },
   { key: "projectName", label: "PROJECT NAME" },
-  { key: "companyName", label: "COMPANY NAME" },
   { key: "businessType", label: "BUSINESS TYPE" },
   { key: "zipCode", label: "ZIP CODE" },
   { key: "employeeCount", label: "EMPLOYEES" },

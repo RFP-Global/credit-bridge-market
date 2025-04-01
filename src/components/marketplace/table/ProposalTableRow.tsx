@@ -30,57 +30,6 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
   // Common class for all cells to ensure consistent alignment with headers
   const cellClass = "flex-1 text-center px-4 py-2 font-extralight";
 
-  // Generate business details for tooltip
-  const businessDetails = () => {
-    const companyStr = proposal.companyName ? 
-      `${proposal.companyName}` : 
-      "";
-
-    const businessDescStr = proposal.businessDescription ? 
-      `${proposal.businessDescription}` : 
-      "";
-      
-    const locationStr = proposal.location ? 
-      `${proposal.location.city}, ${proposal.location.state}` : 
-      "";
-      
-    const zipStr = proposal.zipCode ? 
-      `Zip: ${proposal.zipCode}` : 
-      "";
-      
-    const subSectorStr = proposal.subSector ? 
-      `Sub-sector: ${proposal.subSector}` : 
-      "";
-      
-    const businessTypeStr = proposal.businessType ? 
-      `Type: ${proposal.businessType}` : 
-      "";
-      
-    const employeesStr = proposal.employeeCount ? 
-      `Employees: ${proposal.employeeCount}` : 
-      "";
-      
-    const revenueStr = proposal.annualRevenue ? 
-      `Revenue: ${proposal.annualRevenue}` : 
-      "";
-
-    const foundedStr = proposal.foundedYear ? 
-      `Founded: ${proposal.foundedYear}` : 
-      "";
-      
-    return [
-      companyStr,
-      businessDescStr, 
-      subSectorStr,
-      businessTypeStr, 
-      locationStr, 
-      zipStr, 
-      employeesStr, 
-      revenueStr,
-      foundedStr
-    ].filter(item => item).join(" • ");
-  };
-
   return (
     <TableRow 
       className="border-gray-700/30 hover:bg-gray-800/20 cursor-pointer transition-colors flex w-full"
@@ -88,7 +37,6 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
     >
       <TableCell className={`font-mono text-xs ${cellClass}`}>{proposal.creditRating.toFixed(1)}</TableCell>
       <TableCell className={cellClass}>{proposal.projectName}</TableCell>
-      <TableCell className={cellClass}>{proposal.companyName || "N/A"}</TableCell>
       <TableCell className={cellClass}>{proposal.businessType || "N/A"}</TableCell>
       <TableCell className={cellClass}>{proposal.zipCode || "N/A"}</TableCell>
       <TableCell className={cellClass}>{proposal.employeeCount || "N/A"}</TableCell>
@@ -118,7 +66,7 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
             </TableCell>
           </TooltipTrigger>
           <TooltipContent className="bg-black/90 border-gray-700 max-w-md p-3">
-            <p className="text-xs text-gray-300">{businessDetails()}</p>
+            <p className="text-xs text-gray-300">{proposal.businessType}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
