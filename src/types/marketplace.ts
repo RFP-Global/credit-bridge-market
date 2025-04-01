@@ -14,4 +14,17 @@ export interface FinanceProposal {
   lenderPreferences: string;
   industry: string;
   bidVolume: number;
+  // Additional business details
+  subSector?: string;
+  zipCode?: string;
+  businessName?: string;
+  businessType?: string;
+  employeeCount?: number;
+  annualRevenue?: string;
+  foundedYear?: number;
+  location?: {
+    city: string;
+    state: string;
+    country: string;
+  };
 }

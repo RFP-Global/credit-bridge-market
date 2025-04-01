@@ -16,6 +16,38 @@ interface DocumentationTableProps {
 }
 
 const DocumentationTable = ({ transactionDetails, className = "" }: DocumentationTableProps) => {
+  // Generate more specific document names based on business details
+  const getDocumentName = (index: number) => {
+    const borrowerInfo = transactionDetails?.borrowerInfo || {};
+    const businessName = borrowerInfo.company || "Company";
+    const businessType = borrowerInfo.businessType || "Corporation";
+    
+    const baseDocuments = [
+      `${businessName} Term Sheet`,
+      `${businessName} Credit Agreement`,
+      `${businessName} Promissory Note`,
+      `${businessType} Security Agreement`,
+      `Corporate Guaranty for ${businessName}`,
+      `${borrowerInfo.subSector || 'Industry'} Due Diligence Report`,
+      `${businessName} Financial Statements FY${new Date().getFullYear() - 1}`,
+      `${businessName} Collateral Evaluation`
+    ];
+    
+    const additionalDocuments = [
+      `${businessName} Tax Returns`,
+      `${businessName} Business License - ${borrowerInfo.state || 'State'}`,
+      `${businessName} Articles of Incorporation`,
+      `${businessName} Balance Sheet`,
+      `${businessName} Cash Flow Projections`,
+      `${businessType} UCC Filing Documentation`,
+      `${businessName} Ownership Structure`,
+      `Real Estate Appraisal - ${borrowerInfo.city || 'City'}, ${borrowerInfo.state || 'State'}`
+    ];
+    
+    const allDocuments = [...baseDocuments, ...additionalDocuments];
+    return allDocuments[index % allDocuments.length] + (index >= allDocuments.length ? ` ${Math.floor(index / allDocuments.length) + 1}` : "");
+  };
+
   return (
     <div className={`bg-black/50 border border-gray-800/50 rounded-lg p-5 ${className}`}>
       <h2 className="text-lg font-medium text-cyan-300 mb-4 border-b border-gray-800/50 pb-2">
@@ -37,11 +69,11 @@ const DocumentationTable = ({ transactionDetails, className = "" }: Documentatio
               <TableCell className="font-mono">
                 <div className="flex items-center">
                   <FileText className="h-4 w-4 mr-2 text-cyan-400" />
-                  {["Term Sheet", "Credit Agreement", "Promissory Note", "Security Agreement", "Guaranty", "Due Diligence Report", "Financial Statements", "Collateral Evaluation"][i % 8]} {i > 7 ? i : ""}
+                  {getDocumentName(i)}
                 </div>
               </TableCell>
               <TableCell className="font-mono">
-                {["Legal", "Financial", "Compliance", "Analysis", "Agreement"][i % 5]}
+                {["Legal", "Financial", "Compliance", "Analysis", "Agreement", "Regulatory", "Corporate", "Tax"][i % 8]}
               </TableCell>
               <TableCell className="font-mono">
                 {new Date(Date.now() - Math.random() * 10000000000).toLocaleDateString()}

@@ -5,7 +5,7 @@ import FullscreenButton from "@/components/FullscreenButton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import RadarScreen from "@/components/RadarScreen";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, FileArchive } from "lucide-react";
+import { ArrowLeft, FileArchive, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { financeProposals } from "@/data/marketplaceProposals";
 
@@ -16,13 +16,19 @@ const TransactionArchive = () => {
   const completedTransactions = useMemo(() => 
     financeProposals.filter(proposal => proposal.status === "COMPLETED").map(proposal => ({
       ...proposal,
-      // Add demographic information for borrowers
+      // Add more detailed demographic information for borrowers
       borrowerInfo: {
-        company: proposal.projectName.replace("Project ", "Company "),
+        company: proposal.businessName || proposal.projectName.replace("Project ", "Company "),
         size: ["Small", "Medium", "Enterprise"][Math.floor(Math.random() * 3)],
         yearsInBusiness: Math.floor(Math.random() * 20) + 3,
-        employees: Math.floor(Math.random() * 950) + 50,
-        revenue: `$${(Math.random() * 20 + 1).toFixed(1)}M`
+        employees: proposal.employeeCount || Math.floor(Math.random() * 950) + 50,
+        revenue: proposal.annualRevenue || `$${(Math.random() * 20 + 1).toFixed(1)}M`,
+        subSector: proposal.subSector || ["SaaS", "FinTech", "E-commerce", "Healthcare Tech", "EdTech", "CleanTech", "Biotech", "Manufacturing", "Retail", "Hospitality", "Construction"][Math.floor(Math.random() * 11)],
+        businessType: proposal.businessType || ["Corporation", "LLC", "Partnership", "Sole Proprietorship", "Non-Profit"][Math.floor(Math.random() * 5)],
+        zipCode: proposal.zipCode || `${Math.floor(Math.random() * 90000) + 10000}`,
+        city: proposal.location?.city || ["New York", "Chicago", "San Francisco", "Boston", "Los Angeles", "Dallas", "Miami", "Seattle"][Math.floor(Math.random() * 8)],
+        state: proposal.location?.state || ["NY", "IL", "CA", "MA", "TX", "FL", "WA"][Math.floor(Math.random() * 7)],
+        foundedYear: proposal.foundedYear || (new Date().getFullYear() - Math.floor(Math.random() * 30) - 3)
       },
       completionDate: new Date(Date.now() - Math.random() * 10000000000).toLocaleDateString()
     })),
@@ -83,9 +89,13 @@ const TransactionArchive = () => {
                     <th className="px-4 py-3">Term</th>
                     <th className="px-4 py-3">Completion Date</th>
                     <th className="px-4 py-3">Industry</th>
-                    {/* Borrower information columns */}
-                    <th className="px-4 py-3 bg-black/60">Borrower Size</th>
-                    <th className="px-4 py-3 bg-black/60">Years in Business</th>
+                    {/* Enhanced borrower information columns */}
+                    <th className="px-4 py-3 bg-black/60">Sub-Sector</th>
+                    <th className="px-4 py-3 bg-black/60">Business Name</th>
+                    <th className="px-4 py-3 bg-black/60">Business Type</th>
+                    <th className="px-4 py-3 bg-black/60">Location</th>
+                    <th className="px-4 py-3 bg-black/60">Zip Code</th>
+                    <th className="px-4 py-3 bg-black/60">Founded</th>
                     <th className="px-4 py-3 bg-black/60">Employees</th>
                     <th className="px-4 py-3 bg-black/60">Annual Revenue</th>
                   </tr>
@@ -108,16 +118,20 @@ const TransactionArchive = () => {
                         <td className="px-4 py-3">{transaction.term}</td>
                         <td className="px-4 py-3">{transaction.completionDate}</td>
                         <td className="px-4 py-3">{transaction.industry}</td>
-                        {/* Borrower information cells */}
-                        <td className="px-4 py-3 bg-cyan-900/10">{transaction.borrowerInfo.size}</td>
-                        <td className="px-4 py-3 bg-cyan-900/10">{transaction.borrowerInfo.yearsInBusiness} years</td>
+                        {/* Enhanced borrower information cells */}
+                        <td className="px-4 py-3 bg-cyan-900/10">{transaction.borrowerInfo.subSector}</td>
+                        <td className="px-4 py-3 bg-cyan-900/10">{transaction.borrowerInfo.company}</td>
+                        <td className="px-4 py-3 bg-cyan-900/10">{transaction.borrowerInfo.businessType}</td>
+                        <td className="px-4 py-3 bg-cyan-900/10">{transaction.borrowerInfo.city}, {transaction.borrowerInfo.state}</td>
+                        <td className="px-4 py-3 bg-cyan-900/10">{transaction.borrowerInfo.zipCode}</td>
+                        <td className="px-4 py-3 bg-cyan-900/10">{transaction.borrowerInfo.foundedYear}</td>
                         <td className="px-4 py-3 bg-cyan-900/10">{transaction.borrowerInfo.employees}</td>
                         <td className="px-4 py-3 bg-cyan-900/10">{transaction.borrowerInfo.revenue}</td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={12} className="px-4 py-8 text-center text-gray-500">
+                      <td colSpan={16} className="px-4 py-8 text-center text-gray-500">
                         No completed transactions found
                       </td>
                     </tr>

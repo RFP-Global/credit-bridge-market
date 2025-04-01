@@ -3,6 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { FinanceProposal } from "@/types/marketplace";
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface ProposalTableRowProps {
   proposal: FinanceProposal;
@@ -23,6 +29,42 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
 
   // Common class for all cells to ensure consistent alignment with headers
   const cellClass = "flex-1 text-center px-4 py-2 font-extralight";
+
+  // Generate business details for tooltip
+  const businessDetails = () => {
+    const locationStr = proposal.location ? 
+      `${proposal.location.city}, ${proposal.location.state}` : 
+      "Location not specified";
+      
+    const zipStr = proposal.zipCode ? 
+      `Zip: ${proposal.zipCode}` : 
+      "";
+      
+    const subSectorStr = proposal.subSector ? 
+      `Sub-sector: ${proposal.subSector}` : 
+      "";
+      
+    const businessNameStr = proposal.businessName ? 
+      `Business: ${proposal.businessName}` : 
+      "";
+      
+    const employeesStr = proposal.employeeCount ? 
+      `Employees: ${proposal.employeeCount}` : 
+      "";
+      
+    const revenueStr = proposal.annualRevenue ? 
+      `Revenue: ${proposal.annualRevenue}` : 
+      "";
+      
+    return [
+      businessNameStr, 
+      subSectorStr, 
+      locationStr, 
+      zipStr, 
+      employeesStr, 
+      revenueStr
+    ].filter(item => item).join(" • ");
+  };
 
   return (
     <TableRow 
@@ -49,7 +91,18 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
       </TableCell>
       <TableCell className={cellClass}>{proposal.bidDeadline}</TableCell>
       <TableCell className={cellClass}>{proposal.lenderPreferences}</TableCell>
-      <TableCell className={cellClass}>{proposal.industry}</TableCell>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <TableCell className={`${cellClass} hover:text-cyan-400`}>
+              {proposal.industry}
+            </TableCell>
+          </TooltipTrigger>
+          <TooltipContent className="bg-black/90 border-gray-700 max-w-md p-3">
+            <p className="text-xs text-gray-300">{businessDetails()}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       <TableCell className={cellClass}>
         <div className="flex items-center justify-center">
           <div className="w-16 bg-gray-700/50 h-1 rounded-full overflow-hidden mr-2">
