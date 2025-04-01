@@ -49,7 +49,7 @@ export const financeProposals: FinanceProposal[] = [
     companyName: "Eastside Properties",
     businessDescription: "Residential property management and development",
     subSector: "Residential Real Estate",
-    businessType: "S-Corporation",
+    businessType: "Sneaker Manufacturer",
     employeeCount: 32,
     annualRevenue: "$4.7M",
     foundedYear: 2011,
