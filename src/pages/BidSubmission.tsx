@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Building, DollarSign, Percent, Calendar, Check, X, Upload, Info, FileText } from "lucide-react";
@@ -10,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { financeProposals } from "@/data/marketplaceProposals";
+import { financeProposals } from "@/data/marketplace";
 import { FinanceProposal } from "@/types/marketplace";
 import Navbar from "@/components/Navbar";
 import { 

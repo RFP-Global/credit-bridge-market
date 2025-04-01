@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Radar, Signal, Bell, Settings, ArrowLeft, Save } from "lucide-react";
@@ -15,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
-import { financeProposals } from "@/data/marketplaceProposals";
+import { financeProposals } from "@/data/marketplace";
 import { FinanceProposal } from "@/types/marketplace";
 
 const CreateProposal = () => {
