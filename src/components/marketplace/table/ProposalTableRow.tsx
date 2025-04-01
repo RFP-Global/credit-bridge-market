@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -30,27 +29,38 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
   // Common class for all cells to ensure consistent alignment with headers
   const cellClass = "flex-1 text-center px-4 py-2 font-extralight";
   
-  // Format business type display with fallbacks
+  // Format business type display with more descriptive business types
   const displayBusinessType = () => {
     if (proposal.businessType) return proposal.businessType;
     
     // Determine business type based on industry if available
     if (proposal.industry) {
       switch(proposal.industry) {
-        case "Construction": return "LLC";
-        case "Real Estate": return "Corp";
-        case "Technology": return "Inc";
-        case "Healthcare": return "LLC";
-        case "Manufacturing": return "Corp";
-        case "Retail": return "LLC";
-        case "Energy": return "Corp";
-        case "Wholesale": return "LLC";
-        case "Hospitality": return "LP";
-        case "Agriculture": return "LLC";
-        default: return "Business";
+        case "Construction": 
+          return getConstructionBusinessType(proposal.id);
+        case "Real Estate": 
+          return getRealEstateBusinessType(proposal.id);
+        case "Technology": 
+          return getTechBusinessType(proposal.id);
+        case "Healthcare": 
+          return getHealthcareBusinessType(proposal.id);
+        case "Manufacturing": 
+          return getManufacturingBusinessType(proposal.id);
+        case "Retail": 
+          return getRetailBusinessType(proposal.id);
+        case "Energy": 
+          return getEnergyBusinessType(proposal.id);
+        case "Wholesale": 
+          return getWholesaleBusinessType(proposal.id);
+        case "Hospitality": 
+          return getHospitalityBusinessType(proposal.id);
+        case "Agriculture": 
+          return getAgricultureBusinessType(proposal.id);
+        default: 
+          return getGenericBusinessType(proposal.id);
       }
     }
-    return "Business";
+    return getGenericBusinessType(proposal.id);
   };
   
   // Format location display with better fallbacks
@@ -89,7 +99,7 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
                 <p className="text-xs text-gray-300">{proposal.businessDescription}</p>
               ) : (
                 <p className="text-xs text-gray-300">
-                  {proposal.industry ? `${proposal.industry} business` : "No business description available"}
+                  {getBusinessDescription(proposal.industry, displayBusinessType())}
                 </p>
               )}
               {proposal.foundedYear ? (
@@ -213,6 +223,183 @@ function generateSubsector(industry?: string) {
   
   const options = subsectors[industry] || ["General"];
   return options[Math.floor(Math.random() * options.length)];
+}
+
+// Helper functions to generate specific business types based on industry
+function getConstructionBusinessType(id: string): string {
+  const types = [
+    "General Contractor", 
+    "Home Builder", 
+    "Commercial Developer", 
+    "Renovation Specialist",
+    "Infrastructure Developer",
+    "Specialty Contractor",
+    "Civil Engineering Firm",
+    "Construction Management"
+  ];
+  return types[parseInt(id) % types.length];
+}
+
+function getRealEstateBusinessType(id: string): string {
+  const types = [
+    "Property Management Firm", 
+    "Real Estate Agency", 
+    "Commercial Developer", 
+    "Residential Developer",
+    "REIT",
+    "Real Estate Investment Group",
+    "Property Flipping Business"
+  ];
+  return types[parseInt(id) % types.length];
+}
+
+function getTechBusinessType(id: string): string {
+  const types = [
+    "Software Development Studio", 
+    "SaaS Company", 
+    "IT Services Provider", 
+    "App Developer",
+    "Cloud Computing Provider",
+    "Cybersecurity Firm",
+    "Data Analytics Company",
+    "Tech Startup"
+  ];
+  return types[parseInt(id) % types.length];
+}
+
+function getHealthcareBusinessType(id: string): string {
+  const types = [
+    "Medical Practice", 
+    "Telehealth Provider", 
+    "Specialty Clinic", 
+    "Healthcare IT",
+    "Medical Device Company",
+    "Pharmaceutical Research",
+    "Wellness Center",
+    "Home Health Service"
+  ];
+  return types[parseInt(id) % types.length];
+}
+
+function getManufacturingBusinessType(id: string): string {
+  const types = [
+    "Assembly Plant", 
+    "Electronics Manufacturer", 
+    "Food Processing Plant", 
+    "Automotive Parts Supplier",
+    "Textile Factory",
+    "Furniture Maker",
+    "Industrial Equipment Producer",
+    "Plastics Manufacturer"
+  ];
+  return types[parseInt(id) % types.length];
+}
+
+function getRetailBusinessType(id: string): string {
+  const types = [
+    "Boutique Store", 
+    "Online Retailer", 
+    "Chain Store", 
+    "Specialty Shop",
+    "Department Store",
+    "Direct-to-Consumer Brand",
+    "Pop-up Shop",
+    "Discount Store"
+  ];
+  return types[parseInt(id) % types.length];
+}
+
+function getEnergyBusinessType(id: string): string {
+  const types = [
+    "Solar Installation Company", 
+    "Wind Farm Developer", 
+    "Oil & Gas Provider", 
+    "Energy Consulting Firm",
+    "Biofuel Producer",
+    "Energy Storage Solutions",
+    "Utility Service Provider",
+    "EV Charging Network"
+  ];
+  return types[parseInt(id) % types.length];
+}
+
+function getWholesaleBusinessType(id: string): string {
+  const types = [
+    "Distribution Center", 
+    "Import/Export Business", 
+    "Bulk Supplier", 
+    "B2B Marketplace",
+    "Food Distributor",
+    "Industrial Supply Wholesaler",
+    "Raw Materials Supplier",
+    "Wholesale Showroom"
+  ];
+  return types[parseInt(id) % types.length];
+}
+
+function getHospitalityBusinessType(id: string): string {
+  const types = [
+    "Boutique Hotel", 
+    "Restaurant", 
+    "Food Truck", 
+    "Coffee Shop",
+    "Bed & Breakfast",
+    "Event Venue",
+    "Catering Service",
+    "Brewpub"
+  ];
+  return types[parseInt(id) % types.length];
+}
+
+function getAgricultureBusinessType(id: string): string {
+  const types = [
+    "Family Farm", 
+    "Organic Produce Grower", 
+    "Livestock Operation", 
+    "Vertical Farm",
+    "Aquaponics Facility",
+    "Specialty Crop Producer",
+    "Community Supported Agriculture",
+    "Agtech Startup"
+  ];
+  return types[parseInt(id) % types.length];
+}
+
+function getGenericBusinessType(id: string): string {
+  const types = [
+    "Service Provider", 
+    "Local Business", 
+    "Online Platform", 
+    "Consulting Firm",
+    "Specialty Shop",
+    "Family Business",
+    "Franchise",
+    "Startup"
+  ];
+  return types[parseInt(id) % types.length];
+}
+
+function getBusinessDescription(industry?: string, businessType?: string): string {
+  if (!industry && !businessType) {
+    return "A growing business seeking financing for expansion.";
+  }
+  
+  if (businessType) {
+    switch(businessType) {
+      case "Food Truck":
+        return "A mobile food business offering specialty cuisine with plans to expand fleet.";
+      case "Restaurant":
+        return "A dining establishment looking to renovate facilities and expand menu offerings.";
+      case "Software Development Studio":
+        return "A team of developers creating custom software solutions for business clients.";
+      case "Online Retailer":
+        return "An e-commerce business selling products directly to consumers via their website.";
+      default:
+        return `A ${businessType.toLowerCase()} ${industry ? `in the ${industry.toLowerCase()} sector` : ''} seeking financing for operations and growth.`;
+    }
+  }
+  
+  return `A business in the ${industry?.toLowerCase() || 'service'} industry looking for capital to fuel growth.`;
 }
 
 export default ProposalTableRow;
