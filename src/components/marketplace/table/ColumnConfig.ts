@@ -4,7 +4,6 @@ export const columnConfig = [
   { key: "projectName", label: "PROJECT NAME" },
   { key: "businessType", label: "BUSINESS TYPE" },
   { key: "zipCode", label: "ZIP CODE" },
-  { key: "employeeCount", label: "EMPLOYEES" },
   { key: "facilityType", label: "FACILITY TYPE" },
   { key: "financingType", label: "FINANCING TYPE" },
   { key: "principal", label: "TARGET PRINCIPAL" },
