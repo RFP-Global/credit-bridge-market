@@ -1,0 +1,133 @@
+
+import { FinanceProposal } from "@/types/marketplace";
+
+/**
+ * Finance proposals for the Real Estate industry
+ */
+export const realEstateProposals: FinanceProposal[] = [
+  {
+    id: "2",
+    creditRating: 8.2,
+    projectName: "Project B",
+    facilityType: "364-Day Revolver",
+    financingType: "Refinancing",
+    principal: "$1,500,000",
+    interestRateType: "Fixed",
+    interestRate: "10.175%",
+    term: "12 Months",
+    status: "OPEN",
+    bidDeadline: "00:05:35",
+    lenderPreferences: "Community Bank",
+    industry: "Real Estate",
+    bidVolume: 45,
+    companyName: "Eastside Properties",
+    businessDescription: "Residential property management and development",
+    subSector: "Residential Real Estate",
+    businessType: "Property Management Firm",
+    employeeCount: 32,
+    annualRevenue: "$4.7M",
+    foundedYear: 2011,
+    location: {
+      city: "Austin",
+      state: "TX",
+      country: "USA"
+    },
+    zipCode: "78701"
+  },
+  {
+    id: "16",
+    creditRating: 7.7,
+    projectName: "Project P",
+    facilityType: "Commercial Mortgage",
+    financingType: "Refinancing",
+    principal: "$9,250,000",
+    interestRateType: "Fixed",
+    interestRate: "5.875%",
+    term: "120 Months",
+    status: "OPEN",
+    bidDeadline: "18:55:30",
+    lenderPreferences: "Commercial Bank",
+    industry: "Real Estate",
+    bidVolume: 76
+  },
+  {
+    id: "22",
+    creditRating: 8.5,
+    projectName: "Project V",
+    facilityType: "Bridge Loan",
+    financingType: "New Financing",
+    principal: "$7,500,000",
+    interestRateType: "Fixed",
+    interestRate: "10.50%",
+    term: "12 Months",
+    status: "OPEN",
+    bidDeadline: "02:30:50",
+    lenderPreferences: "Private Credit",
+    industry: "Real Estate",
+    bidVolume: 82
+  },
+  {
+    id: "32",
+    creditRating: 8.1,
+    projectName: "Project AF",
+    facilityType: "Commercial Mortgage",
+    financingType: "Refinancing",
+    principal: "$13,750,000",
+    interestRateType: "Fixed",
+    interestRate: "5.625%",
+    term: "180 Months",
+    status: "OPEN",
+    bidDeadline: "01:25:35",
+    lenderPreferences: "Commercial Bank",
+    industry: "Real Estate",
+    bidVolume: 81
+  },
+  {
+    id: "36",
+    creditRating: 8.8,
+    projectName: "Project AJ",
+    facilityType: "Bridge Loan",
+    financingType: "New Financing",
+    principal: "$6,750,000",
+    interestRateType: "Fixed",
+    interestRate: "11.25%",
+    term: "18 Months",
+    status: "OPEN",
+    bidDeadline: "03:50:25",
+    lenderPreferences: "Private Credit",
+    industry: "Real Estate",
+    bidVolume: 86
+  },
+  {
+    id: "46",
+    creditRating: 6.3,
+    projectName: "Project AT",
+    facilityType: "Commercial Mortgage",
+    financingType: "Refinancing",
+    principal: "$6,250,000",
+    interestRateType: "Fixed",
+    interestRate: "5.75%",
+    term: "120 Months",
+    status: "OPEN",
+    bidDeadline: "13:50:30",
+    lenderPreferences: "Commercial Bank",
+    industry: "Real Estate",
+    bidVolume: 61
+  },
+  {
+    id: "49",
+    creditRating: 8.7,
+    projectName: "Project AW",
+    facilityType: "Bridge Loan",
+    financingType: "New Financing",
+    principal: "$10,250,000",
+    interestRateType: "Fixed",
+    interestRate: "10.75%",
+    term: "12 Months",
+    status: "OPEN",
+    bidDeadline: "17:05:25",
+    lenderPreferences: "Private Credit",
+    industry: "Real Estate",
+    bidVolume: 83
+  }
+];
