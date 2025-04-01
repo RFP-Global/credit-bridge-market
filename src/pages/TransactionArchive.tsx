@@ -23,11 +23,11 @@ const TransactionArchive = () => {
   const filteredTransactions = useMemo(() => {
     return historicalTransactions.filter(transaction => {
       const matchesSearch = searchQuery === "" || 
-        transaction.companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         transaction.location.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
         transaction.location.state.toLowerCase().includes(searchQuery.toLowerCase()) ||
         transaction.businessType.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (transaction.subSector && transaction.subSector.toLowerCase().includes(searchQuery.toLowerCase()));
+        (transaction.subSector && transaction.subSector.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        transaction.id.substring(0, 6).toLowerCase().includes(searchQuery.toLowerCase());
         
       const matchesIndustry = industryFilter === "all" || transaction.industry === industryFilter;
       const matchesFacilityType = facilityTypeFilter === "all" || transaction.facilityType === facilityTypeFilter;

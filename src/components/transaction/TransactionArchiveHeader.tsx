@@ -49,7 +49,7 @@ const TransactionArchiveHeader = ({
       </div>
       
       <p className="text-gray-300">
-        View and analyze completed transactions across the platform. Explore funding details, rates, and business insights.
+        View and analyze anonymized transactions across the platform. Explore funding details, rates, and business insights.
       </p>
       
       <div className="flex flex-col sm:flex-row gap-4">
@@ -57,7 +57,7 @@ const TransactionArchiveHeader = ({
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input 
             type="text"
-            placeholder="Search by company name, location..." 
+            placeholder="Search by location, business type..." 
             className="pl-10 bg-gray-900/50 border-gray-700 text-white focus-visible:ring-cyan-500"
             value={searchQuery}
             onChange={handleSearchInput}

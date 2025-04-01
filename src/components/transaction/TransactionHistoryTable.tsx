@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HistoricalTransaction } from "@/data/transactionArchiveData";
@@ -86,7 +85,7 @@ const TransactionHistoryTable = ({ transactions }: TransactionHistoryTableProps)
               className="text-cyan-300 cursor-pointer" 
               onClick={() => handleSort('companyName')}
             >
-              Company {getSortIcon('companyName')}
+              Project {getSortIcon('companyName')}
             </TableHead>
             <TableHead 
               className="text-cyan-300 cursor-pointer" 
@@ -136,7 +135,7 @@ const TransactionHistoryTable = ({ transactions }: TransactionHistoryTableProps)
               <TableCell>
                 <div className="flex items-center space-x-2">
                   <Building className="h-4 w-4 text-cyan-400" />
-                  <span>{transaction.companyName}</span>
+                  <span>Anonymous Project {transaction.id.substring(0, 6)}</span>
                 </div>
               </TableCell>
               <TableCell>
