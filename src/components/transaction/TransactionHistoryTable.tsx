@@ -76,6 +76,11 @@ const TransactionHistoryTable = ({ transactions }: TransactionHistoryTableProps)
     return sortDirection === "asc" ? "↑" : "↓";
   };
 
+  const getProjectName = (index: number) => {
+    const projectLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    return `Project ${projectLetters[index % projectLetters.length]}`;
+  };
+
   return (
     <div className="rounded-lg border border-gray-700 overflow-hidden">
       <Table>
@@ -126,7 +131,7 @@ const TransactionHistoryTable = ({ transactions }: TransactionHistoryTableProps)
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sortedTransactions.map((transaction) => (
+          {sortedTransactions.map((transaction, index) => (
             <TableRow 
               key={transaction.id} 
               className="hover:bg-gray-800/30 border-gray-700 cursor-pointer"
@@ -135,7 +140,7 @@ const TransactionHistoryTable = ({ transactions }: TransactionHistoryTableProps)
               <TableCell>
                 <div className="flex items-center space-x-2">
                   <Building className="h-4 w-4 text-cyan-400" />
-                  <span>Anonymous Project {transaction.id.substring(0, 6)}</span>
+                  <span>{getProjectName(index)}</span>
                 </div>
               </TableCell>
               <TableCell>
