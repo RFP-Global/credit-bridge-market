@@ -88,6 +88,10 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
     >
       <TableCell className={`font-mono text-xs ${cellClass}`}>{proposal.creditRating.toFixed(1)}</TableCell>
       <TableCell className={cellClass}>{proposal.projectName}</TableCell>
+      <TableCell className={cellClass}>{proposal.companyName || "N/A"}</TableCell>
+      <TableCell className={cellClass}>{proposal.businessType || "N/A"}</TableCell>
+      <TableCell className={cellClass}>{proposal.zipCode || "N/A"}</TableCell>
+      <TableCell className={cellClass}>{proposal.employeeCount || "N/A"}</TableCell>
       <TableCell className={cellClass}>{proposal.facilityType}</TableCell>
       <TableCell className={cellClass}>{proposal.financingType}</TableCell>
       <TableCell className={cellClass}>{proposal.principal}</TableCell>
