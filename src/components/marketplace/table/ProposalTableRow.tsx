@@ -29,6 +29,13 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
 
   // Common class for all cells to ensure consistent alignment with headers
   const cellClass = "flex-1 text-center px-4 py-2 font-extralight";
+  
+  // Format business type display
+  const displayBusinessType = proposal.businessType || "Business Details";
+  
+  // Format location display
+  const displayLocation = proposal.zipCode || 
+    (proposal.location ? `${proposal.location.city.substring(0, 5)}...` : "Location Info");
 
   return (
     <TableRow 
@@ -42,20 +49,26 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
         <Tooltip>
           <TooltipTrigger asChild>
             <TableCell className={`${cellClass} hover:text-cyan-400`}>
-              {proposal.businessType || "N/A"}
+              {displayBusinessType}
             </TableCell>
           </TooltipTrigger>
           <TooltipContent className="bg-black/90 border-gray-700 max-w-md p-3">
             <div className="space-y-2">
               <p className="text-xs font-medium text-cyan-400">Business Details</p>
-              {proposal.businessDescription && (
+              {proposal.businessDescription ? (
                 <p className="text-xs text-gray-300">{proposal.businessDescription}</p>
+              ) : (
+                <p className="text-xs text-gray-300">No business description available</p>
               )}
-              {proposal.foundedYear && (
+              {proposal.foundedYear ? (
                 <p className="text-xs text-gray-300">Founded: {proposal.foundedYear}</p>
+              ) : (
+                <p className="text-xs text-gray-300">Founded: Not specified</p>
               )}
-              {proposal.annualRevenue && (
+              {proposal.annualRevenue ? (
                 <p className="text-xs text-gray-300">Revenue: {proposal.annualRevenue}</p>
+              ) : (
+                <p className="text-xs text-gray-300">Revenue: Not specified</p>
               )}
             </div>
           </TooltipContent>
@@ -66,16 +79,23 @@ const ProposalTableRow = ({ proposal, onViewDetails }: ProposalTableRowProps) =>
         <Tooltip>
           <TooltipTrigger asChild>
             <TableCell className={`${cellClass} hover:text-cyan-400`}>
-              {proposal.zipCode || "N/A"}
+              {displayLocation}
             </TableCell>
           </TooltipTrigger>
           <TooltipContent className="bg-black/90 border-gray-700 max-w-md p-3">
             <div className="space-y-2">
               <p className="text-xs font-medium text-cyan-400">Location</p>
-              {proposal.location && (
+              {proposal.location ? (
                 <p className="text-xs text-gray-300">
                   {proposal.location.city}, {proposal.location.state}, {proposal.location.country}
                 </p>
+              ) : (
+                <p className="text-xs text-gray-300">
+                  Location information not available
+                </p>
+              )}
+              {proposal.zipCode && (
+                <p className="text-xs text-gray-300">Zip Code: {proposal.zipCode}</p>
               )}
             </div>
           </TooltipContent>
