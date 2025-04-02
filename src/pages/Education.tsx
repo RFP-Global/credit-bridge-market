@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
-import { Book, Filter, Download } from "lucide-react";
+import { Book, Filter, Download, Building } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -187,11 +187,13 @@ const Education = () => {
 
   const handleFacilityClick = (facility: typeof creditFacilityTypes[0]) => {
     setSelectedFacility(facility);
+    setSelectedLender(null);
     setDialogOpen(true);
   };
 
   const handleLenderClick = (lender: typeof lenderTypes[0]) => {
     setSelectedLender(lender);
+    setSelectedFacility(null);
     setDialogOpen(true);
   };
 
@@ -316,10 +318,16 @@ const Education = () => {
                 {lenderTypes.map((lender) => (
                   <Card 
                     key={lender.id} 
-                    className="bg-black/60 border-cyan-800/30 backdrop-blur-sm"
+                    className="bg-black/60 border-cyan-800/30 backdrop-blur-sm hover:bg-black/80 hover:border-cyan-700/50 transition-all cursor-pointer"
+                    onClick={() => handleLenderClick(lender)}
                   >
                     <CardHeader>
-                      <CardTitle className="text-cyan-300">{lender.title}</CardTitle>
+                      <div className="flex justify-between items-start">
+                        <CardTitle className="text-cyan-300">{lender.title}</CardTitle>
+                        <Badge className="bg-emerald-900/30 text-emerald-300 border border-emerald-700/50">
+                          Provider
+                        </Badge>
+                      </div>
                       <CardDescription className="text-gray-400">
                         {lender.description}
                       </CardDescription>
@@ -364,6 +372,7 @@ const Education = () => {
         isOpen={dialogOpen}
         onClose={handleCloseDialog}
         facility={selectedFacility}
+        lender={selectedLender}
       />
     </div>
   );

@@ -4,40 +4,57 @@ import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Book, Info, Settings, Code } from "lucide-react";
+import { Book, Info, Settings, Code, Users, Building } from "lucide-react";
 import FacilityStatistics from './FacilityStatistics';
 import { Button } from "@/components/ui/button";
 
 interface FacilityDetailsProps {
   isOpen: boolean;
   onClose: () => void;
-  facility: {
+  facility?: {
     id: string;
     title: string;
     description: string;
     content: string;
     riskLevel: string;
-    typicalTerms: string;
-    interestRates: string;
-    bestFor: string;
-    commonProviders: string;
+    typicalTerms?: string;
+    interestRates?: string;
+    bestFor?: string;
+    commonProviders?: string;
     mechanics?: string;
+  } | null;
+  lender?: {
+    id: string;
+    title: string;
+    description: string;
+    content: string;
+    strengthsWeaknesses?: string;
+    typicalProducts?: string;
+    bestForBusinesses?: string;
   } | null;
 }
 
 const FacilityDetailsDialog: React.FC<FacilityDetailsProps> = ({ 
   isOpen, 
   onClose, 
-  facility 
+  facility,
+  lender
 }) => {
   const navigate = useNavigate();
   
-  if (!facility) return null;
+  const item = facility || lender;
+  if (!item) return null;
+  
+  const isLender = !!lender;
   
   const handleMechanicsClick = () => {
     // Close the dialog and navigate to the mechanics page
     onClose();
-    navigate(`/facility-mechanics/${facility.id}`);
+    if (facility) {
+      navigate(`/facility-mechanics/${facility.id}`);
+    } else if (lender) {
+      navigate(`/facility-mechanics/lender-${lender.id}`);
+    }
   };
   
   return (
@@ -46,15 +63,21 @@ const FacilityDetailsDialog: React.FC<FacilityDetailsProps> = ({
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle className="text-2xl text-cyan-300 font-mono flex items-center gap-2">
-              <Book className="h-5 w-5" />
-              {facility.title}
+              {isLender ? (
+                <Building className="h-5 w-5" />
+              ) : (
+                <Book className="h-5 w-5" />
+              )}
+              {item.title}
             </DialogTitle>
-            <Badge className="bg-cyan-900/30 text-cyan-300 border border-cyan-700/50">
-              {facility.riskLevel}
-            </Badge>
+            {facility && (
+              <Badge className="bg-cyan-900/30 text-cyan-300 border border-cyan-700/50">
+                {facility.riskLevel}
+              </Badge>
+            )}
           </div>
           <DialogDescription className="text-gray-400">
-            {facility.description}
+            {item.description}
           </DialogDescription>
         </DialogHeader>
         
@@ -65,32 +88,53 @@ const FacilityDetailsDialog: React.FC<FacilityDetailsProps> = ({
                 <Info className="h-4 w-4" />
                 Overview
               </h3>
-              <p className="text-gray-300 leading-relaxed">{facility.content}</p>
+              <p className="text-gray-300 leading-relaxed">{item.content}</p>
               
-              <div className="grid grid-cols-2 gap-4 mt-4">
-                <div className="space-y-2">
-                  <h4 className="text-cyan-400/80 text-sm font-semibold">Typical Terms</h4>
-                  <p className="text-gray-300">{facility.typicalTerms}</p>
+              {facility && (
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                  <div className="space-y-2">
+                    <h4 className="text-cyan-400/80 text-sm font-semibold">Typical Terms</h4>
+                    <p className="text-gray-300">{facility.typicalTerms}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="text-cyan-400/80 text-sm font-semibold">Interest Rates</h4>
+                    <p className="text-gray-300">{facility.interestRates}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="text-cyan-400/80 text-sm font-semibold">Best For</h4>
+                    <p className="text-gray-300">{facility.bestFor}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="text-cyan-400/80 text-sm font-semibold">Common Providers</h4>
+                    <p className="text-gray-300">{facility.commonProviders}</p>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <h4 className="text-cyan-400/80 text-sm font-semibold">Interest Rates</h4>
-                  <p className="text-gray-300">{facility.interestRates}</p>
+              )}
+              
+              {lender && (
+                <div className="grid grid-cols-1 gap-4 mt-4">
+                  <div className="space-y-2">
+                    <h4 className="text-cyan-400/80 text-sm font-semibold">Strengths & Weaknesses</h4>
+                    <p className="text-gray-300">{lender.strengthsWeaknesses}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="text-cyan-400/80 text-sm font-semibold">Typical Products</h4>
+                    <p className="text-gray-300">{lender.typicalProducts}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="text-cyan-400/80 text-sm font-semibold">Best For Businesses</h4>
+                    <p className="text-gray-300">{lender.bestForBusinesses}</p>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <h4 className="text-cyan-400/80 text-sm font-semibold">Best For</h4>
-                  <p className="text-gray-300">{facility.bestFor}</p>
-                </div>
-                <div className="space-y-2">
-                  <h4 className="text-cyan-400/80 text-sm font-semibold">Common Providers</h4>
-                  <p className="text-gray-300">{facility.commonProviders}</p>
-                </div>
-              </div>
+              )}
             </div>
             
-            <FacilityStatistics 
-              facilityId={facility.id} 
-              facilityTitle={facility.title}
-            />
+            {facility && (
+              <FacilityStatistics 
+                facilityId={facility.id} 
+                facilityTitle={facility.title}
+              />
+            )}
             
             <div className="border-t border-cyan-800/30 pt-6">
               <Button
@@ -100,7 +144,9 @@ const FacilityDetailsDialog: React.FC<FacilityDetailsProps> = ({
               >
                 <div className="flex items-center gap-2">
                   <Settings className="h-5 w-5 text-cyan-400" />
-                  <span className="text-xl">Explore Detailed Mechanics</span>
+                  <span className="text-xl">
+                    Explore Detailed {isLender ? 'Provider' : 'Facility'} Mechanics
+                  </span>
                 </div>
               </Button>
             </div>
