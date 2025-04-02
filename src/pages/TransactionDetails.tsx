@@ -1,4 +1,3 @@
-
 import { useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, Download } from "lucide-react";
@@ -28,12 +27,10 @@ const TransactionDetails = () => {
     [id]
   );
   
-  // Get project index from location state or find the index in the array
   const projectIndex = useMemo(() => {
     if (location.state?.projectIndex !== undefined) {
       return location.state.projectIndex;
     }
-    // Fallback: find index in the array
     return historicalTransactions.findIndex(t => t.id === id);
   }, [id, location.state]);
   
@@ -56,7 +53,6 @@ const TransactionDetails = () => {
       bidsReceived: Math.floor(Math.random() * 10) + 3,
       winningLender: "Anonymous Lender",
       documentation: Math.floor(Math.random() * 8) + 3,
-      // Add more detailed transaction metrics
       metrics: {
         debtServiceCoverageRatio: (Math.random() * 2 + 1).toFixed(2),
         loanToValueRatio: `${(Math.random() * 30 + 50).toFixed(1)}%`,
@@ -66,7 +62,6 @@ const TransactionDetails = () => {
         fundingEfficiency: `${(Math.random() * 20 + 80).toFixed(1)}%`,
         negotiationRounds: Math.floor(Math.random() * 5) + 1
       },
-      // Add anonymized borrower information
       borrowerInfo: {
         company: "Anonymous Company",
         size: ["Small", "Medium", "Enterprise"][Math.floor(Math.random() * 3)],
@@ -84,7 +79,6 @@ const TransactionDetails = () => {
         publiclyTraded: Math.random() > 0.7,
         subsidiaries: Math.floor(Math.random() * 5)
       },
-      // Add anonymized lender information
       lenderInfo: {
         name: "Anonymous Financial Institution",
         type: transaction.facilityType === "SBA Loan" ? "SBA Lender" : 
@@ -111,7 +105,6 @@ const TransactionDetails = () => {
     return <NotFoundMessage />;
   }
   
-  // Generate project name from index
   const getProjectName = () => {
     const projectLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     return `Project ${projectLetters[projectIndex % projectLetters.length]}`;
@@ -141,8 +134,7 @@ const TransactionDetails = () => {
             
             <div className="flex justify-between items-center mt-2">
               <h1 className="text-2xl font-bold text-cyan-400">
-                {getProjectName()} 
-                <span className="text-sm font-normal text-cyan-300">Transaction #{transaction.id.substring(0, 6)}</span>
+                {getProjectName()}
               </h1>
               
               <div className="flex gap-3 items-center">
@@ -164,16 +156,13 @@ const TransactionDetails = () => {
         
         <ScrollArea className="flex-1">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-8">
-            {/* First row */}
             <TransactionSummary transaction={transaction} transactionDetails={transactionDetails} />
             <BidInformation transactionDetails={transactionDetails} />
             <MetricsPanel transactionDetails={transactionDetails} />
             
-            {/* Second row */}
             <BorrowerInformation transactionDetails={transactionDetails} />
             <LenderDetails transactionDetails={transactionDetails} />
             
-            {/* Third row - full width components */}
             <TransactionTimeline transactionDetails={transactionDetails} className="lg:col-span-3" />
             <DocumentationTable transactionDetails={transactionDetails} className="lg:col-span-3" />
           </div>
