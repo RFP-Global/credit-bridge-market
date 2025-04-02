@@ -3,7 +3,7 @@ import React from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Book, Info } from "lucide-react";
+import { Book, Info, Settings, FileText, Database, Code } from "lucide-react";
 import FacilityStatistics from './FacilityStatistics';
 
 interface FacilityDetailsProps {
@@ -376,41 +376,77 @@ const FacilityDetailsDialog: React.FC<FacilityDetailsProps> = ({
               facilityTitle={facility.title}
             />
             
-            {/* Mechanics Section */}
-            <div className="space-y-3 border-t border-cyan-800/30 pt-6">
-              <h3 className="text-lg text-cyan-300 font-mono">Detailed Mechanics</h3>
-              <div className="text-gray-300 leading-relaxed whitespace-pre-line">
-                {mechanics.split('\n').map((line, i) => {
-                  if (line.startsWith('# ')) {
-                    return <h3 key={i} className="text-xl text-cyan-300 font-mono mt-4 mb-3">{line.replace('# ', '')}</h3>;
-                  } else if (line.startsWith('## ')) {
-                    return <h4 key={i} className="text-lg text-cyan-400 font-mono mt-4 mb-2">{line.replace('## ', '')}</h4>;
-                  } else if (line.match(/^\d+\. \*\*/)) {
-                    // Numbered list items with bold starts
-                    return (
-                      <div key={i} className="flex gap-2 my-2">
-                        <span className="text-cyan-400/80">{line.split('.')[0]}.</span>
-                        <span dangerouslySetInnerHTML={{ 
-                          __html: line.split('.')[1].replace(/\*\*(.*?)\*\*/g, '<span class="font-semibold text-cyan-200">$1</span>') 
-                        }} />
-                      </div>
-                    );
-                  } else if (line.startsWith('- **')) {
-                    // Bullet items with bold starts
-                    return (
-                      <div key={i} className="flex gap-2 my-1 ml-4">
-                        <span className="text-cyan-400/80">•</span>
-                        <span dangerouslySetInnerHTML={{ 
-                          __html: line.substring(2).replace(/\*\*(.*?)\*\*/g, '<span class="font-semibold text-cyan-200">$1</span>') 
-                        }} />
-                      </div>
-                    );
-                  } else if (line.trim() === '') {
-                    return <div key={i} className="h-2" />;
-                  } else {
-                    return <p key={i} className="my-2">{line}</p>;
-                  }
-                })}
+            {/* Mechanics Section - Improved Design */}
+            <div className="space-y-6 border-t border-cyan-800/30 pt-6">
+              <h3 className="text-2xl text-cyan-300 font-mono flex items-center gap-2">
+                <Settings className="h-5 w-5 text-cyan-400" />
+                Detailed Mechanics
+              </h3>
+              
+              <div className="bg-gradient-to-b from-cyan-950/30 to-black/20 rounded-lg border border-cyan-800/30 shadow-lg overflow-hidden">
+                <div className="p-6 text-gray-200 leading-relaxed">
+                  {mechanics.split('\n').map((line, i) => {
+                    if (line.startsWith('# ')) {
+                      return (
+                        <div key={i} className="flex items-center gap-2 mb-4 mt-6 border-b border-cyan-800/30 pb-2">
+                          <FileText className="h-5 w-5 text-cyan-400" />
+                          <h3 className="text-xl text-cyan-300 font-mono">{line.replace('# ', '')}</h3>
+                        </div>
+                      );
+                    } else if (line.startsWith('## ')) {
+                      return (
+                        <div key={i} className="flex items-center gap-2 mt-4 mb-2">
+                          <Database className="h-4 w-4 text-cyan-400/80" />
+                          <h4 className="text-lg text-cyan-400 font-mono">{line.replace('## ', '')}</h4>
+                        </div>
+                      );
+                    } else if (line.match(/^\d+\. \*\*/)) {
+                      // Numbered list items with bold starts
+                      return (
+                        <div key={i} className="flex gap-2 my-3 pl-2 border-l-2 border-cyan-700/30">
+                          <span className="text-cyan-400/90 font-mono">{line.split('.')[0]}.</span>
+                          <div className="flex-1">
+                            <span 
+                              dangerouslySetInnerHTML={{ 
+                                __html: line.split('.')[1].replace(/\*\*(.*?)\*\*/g, '<span class="font-semibold text-cyan-100">$1</span>') 
+                              }} 
+                            />
+                          </div>
+                        </div>
+                      );
+                    } else if (line.startsWith('- **')) {
+                      // Bullet items with bold starts
+                      return (
+                        <div key={i} className="flex gap-2 my-2 ml-4 bg-cyan-900/10 p-2 rounded-md">
+                          <span className="text-cyan-400/90">•</span>
+                          <div className="flex-1">
+                            <span 
+                              dangerouslySetInnerHTML={{ 
+                                __html: line.substring(2).replace(/\*\*(.*?)\*\*/g, '<span class="font-semibold text-cyan-200">$1</span>') 
+                              }} 
+                            />
+                          </div>
+                        </div>
+                      );
+                    } else if (line.trim() === '') {
+                      return <div key={i} className="h-2" />;
+                    } else {
+                      return (
+                        <p key={i} className="my-2 text-gray-300 leading-relaxed">
+                          {line}
+                        </p>
+                      );
+                    }
+                  })}
+                </div>
+              </div>
+              
+              {/* Footer with code icon */}
+              <div className="flex justify-end pt-2">
+                <div className="flex items-center text-xs text-cyan-500/60">
+                  <Code className="h-3 w-3 mr-1" />
+                  <span>Facility mechanics documentation</span>
+                </div>
               </div>
             </div>
           </div>
