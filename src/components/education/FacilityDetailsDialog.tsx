@@ -1,9 +1,11 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Book, Info, Settings, FileText, Database, Code, CheckCircle2, Zap, Target } from "lucide-react";
+import { Book, Info, Settings, FileText, Database, Code, CheckCircle2, Zap, Target, ChevronDown, ChevronUp } from "lucide-react";
 import FacilityStatistics from './FacilityStatistics';
+import { Button } from "@/components/ui/button";
 
 interface FacilityDetailsProps {
   isOpen: boolean;
@@ -316,6 +318,8 @@ const FacilityDetailsDialog: React.FC<FacilityDetailsProps> = ({
   onClose, 
   facility 
 }) => {
+  const [showMechanics, setShowMechanics] = useState(false);
+  
   if (!facility) return null;
 
   const mechanics = facilityMechanics[facility.id] || "";
@@ -372,96 +376,107 @@ const FacilityDetailsDialog: React.FC<FacilityDetailsProps> = ({
               facilityTitle={facility.title}
             />
             
-            <div className="space-y-6 border-t border-cyan-800/30 pt-6">
-              <h3 className="text-2xl text-cyan-300 font-mono flex items-center gap-2">
-                <Settings className="h-5 w-5 text-cyan-400" />
-                Detailed Mechanics
-              </h3>
-              
-              <div className="bg-gradient-to-b from-cyan-950/30 to-black/20 rounded-xl border border-cyan-800/30 shadow-lg overflow-hidden">
-                <div className="p-6 text-gray-200 leading-relaxed">
-                  {mechanics.split('\n').map((line, i) => {
-                    if (line.startsWith('# ')) {
-                      return (
-                        <div 
-                          key={i} 
-                          className="bg-cyan-900/40 rounded-xl p-4 mb-6 mt-6 shadow-md border border-cyan-700/30 flex items-center gap-3"
-                        >
-                          <Zap className="h-6 w-6 text-cyan-400 flex-shrink-0" />
-                          <h3 className="text-xl text-cyan-200 font-mono">
-                            {line.replace('# ', '')}
-                          </h3>
-                        </div>
-                      );
-                    } else if (line.startsWith('## ')) {
-                      return (
-                        <div 
-                          key={i} 
-                          className="flex items-center gap-2 mt-6 mb-3 bg-cyan-900/20 p-3 rounded-lg border-l-4 border-cyan-500"
-                        >
-                          <Target className="h-5 w-5 text-cyan-400/80" />
-                          <h4 className="text-lg text-cyan-300 font-mono">
-                            {line.replace('## ', '')}
-                          </h4>
-                        </div>
-                      );
-                    } else if (line.match(/^\d+\. \*\*/)) {
-                      const number = line.split('.')[0];
-                      const content = line.substring(number.length + 2);
-                      
-                      return (
-                        <div 
-                          key={i} 
-                          className="flex gap-4 my-4 p-4 bg-cyan-950/40 rounded-xl border-l-2 border-cyan-600/50 shadow-sm transition-all hover:bg-cyan-950/60"
-                        >
-                          <div className="bg-cyan-700/30 text-cyan-300 h-8 w-8 rounded-full flex items-center justify-center font-mono text-sm font-bold">
-                            {number}
-                          </div>
-                          <div className="flex-1">
-                            <span 
-                              className="text-gray-300"
-                              dangerouslySetInnerHTML={{ 
-                                __html: content.replace(/\*\*(.*?)\*\*/g, '<span class="font-semibold text-cyan-100">$1</span>') 
-                              }} 
-                            />
-                          </div>
-                        </div>
-                      );
-                    } else if (line.startsWith('- **')) {
-                      return (
-                        <div 
-                          key={i} 
-                          className="flex gap-3 my-3 ml-4 bg-cyan-900/10 p-3 rounded-lg border-l-2 border-cyan-700/30 hover:bg-cyan-900/20 transition-all"
-                        >
-                          <CheckCircle2 className="text-cyan-400/90 h-5 w-5 mt-0.5 flex-shrink-0" />
-                          <div className="flex-1">
-                            <span 
-                              dangerouslySetInnerHTML={{ 
-                                __html: line.substring(2).replace(/\*\*(.*?)\*\*/g, '<span class="font-semibold text-cyan-200">$1</span>') 
-                              }} 
-                            />
-                          </div>
-                        </div>
-                      );
-                    } else if (line.trim() === '') {
-                      return <div key={i} className="h-2" />;
-                    } else {
-                      return (
-                        <p key={i} className="my-3 text-gray-300 leading-relaxed pl-2">
-                          {line}
-                        </p>
-                      );
-                    }
-                  })}
+            <div className="border-t border-cyan-800/30 pt-6">
+              <Button
+                onClick={() => setShowMechanics(!showMechanics)}
+                variant="outline"
+                className="w-full bg-gradient-to-r from-cyan-950/60 to-black/60 hover:from-cyan-900/60 hover:to-cyan-950/60 border border-cyan-800/50 text-cyan-300 font-mono flex items-center justify-between py-6"
+              >
+                <div className="flex items-center gap-2">
+                  <Settings className="h-5 w-5 text-cyan-400" />
+                  <span className="text-xl">Detailed Mechanics</span>
                 </div>
-              </div>
+                {showMechanics ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+              </Button>
               
-              <div className="flex justify-end pt-2">
-                <div className="flex items-center text-xs text-cyan-500/60">
-                  <Code className="h-3 w-3 mr-1" />
-                  <span>Facility mechanics documentation</span>
+              {showMechanics && (
+                <div className="space-y-6 mt-6">
+                  <div className="bg-gradient-to-b from-cyan-950/30 to-black/20 rounded-xl border border-cyan-800/30 shadow-lg overflow-hidden">
+                    <div className="p-6 text-gray-200 leading-relaxed">
+                      {mechanics.split('\n').map((line, i) => {
+                        if (line.startsWith('# ')) {
+                          return (
+                            <div 
+                              key={i} 
+                              className="bg-cyan-900/40 rounded-xl p-4 mb-6 mt-6 shadow-md border border-cyan-700/30 flex items-center gap-3"
+                            >
+                              <Zap className="h-6 w-6 text-cyan-400 flex-shrink-0" />
+                              <h3 className="text-xl text-cyan-200 font-mono">
+                                {line.replace('# ', '')}
+                              </h3>
+                            </div>
+                          );
+                        } else if (line.startsWith('## ')) {
+                          return (
+                            <div 
+                              key={i} 
+                              className="flex items-center gap-2 mt-6 mb-3 bg-cyan-900/20 p-3 rounded-lg border-l-4 border-cyan-500"
+                            >
+                              <Target className="h-5 w-5 text-cyan-400/80" />
+                              <h4 className="text-lg text-cyan-300 font-mono">
+                                {line.replace('## ', '')}
+                              </h4>
+                            </div>
+                          );
+                        } else if (line.match(/^\d+\. \*\*/)) {
+                          const number = line.split('.')[0];
+                          const content = line.substring(number.length + 2);
+                          
+                          return (
+                            <div 
+                              key={i} 
+                              className="flex gap-4 my-4 p-4 bg-cyan-950/40 rounded-xl border-l-2 border-cyan-600/50 shadow-sm transition-all hover:bg-cyan-950/60"
+                            >
+                              <div className="bg-cyan-700/30 text-cyan-300 h-8 w-8 rounded-full flex items-center justify-center font-mono text-sm font-bold">
+                                {number}
+                              </div>
+                              <div className="flex-1">
+                                <span 
+                                  className="text-gray-300"
+                                  dangerouslySetInnerHTML={{ 
+                                    __html: content.replace(/\*\*(.*?)\*\*/g, '<span class="font-semibold text-cyan-100">$1</span>') 
+                                  }} 
+                                />
+                              </div>
+                            </div>
+                          );
+                        } else if (line.startsWith('- **')) {
+                          return (
+                            <div 
+                              key={i} 
+                              className="flex gap-3 my-3 ml-4 bg-cyan-900/10 p-3 rounded-lg border-l-2 border-cyan-700/30 hover:bg-cyan-900/20 transition-all"
+                            >
+                              <CheckCircle2 className="text-cyan-400/90 h-5 w-5 mt-0.5 flex-shrink-0" />
+                              <div className="flex-1">
+                                <span 
+                                  dangerouslySetInnerHTML={{ 
+                                    __html: line.substring(2).replace(/\*\*(.*?)\*\*/g, '<span class="font-semibold text-cyan-200">$1</span>') 
+                                  }} 
+                                />
+                              </div>
+                            </div>
+                          );
+                        } else if (line.trim() === '') {
+                          return <div key={i} className="h-2" />;
+                        } else {
+                          return (
+                            <p key={i} className="my-3 text-gray-300 leading-relaxed pl-2">
+                              {line}
+                            </p>
+                          );
+                        }
+                      })}
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-end pt-2">
+                    <div className="flex items-center text-xs text-cyan-500/60">
+                      <Code className="h-3 w-3 mr-1" />
+                      <span>Facility mechanics documentation</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </ScrollArea>
