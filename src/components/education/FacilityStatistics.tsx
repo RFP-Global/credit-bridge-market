@@ -1,6 +1,6 @@
 
 import React, { useMemo } from 'react';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, ResponsiveContainer, Cell, Tooltip, Legend } from 'recharts';
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, ResponsiveContainer, Cell, Tooltip, Legend, CartesianGrid } from 'recharts';
 import { historicalTransactions } from '@/data/transactionArchiveData';
 import { 
   BarChart3, 
@@ -47,8 +47,7 @@ const FacilityStatistics: React.FC<FacilityStatisticsProps> = ({ facilityId, fac
         transactionCount: 0,
         averageInterestRate: "N/A",
         averageTerm: "N/A",
-        interestRateData: [],
-        termData: [],
+        rateTermData: [],
         businessTypes: [],
         lenderTypes: []
       };
@@ -96,7 +95,7 @@ const FacilityStatistics: React.FC<FacilityStatisticsProps> = ({ facilityId, fac
     const businessTypes = Object.entries(businessTypeCounts)
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value)
-      .slice(0, 8); // Increased from 5 to 8 to show more business types
+      .slice(0, 8); // Show up to 8 business types
     
     // Count lender types instead of specific lenders
     const lenderTypeCounts: Record<string, number> = {
@@ -137,52 +136,35 @@ const FacilityStatistics: React.FC<FacilityStatisticsProps> = ({ facilityId, fac
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);
 
-    // Create interest rate distribution data for line chart
-    const interestRanges = [
-      { range: "<3%", value: 0 },
-      { range: "3-4%", value: 0 },
-      { range: "4-5%", value: 0 },
-      { range: "5-6%", value: 0 },
-      { range: "6-7%", value: 0 },
-      { range: ">7%", value: 0 }
-    ];
-    
-    interestRates.forEach(rate => {
-      if (rate < 3) interestRanges[0].value++;
-      else if (rate < 4) interestRanges[1].value++;
-      else if (rate < 5) interestRanges[2].value++;
-      else if (rate < 6) interestRanges[3].value++;
-      else if (rate < 7) interestRanges[4].value++;
-      else interestRanges[5].value++;
+    // Create interest rate vs term length scatter data
+    const rateTermData = facilityTransactions.map(t => {
+      // Parse interest rate
+      const rate = parseFloat(t.interestRate.replace('%', ''));
+      
+      // Parse term
+      const term = t.term;
+      const termValue = parseInt(term.split(' ')[0]);
+      const termUnit = term.split(' ')[1];
+      
+      // Convert term to years
+      let termYears = termValue;
+      if (termUnit.includes('month')) {
+        termYears = Math.round(termValue / 12 * 10) / 10; // Round to 1 decimal
+      }
+      
+      return {
+        name: t.companyName,
+        interestRate: rate,
+        termYears: termYears, 
+        principal: t.principal
+      };
     });
-    
-    const interestRateData = interestRanges.filter(r => r.value > 0);
-
-    // Create term length distribution data for line chart
-    const termRanges = [
-      { range: "<1 year", value: 0 },
-      { range: "1-3 years", value: 0 },
-      { range: "3-5 years", value: 0 },
-      { range: "5-10 years", value: 0 },
-      { range: ">10 years", value: 0 }
-    ];
-    
-    termLengths.forEach(months => {
-      if (months < 12) termRanges[0].value++;
-      else if (months < 36) termRanges[1].value++;
-      else if (months < 60) termRanges[2].value++;
-      else if (months < 120) termRanges[3].value++;
-      else termRanges[4].value++;
-    });
-    
-    const termData = termRanges.filter(r => r.value > 0);
 
     return {
       transactionCount: facilityTransactions.length,
       averageInterestRate: `${averageInterestRate}%`,
       averageTerm: averageTerm,
-      interestRateData,
-      termData,
+      rateTermData,
       businessTypes,
       lenderTypes
     };
@@ -235,53 +217,46 @@ const FacilityStatistics: React.FC<FacilityStatisticsProps> = ({ facilityId, fac
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 gap-6 mb-6">
         <div>
           <h4 className="text-sm text-cyan-300 mb-2 flex items-center gap-1">
-            <TrendingUp className="h-4 w-4" /> Interest Rate Distribution
+            <TrendingUp className="h-4 w-4" /> Interest Rate vs. Term Length Distribution
           </h4>
           <div className="bg-cyan-950/10 border border-cyan-800/20 rounded p-3 h-64">
             <ResponsiveContainer width="100%" height="100%">
-              {/* Changed from BarChart to LineChart */}
-              <LineChart data={statistics.interestRateData} margin={{ top: 5, right: 20, bottom: 30, left: 0 }}>
-                <XAxis dataKey="range" stroke="#94a3b8" fontSize={12} tickMargin={5} />
-                <YAxis stroke="#94a3b8" fontSize={12} />
-                <Tooltip content={<CustomTooltip />} />
-                <Legend />
-                <Line 
-                  type="monotone" 
-                  dataKey="value" 
-                  name="Transactions" 
-                  stroke="#33bbef" 
-                  strokeWidth={2} 
-                  dot={{ r: 4 }}
-                  activeDot={{ r: 6 }}
+              <LineChart
+                data={statistics.rateTermData}
+                margin={{ top: 5, right: 20, left: 5, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#1e3a5f" />
+                <XAxis 
+                  dataKey="interestRate" 
+                  label={{ value: 'Interest Rate (%)', position: 'bottom', fill: '#94a3b8', style: { fontSize: '12px' } }}
+                  type="number"
+                  domain={[0, 15]}
+                  ticks={[0, 3, 6, 9, 12, 15]}
+                  stroke="#94a3b8" 
+                  fontSize={12}
                 />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div>
-          <h4 className="text-sm text-cyan-300 mb-2 flex items-center gap-1">
-            <Timer className="h-4 w-4" /> Term Length Distribution
-          </h4>
-          <div className="bg-cyan-950/10 border border-cyan-800/20 rounded p-3 h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              {/* Changed from BarChart to LineChart */}
-              <LineChart data={statistics.termData} margin={{ top: 5, right: 20, bottom: 30, left: 0 }}>
-                <XAxis dataKey="range" stroke="#94a3b8" fontSize={12} tickMargin={5} />
-                <YAxis stroke="#94a3b8" fontSize={12} />
+                <YAxis 
+                  dataKey="termYears" 
+                  label={{ value: 'Term Length (years)', angle: -90, position: 'left', fill: '#94a3b8', style: { fontSize: '12px' } }}
+                  type="number"
+                  domain={[0, 20]}
+                  ticks={[0, 5, 10, 15, 20]}
+                  stroke="#94a3b8" 
+                  fontSize={12}
+                />
                 <Tooltip content={<CustomTooltip />} />
-                <Legend />
-                <Line 
-                  type="monotone" 
-                  dataKey="value" 
-                  name="Transactions" 
-                  stroke="#38bdf8" 
-                  strokeWidth={2} 
-                  dot={{ r: 4 }}
+                <Line
+                  type="monotone"
+                  dataKey="termYears"
+                  name="Term (Years)"
+                  stroke="#33bbef"
+                  strokeWidth={0}
+                  dot={{ r: 4, fill: "#38bdf8" }}
                   activeDot={{ r: 6 }}
+                  isAnimationActive={true}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -297,7 +272,6 @@ const FacilityStatistics: React.FC<FacilityStatisticsProps> = ({ facilityId, fac
           <div className="bg-cyan-950/10 border border-cyan-800/20 rounded p-3 h-64">
             {statistics.businessTypes.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
-                {/* Changed from PieChart to BarChart */}
                 <BarChart 
                   data={statistics.businessTypes} 
                   layout="vertical"
@@ -339,7 +313,6 @@ const FacilityStatistics: React.FC<FacilityStatisticsProps> = ({ facilityId, fac
           <div className="bg-cyan-950/10 border border-cyan-800/20 rounded p-3 h-64">
             {statistics.lenderTypes.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
-                {/* Changed from PieChart to BarChart */}
                 <BarChart 
                   data={statistics.lenderTypes} 
                   layout="vertical"
