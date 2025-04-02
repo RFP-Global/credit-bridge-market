@@ -15,6 +15,7 @@ import LenderSignUp from "./pages/LenderSignUp";
 import EnterpriseDashboard from "./pages/EnterpriseDashboard";
 import LenderDashboard from "./pages/LenderDashboard";
 import Intelligence from "./pages/Intelligence";
+import Education from "./pages/Education";
 import ProposalDetails from "./pages/ProposalDetails";
 import BidSubmission from "./pages/BidSubmission";
 import FullscreenButton from "./components/FullscreenButton";
@@ -48,6 +49,7 @@ const App = () => {
             <Route path="/enterprise-dashboard" element={<EnterpriseDashboard />} />
             <Route path="/lender-dashboard" element={<LenderDashboard />} />
             <Route path="/intelligence" element={<Intelligence />} />
+            <Route path="/education" element={<Education />} />
             <Route path="/proposals-dashboard" element={<ProposalsDashboard />} />
             <Route path="/proposal-bids/:id" element={<ProposalBids />} />
             <Route path="/create-proposal" element={<CreateProposal />} />
