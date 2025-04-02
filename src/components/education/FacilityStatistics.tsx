@@ -1,6 +1,5 @@
 
 import React, { useMemo } from 'react';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, ResponsiveContainer, Cell, Tooltip, Legend, CartesianGrid } from 'recharts';
 import { historicalTransactions } from '@/data/transactionArchiveData';
 import { 
   BarChart3, 
@@ -9,8 +8,6 @@ import {
   Building2, 
   Landmark 
 } from 'lucide-react';
-import { COLORS } from '@/components/charts/ChartUtils';
-import CustomTooltip from '@/components/charts/CustomTooltip';
 
 interface FacilityStatisticsProps {
   facilityId: string;
@@ -47,7 +44,6 @@ const FacilityStatistics: React.FC<FacilityStatisticsProps> = ({ facilityId, fac
         transactionCount: 0,
         averageInterestRate: "N/A",
         averageTerm: "N/A",
-        rateTermData: [],
         businessTypes: [],
         lenderTypes: []
       };
@@ -86,7 +82,7 @@ const FacilityStatistics: React.FC<FacilityStatisticsProps> = ({ facilityId, fac
       averageTerm = `${Math.floor(avgTermMonths / 12)} years, ${avgTermMonths % 12} months`;
     }
 
-    // Count business types and expand to more types
+    // Count business types
     const businessTypeCounts: Record<string, number> = {};
     facilityTransactions.forEach(t => {
       businessTypeCounts[t.businessType] = (businessTypeCounts[t.businessType] || 0) + 1;
@@ -96,8 +92,8 @@ const FacilityStatistics: React.FC<FacilityStatisticsProps> = ({ facilityId, fac
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 8); // Show up to 8 business types
-    
-    // Count lender types instead of specific lenders
+
+    // Count lender types
     const lenderTypeCounts: Record<string, number> = {
       "Commercial Bank": 0,
       "Credit Union": 0,
@@ -136,118 +132,14 @@ const FacilityStatistics: React.FC<FacilityStatisticsProps> = ({ facilityId, fac
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);
 
-    // Generate 15 synthetic data points for interest rate vs term length
-    // This ensures we have exactly 15 data points for visualization
-    const rateTermData = [];
-    
-    // Use actual data if we have enough points
-    if (facilityTransactions.length >= 15) {
-      for (let i = 0; i < 15; i++) {
-        const t = facilityTransactions[i];
-        const rate = parseFloat(t.interestRate.replace('%', ''));
-        
-        // Parse term
-        const term = t.term;
-        const termValue = parseInt(term.split(' ')[0]);
-        const termUnit = term.split(' ')[1];
-        
-        // Convert term to years
-        let termYears = termValue;
-        if (termUnit.includes('month')) {
-          termYears = Math.round(termValue / 12 * 10) / 10; // Round to 1 decimal
-        }
-        
-        rateTermData.push({
-          name: t.companyName,
-          interestRate: rate,
-          termYears: termYears, 
-          principal: t.principal
-        });
-      }
-    } else {
-      // If we don't have 15 actual data points, generate synthetic ones
-      // based on the distribution of actual data
-      
-      // First add all actual data points
-      facilityTransactions.forEach(t => {
-        const rate = parseFloat(t.interestRate.replace('%', ''));
-        
-        // Parse term
-        const term = t.term;
-        const termValue = parseInt(term.split(' ')[0]);
-        const termUnit = term.split(' ')[1];
-        
-        // Convert term to years
-        let termYears = termValue;
-        if (termUnit.includes('month')) {
-          termYears = Math.round(termValue / 12 * 10) / 10; // Round to 1 decimal
-        }
-        
-        rateTermData.push({
-          name: t.companyName,
-          interestRate: rate,
-          termYears: termYears, 
-          principal: t.principal
-        });
-      });
-      
-      // Calculate min/max/avg values to generate realistic synthetic data
-      const actualRates = rateTermData.map(d => d.interestRate);
-      const minRate = Math.min(...actualRates);
-      const maxRate = Math.max(...actualRates);
-      const avgRate = actualRates.reduce((sum, r) => sum + r, 0) / actualRates.length;
-      
-      const actualTerms = rateTermData.map(d => d.termYears);
-      const minTerm = Math.min(...actualTerms);
-      const maxTerm = Math.max(...actualTerms);
-      const avgTerm = actualTerms.reduce((sum, t) => sum + t, 0) / actualTerms.length;
-      
-      // Generate remaining synthetic data points
-      const remainingPoints = 15 - rateTermData.length;
-      for (let i = 0; i < remainingPoints; i++) {
-        // Generate realistic but varied data points
-        const syntheticRate = getRandomNumber(
-          Math.max(0, minRate - 1), 
-          Math.min(15, maxRate + 1)
-        );
-        
-        const syntheticTerm = getRandomNumber(
-          Math.max(1, minTerm - 1), 
-          Math.min(20, maxTerm + 2)
-        );
-        
-        const companyNames = [
-          "Synthetic Corp.", "Data Point Inc.", "Virtual Enterprise",
-          "Sample Business", "Example Co.", "Statistic LLC", "Graph Data Ltd.",
-          "Visual Analytics", "Chart Entity", "Trend Line Group"
-        ];
-        
-        rateTermData.push({
-          name: companyNames[i % companyNames.length] + " " + (i + 1),
-          interestRate: syntheticRate,
-          termYears: syntheticTerm,
-          principal: Math.round(100000 + Math.random() * 900000)
-        });
-      }
-    }
-    
-    // Sort the data by interest rate for better visualization
-    rateTermData.sort((a, b) => a.interestRate - b.interestRate);
-
     return {
       transactionCount: facilityTransactions.length,
       averageInterestRate: `${averageInterestRate}%`,
       averageTerm: averageTerm,
-      rateTermData,
       businessTypes,
       lenderTypes
     };
   }, [facilityId, facilityTitle]);
-  
-  // Helper function to generate random number within a range
-  const getRandomNumber = (min: number, max: number) => {
-    return Math.round((Math.random() * (max - min) + min) * 10) / 10;
-  };
 
   if (statistics.transactionCount === 0) {
     return (
@@ -296,87 +188,30 @@ const FacilityStatistics: React.FC<FacilityStatisticsProps> = ({ facilityId, fac
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 mb-6">
-        <div>
-          <h4 className="text-sm text-cyan-300 mb-2 flex items-center gap-1">
-            <TrendingUp className="h-4 w-4" /> Interest Rate vs. Term Length Distribution (15 Data Points)
-          </h4>
-          <div className="bg-cyan-950/10 border border-cyan-800/20 rounded p-3 h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={statistics.rateTermData}
-                margin={{ top: 5, right: 20, left: 5, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e3a5f" />
-                <XAxis 
-                  dataKey="interestRate" 
-                  label={{ value: 'Interest Rate (%)', position: 'bottom', fill: '#94a3b8', style: { fontSize: '12px' } }}
-                  type="number"
-                  domain={[0, 15]}
-                  ticks={[0, 3, 6, 9, 12, 15]}
-                  stroke="#94a3b8" 
-                  fontSize={12}
-                />
-                <YAxis 
-                  dataKey="termYears" 
-                  label={{ value: 'Term Length (years)', angle: -90, position: 'left', fill: '#94a3b8', style: { fontSize: '12px' } }}
-                  type="number"
-                  domain={[0, 20]}
-                  ticks={[0, 5, 10, 15, 20]}
-                  stroke="#94a3b8" 
-                  fontSize={12}
-                />
-                <Tooltip content={<CustomTooltip />} />
-                <Line
-                  type="monotone"
-                  dataKey="termYears"
-                  name="Term (Years)"
-                  stroke="#33bbef"
-                  strokeWidth={2}
-                  dot={{ r: 4, fill: "#38bdf8" }}
-                  activeDot={{ r: 6 }}
-                  isAnimationActive={true}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
           <h4 className="text-sm text-cyan-300 mb-2 flex items-center gap-1">
             <Building2 className="h-4 w-4" /> Most Common Business Types
           </h4>
-          <div className="bg-cyan-950/10 border border-cyan-800/20 rounded p-3 h-64">
+          <div className="bg-cyan-950/10 border border-cyan-800/20 rounded p-4 h-64 overflow-auto">
             {statistics.businessTypes.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart 
-                  data={statistics.businessTypes} 
-                  layout="vertical"
-                  margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
-                >
-                  <XAxis type="number" stroke="#94a3b8" fontSize={12} />
-                  <YAxis 
-                    type="category" 
-                    dataKey="name" 
-                    stroke="#94a3b8" 
-                    fontSize={12} 
-                    width={100}
-                  />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Legend />
-                  <Bar 
-                    dataKey="value" 
-                    name="Transactions" 
-                    fill="#33bbef"
-                  >
-                    {statistics.businessTypes.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+              <ul className="space-y-2">
+                {statistics.businessTypes.map((type, index) => (
+                  <li key={index} className="flex justify-between items-center">
+                    <span className="text-gray-300">{type.name}</span>
+                    <div className="flex items-center">
+                      <div 
+                        className="h-2 bg-cyan-500 mr-2" 
+                        style={{ 
+                          width: `${(type.value / statistics.businessTypes[0].value) * 100}px`,
+                          opacity: 0.3 + (0.7 * (1 - index / statistics.businessTypes.length))
+                        }}
+                      ></div>
+                      <span className="text-cyan-300 font-mono">{type.value}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             ) : (
               <div className="flex items-center justify-center h-full text-gray-500">
                 No business type data available
@@ -389,35 +224,25 @@ const FacilityStatistics: React.FC<FacilityStatisticsProps> = ({ facilityId, fac
           <h4 className="text-sm text-cyan-300 mb-2 flex items-center gap-1">
             <Landmark className="h-4 w-4" /> Most Common Lender Types
           </h4>
-          <div className="bg-cyan-950/10 border border-cyan-800/20 rounded p-3 h-64">
+          <div className="bg-cyan-950/10 border border-cyan-800/20 rounded p-4 h-64 overflow-auto">
             {statistics.lenderTypes.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart 
-                  data={statistics.lenderTypes} 
-                  layout="vertical"
-                  margin={{ top: 5, right: 20, left: 30, bottom: 5 }}
-                >
-                  <XAxis type="number" stroke="#94a3b8" fontSize={12} />
-                  <YAxis 
-                    type="category" 
-                    dataKey="name" 
-                    stroke="#94a3b8" 
-                    fontSize={12}
-                    width={120}
-                  />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Legend />
-                  <Bar 
-                    dataKey="value" 
-                    name="Transactions" 
-                    fill="#38bdf8"
-                  >
-                    {statistics.lenderTypes.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+              <ul className="space-y-2">
+                {statistics.lenderTypes.map((type, index) => (
+                  <li key={index} className="flex justify-between items-center">
+                    <span className="text-gray-300">{type.name}</span>
+                    <div className="flex items-center">
+                      <div 
+                        className="h-2 bg-cyan-400 mr-2" 
+                        style={{ 
+                          width: `${(type.value / statistics.lenderTypes[0].value) * 100}px`,
+                          opacity: 0.3 + (0.7 * (1 - index / statistics.lenderTypes.length))
+                        }}
+                      ></div>
+                      <span className="text-cyan-300 font-mono">{type.value}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             ) : (
               <div className="flex items-center justify-center h-full text-gray-500">
                 No lender type data available
