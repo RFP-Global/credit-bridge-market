@@ -1,6 +1,6 @@
 
 import { useMemo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { historicalTransactions } from "@/data/transactionArchiveData";
@@ -21,11 +21,21 @@ import MetricsPanel from "@/components/transaction/MetricsPanel";
 const TransactionDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   
   const transaction = useMemo(() => 
     historicalTransactions.find(transaction => transaction.id === id),
     [id]
   );
+  
+  // Get project index from location state or find the index in the array
+  const projectIndex = useMemo(() => {
+    if (location.state?.projectIndex !== undefined) {
+      return location.state.projectIndex;
+    }
+    // Fallback: find index in the array
+    return historicalTransactions.findIndex(t => t.id === id);
+  }, [id, location.state]);
   
   const transactionDetails = useMemo(() => {
     if (!transaction) return null;
@@ -100,6 +110,12 @@ const TransactionDetails = () => {
   if (!transaction) {
     return <NotFoundMessage />;
   }
+  
+  // Generate project name from index
+  const getProjectName = () => {
+    const projectLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    return `Project ${projectLetters[projectIndex % projectLetters.length]}`;
+  };
 
   return (
     <div className="min-h-screen bg-black/90 text-gray-200 relative grid-bg font-typewriter">
@@ -125,9 +141,7 @@ const TransactionDetails = () => {
             
             <div className="flex justify-between items-center mt-2">
               <h1 className="text-2xl font-bold text-cyan-400">
-                {transaction.projectIndex !== undefined 
-                  ? `Project ${String.fromCharCode(65 + (transaction.projectIndex % 26))}` 
-                  : `Project ${transaction.id.substring(0, 6)}`} 
+                {getProjectName()} 
                 <span className="text-sm font-normal text-cyan-300">Transaction #{transaction.id.substring(0, 6)}</span>
               </h1>
               

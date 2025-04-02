@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HistoricalTransaction } from "@/data/transactionArchiveData";
@@ -67,8 +68,11 @@ const TransactionHistoryTable = ({ transactions }: TransactionHistoryTableProps)
     return 0;
   });
 
-  const handleRowClick = (transaction: HistoricalTransaction) => {
-    navigate(`/transaction/${transaction.id}`);
+  const handleRowClick = (transaction: HistoricalTransaction, index: number) => {
+    // Add the projectIndex to the transaction when navigating
+    navigate(`/transaction/${transaction.id}`, { 
+      state: { projectIndex: index } 
+    });
   };
   
   const getSortIcon = (field: keyof HistoricalTransaction) => {
@@ -135,7 +139,7 @@ const TransactionHistoryTable = ({ transactions }: TransactionHistoryTableProps)
             <TableRow 
               key={transaction.id} 
               className="hover:bg-gray-800/30 border-gray-700 cursor-pointer"
-              onClick={() => handleRowClick(transaction)}
+              onClick={() => handleRowClick(transaction, index)}
             >
               <TableCell>
                 <div className="flex items-center space-x-2">
