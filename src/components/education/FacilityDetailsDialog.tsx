@@ -3,7 +3,7 @@ import React from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Book, Info, Settings, FileText, Database, Code } from "lucide-react";
+import { Book, Info, Settings, FileText, Database, Code, CheckCircle2 } from "lucide-react";
 import FacilityStatistics from './FacilityStatistics';
 
 interface FacilityDetailsProps {
@@ -376,7 +376,7 @@ const FacilityDetailsDialog: React.FC<FacilityDetailsProps> = ({
               facilityTitle={facility.title}
             />
             
-            {/* Mechanics Section - Improved Design */}
+            {/* Mechanics Section - Improved Organization */}
             <div className="space-y-6 border-t border-cyan-800/30 pt-6">
               <h3 className="text-2xl text-cyan-300 font-mono flex items-center gap-2">
                 <Settings className="h-5 w-5 text-cyan-400" />
@@ -388,27 +388,34 @@ const FacilityDetailsDialog: React.FC<FacilityDetailsProps> = ({
                   {mechanics.split('\n').map((line, i) => {
                     if (line.startsWith('# ')) {
                       return (
-                        <div key={i} className="flex items-center gap-2 mb-4 mt-6 border-b border-cyan-800/30 pb-2">
-                          <FileText className="h-5 w-5 text-cyan-400" />
-                          <h3 className="text-xl text-cyan-300 font-mono">{line.replace('# ', '')}</h3>
+                        <div key={i} className="bg-cyan-900/40 rounded-md p-3 mb-6 mt-6 shadow-md">
+                          <h3 className="text-xl text-cyan-200 font-mono flex items-center gap-2">
+                            <FileText className="h-5 w-5 text-cyan-400" />
+                            {line.replace('# ', '')}
+                          </h3>
                         </div>
                       );
                     } else if (line.startsWith('## ')) {
                       return (
-                        <div key={i} className="flex items-center gap-2 mt-4 mb-2">
+                        <div key={i} className="flex items-center gap-2 mt-6 mb-3 bg-cyan-900/20 p-2 rounded-md border-l-4 border-cyan-500">
                           <Database className="h-4 w-4 text-cyan-400/80" />
-                          <h4 className="text-lg text-cyan-400 font-mono">{line.replace('## ', '')}</h4>
+                          <h4 className="text-lg text-cyan-300 font-mono">{line.replace('## ', '')}</h4>
                         </div>
                       );
                     } else if (line.match(/^\d+\. \*\*/)) {
                       // Numbered list items with bold starts
+                      const number = line.split('.')[0];
+                      const content = line.substring(number.length + 2);
+                      
                       return (
-                        <div key={i} className="flex gap-2 my-3 pl-2 border-l-2 border-cyan-700/30">
-                          <span className="text-cyan-400/90 font-mono">{line.split('.')[0]}.</span>
+                        <div key={i} className="flex gap-3 my-4 p-3 bg-cyan-950/40 rounded-lg border-l-2 border-cyan-600/50 shadow-sm transition-all hover:bg-cyan-950/60">
+                          <div className="bg-cyan-700/30 text-cyan-300 h-6 w-6 rounded-full flex items-center justify-center font-mono text-sm">
+                            {number}
+                          </div>
                           <div className="flex-1">
                             <span 
                               dangerouslySetInnerHTML={{ 
-                                __html: line.split('.')[1].replace(/\*\*(.*?)\*\*/g, '<span class="font-semibold text-cyan-100">$1</span>') 
+                                __html: content.replace(/\*\*(.*?)\*\*/g, '<span class="font-semibold text-cyan-100">$1</span>') 
                               }} 
                             />
                           </div>
@@ -417,8 +424,8 @@ const FacilityDetailsDialog: React.FC<FacilityDetailsProps> = ({
                     } else if (line.startsWith('- **')) {
                       // Bullet items with bold starts
                       return (
-                        <div key={i} className="flex gap-2 my-2 ml-4 bg-cyan-900/10 p-2 rounded-md">
-                          <span className="text-cyan-400/90">•</span>
+                        <div key={i} className="flex gap-2 my-3 ml-4 bg-cyan-900/10 p-3 rounded-md border-l-2 border-cyan-700/30 hover:bg-cyan-900/20 transition-all">
+                          <CheckCircle2 className="text-cyan-400/90 h-5 w-5 mt-0.5 flex-shrink-0" />
                           <div className="flex-1">
                             <span 
                               dangerouslySetInnerHTML={{ 
@@ -432,7 +439,7 @@ const FacilityDetailsDialog: React.FC<FacilityDetailsProps> = ({
                       return <div key={i} className="h-2" />;
                     } else {
                       return (
-                        <p key={i} className="my-2 text-gray-300 leading-relaxed">
+                        <p key={i} className="my-3 text-gray-300 leading-relaxed pl-2">
                           {line}
                         </p>
                       );
