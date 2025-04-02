@@ -185,5 +185,166 @@ export const historicalTransactions: HistoricalTransaction[] = [
     employeeCount: "54",
     annualRevenue: "$9.2M",
     foundedYear: 2005
+  },
+  // New transactions for better statistics
+  {
+    id: uuidv4(),
+    companyName: "Green Earth Construction",
+    facilityType: "Term Loans",
+    industry: "Construction",
+    subSector: "Sustainable Building",
+    businessType: "General Contractor",
+    principal: 1250000,
+    interestRate: "4.85%",
+    term: "7 years",
+    location: {
+      city: "Seattle",
+      state: "WA"
+    },
+    completionDate: "2023-06-18",
+    winningLender: "Pacific Northwest Bank",
+    employeeCount: "37",
+    annualRevenue: "$5.2M",
+    foundedYear: 2012
+  },
+  {
+    id: uuidv4(),
+    companyName: "Cloud Solutions Inc.",
+    facilityType: "Revolving Credit",
+    industry: "Technology",
+    subSector: "Cloud Services",
+    businessType: "Software Provider",
+    principal: 2000000,
+    interestRate: "6.75%",
+    term: "3 years",
+    location: {
+      city: "Austin",
+      state: "TX"
+    },
+    completionDate: "2023-06-05",
+    winningLender: "Tech Capital",
+    employeeCount: "48",
+    annualRevenue: "$7.8M",
+    foundedYear: 2015
+  },
+  {
+    id: uuidv4(),
+    companyName: "Artisan Bakery",
+    facilityType: "SBA Loan",
+    industry: "Food & Beverage",
+    subSector: "Bakery",
+    businessType: "Food Production",
+    principal: 350000,
+    interestRate: "3.85%",
+    term: "10 years",
+    location: {
+      city: "Denver",
+      state: "CO"
+    },
+    completionDate: "2023-05-22",
+    winningLender: "Mountain Community Bank",
+    employeeCount: "12",
+    annualRevenue: "$950K",
+    foundedYear: 2018
+  },
+  {
+    id: uuidv4(),
+    companyName: "Elite Fitness",
+    facilityType: "Equipment Finance",
+    industry: "Health & Fitness",
+    subSector: "Gym Equipment",
+    businessType: "Fitness Center",
+    principal: 425000,
+    interestRate: "5.25%",
+    term: "48 months",
+    location: {
+      city: "Los Angeles",
+      state: "CA"
+    },
+    completionDate: "2023-05-10",
+    winningLender: "West Coast Leasing",
+    employeeCount: "23",
+    annualRevenue: "$1.7M",
+    foundedYear: 2016
+  },
+  {
+    id: uuidv4(),
+    companyName: "Harbor Shipping",
+    facilityType: "Asset-Based Lending",
+    industry: "Transportation",
+    subSector: "Maritime Shipping",
+    businessType: "Logistics Provider",
+    principal: 4750000,
+    interestRate: "5.75%",
+    term: "6 years",
+    location: {
+      city: "Baltimore",
+      state: "MD"
+    },
+    completionDate: "2023-04-28",
+    winningLender: "Atlantic Finance",
+    employeeCount: "92",
+    annualRevenue: "$14.5M",
+    foundedYear: 2008
+  },
+  {
+    id: uuidv4(),
+    companyName: "Modern Healthcare Solutions",
+    facilityType: "Term Loans",
+    industry: "Healthcare",
+    subSector: "Healthcare Technology",
+    businessType: "Software Provider",
+    principal: 1850000,
+    interestRate: "4.95%",
+    term: "5 years",
+    location: {
+      city: "Minneapolis",
+      state: "MN"
+    },
+    completionDate: "2023-04-15",
+    winningLender: "Midwest Banking Group",
+    employeeCount: "47",
+    annualRevenue: "$6.3M",
+    foundedYear: 2014
+  },
+  {
+    id: uuidv4(),
+    companyName: "Horizon Properties",
+    facilityType: "Commercial Mortgage",
+    industry: "Real Estate",
+    subSector: "Commercial Property",
+    businessType: "Property Management",
+    principal: 5250000,
+    interestRate: "4.15%",
+    term: "20 years",
+    location: {
+      city: "Charlotte",
+      state: "NC"
+    },
+    completionDate: "2023-03-30",
+    winningLender: "Southern Trust Bank",
+    employeeCount: "19",
+    annualRevenue: "$3.2M",
+    foundedYear: 2006
+  },
+  {
+    id: uuidv4(),
+    companyName: "Quantum Computing Research",
+    facilityType: "Venture Debt",
+    industry: "Technology",
+    subSector: "Quantum Computing",
+    businessType: "Research & Development",
+    principal: 7500000,
+    interestRate: "7.85%",
+    term: "4 years",
+    location: {
+      city: "Cambridge",
+      state: "MA"
+    },
+    completionDate: "2023-03-15",
+    winningLender: "Innovation Ventures",
+    employeeCount: "34",
+    annualRevenue: "$2.1M",
+    foundedYear: 2019
   }
 ];

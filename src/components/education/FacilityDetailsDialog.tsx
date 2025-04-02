@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Book, Info } from "lucide-react";
+import FacilityStatistics from './FacilityStatistics';
 
 interface FacilityDetailsProps {
   isOpen: boolean;
@@ -368,6 +369,12 @@ const FacilityDetailsDialog: React.FC<FacilityDetailsProps> = ({
                 </div>
               </div>
             </div>
+            
+            {/* Statistics Section */}
+            <FacilityStatistics 
+              facilityId={facility.id} 
+              facilityTitle={facility.title}
+            />
             
             {/* Mechanics Section */}
             <div className="space-y-3 border-t border-cyan-800/30 pt-6">
