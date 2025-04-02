@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Menu, X, Terminal, Radar, Signal, Book } from 'lucide-react';
+import { Menu, X, Terminal, Radar, Signal, Book, Building } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { 
   DropdownMenu, 
@@ -89,6 +88,12 @@ const Navbar = () => {
                 <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
                   <Link to="/education">EDUCATION</Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
+                  <Link to="/facility-builder">
+                    <Building className="h-4 w-4 mr-2" />
+                    FACILITY BUILDER
+                  </Link>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -153,6 +158,14 @@ const Navbar = () => {
               onClick={() => setMobileMenuOpen(false)}
             >
               EDUCATION
+            </Link>
+            <Link 
+              to="/facility-builder" 
+              className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <Building className="h-4 w-4 mr-2 inline-block" />
+              FACILITY BUILDER
             </Link>
           </nav>
           <div className="flex flex-col space-y-4">
