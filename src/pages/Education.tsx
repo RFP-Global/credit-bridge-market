@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
-import { Book, Filter, Download, ChevronDown } from "lucide-react";
+import { Book, Filter, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import FullscreenButton from "@/components/FullscreenButton";
 import RadarScreen from "@/components/RadarScreen";
+import FacilityDetailsDialog from "@/components/education/FacilityDetailsDialog";
 
 const creditFacilityTypes = [
   {
@@ -180,6 +181,23 @@ const lenderTypes = [
 const Education = () => {
   const [activeTab, setActiveTab] = useState("facilities");
   const [timeFilter, setTimeFilter] = useState("all-time");
+  const [selectedFacility, setSelectedFacility] = useState<typeof creditFacilityTypes[0] | null>(null);
+  const [selectedLender, setSelectedLender] = useState<typeof lenderTypes[0] | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleFacilityClick = (facility: typeof creditFacilityTypes[0]) => {
+    setSelectedFacility(facility);
+    setDialogOpen(true);
+  };
+
+  const handleLenderClick = (lender: typeof lenderTypes[0]) => {
+    setSelectedLender(lender);
+    setDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-black text-gray-300 overflow-x-hidden">
@@ -239,7 +257,11 @@ const Education = () => {
             <ScrollArea className="h-[calc(100vh-220px)]">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10">
                 {creditFacilityTypes.map((facility) => (
-                  <Card key={facility.id} className="bg-black/60 border-cyan-800/30 backdrop-blur-sm">
+                  <Card 
+                    key={facility.id} 
+                    className="bg-black/60 border-cyan-800/30 backdrop-blur-sm hover:bg-black/80 hover:border-cyan-700/50 transition-all cursor-pointer"
+                    onClick={() => handleFacilityClick(facility)}
+                  >
                     <CardHeader>
                       <div className="flex justify-between items-start">
                         <CardTitle className="text-cyan-300">{facility.title}</CardTitle>
@@ -292,7 +314,10 @@ const Education = () => {
             <ScrollArea className="h-[calc(100vh-220px)]">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10">
                 {lenderTypes.map((lender) => (
-                  <Card key={lender.id} className="bg-black/60 border-cyan-800/30 backdrop-blur-sm">
+                  <Card 
+                    key={lender.id} 
+                    className="bg-black/60 border-cyan-800/30 backdrop-blur-sm"
+                  >
                     <CardHeader>
                       <CardTitle className="text-cyan-300">{lender.title}</CardTitle>
                       <CardDescription className="text-gray-400">
@@ -333,6 +358,13 @@ const Education = () => {
           )}
         </Tabs>
       </div>
+      
+      {/* Details Dialog */}
+      <FacilityDetailsDialog
+        isOpen={dialogOpen}
+        onClose={handleCloseDialog}
+        facility={selectedFacility}
+      />
     </div>
   );
 };
