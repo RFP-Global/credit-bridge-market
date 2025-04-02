@@ -24,6 +24,7 @@ import ProposalBids from "./pages/ProposalBids";
 import CreateProposal from "./pages/CreateProposal";
 import TransactionArchive from "./pages/TransactionArchive";
 import TransactionDetails from "./pages/TransactionDetails";
+import FacilityBuilder from "./pages/FacilityBuilder";
 
 const App = () => {
   // Create a client inside the component
@@ -55,6 +56,7 @@ const App = () => {
             <Route path="/create-proposal" element={<CreateProposal />} />
             <Route path="/transaction-archive" element={<TransactionArchive />} />
             <Route path="/transaction/:id" element={<TransactionDetails />} />
+            <Route path="/facility-builder" element={<FacilityBuilder />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
