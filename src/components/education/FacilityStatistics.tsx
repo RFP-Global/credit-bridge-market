@@ -1,6 +1,6 @@
 
 import React, { useMemo } from 'react';
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell, Tooltip, PieChart, Pie, Legend } from 'recharts';
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, ResponsiveContainer, Cell, Tooltip, Legend } from 'recharts';
 import { historicalTransactions } from '@/data/transactionArchiveData';
 import { 
   BarChart3, 
@@ -87,7 +87,7 @@ const FacilityStatistics: React.FC<FacilityStatisticsProps> = ({ facilityId, fac
       averageTerm = `${Math.floor(avgTermMonths / 12)} years, ${avgTermMonths % 12} months`;
     }
 
-    // Count business types
+    // Count business types and expand to more types
     const businessTypeCounts: Record<string, number> = {};
     facilityTransactions.forEach(t => {
       businessTypeCounts[t.businessType] = (businessTypeCounts[t.businessType] || 0) + 1;
@@ -96,58 +96,86 @@ const FacilityStatistics: React.FC<FacilityStatisticsProps> = ({ facilityId, fac
     const businessTypes = Object.entries(businessTypeCounts)
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value)
-      .slice(0, 5);
+      .slice(0, 8); // Increased from 5 to 8 to show more business types
     
-    // Count lender types
-    const lenderCounts: Record<string, number> = {};
+    // Count lender types instead of specific lenders
+    const lenderTypeCounts: Record<string, number> = {
+      "Commercial Bank": 0,
+      "Credit Union": 0,
+      "SBA Lender": 0, 
+      "Online Lender": 0,
+      "Venture Capital": 0,
+      "Equipment Financier": 0,
+      "CDFI": 0
+    };
+    
     facilityTransactions.forEach(t => {
-      lenderCounts[t.winningLender] = (lenderCounts[t.winningLender] || 0) + 1;
+      // Categorize lenders by type based on naming patterns
+      const lenderName = t.winningLender.toLowerCase();
+      if (lenderName.includes("bank")) {
+        lenderTypeCounts["Commercial Bank"]++;
+      } else if (lenderName.includes("credit") || lenderName.includes("union")) {
+        lenderTypeCounts["Credit Union"]++;
+      } else if (lenderName.includes("sba") || t.facilityType === "SBA Loan") {
+        lenderTypeCounts["SBA Lender"]++;
+      } else if (lenderName.includes("online") || lenderName.includes("tech") || lenderName.includes("digital")) {
+        lenderTypeCounts["Online Lender"]++;
+      } else if (lenderName.includes("venture") || lenderName.includes("capital") || t.facilityType === "Venture Debt") {
+        lenderTypeCounts["Venture Capital"]++;
+      } else if (lenderName.includes("equipment") || lenderName.includes("leasing")) {
+        lenderTypeCounts["Equipment Financier"]++;
+      } else if (lenderName.includes("community") || lenderName.includes("development")) {
+        lenderTypeCounts["CDFI"]++;
+      } else {
+        // Default to commercial bank if can't categorize
+        lenderTypeCounts["Commercial Bank"]++;
+      }
     });
     
-    const lenderTypes = Object.entries(lenderCounts)
+    const lenderTypes = Object.entries(lenderTypeCounts)
+      .filter(([_, count]) => count > 0)
       .map(([name, value]) => ({ name, value }))
-      .sort((a, b) => b.value - a.value)
-      .slice(0, 5);
+      .sort((a, b) => b.value - a.value);
 
-    // Create interest rate distribution data
+    // Create interest rate distribution data for line chart
     const interestRanges = [
-      { range: "<3%", count: 0 },
-      { range: "3-4%", count: 0 },
-      { range: "4-5%", count: 0 },
-      { range: "5-6%", count: 0 },
-      { range: "6-7%", count: 0 },
-      { range: ">7%", count: 0 }
+      { range: "<3%", value: 0 },
+      { range: "3-4%", value: 0 },
+      { range: "4-5%", value: 0 },
+      { range: "5-6%", value: 0 },
+      { range: "6-7%", value: 0 },
+      { range: ">7%", value: 0 }
     ];
     
     interestRates.forEach(rate => {
-      if (rate < 3) interestRanges[0].count++;
-      else if (rate < 4) interestRanges[1].count++;
-      else if (rate < 5) interestRanges[2].count++;
-      else if (rate < 6) interestRanges[3].count++;
-      else if (rate < 7) interestRanges[4].count++;
-      else interestRanges[5].count++;
+      if (rate < 3) interestRanges[0].value++;
+      else if (rate < 4) interestRanges[1].value++;
+      else if (rate < 5) interestRanges[2].value++;
+      else if (rate < 6) interestRanges[3].value++;
+      else if (rate < 7) interestRanges[4].value++;
+      else interestRanges[5].value++;
     });
     
-    const interestRateData = interestRanges.filter(r => r.count > 0);
+    const interestRateData = interestRanges.filter(r => r.value > 0);
 
-    // Create term length distribution data
+    // Create term length distribution data for line chart
     const termRanges = [
-      { range: "<1 year", count: 0 },
-      { range: "1-3 years", count: 0 },
-      { range: "3-5 years", count: 0 },
-      { range: "5-10 years", count: 0 },
-      { range: ">10 years", count: 0 }
+      { range: "<1 year", value: 0 },
+      { range: "1-3 years", value: 0 },
+      { range: "3-5 years", value: 0 },
+      { range: "5-10 years", value: 0 },
+      { range: ">10 years", value: 0 }
     ];
     
     termLengths.forEach(months => {
-      if (months < 12) termRanges[0].count++;
-      else if (months < 36) termRanges[1].count++;
-      else if (months < 60) termRanges[2].count++;
-      else if (months < 120) termRanges[3].count++;
-      else termRanges[4].count++;
+      if (months < 12) termRanges[0].value++;
+      else if (months < 36) termRanges[1].value++;
+      else if (months < 60) termRanges[2].value++;
+      else if (months < 120) termRanges[3].value++;
+      else termRanges[4].value++;
     });
     
-    const termData = termRanges.filter(r => r.count > 0);
+    const termData = termRanges.filter(r => r.value > 0);
 
     return {
       transactionCount: facilityTransactions.length,
@@ -159,19 +187,6 @@ const FacilityStatistics: React.FC<FacilityStatisticsProps> = ({ facilityId, fac
       lenderTypes
     };
   }, [facilityId, facilityTitle]);
-
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
-    const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-    return (
-      <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-        {`${(percent * 100).toFixed(0)}%`}
-      </text>
-    );
-  };
 
   if (statistics.transactionCount === 0) {
     return (
@@ -227,16 +242,22 @@ const FacilityStatistics: React.FC<FacilityStatisticsProps> = ({ facilityId, fac
           </h4>
           <div className="bg-cyan-950/10 border border-cyan-800/20 rounded p-3 h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={statistics.interestRateData} margin={{ top: 5, right: 20, bottom: 30, left: 0 }}>
+              {/* Changed from BarChart to LineChart */}
+              <LineChart data={statistics.interestRateData} margin={{ top: 5, right: 20, bottom: 30, left: 0 }}>
                 <XAxis dataKey="range" stroke="#94a3b8" fontSize={12} tickMargin={5} />
                 <YAxis stroke="#94a3b8" fontSize={12} />
                 <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="count" name="Transactions" barSize={30}>
-                  {statistics.interestRateData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Bar>
-              </BarChart>
+                <Legend />
+                <Line 
+                  type="monotone" 
+                  dataKey="value" 
+                  name="Transactions" 
+                  stroke="#33bbef" 
+                  strokeWidth={2} 
+                  dot={{ r: 4 }}
+                  activeDot={{ r: 6 }}
+                />
+              </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
@@ -247,16 +268,22 @@ const FacilityStatistics: React.FC<FacilityStatisticsProps> = ({ facilityId, fac
           </h4>
           <div className="bg-cyan-950/10 border border-cyan-800/20 rounded p-3 h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={statistics.termData} margin={{ top: 5, right: 20, bottom: 30, left: 0 }}>
+              {/* Changed from BarChart to LineChart */}
+              <LineChart data={statistics.termData} margin={{ top: 5, right: 20, bottom: 30, left: 0 }}>
                 <XAxis dataKey="range" stroke="#94a3b8" fontSize={12} tickMargin={5} />
                 <YAxis stroke="#94a3b8" fontSize={12} />
                 <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="count" name="Transactions" barSize={30}>
-                  {statistics.termData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Bar>
-              </BarChart>
+                <Legend />
+                <Line 
+                  type="monotone" 
+                  dataKey="value" 
+                  name="Transactions" 
+                  stroke="#38bdf8" 
+                  strokeWidth={2} 
+                  dot={{ r: 4 }}
+                  activeDot={{ r: 6 }}
+                />
+              </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
@@ -270,26 +297,32 @@ const FacilityStatistics: React.FC<FacilityStatisticsProps> = ({ facilityId, fac
           <div className="bg-cyan-950/10 border border-cyan-800/20 rounded p-3 h-64">
             {statistics.businessTypes.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={statistics.businessTypes}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={30}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    paddingAngle={2}
-                    dataKey="value"
-                    labelLine={false}
-                    label={renderCustomizedLabel}
+                {/* Changed from PieChart to BarChart */}
+                <BarChart 
+                  data={statistics.businessTypes} 
+                  layout="vertical"
+                  margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
+                >
+                  <XAxis type="number" stroke="#94a3b8" fontSize={12} />
+                  <YAxis 
+                    type="category" 
+                    dataKey="name" 
+                    stroke="#94a3b8" 
+                    fontSize={12} 
+                    width={100}
+                  />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend />
+                  <Bar 
+                    dataKey="value" 
+                    name="Transactions" 
+                    fill="#33bbef"
                   >
                     {statistics.businessTypes.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
-                  </Pie>
-                  <Tooltip content={<CustomTooltip />} />
-                  <Legend />
-                </PieChart>
+                  </Bar>
+                </BarChart>
               </ResponsiveContainer>
             ) : (
               <div className="flex items-center justify-center h-full text-gray-500">
@@ -301,35 +334,41 @@ const FacilityStatistics: React.FC<FacilityStatisticsProps> = ({ facilityId, fac
 
         <div>
           <h4 className="text-sm text-cyan-300 mb-2 flex items-center gap-1">
-            <Landmark className="h-4 w-4" /> Most Common Lenders
+            <Landmark className="h-4 w-4" /> Most Common Lender Types
           </h4>
           <div className="bg-cyan-950/10 border border-cyan-800/20 rounded p-3 h-64">
             {statistics.lenderTypes.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={statistics.lenderTypes}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={30}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    paddingAngle={2}
-                    dataKey="value"
-                    labelLine={false}
-                    label={renderCustomizedLabel}
+                {/* Changed from PieChart to BarChart */}
+                <BarChart 
+                  data={statistics.lenderTypes} 
+                  layout="vertical"
+                  margin={{ top: 5, right: 20, left: 30, bottom: 5 }}
+                >
+                  <XAxis type="number" stroke="#94a3b8" fontSize={12} />
+                  <YAxis 
+                    type="category" 
+                    dataKey="name" 
+                    stroke="#94a3b8" 
+                    fontSize={12}
+                    width={120}
+                  />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend />
+                  <Bar 
+                    dataKey="value" 
+                    name="Transactions" 
+                    fill="#38bdf8"
                   >
                     {statistics.lenderTypes.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
-                  </Pie>
-                  <Tooltip content={<CustomTooltip />} />
-                  <Legend />
-                </PieChart>
+                  </Bar>
+                </BarChart>
               </ResponsiveContainer>
             ) : (
               <div className="flex items-center justify-center h-full text-gray-500">
-                No lender data available
+                No lender type data available
               </div>
             )}
           </div>
