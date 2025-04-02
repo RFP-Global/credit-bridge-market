@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Radar, Signal, Check, Building2, DollarSign, FileText, Lightbulb, ArrowRight } from "lucide-react";
+import { Radar, Signal, Check, Building2, DollarSign, FileText, Lightbulb, ArrowRight, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -30,13 +30,11 @@ import * as z from "zod";
 import Navbar from "@/components/Navbar";
 import RadarScreen from "@/components/RadarScreen";
 
-// Form schema definition
+// Form schema definition with business name and credit score removed
 const formSchema = z.object({
-  businessName: z.string().min(2, "Business name must be at least 2 characters"),
   industry: z.string().min(1, "Please select an industry"),
   yearsFounded: z.string().min(1, "Please enter years in business"),
   annualRevenue: z.string().min(1, "Please enter annual revenue"),
-  creditScore: z.string().min(1, "Please select a credit score range"),
   fundingAmount: z.string().min(1, "Please enter funding amount"),
   fundingPurpose: z.string().min(1, "Please select funding purpose"),
   fundingTimeline: z.string().min(1, "Please select funding timeline"),
@@ -44,6 +42,20 @@ const formSchema = z.object({
 });
 
 type FormValues = z.infer<typeof formSchema>;
+
+// Mock financial metrics that would come from enterprise profile
+const enterpriseFinancialMetrics = {
+  creditScore: 735,
+  businessName: "Quantum Solutions Inc.",
+  profitMargin: "12.8%",
+  debtToEquityRatio: "1.3",
+  workingCapitalRatio: "2.4",
+  accountsReceivable: "$685,000",
+  quickRatio: "1.7",
+  assetTurnoverRatio: "2.1",
+  inventoryTurnover: "8.3",
+  operatingCashFlow: "$1.2M"
+};
 
 const FacilityBuilder = () => {
   const navigate = useNavigate();
@@ -59,15 +71,13 @@ const FacilityBuilder = () => {
     nextSteps: string[];
   } | null>(null);
 
-  // Initialize form
+  // Initialize form without business name and credit score
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      businessName: "",
       industry: "",
       yearsFounded: "",
       annualRevenue: "",
-      creditScore: "",
       fundingAmount: "",
       fundingPurpose: "",
       fundingTimeline: "",
@@ -77,7 +87,7 @@ const FacilityBuilder = () => {
 
   const onSubmit = (data: FormValues) => {
     // In a real app, this would call an API with AI to generate recommendations
-    // For now, we'll generate a recommendation based on the form data
+    // For now, we'll generate a recommendation based on the form data and financial metrics
     
     // Simple facility type recommendation logic based on purpose and amount
     let facilityType = "Term Loan";
@@ -113,16 +123,29 @@ const FacilityBuilder = () => {
       financingType = "Refinancing";
     }
     
-    // Adjust based on credit score
+    // Adjust based on credit score from enterprise profile
     let creditFactor = 1.0;
-    if (data.creditScore === "Excellent (750+)") {
+    const creditScore = enterpriseFinancialMetrics.creditScore;
+    if (creditScore >= 750) {
       creditFactor = 0.85;
-    } else if (data.creditScore === "Good (700-749)") {
+    } else if (creditScore >= 700 && creditScore <= 749) {
       creditFactor = 1.0;
-    } else if (data.creditScore === "Fair (650-699)") {
+    } else if (creditScore >= 650 && creditScore <= 699) {
       creditFactor = 1.2;
-    } else if (data.creditScore === "Poor (below 650)") {
+    } else if (creditScore < 650) {
       creditFactor = 1.5;
+    }
+    
+    // Further adjust based on financial metrics
+    const workingCapitalRatio = parseFloat(enterpriseFinancialMetrics.workingCapitalRatio);
+    const debtToEquityRatio = parseFloat(enterpriseFinancialMetrics.debtToEquityRatio);
+    
+    if (workingCapitalRatio > 2.0) {
+      creditFactor *= 0.95; // Better liquidity = lower rates
+    }
+    
+    if (debtToEquityRatio > 2.0) {
+      creditFactor *= 1.1; // Higher leverage = higher rates
     }
     
     // Adjust interest rate based on credit factor
@@ -140,8 +163,9 @@ const FacilityBuilder = () => {
       interestRateEstimate,
       pros: [
         `Well-suited for ${data.fundingPurpose.toLowerCase()} projects`,
-        `Competitive rates based on your ${data.creditScore} credit score`,
+        `Competitive rates based on your ${enterpriseFinancialMetrics.creditScore} credit score`,
         `Timeline aligns with your ${data.fundingTimeline} funding needs`,
+        `Optimized for your ${enterpriseFinancialMetrics.workingCapitalRatio} working capital ratio`
       ],
       cons: [
         data.fundingTimeline === "Immediate (< 30 days)" 
@@ -150,6 +174,9 @@ const FacilityBuilder = () => {
         fundingAmountNum > 1000000 
           ? "Large funding amount may require additional documentation"
           : "Standard documentation requirements apply",
+        enterpriseFinancialMetrics.debtToEquityRatio > 1.5
+          ? "Higher debt-to-equity ratio may affect financing terms"
+          : "Debt-to-equity ratio is within acceptable range"
       ],
       nextSteps: [
         "Review and refine the proposal details",
@@ -187,12 +214,12 @@ const FacilityBuilder = () => {
             Credit Facility Builder
           </h1>
           <p className="text-muted-foreground">
-            Enter your business details and funding needs to get a personalized facility recommendation
+            Enter your funding needs to get a personalized facility recommendation
           </p>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className={`col-span-1 ${showRecommendation ? 'lg:col-span-1' : 'lg:col-span-3'}`}>
+          <div className={`col-span-1 ${showRecommendation ? 'lg:col-span-1' : 'lg:col-span-2'}`}>
             <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="text-lg font-mono flex items-center">
@@ -200,25 +227,46 @@ const FacilityBuilder = () => {
                   Business & Funding Details
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-6">
+                {/* Financial Metrics Section */}
+                <div className="p-4 border border-primary/20 bg-primary/5 rounded-md">
+                  <h3 className="text-sm font-semibold border-b border-primary/20 pb-1 mb-4 flex items-center">
+                    <TrendingUp className="h-4 w-4 mr-2 text-primary" />
+                    Enterprise Financial Metrics
+                  </h3>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6">
+                    <div>
+                      <p className="text-xs text-muted-foreground">Business Name</p>
+                      <p className="font-medium">{enterpriseFinancialMetrics.businessName}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Credit Score</p>
+                      <p className="font-medium">{enterpriseFinancialMetrics.creditScore}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Profit Margin</p>
+                      <p className="font-medium">{enterpriseFinancialMetrics.profitMargin}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Working Capital Ratio</p>
+                      <p className="font-medium">{enterpriseFinancialMetrics.workingCapitalRatio}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Debt-to-Equity</p>
+                      <p className="font-medium">{enterpriseFinancialMetrics.debtToEquityRatio}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Quick Ratio</p>
+                      <p className="font-medium">{enterpriseFinancialMetrics.quickRatio}</p>
+                    </div>
+                  </div>
+                </div>
+                
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                     <div className="space-y-4">
                       <h3 className="text-sm font-semibold border-b border-primary/20 pb-1">Business Information</h3>
-                      
-                      <FormField
-                        control={form.control}
-                        name="businessName"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Business Name</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Enter your business name" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
                       
                       <FormField
                         control={form.control}
@@ -279,31 +327,6 @@ const FacilityBuilder = () => {
                           )}
                         />
                       </div>
-                      
-                      <FormField
-                        control={form.control}
-                        name="creditScore"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Business Credit Score</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select credit score range" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="Excellent (750+)">Excellent (750+)</SelectItem>
-                                <SelectItem value="Good (700-749)">Good (700-749)</SelectItem>
-                                <SelectItem value="Fair (650-699)">Fair (650-699)</SelectItem>
-                                <SelectItem value="Poor (below 650)">Poor (below 650)</SelectItem>
-                                <SelectItem value="Not Sure">Not Sure</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
                     </div>
                     
                     <Separator />
