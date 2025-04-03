@@ -13,6 +13,7 @@ import LenderLogin from "./pages/LenderLogin";
 import EnterpriseSignUp from "./pages/EnterpriseSignUp";
 import LenderSignUp from "./pages/LenderSignUp";
 import EnterpriseDashboard from "./pages/EnterpriseDashboard";
+import EnterpriseProfile from "./pages/EnterpriseProfile";
 import LenderDashboard from "./pages/LenderDashboard";
 import Intelligence from "./pages/Intelligence";
 import Education from "./pages/Education";
@@ -50,6 +51,7 @@ const App = () => {
             <Route path="/enterprise-signup" element={<EnterpriseSignUp />} />
             <Route path="/lender-signup" element={<LenderSignUp />} />
             <Route path="/enterprise-dashboard" element={<EnterpriseDashboard />} />
+            <Route path="/enterprise-profile" element={<EnterpriseProfile />} />
             <Route path="/lender-dashboard" element={<LenderDashboard />} />
             <Route path="/intelligence" element={<Intelligence />} />
             <Route path="/education" element={<Education />} />

@@ -60,9 +60,9 @@ const EnterpriseDashboard = () => {
                 <Bell className="h-5 w-5" />
                 <span className="absolute top-0 right-0 h-2 w-2 bg-primary rounded-full"></span>
               </button>
-              <button className="p-2 rounded-full hover:bg-primary/10">
-                <Settings className="h-5 w-5" />
-              </button>
+              <Link to="/enterprise-profile" className="p-2 rounded-full hover:bg-primary/10 flex items-center">
+                <User className="h-5 w-5" />
+              </Link>
               <Button 
                 variant="outline" 
                 size="sm" 
@@ -95,6 +95,13 @@ const EnterpriseDashboard = () => {
                   <p className="flex justify-between py-1"><span>Account Level:</span> <span className="font-mono">ENTERPRISE</span></p>
                   <p className="flex justify-between py-1"><span>Active Proposals:</span> <span className="font-mono">7</span></p>
                   <p className="flex justify-between py-1"><span>Total Financing:</span> <span className="font-mono">$28.5M</span></p>
+                </div>
+                <div className="pt-2">
+                  <Link to="/enterprise-profile">
+                    <Button variant="outline" size="sm" className="w-full text-xs font-mono">
+                      View Profile
+                    </Button>
+                  </Link>
                 </div>
               </CardContent>
             </Card>
@@ -132,6 +139,12 @@ const EnterpriseDashboard = () => {
                 <Users className="h-4 w-4 mr-3" />
                 Team
               </Button>
+              <Link to="/enterprise-profile" className="block">
+                <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3">
+                  <User className="h-4 w-4 mr-3" />
+                  Profile
+                </Button>
+              </Link>
             </nav>
           </aside>
           

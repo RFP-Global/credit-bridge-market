@@ -61,7 +61,16 @@ const EnterpriseSignUp = () => {
         title: "Account Created",
         description: "Your enterprise account has been registered",
       });
-      navigate("/enterprise-login");
+      navigate("/enterprise-dashboard");
+      
+      // Save the enterprise account data (in a real app, this would be stored in a database)
+      localStorage.setItem('enterpriseAccount', JSON.stringify({
+        companyName: formData.companyName,
+        fullName: formData.fullName,
+        email: formData.email,
+        industry: formData.industry,
+        createdAt: new Date().toISOString()
+      }));
     }, 1500);
   };
 
