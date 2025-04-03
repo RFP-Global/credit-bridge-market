@@ -1,3 +1,4 @@
+<lov-code>
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { 
@@ -645,5 +646,4 @@ const detailSectionContents = {
           description: "Refinancing multiple high-interest debts into a single, lower-interest loan."
         },
         {
-          title: "Large Inventory Purchases",
-          description
+          title: "Large
