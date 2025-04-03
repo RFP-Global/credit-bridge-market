@@ -115,7 +115,7 @@ const EnterpriseSignUp = () => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="fullName" className="text-sm font-mono">AGENT NAME</Label>
+              <Label htmlFor="fullName" className="text-sm font-mono">REPRESENTATIVE NAME</Label>
               <div className="relative">
                 <User className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
                 <Input
@@ -132,14 +132,14 @@ const EnterpriseSignUp = () => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-mono">AGENT IDENTIFIER</Label>
+              <Label htmlFor="email" className="text-sm font-mono">ORGANIZATION IDENTIFIER</Label>
               <div className="relative">
                 <Mail className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
                 <Input
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="agent@organization.com"
+                  placeholder="organization@company.com"
                   value={formData.email}
                   onChange={handleChange}
                   className="font-mono text-sm bg-background/50 border-primary/20 focus:border-primary/40 pl-10"
