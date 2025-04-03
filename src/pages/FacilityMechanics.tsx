@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { 
@@ -652,3 +653,41 @@ const detailSectionContents = {
     }
   }
 };
+
+// Add the main FacilityMechanics component
+const FacilityMechanics = () => {
+  const { facilityId } = useParams();
+  const navigate = useNavigate();
+  
+  // Add component implementation here - for now just displaying a placeholder
+  return (
+    <div className="min-h-screen bg-black text-gray-300">
+      <div className="container mx-auto px-4 py-8 mt-16">
+        <Button 
+          variant="outline" 
+          className="mb-4" 
+          onClick={() => navigate(-1)}
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back
+        </Button>
+        
+        <h1 className="text-2xl font-mono text-cyan-400 mb-4">
+          {facilityId ? facilityId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Facility'} Mechanics
+        </h1>
+        
+        {facilityId && facilityMechanics[facilityId] ? (
+          <div className="space-y-6">
+            <div className="prose prose-invert max-w-none">
+              <div dangerouslySetInnerHTML={{ __html: facilityMechanics[facilityId] }} />
+            </div>
+          </div>
+        ) : (
+          <div>Select a facility type to view its mechanics.</div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default FacilityMechanics;
