@@ -646,3 +646,4 @@ const detailSectionContents = {
         },
         {
           title: "Large Inventory Purchases",
+          description
