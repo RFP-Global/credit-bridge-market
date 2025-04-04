@@ -28,6 +28,7 @@ import TransactionDetails from "./pages/TransactionDetails";
 import FacilityBuilder from "./pages/FacilityBuilder";
 import FacilityMechanics from "./pages/FacilityMechanics";
 import FacilityReferenceDetail from "./pages/FacilityReferenceDetail";
+import BidComparison from "./pages/BidComparison";
 
 const App = () => {
   // Create a client inside the component
@@ -57,6 +58,7 @@ const App = () => {
             <Route path="/education" element={<Education />} />
             <Route path="/proposals-dashboard" element={<ProposalsDashboard />} />
             <Route path="/proposal-bids/:id" element={<ProposalBids />} />
+            <Route path="/bid-comparison/:id" element={<BidComparison />} />
             <Route path="/create-proposal" element={<CreateProposal />} />
             <Route path="/transaction-archive" element={<TransactionArchive />} />
             <Route path="/transaction/:id" element={<TransactionDetails />} />

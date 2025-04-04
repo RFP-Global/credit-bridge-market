@@ -1,8 +1,9 @@
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { 
   BarChart3, FileText, ArrowLeft, Signal, Radar, 
-  Bell, Settings, Building, CreditCard, ShoppingCart, Users, CheckCircle, Clock, DollarSign
+  Bell, Settings, Building, CreditCard, ShoppingCart, Users, CheckCircle, Clock, DollarSign, ArrowUpRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -167,6 +168,15 @@ const ProposalBids = () => {
     );
   };
 
+  const handleCompareBids = () => {
+    // This would navigate to a bid comparison page
+    navigate(`/bid-comparison/${id}`);
+    toast({
+      title: "Navigating to Bid Comparison",
+      description: "This would take you to a page where you can compare bids side by side.",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground relative grid-bg">
       <div className="absolute inset-0 z-0">
@@ -306,32 +316,22 @@ const ProposalBids = () => {
                   </div>
                 </div>
                 
-        
-        <div className="grid grid-cols-1 gap-4 mb-6">
-          <Card className="border-primary/20 bg-background/50">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-mono">WINNING DEAL TERMS</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-3 gap-4 mb-2">
-                <div>
-                  <p className="text-xs text-muted-foreground">AMOUNT</p>
-                  <p className="font-mono text-2xl">{proposal.winningTerms?.amount || "N/A"}</p>
+                <div className="grid grid-cols-1 gap-4 mb-6">
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="w-full border-primary/40 hover:bg-primary/10 font-mono flex justify-between items-center"
+                    onClick={handleCompareBids}
+                  >
+                    <div className="flex items-center">
+                      <div className="bg-primary/10 p-2 rounded mr-3">
+                        <DollarSign className="h-5 w-5" />
+                      </div>
+                      COMPARE BIDS SIDE BY SIDE
+                    </div>
+                    <ArrowUpRight className="h-5 w-5" />
+                  </Button>
                 </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">INTEREST</p>
-                  <p className="font-mono text-2xl">{proposal.winningTerms?.interestRate || "N/A"}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">TERM</p>
-                  <p className="font-mono text-2xl">{proposal.winningTerms?.term || "N/A"}</p>
-                </div>
-              </div>
-              <p className="text-sm mt-4">{proposal.winningTerms?.additionalTerms || "No additional terms"}</p>
-            </CardContent>
-          </Card>
-        </div>
-        
                 
                 {proposal.description && (
                   <Card className="border-primary/20 bg-background/50 mb-6">
