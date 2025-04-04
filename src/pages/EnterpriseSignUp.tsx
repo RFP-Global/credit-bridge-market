@@ -8,6 +8,8 @@ import { toast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { v4 as uuidv4 } from "uuid";
+import { ProfileData } from "@/types/profile";
 
 const EnterpriseSignUp = () => {
   const [formData, setFormData] = useState({
@@ -54,6 +56,23 @@ const EnterpriseSignUp = () => {
     
     setIsLoading(true);
     
+    // Create a unique ID for this enterprise account
+    const enterpriseId = uuidv4();
+    
+    // Create a more complete profile data structure
+    const profileData: ProfileData = {
+      id: enterpriseId,
+      companyName: formData.companyName,
+      fullName: formData.fullName,
+      email: formData.email,
+      industry: formData.industry,
+      phone: "", // Default empty values for fields not collected during signup
+      address: "",
+      founded: "",
+      employees: "",
+      description: ""
+    };
+    
     // Simulate sign up process
     setTimeout(() => {
       setIsLoading(false);
@@ -61,16 +80,12 @@ const EnterpriseSignUp = () => {
         title: "Account Created",
         description: "Your enterprise account has been registered",
       });
-      navigate("/enterprise-dashboard");
       
-      // Save the enterprise account data (in a real app, this would be stored in a database)
-      localStorage.setItem('enterpriseAccount', JSON.stringify({
-        companyName: formData.companyName,
-        fullName: formData.fullName,
-        email: formData.email,
-        industry: formData.industry,
-        createdAt: new Date().toISOString()
-      }));
+      // Save the complete enterprise profile data
+      localStorage.setItem('currentEnterpriseId', enterpriseId);
+      localStorage.setItem(`enterpriseProfile_${enterpriseId}`, JSON.stringify(profileData));
+      
+      navigate("/enterprise-dashboard");
     }, 1500);
   };
 

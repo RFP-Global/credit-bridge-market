@@ -1,6 +1,4 @@
 
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 import { ProfileData } from "@/types/profile";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -9,45 +7,59 @@ interface AccountSidebarProps {
 }
 
 const AccountSidebar = ({ profileData }: AccountSidebarProps) => {
+  // Format date to display creation date nicely
+  const formattedDate = new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
   return (
-    <Card className="border border-primary/20 bg-background/50 backdrop-blur-sm sticky top-20">
-      <CardHeader className="border-b border-primary/10 pb-4">
-        <CardTitle className="font-mono text-sm">ACCOUNT STATUS</CardTitle>
-      </CardHeader>
-      <CardContent className="pt-6">
-        <div className="space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="bg-primary/10 w-10 h-10 rounded-full flex items-center justify-center text-xs font-mono">
-              {profileData.companyName?.substring(0, 2).toUpperCase()}
-            </div>
-            <div>
-              <p className="font-mono text-sm">{profileData.companyName}</p>
-              <p className="text-xs text-muted-foreground">{profileData.email}</p>
-            </div>
+    <div className="space-y-6">
+      <Card className="border border-primary/20 bg-background/50 backdrop-blur-sm">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-mono">ACCOUNT SUMMARY</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3 text-sm">
+          <div className="flex justify-between py-1 border-b border-primary/10">
+            <span className="text-muted-foreground">Status</span>
+            <span className="font-mono text-green-500">ACTIVE</span>
           </div>
-          
-          <div className="text-xs text-muted-foreground pt-2 border-t border-primary/10">
-            <p className="flex justify-between py-1"><span>Account Level:</span> <span className="font-mono">ENTERPRISE</span></p>
-            <p className="flex justify-between py-1"><span>Member Since:</span> <span className="font-mono">APR 2025</span></p>
-            <p className="flex justify-between py-1"><span>Status:</span> <span className="font-mono text-green-500">ACTIVE</span></p>
+          <div className="flex justify-between py-1 border-b border-primary/10">
+            <span className="text-muted-foreground">Account Type</span>
+            <span className="font-mono">ENTERPRISE</span>
           </div>
-          
-          <div className="pt-4 space-y-3">
-            <Button variant="outline" size="sm" className="w-full font-mono text-xs">
-              Account Settings
-            </Button>
-            <Button variant="outline" size="sm" className="w-full font-mono text-xs">
-              Security Settings
-            </Button>
-            <Link to="/enterprise-dashboard">
-              <Button variant="default" size="sm" className="w-full font-mono text-xs">
-                Return to Dashboard
-              </Button>
-            </Link>
+          <div className="flex justify-between py-1 border-b border-primary/10">
+            <span className="text-muted-foreground">Created</span>
+            <span>{formattedDate}</span>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+          <div className="flex justify-between py-1">
+            <span className="text-muted-foreground">ID</span>
+            <span className="font-mono text-xs">{profileData.id.substring(0, 8)}</span>
+          </div>
+        </CardContent>
+      </Card>
+      
+      <Card className="border border-primary/20 bg-background/50 backdrop-blur-sm">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-mono">ACCOUNT SECURITY</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3 text-sm">
+          <div className="flex justify-between py-1 border-b border-primary/10">
+            <span className="text-muted-foreground">Two-Factor Auth</span>
+            <span className="font-mono text-amber-500">DISABLED</span>
+          </div>
+          <div className="flex justify-between py-1 border-b border-primary/10">
+            <span className="text-muted-foreground">Last Login</span>
+            <span>{formattedDate}</span>
+          </div>
+          <div className="flex justify-between py-1">
+            <span className="text-muted-foreground">Password</span>
+            <span className="font-mono">••••••••</span>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

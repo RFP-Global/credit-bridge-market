@@ -1,15 +1,41 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Radar, Signal, BarChart3, FileText, Users, Building, CreditCard, ArrowUpRight, Bell, Settings, ShoppingCart, User } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
+import { ProfileData } from "@/types/profile";
 
 const EnterpriseDashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
+  const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  
+  useEffect(() => {
+    const currentEnterpriseId = localStorage.getItem('currentEnterpriseId');
+    
+    if (currentEnterpriseId) {
+      const storedProfile = localStorage.getItem(`enterpriseProfile_${currentEnterpriseId}`);
+      if (storedProfile) {
+        setProfileData(JSON.parse(storedProfile));
+      } else {
+        toast({
+          title: "Session Expired",
+          description: "Please login again to access your dashboard",
+          variant: "destructive",
+        });
+        navigate("/enterprise-login");
+      }
+    } else {
+      toast({
+        title: "Authentication Required",
+        description: "Please login to access your dashboard",
+        variant: "destructive",
+      });
+      navigate("/enterprise-login");
+    }
+  }, [navigate]);
   
   const recentProposals = [
     { id: 1, name: "Riverside Development", type: "Commercial Real Estate", status: "Under Review", amount: "$2.4M" },
@@ -24,12 +50,25 @@ const EnterpriseDashboard = () => {
   ];
 
   const handleLogout = () => {
+    localStorage.removeItem('currentEnterpriseId');
+    
     toast({
       title: "Logged Out",
       description: "Successfully logged out of your enterprise account",
     });
     navigate("/");
   };
+
+  if (!profileData) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin h-8 w-8 border-t-2 border-primary rounded-full mx-auto mb-4"></div>
+          <p className="font-mono text-sm">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground relative grid-bg">
@@ -85,16 +124,18 @@ const EnterpriseDashboard = () => {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-3">
-                  <div className="bg-primary/10 w-10 h-10 rounded-full flex items-center justify-center text-xs font-mono">TF</div>
+                  <div className="bg-primary/10 w-10 h-10 rounded-full flex items-center justify-center text-xs font-mono">
+                    {profileData?.companyName?.substring(0, 2).toUpperCase() || 'EN'}
+                  </div>
                   <div>
-                    <p className="font-mono text-sm">TERRAFORGE INC.</p>
-                    <p className="text-xs text-muted-foreground">admin@terraforge.com</p>
+                    <p className="font-mono text-sm">{profileData?.companyName?.toUpperCase() || 'ENTERPRISE INC.'}</p>
+                    <p className="text-xs text-muted-foreground">{profileData?.email || 'admin@enterprise.com'}</p>
                   </div>
                 </div>
                 <div className="text-xs text-muted-foreground pt-2 border-t border-primary/10">
                   <p className="flex justify-between py-1"><span>Account Level:</span> <span className="font-mono">ENTERPRISE</span></p>
                   <p className="flex justify-between py-1"><span>Active Proposals:</span> <span className="font-mono">7</span></p>
-                  <p className="flex justify-between py-1"><span>Total Financing:</span> <span className="font-mono">$28.5M</span></p>
+                  <p className="flex justify-between py-1"><span>Industry:</span> <span className="font-mono">{profileData?.industry || 'Technology'}</span></p>
                 </div>
                 <div className="pt-2">
                   <Link to="/enterprise-profile">
@@ -150,8 +191,8 @@ const EnterpriseDashboard = () => {
           
           <main className="flex-1">
             <div className="border-b border-primary/10 pb-4 mb-6">
-              <h1 className="text-2xl font-mono">Dashboard</h1>
-              <p className="text-sm text-muted-foreground">Welcome back to your Enterprise portal.</p>
+              <h1 className="text-2xl font-mono">Welcome, {profileData?.fullName?.split(' ')[0] || 'User'}</h1>
+              <p className="text-sm text-muted-foreground">Your personalized enterprise dashboard for {profileData?.companyName || 'your organization'}.</p>
             </div>
             
             <Tabs defaultValue="overview" className="space-y-6" onValueChange={setActiveTab}>
