@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useVDR } from "@/contexts/vdr/VDRContext";
 import FilePreview from "@/components/vdr/FilePreview";
 import DeleteFileDialog from "@/components/vdr/DeleteFileDialog";
@@ -31,16 +31,27 @@ const VDRDialogs = ({
     folders
   } = useVDR();
 
+  useEffect(() => {
+    const handleOrganizeFileEvent = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      if (customEvent.detail && customEvent.detail.file) {
+        setFileToOrganize(customEvent.detail.file);
+        setIsOrganizeDialogOpen(true);
+      }
+    };
+
+    document.addEventListener('vdr:organize-file', handleOrganizeFileEvent);
+    
+    return () => {
+      document.removeEventListener('vdr:organize-file', handleOrganizeFileEvent);
+    };
+  }, []);
+
   const confirmDelete = () => {
     if (fileToDelete) {
       handleDeleteFile(fileToDelete);
       setIsDeleteDialogOpen(false);
     }
-  };
-
-  const handleOrganizeClick = (file: any) => {
-    setFileToOrganize(file);
-    setIsOrganizeDialogOpen(true);
   };
 
   const handleUploadComplete = (files: FileList, contents: {[filename: string]: string}, destinationFolder: string) => {
@@ -50,6 +61,7 @@ const VDRDialogs = ({
 
   const handleOrganizeComplete = (fileId: string, destinationFolder: string) => {
     handleMoveFile(fileId, destinationFolder);
+    setIsOrganizeDialogOpen(false);
   };
 
   return (

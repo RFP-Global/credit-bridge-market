@@ -7,8 +7,6 @@ import FolderNavigation from "@/components/vdr/FolderNavigation";
 import FolderItem from "@/components/vdr/FolderItem";
 import FileItem from "@/components/vdr/FileItem";
 import EmptyState from "@/components/vdr/EmptyState";
-import { useState } from "react";
-import OrganizeFileDialog from "./OrganizeFileDialog";
 
 const VDRContent = () => {
   const {
@@ -24,12 +22,8 @@ const VDRContent = () => {
     setIsDeleteDialogOpen,
     getCurrentFolderPath,
     setCurrentFolder,
-    folders,
     handleMoveFile
   } = useVDR();
-
-  const [isOrganizeDialogOpen, setIsOrganizeDialogOpen] = useState(false);
-  const [fileToOrganize, setFileToOrganize] = useState<{ id: string; name: string; folder: string } | null>(null);
 
   const handleDeleteClick = (file: { id: string; name: string }) => {
     setFileToDelete(file);
@@ -37,13 +31,11 @@ const VDRContent = () => {
   };
 
   const handleOrganizeClick = (file: any) => {
-    setFileToOrganize(file);
-    setIsOrganizeDialogOpen(true);
-  };
-
-  const handleOrganizeComplete = (fileId: string, destinationFolder: string) => {
-    handleMoveFile(fileId, destinationFolder);
-    setIsOrganizeDialogOpen(false);
+    // Leverage the organize dialog in VDRDialogs.tsx instead
+    const organizeEvent = new CustomEvent('vdr:organize-file', { 
+      detail: { file }
+    });
+    document.dispatchEvent(organizeEvent);
   };
 
   return (
@@ -97,14 +89,6 @@ const VDRContent = () => {
           )}
         </div>
       </div>
-      
-      <OrganizeFileDialog
-        file={fileToOrganize}
-        folders={folders}
-        isOpen={isOrganizeDialogOpen}
-        onOpenChange={setIsOrganizeDialogOpen}
-        onOrganizeComplete={handleOrganizeComplete}
-      />
     </div>
   );
 };

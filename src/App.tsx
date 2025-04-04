@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -30,7 +31,9 @@ import FacilityReferenceDetail from "./pages/FacilityReferenceDetail";
 import BidComparison from "./pages/BidComparison";
 import VDR from "./pages/VDR";
 
+// Create a new QueryClient instance inside the component
 const App = () => {
+  // Initialize queryClient inside the component, not outside
   const queryClient = new QueryClient();
 
   return (
