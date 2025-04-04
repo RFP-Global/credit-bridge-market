@@ -120,6 +120,27 @@ const FileItem = ({ file, onFileClick, onDeleteClick, onOrganizeClick }: FileIte
                   <Button 
                     variant="ghost" 
                     size="sm" 
+                    className="h-8 w-8 p-0"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onOrganizeClick && onOrganizeClick(file);
+                    }}
+                  >
+                    <FolderUp className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Organize file</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
                     className="h-8 w-8 p-0 text-destructive"
                     onClick={(e) => {
                       e.stopPropagation();

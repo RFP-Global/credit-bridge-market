@@ -21,8 +21,7 @@ const VDRContent = () => {
     setFileToDelete,
     setIsDeleteDialogOpen,
     getCurrentFolderPath,
-    setCurrentFolder,
-    handleMoveFile
+    setCurrentFolder
   } = useVDR();
 
   const handleDeleteClick = (file: { id: string; name: string }) => {
@@ -31,7 +30,7 @@ const VDRContent = () => {
   };
 
   const handleOrganizeClick = (file: any) => {
-    // Leverage the organize dialog in VDRDialogs.tsx instead
+    // Dispatch custom event to be caught by VDRDialogs
     const organizeEvent = new CustomEvent('vdr:organize-file', { 
       detail: { file }
     });
