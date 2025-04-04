@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import { 
   ArrowLeft, Signal, Radar, Table as TableIcon, 
-  DollarSign, ChevronRight, CheckCircle 
+  DollarSign, ChevronRight, CheckCircle, Clock
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -56,6 +56,25 @@ const BidComparison = () => {
     
     // Format the result
     return `$${(total / 1000000).toFixed(2)}M`;
+  };
+  
+  // Function to calculate annualized cost (cost per year)
+  const calculateAnnualizedCost = (amount: string, interestRate: string, term: string): string => {
+    // Parse the input values
+    const principal = parseFloat(amount.replace(/[^0-9.]/g, '')) * 1000000; // Convert $XM to a number
+    const rate = parseFloat(interestRate.replace('%', '')) / 100; // Convert percentage to decimal
+    const months = parseInt(term.split(' ')[0]); // Extract months from "XX months"
+    const years = months / 12;
+    
+    // Calculate total cost
+    const interest = principal * rate * years;
+    const total = principal + interest;
+    
+    // Calculate annualized cost (total cost divided by years)
+    const annualizedCost = total / years;
+    
+    // Format the result
+    return `$${(annualizedCost / 1000000).toFixed(2)}M/yr`;
   };
   
   useEffect(() => {
@@ -233,6 +252,13 @@ const BidComparison = () => {
                   <div className="font-mono text-sm mb-6 h-12 flex items-center">
                     <span>Total Cost</span>
                   </div>
+                  <div className="font-mono text-sm mb-6 h-12 flex items-center border-t border-primary/10 pt-2">
+                    <span>Annualized Cost</span>
+                    <span className="ml-1 text-xs text-amber-400/80 flex items-center">
+                      <Clock className="h-3 w-3 mr-1" />
+                      (time-adjusted)
+                    </span>
+                  </div>
                   <div className="font-mono text-sm mb-6 h-12 flex items-center">
                     <span>Submission Date</span>
                   </div>
@@ -281,6 +307,10 @@ const BidComparison = () => {
                     <div className="font-mono text-lg mb-6 h-12 flex items-center text-amber-400 font-bold">
                       {calculateTotalCost(bid.amount, bid.interestRate, bid.term)}
                       <DollarSign className="h-4 w-4 ml-1 text-amber-400" />
+                    </div>
+                    <div className="font-mono text-lg mb-6 h-12 flex items-center text-cyan-400 font-bold border-t border-primary/10 pt-2">
+                      {calculateAnnualizedCost(bid.amount, bid.interestRate, bid.term)}
+                      <Clock className="h-4 w-4 ml-1 text-cyan-400" />
                     </div>
                     <div className="font-mono text-sm mb-6 h-12 flex items-center text-muted-foreground">{bid.submittedDate}</div>
                     
