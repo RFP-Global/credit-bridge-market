@@ -1,6 +1,6 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlusCircle, Search, Filter, ArrowUpDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,6 @@ const ProposalsDashboard = () => {
   const [activeTab, setActiveTab] = useState("active");
   const [searchQuery, setSearchQuery] = useState("");
   
-  // Mock data for proposals
   const activeProposals = [
     { id: 1, name: "Riverside Development", type: "Commercial Real Estate", status: "Under Review", amount: "$2.4M", date: "2023-06-15", responses: 4 },
     { id: 2, name: "Green Energy Initiative", type: "Renewable Energy", status: "Approved", amount: "$5.7M", date: "2023-05-22", responses: 7 },
@@ -132,11 +131,7 @@ const ProposalsDashboard = () => {
                         <td className="py-3 px-4 font-mono text-sm">{proposal.name}</td>
                         <td className="py-3 px-4 text-xs">{proposal.type}</td>
                         <td className="py-3 px-4">
-                          <span className={`text-xs px-2 py-1 font-mono ${
-                            proposal.status === "Approved" ? "bg-green-100 text-green-800" : 
-                            proposal.status === "Under Review" ? "bg-amber-100 text-amber-800" : 
-                            "bg-blue-100 text-blue-800"
-                          }`}>
+                          <span className="text-xs px-2 py-1 font-mono">
                             {proposal.status}
                           </span>
                         </td>
