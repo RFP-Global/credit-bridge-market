@@ -1,8 +1,9 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, FolderPlus, Upload } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 
 // Import our new components
@@ -16,6 +17,23 @@ import FileUploadDialog from "@/components/vdr/FileUploadDialog";
 import NewFolderDialog from "@/components/vdr/NewFolderDialog";
 import DeleteFileDialog from "@/components/vdr/DeleteFileDialog";
 
+// Define types for our data
+interface Folder {
+  id: string;
+  name: string;
+  parent: string;
+}
+
+interface File {
+  id: string;
+  name: string;
+  folder: string;
+  size: string;
+  date: string;
+  type: string;
+  content?: string;
+}
+
 const VDR = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,15 +42,11 @@ const VDR = () => {
   const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
   const [fileToDelete, setFileToDelete] = useState<{ id: string; name: string } | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [previewFile, setPreviewFile] = useState<{
-    id: string;
-    name: string;
-    type: string;
-    content?: string;
-  } | null>(null);
+  const [previewFile, setPreviewFile] = useState<File | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
-  const folders = [
+  // Define default folders
+  const defaultFolders: Folder[] = [
     { id: "f1", name: "Financial Documents", parent: "root" },
     { id: "f2", name: "Legal Documents", parent: "root" },
     { id: "f3", name: "Project Materials", parent: "root" },
@@ -41,7 +55,8 @@ const VDR = () => {
     { id: "f7", name: "Q2 Reports", parent: "f1" },
   ];
 
-  const [files, setFiles] = useState([
+  // Define default files
+  const defaultFiles: File[] = [
     { id: "d1", name: "Annual Report 2024.pdf", folder: "root", size: "4.2 MB", date: "2024-04-01", type: "pdf", content: "This is a sample annual report for 2024..." },
     { id: "d2", name: "Corporate Structure.docx", folder: "root", size: "1.8 MB", date: "2024-03-15", type: "docx", content: "Corporate structure details and organization chart..." },
     { id: "d3", name: "Financial Statement.xlsx", folder: "f1", size: "3.1 MB", date: "2024-03-20", type: "xlsx", content: "Financial statement data with quarterly breakdowns..." },
@@ -49,7 +64,29 @@ const VDR = () => {
     { id: "d5", name: "Project Timeline.pptx", folder: "f3", size: "6.5 MB", date: "2024-03-25", type: "pptx", content: "Project timeline with milestones and deliverables..." },
     { id: "d8", name: "Passport Copy.pdf", folder: "f5", size: "1.2 MB", date: "2024-03-10", type: "pdf", content: "Digitized copy of identification documents..." },
     { id: "d9", name: "Company Registration.pdf", folder: "f5", size: "2.8 MB", date: "2024-03-12", type: "pdf", content: "Official company registration certificate and documents..." },
-  ]);
+  ];
+
+  // Initialize folders state from localStorage or defaults
+  const [folders, setFolders] = useState<Folder[]>(() => {
+    const savedFolders = localStorage.getItem("vdr-folders");
+    return savedFolders ? JSON.parse(savedFolders) : defaultFolders;
+  });
+
+  // Initialize files state from localStorage or defaults
+  const [files, setFiles] = useState<File[]>(() => {
+    const savedFiles = localStorage.getItem("vdr-files");
+    return savedFiles ? JSON.parse(savedFiles) : defaultFiles;
+  });
+
+  // Save folders to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("vdr-folders", JSON.stringify(folders));
+  }, [folders]);
+
+  // Save files to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("vdr-files", JSON.stringify(files));
+  }, [files]);
 
   const filteredFolders = folders
     .filter(folder => folder.parent === currentFolder)
@@ -107,6 +144,15 @@ const VDR = () => {
   };
 
   const handleCreateFolder = (folderName: string) => {
+    const newFolder: Folder = {
+      id: `f${Date.now()}`,
+      name: folderName,
+      parent: currentFolder
+    };
+    
+    setFolders(prev => [...prev, newFolder]);
+    setIsNewFolderDialogOpen(false);
+    
     toast({
       title: "Folder created",
       description: `Created folder: ${folderName}`,
@@ -132,7 +178,7 @@ const VDR = () => {
     }
   };
 
-  const handleFileClick = (file: any) => {
+  const handleFileClick = (file: File) => {
     setPreviewFile(file);
     setIsPreviewOpen(true);
   };
@@ -185,6 +231,23 @@ const VDR = () => {
                 onOpenChange={setIsNewFolderDialogOpen}
                 onCreateFolder={handleCreateFolder}
               />
+              
+              <Button 
+                className="rounded-none font-mono text-xs"
+                onClick={() => setIsUploadDialogOpen(true)}
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                UPLOAD FILES
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="rounded-none font-mono text-xs"
+                onClick={() => setIsNewFolderDialogOpen(true)}
+              >
+                <FolderPlus className="h-4 w-4 mr-2" />
+                NEW FOLDER
+              </Button>
             </div>
           </div>
           
