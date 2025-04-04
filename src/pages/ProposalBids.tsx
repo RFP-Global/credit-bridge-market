@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { 
   BarChart3, FileText, ArrowLeft, Signal, Radar, 
@@ -333,23 +332,6 @@ const ProposalBids = () => {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 gap-4 mb-6">
-                  <Button 
-                    variant="outline" 
-                    size="lg" 
-                    className="w-full border-primary/40 hover:bg-primary/10 font-mono flex justify-between items-center"
-                    onClick={handleCompareBids}
-                  >
-                    <div className="flex items-center">
-                      <div className="bg-primary/10 p-2 rounded mr-3">
-                        <DollarSign className="h-5 w-5" />
-                      </div>
-                      COMPARE BIDS SIDE BY SIDE
-                    </div>
-                    <ArrowUpRight className="h-5 w-5" />
-                  </Button>
-                </div>
-                
                 {proposal.description && (
                   <Card className="border-primary/20 bg-background/50 mb-6">
                     <CardHeader>
@@ -364,27 +346,11 @@ const ProposalBids = () => {
                 <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
                   <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle className="text-sm font-mono">RECEIVED BIDS</CardTitle>
-                    <div className="flex space-x-2 items-center">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="rounded-none text-xs"
-                        onClick={handleCompareBids}
-                        disabled={selectedBids.length < 2}
-                      >
-                        <Scale className="h-4 w-4 mr-1" />
-                        Compare
-                      </Button>
-                      <CardDescription className="text-xs">
-                        {selectedBids.length} selected
-                      </CardDescription>
-                    </div>
                   </CardHeader>
                   <CardContent>
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead className="w-[50px]">SELECT</TableHead>
                           <TableHead className="w-[100px]">BID ID</TableHead>
                           <TableHead>AMOUNT</TableHead>
                           <TableHead>INTEREST</TableHead>
@@ -397,14 +363,6 @@ const ProposalBids = () => {
                       <TableBody>
                         {bids.map((bid) => (
                           <TableRow key={bid.id}>
-                            <TableCell>
-                              <Checkbox 
-                                checked={selectedBids.includes(bid.id)} 
-                                onCheckedChange={() => toggleBidSelection(bid.id)}
-                                disabled={bid.status !== "Under Review"}
-                                id={`checkbox-${bid.id}`}
-                              />
-                            </TableCell>
                             <TableCell className="font-mono text-xs">{bid.id}</TableCell>
                             <TableCell className="font-mono font-extralight">{bid.amount}</TableCell>
                             <TableCell className="font-mono font-extralight">{bid.interestRate}</TableCell>
