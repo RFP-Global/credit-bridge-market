@@ -347,15 +347,6 @@ const ProposalDetails = () => {
                 </CardContent>
               </Card>
             </div>
-            
-            <Card className="bg-black border-gray-800">
-              <CardHeader className="border-b border-gray-800">
-                <CardTitle className="text-sm font-mono">HISTORICAL PERFORMANCE</CardTitle>
-              </CardHeader>
-              <CardContent className="pt-6 h-80">
-                <TimeSeriesLineChart data={timeSeriesData} lines={timeSeriesLines} />
-              </CardContent>
-            </Card>
           </TabsContent>
           
           <TabsContent value="financials" className="space-y-6">
