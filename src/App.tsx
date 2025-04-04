@@ -31,6 +31,7 @@ import FacilityReferenceDetail from "./pages/FacilityReferenceDetail";
 import BidComparison from "./pages/BidComparison";
 import VDR from "./pages/VDR";
 import Lenders from "./pages/Lenders";
+import LenderProfile from "./pages/LenderProfile";
 import Financing from "./pages/Financing";
 import Team from "./pages/Team";
 import { useState } from "react";
@@ -73,6 +74,7 @@ const App = () => {
             <Route path="/facility-reference/:facilityId/:sectionType" element={<FacilityReferenceDetail />} />
             <Route path="/vdr" element={<VDR />} />
             <Route path="/lenders" element={<Lenders />} />
+            <Route path="/lender/:id" element={<LenderProfile />} />
             <Route path="/financing" element={<Financing />} />
             <Route path="/team" element={<Team />} />
             <Route path="*" element={<NotFound />} />
