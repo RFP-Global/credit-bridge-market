@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Radar, Signal, BarChart3, FileText, Users, Building, CreditCard, ArrowUpRight, Bell, Settings, ShoppingCart } from "lucide-react";
+import { Radar, Signal, BarChart3, FileText, Users, Building, CreditCard, ArrowUpRight, Bell, Settings, ShoppingCart, User } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 
