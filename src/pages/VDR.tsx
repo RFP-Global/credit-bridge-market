@@ -1,35 +1,41 @@
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-import { VDRProvider } from "@/contexts/VDRContext";
-import VDRLayout from "@/components/vdr/VDRLayout";
-import VDRHeader from "@/components/vdr/VDRHeader";
+import { VDRProvider } from "@/contexts/vdr/VDRContext";
 import VDRContent from "@/components/vdr/VDRContent";
 import VDRDialogs from "@/components/vdr/VDRDialogs";
-import FullscreenButton from "@/components/FullscreenButton";
+import VDRHeader from "@/components/vdr/VDRHeader";
+import VDRLayout from "@/components/vdr/VDRLayout";
+import EnterpriseLayout from "@/components/layout/EnterpriseLayout";
 
 const VDR = () => {
-  const navigate = useNavigate();
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
-
+  const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
+  const [isFilePreviewOpen, setIsFilePreviewOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  
   return (
-    <VDRProvider>
-      <VDRLayout>
+    <EnterpriseLayout 
+      title="Virtual Data Room" 
+      description="Securely manage and share your project documents."
+    >
+      <VDRProvider>
         <VDRHeader 
-          onBackClick={() => navigate("/enterprise-dashboard")}
-          onUploadClick={() => setIsUploadDialogOpen(true)}
+          setIsUploadDialogOpen={setIsUploadDialogOpen}
+          setIsNewFolderDialogOpen={setIsNewFolderDialogOpen}
         />
-        
         <VDRContent />
-        <FullscreenButton />
-        
         <VDRDialogs 
           isUploadDialogOpen={isUploadDialogOpen}
           setIsUploadDialogOpen={setIsUploadDialogOpen}
+          isNewFolderDialogOpen={isNewFolderDialogOpen}
+          setIsNewFolderDialogOpen={setIsNewFolderDialogOpen}
+          isFilePreviewOpen={isFilePreviewOpen}
+          setIsFilePreviewOpen={setIsFilePreviewOpen}
+          selectedFile={selectedFile}
+          setSelectedFile={setSelectedFile}
         />
-      </VDRLayout>
-    </VDRProvider>
+      </VDRProvider>
+    </EnterpriseLayout>
   );
 };
 

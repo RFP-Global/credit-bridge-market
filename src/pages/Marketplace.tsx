@@ -1,6 +1,5 @@
 
 import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import FullscreenButton from "@/components/FullscreenButton";
 import MarketplaceHeader from "@/components/marketplace/MarketplaceHeader";
@@ -11,12 +10,9 @@ import { useMarketplace } from "@/hooks/useMarketplace";
 import { financeProposals } from "@/data/marketplaceProposals";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import RadarScreen from "@/components/RadarScreen";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import EnterpriseLayout from "@/components/layout/EnterpriseLayout";
 
 const Marketplace = () => {
-  const navigate = useNavigate();
-
   // Extract unique values for filters
   const facilityTypes = useMemo(() => 
     [...new Set(financeProposals.map(p => p.facilityType))], 
@@ -52,38 +48,16 @@ const Marketplace = () => {
     clearFilters
   } = useMarketplace(financeProposals);
 
-  const handleBackToDashboard = () => {
-    navigate("/enterprise-dashboard");
-  };
-
   return (
-    <div className="min-h-screen bg-black/90 text-gray-200 relative grid-bg font-typewriter">
-      <Navbar />
-      <FullscreenButton />
-      
-      {/* Replace radar pulse with radar screen */}
-      <RadarScreen className="z-0" />
-      
-      <div className="scanline z-10"></div>
-      
-      <div className="container mx-auto px-4 py-6 pt-24 h-screen flex flex-col relative z-10">
-        {/* Header section */}
-        <div className="bg-transparent pb-4 z-30 flex justify-between items-center">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="border-gray-700/50 text-cyan-300 bg-transparent hover:bg-cyan-900/20"
-            onClick={handleBackToDashboard}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
-          </Button>
-
-          <MarketplaceHeader 
-            resultsCount={filteredProposals.length}
-            clearFilters={clearFilters}
-          />
-        </div>
+    <EnterpriseLayout 
+      title="Marketplace" 
+      description="Explore financing opportunities in the global marketplace."
+    >
+      <div className="bg-transparent pb-4 z-30">
+        <MarketplaceHeader 
+          resultsCount={filteredProposals.length}
+          clearFilters={clearFilters}
+        />
 
         <MarketplaceFilters 
           searchTerm={searchTerm}
@@ -100,35 +74,34 @@ const Marketplace = () => {
           industries={industries}
           clearFilters={clearFilters}
         />
-
-        {/* Scrollable table area with fixed headers */}
-        <div className="flex-1 overflow-hidden">
-          <ScrollArea className="h-[calc(100vh-340px)]">
-            <div className="min-w-max">
-              <MarketplaceTable 
-                proposals={paginatedProposals}
-                sortField={sortField}
-                sortDirection={sortDirection}
-                handleSort={handleSort}
-                columnFilters={columnFilters}
-                setColumnFilters={setColumnFilters}
-              />
-            </div>
-          </ScrollArea>
-        </div>
-
-        {/* Fixed pagination at the bottom */}
-        <div className="mt-4 bg-transparent pt-2">
-          <MarketplacePagination 
-            currentPage={currentPage}
-            totalPages={totalPages}
-            handlePageChange={handlePageChange}
-          />
-        </div>
       </div>
-    </div>
+
+      {/* Scrollable table area with fixed headers */}
+      <div className="flex-1 overflow-hidden">
+        <ScrollArea className="h-[calc(100vh-340px)]">
+          <div className="min-w-max">
+            <MarketplaceTable 
+              proposals={paginatedProposals}
+              sortField={sortField}
+              sortDirection={sortDirection}
+              handleSort={handleSort}
+              columnFilters={columnFilters}
+              setColumnFilters={setColumnFilters}
+            />
+          </div>
+        </ScrollArea>
+      </div>
+
+      {/* Fixed pagination at the bottom */}
+      <div className="mt-4 bg-transparent pt-2">
+        <MarketplacePagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          handlePageChange={handlePageChange}
+        />
+      </div>
+    </EnterpriseLayout>
   );
 };
 
 export default Marketplace;
-
