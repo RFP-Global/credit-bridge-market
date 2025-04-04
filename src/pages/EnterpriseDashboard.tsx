@@ -6,6 +6,7 @@ import DashboardOverview from "@/components/dashboard/DashboardOverview";
 import ActiveRFPsTab from "@/components/dashboard/ActiveRFPsTab";
 import NotificationsTab from "@/components/dashboard/NotificationsTab";
 import { useEnterpriseDashboard } from "@/hooks/useEnterpriseDashboard";
+import { Loading } from "@/components/ui/loading";
 
 const EnterpriseDashboard = () => {
   const {
@@ -20,10 +21,12 @@ const EnterpriseDashboard = () => {
   if (isLoading || !profileData || !dashboardData) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin h-8 w-8 border-t-2 border-primary rounded-full mx-auto mb-4"></div>
-          <p className="font-mono text-sm">Loading your dashboard...</p>
-        </div>
+        <Loading 
+          variant="spinner" 
+          size="lg" 
+          text="Loading your dashboard..." 
+          centered 
+        />
       </div>
     );
   }

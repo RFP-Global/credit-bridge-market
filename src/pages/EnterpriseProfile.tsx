@@ -7,6 +7,7 @@ import ProfileForm from "@/components/profile/ProfileForm";
 import ProfileDetails from "@/components/profile/ProfileDetails";
 import AccountSidebar from "@/components/profile/AccountSidebar";
 import { toast } from "@/hooks/use-toast";
+import { Loading } from "@/components/ui/loading";
 
 const EnterpriseProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -59,10 +60,11 @@ const EnterpriseProfile = () => {
   if (!profileData) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin h-8 w-8 border-t-2 border-primary rounded-full mx-auto mb-4"></div>
-          <p className="font-mono text-sm">Loading your profile...</p>
-        </div>
+        <Loading 
+          variant="spinner"
+          text="Loading your profile..." 
+          centered 
+        />
       </div>
     );
   }

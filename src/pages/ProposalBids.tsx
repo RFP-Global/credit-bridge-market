@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { 
@@ -10,6 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
+import { Loading } from "@/components/ui/loading";
 
 interface Bid {
   id: string;
@@ -36,17 +36,13 @@ const ProposalBids = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   
-  // Mock data for the selected proposal
   const [proposal, setProposal] = useState<Proposal | null>(null);
   const [bids, setBids] = useState<Bid[]>([]);
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
-    // Simulate API call to get proposal details
     const fetchProposalDetails = () => {
-      // In a real app, this would be an API call
       setTimeout(() => {
-        // Mock data for the proposal
         const mockProposal: Proposal = {
           id: id || "",
           name: id === "RFP-2023-001" ? "Riverside Development" : 
@@ -69,7 +65,6 @@ const ProposalBids = () => {
           description: "This project aims to create a sustainable and modern development that meets the highest environmental standards while delivering exceptional returns for investors."
         };
         
-        // Mock data for bids
         const mockBids: Bid[] = [
           {
             id: "BID-001",
@@ -129,7 +124,6 @@ const ProposalBids = () => {
       description: `You've accepted bid ${bidId}. The lender will be notified.`,
     });
     
-    // Update the bids list to mark this bid as approved
     setBids(prevBids => 
       prevBids.map(bid => 
         bid.id === bidId 
@@ -145,7 +139,6 @@ const ProposalBids = () => {
       description: `You've rejected bid ${bidId}. The lender will be notified.`,
     });
     
-    // Update the bids list to mark this bid as rejected
     setBids(prevBids => 
       prevBids.map(bid => 
         bid.id === bidId 
@@ -278,7 +271,7 @@ const ProposalBids = () => {
             
             {loading ? (
               <div className="flex justify-center py-12">
-                <div className="animate-pulse">Loading proposal details...</div>
+                <Loading text="Loading proposal details..." centered />
               </div>
             ) : proposal ? (
               <>
