@@ -1,36 +1,14 @@
 
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
-import { 
-  ArrowLeft, Signal, Radar, Table as TableIcon, 
-  DollarSign, ChevronRight, CheckCircle, Clock
-} from "lucide-react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { ArrowLeft, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { toast } from "@/hooks/use-toast";
-
-interface Bid {
-  id: string;
-  amount: string;
-  interestRate: string;
-  interestRateType: "Fixed" | "Floating";
-  term: string;
-  facilityType: string;
-  status: "Under Review" | "Approved" | "Rejected";
-  submittedDate: string;
-  additionalTerms: string;
-  features?: string[];
-}
-
-interface Proposal {
-  id: string;
-  name: string;
-  industry: string;
-  status: string;
-  principal: string;
-}
+import { BidCard } from "@/components/bids/BidCard";
+import { BidDetailsHeader } from "@/components/bids/BidDetailsHeader";
+import { fetchProposalDetails } from "@/services/proposalService";
+import { Proposal, Bid } from "@/types/bids";
 
 const BidComparison = () => {
   const { id } = useParams<{ id: string }>();
@@ -41,137 +19,24 @@ const BidComparison = () => {
   const [bids, setBids] = useState<Bid[]>([]);
   const [loading, setLoading] = useState(true);
   
-  // Function to calculate total cost of a loan
-  const calculateTotalCost = (amount: string, interestRate: string, term: string): string => {
-    // Parse the input values
-    const principal = parseFloat(amount.replace(/[^0-9.]/g, '')) * 1000000; // Convert $XM to a number
-    const rate = parseFloat(interestRate.replace('%', '')) / 100; // Convert percentage to decimal
-    const months = parseInt(term.split(' ')[0]); // Extract months from "XX months"
-    
-    // For simplified calculation (ignoring compounding), we'll use the formula:
-    // Total = Principal + (Principal * Rate * Term in years)
-    const years = months / 12;
-    const interest = principal * rate * years;
-    const total = principal + interest;
-    
-    // Format the result
-    return `$${(total / 1000000).toFixed(2)}M`;
-  };
-  
-  // Function to calculate annualized cost (cost per year)
-  const calculateAnnualizedCost = (amount: string, interestRate: string, term: string): string => {
-    // Parse the input values
-    const principal = parseFloat(amount.replace(/[^0-9.]/g, '')) * 1000000; // Convert $XM to a number
-    const rate = parseFloat(interestRate.replace('%', '')) / 100; // Convert percentage to decimal
-    const months = parseInt(term.split(' ')[0]); // Extract months from "XX months"
-    const years = months / 12;
-    
-    // Calculate total cost
-    const interest = principal * rate * years;
-    const total = principal + interest;
-    
-    // Calculate annualized cost (total cost divided by years)
-    const annualizedCost = total / years;
-    
-    // Format the result
-    return `$${(annualizedCost / 1000000).toFixed(2)}M/yr`;
-  };
-  
   useEffect(() => {
-    // Simulate API call to get proposal details
-    const fetchProposalDetails = () => {
-      setTimeout(() => {
-        // Mock data for the proposal
-        const mockProposal: Proposal = {
-          id: id || "",
-          name: id === "RFP-2023-001" ? "Riverside Development" : 
-                id === "RFP-2023-002" ? "Green Energy Initiative" : 
-                id === "RFP-2023-003" ? "Medical Center Expansion" : 
-                "Unknown Project",
-          industry: id === "RFP-2023-001" ? "Commercial Real Estate" : 
-                   id === "RFP-2023-002" ? "Renewable Energy" : 
-                   id === "RFP-2023-003" ? "Healthcare" : 
-                   "Other",
-          status: "OPEN",
-          principal: id === "RFP-2023-001" ? "$2.4M" : 
-                    id === "RFP-2023-002" ? "$5.7M" : 
-                    id === "RFP-2023-003" ? "$8.1M" : 
-                    "$0",
-        };
-        
-        // Enhanced mock data for bids with more details for comparison
-        const mockBids: Bid[] = [
-          {
-            id: "BID-001",
-            amount: mockProposal.principal,
-            interestRate: "5.75%",
-            interestRateType: "Fixed",
-            term: "60 months",
-            facilityType: "Term Loan",
-            status: "Under Review",
-            submittedDate: "2023-11-15",
-            additionalTerms: "No prepayment penalty after 24 months",
-            features: [
-              "Annual review of terms",
-              "No collateral required",
-              "Option to increase credit line after 1 year"
-            ]
-          },
-          {
-            id: "BID-002",
-            amount: mockProposal.principal,
-            interestRate: "5.50%",
-            interestRateType: "Floating",
-            term: "48 months",
-            facilityType: "Revolving Credit",
-            status: "Under Review",
-            submittedDate: "2023-11-16",
-            additionalTerms: "Includes optional line of credit",
-            features: [
-              "Fixed rate guarantee",
-              "Flexible payment schedule",
-              "Dedicated account manager"
-            ]
-          },
-          {
-            id: "BID-003",
-            amount: id === "RFP-2023-001" ? "$2.2M" : 
-                   id === "RFP-2023-002" ? "$5.5M" : 
-                   id === "RFP-2023-003" ? "$7.8M" : 
-                   "$0",
-            interestRate: "6.00%",
-            interestRateType: "Fixed",
-            term: "72 months",
-            facilityType: "Bridge Loan",
-            status: "Under Review",
-            submittedDate: "2023-11-18",
-            additionalTerms: "Fixed rate for first 36 months",
-            features: [
-              "Quarterly performance reviews",
-              "Low early repayment fees",
-              "Business growth advisory services included"
-            ]
-          }
-        ];
-        
+    const loadProposalData = async () => {
+      try {
         // Check if specific bids were requested via URL params
         const queryParams = new URLSearchParams(location.search);
         const selectedBidIds = queryParams.get('bids')?.split(',');
         
-        if (selectedBidIds && selectedBidIds.length > 0) {
-          // Filter to only show selected bids
-          const filteredBids = mockBids.filter(bid => selectedBidIds.includes(bid.id));
-          setBids(filteredBids.length > 0 ? filteredBids : mockBids);
-        } else {
-          setBids(mockBids);
-        }
-        
-        setProposal(mockProposal);
+        const result = await fetchProposalDetails(id, selectedBidIds);
+        setProposal(result.proposal);
+        setBids(result.bids);
+      } catch (error) {
+        console.error("Error loading proposal data:", error);
+      } finally {
         setLoading(false);
-      }, 500);
+      }
     };
     
-    fetchProposalDetails();
+    loadProposalData();
   }, [id, location.search]);
   
   const handleAcceptBid = (bidId: string) => {
@@ -227,120 +92,14 @@ const BidComparison = () => {
             
             <div className="grid grid-cols-1 gap-6">
               <div className="flex overflow-x-auto pb-4">
-                <div className="flex-shrink-0 w-40 mr-4">
-                  <div className="h-12 flex items-center">
-                    <span className="font-mono text-sm text-muted-foreground">BID DETAILS</span>
-                  </div>
-                  <div className="font-mono text-sm mb-6 h-12 flex items-center">
-                    <span>Bid ID</span>
-                  </div>
-                  <div className="font-mono text-sm mb-6 h-12 flex items-center">
-                    <span>Amount</span>
-                  </div>
-                  <div className="font-mono text-sm mb-6 h-12 flex items-center">
-                    <span>Interest Rate</span>
-                  </div>
-                  <div className="font-mono text-sm mb-6 h-12 flex items-center">
-                    <span>Interest Rate Type</span>
-                  </div>
-                  <div className="font-mono text-sm mb-6 h-12 flex items-center">
-                    <span>Term</span>
-                  </div>
-                  <div className="font-mono text-sm mb-6 h-12 flex items-center">
-                    <span>Facility Type</span>
-                  </div>
-                  <div className="font-mono text-sm mb-6 h-12 flex items-center">
-                    <span>Total Cost</span>
-                  </div>
-                  <div className="font-mono text-sm mb-6 h-12 flex items-center border-t border-primary/10 pt-2">
-                    <span>Annualized Cost</span>
-                    <span className="ml-1 text-xs text-amber-400/80 flex items-center">
-                      <Clock className="h-3 w-3 mr-1" />
-                      (time-adjusted)
-                    </span>
-                  </div>
-                  <div className="font-mono text-sm mb-6 h-12 flex items-center">
-                    <span>Submission Date</span>
-                  </div>
-                  <div className="font-mono text-sm mb-6">
-                    <span>Additional Terms</span>
-                  </div>
-                  <div className="font-mono text-sm mb-6">
-                    <span>Features</span>
-                  </div>
-                  <div className="font-mono text-sm mb-6 h-12 flex items-center">
-                    <span>Action</span>
-                  </div>
-                </div>
+                <BidDetailsHeader />
                 
                 {bids.map((bid) => (
-                  <div key={bid.id} className="flex-shrink-0 w-80 bg-background/50 border border-primary/20 rounded-lg p-4 mr-4">
-                    <div className="h-12 flex items-center justify-between border-b border-primary/10">
-                      <Badge className={`
-                        ${bid.status === "Approved" ? "bg-green-500/20 text-green-300" : 
-                          bid.status === "Rejected" ? "bg-red-500/20 text-red-300" : 
-                          "bg-amber-500/20 text-amber-300"}
-                        rounded-full px-2 text-xs mb-2
-                      `}>
-                        {bid.status}
-                      </Badge>
-                      <TableIcon className="h-4 w-4 text-primary" />
-                    </div>
-                    
-                    <div className="font-mono text-lg mb-6 h-12 flex items-center">{bid.id}</div>
-                    <div className="font-mono text-lg mb-6 h-12 flex items-center">{bid.amount}</div>
-                    <div className="font-mono text-lg mb-6 h-12 flex items-center text-green-400">{bid.interestRate}</div>
-                    <div className="font-mono text-lg mb-6 h-12 flex items-center">
-                      <Badge className={`
-                        ${bid.interestRateType === "Fixed" ? "bg-blue-500/20 text-blue-300" : "bg-purple-500/20 text-purple-300"}
-                        rounded-full px-2 py-1
-                      `}>
-                        {bid.interestRateType}
-                      </Badge>
-                    </div>
-                    <div className="font-mono text-lg mb-6 h-12 flex items-center">{bid.term}</div>
-                    <div className="font-mono text-lg mb-6 h-12 flex items-center">
-                      <Badge className="bg-gray-500/20 text-gray-300 rounded-full px-2 py-1">
-                        {bid.facilityType}
-                      </Badge>
-                    </div>
-                    <div className="font-mono text-lg mb-6 h-12 flex items-center text-amber-400 font-bold">
-                      {calculateTotalCost(bid.amount, bid.interestRate, bid.term)}
-                      <DollarSign className="h-4 w-4 ml-1 text-amber-400" />
-                    </div>
-                    <div className="font-mono text-lg mb-6 h-12 flex items-center text-cyan-400 font-bold border-t border-primary/10 pt-2">
-                      {calculateAnnualizedCost(bid.amount, bid.interestRate, bid.term)}
-                      <Clock className="h-4 w-4 ml-1 text-cyan-400" />
-                    </div>
-                    <div className="font-mono text-sm mb-6 h-12 flex items-center text-muted-foreground">{bid.submittedDate}</div>
-                    
-                    <div className="mb-6 min-h-24">
-                      <p className="text-sm font-extralight">{bid.additionalTerms}</p>
-                    </div>
-                    
-                    <div className="mb-6 min-h-32">
-                      <ul className="list-disc list-inside space-y-1">
-                        {bid.features?.map((feature, index) => (
-                          <li key={index} className="text-sm font-extralight flex items-start">
-                            <ChevronRight className="h-3 w-3 mt-0.5 mr-1 flex-shrink-0 text-primary" />
-                            <span>{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    
-                    <div className="h-12 flex items-center">
-                      <Button
-                        onClick={() => handleAcceptBid(bid.id)}
-                        className="w-full rounded-none font-mono text-xs"
-                        variant="outline"
-                        disabled={bid.status !== "Under Review"}
-                      >
-                        <CheckCircle className="h-3 w-3 mr-1" />
-                        Accept This Bid
-                      </Button>
-                    </div>
-                  </div>
+                  <BidCard 
+                    key={bid.id} 
+                    bid={bid} 
+                    onAccept={handleAcceptBid}
+                  />
                 ))}
               </div>
               
