@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -29,9 +28,9 @@ import FacilityBuilder from "./pages/FacilityBuilder";
 import FacilityMechanics from "./pages/FacilityMechanics";
 import FacilityReferenceDetail from "./pages/FacilityReferenceDetail";
 import BidComparison from "./pages/BidComparison";
+import VDR from "./pages/VDR";
 
 const App = () => {
-  // Create a client inside the component
   const queryClient = new QueryClient();
 
   return (
@@ -65,7 +64,7 @@ const App = () => {
             <Route path="/facility-builder" element={<FacilityBuilder />} />
             <Route path="/facility-mechanics/:facilityId" element={<FacilityMechanics />} />
             <Route path="/facility-reference/:facilityId/:sectionType" element={<FacilityReferenceDetail />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="/vdr" element={<VDR />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
