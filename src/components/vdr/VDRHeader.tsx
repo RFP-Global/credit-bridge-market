@@ -1,13 +1,14 @@
 
 import { Link } from "react-router-dom";
-import { Radar, Signal, ArrowLeft } from "lucide-react";
+import { Radar, Signal, ArrowLeft, FolderPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface VDRHeaderProps {
   onBackClick: () => void;
+  onNewFolderClick: () => void;
 }
 
-const VDRHeader = ({ onBackClick }: VDRHeaderProps) => {
+const VDRHeader = ({ onBackClick, onNewFolderClick }: VDRHeaderProps) => {
   return (
     <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-primary/20">
       <div className="container mx-auto px-6 py-3">
@@ -24,6 +25,16 @@ const VDRHeader = ({ onBackClick }: VDRHeaderProps) => {
           </div>
           
           <div className="flex items-center space-x-4">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="rounded-none font-mono text-xs border-primary/30"
+              onClick={onNewFolderClick}
+            >
+              <FolderPlus className="h-4 w-4 mr-1" />
+              NEW FOLDER
+            </Button>
+            
             <Button 
               variant="outline" 
               size="sm" 
