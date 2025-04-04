@@ -1,13 +1,20 @@
-
 import React from 'react';
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BarChart3, FileText, ShoppingCart, Building, CreditCard, Users, Database } from "lucide-react";
+import SidebarNavButton from "./SidebarNavButton";
 
 const EnterpriseSidebar = () => {
-  const location = useLocation();
-  const isActive = (path: string) => location.pathname === path;
+  const navItems = [
+    { to: "/enterprise-dashboard", icon: BarChart3, label: "Dashboard" },
+    { to: "/proposals-dashboard", icon: FileText, label: "Proposals" },
+    { to: "/marketplace", icon: ShoppingCart, label: "Marketplace" },
+    { to: "#", icon: Building, label: "Lenders" },
+    { to: "#", icon: CreditCard, label: "Financing" },
+    { to: "#", icon: Users, label: "Team" },
+    { to: "/vdr", icon: Database, label: "VDR" },
+  ];
 
   return (
     <aside className="w-full md:w-64 space-y-6">
@@ -39,84 +46,14 @@ const EnterpriseSidebar = () => {
       </Card>
       
       <nav className="space-y-1">
-        <Button 
-          variant="ghost" 
-          className={`w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3 ${
-            isActive("/enterprise-dashboard") ? "bg-primary/5 text-primary border-l-2 border-primary" : ""
-          }`}
-          asChild
-        >
-          <Link to="/enterprise-dashboard">
-            <BarChart3 className="h-4 w-4 mr-3" />
-            Dashboard
-          </Link>
-        </Button>
-        <Button 
-          variant="ghost"
-          className={`w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3 ${
-            isActive("/proposals-dashboard") ? "bg-primary/5 text-primary border-l-2 border-primary" : ""
-          }`}
-          asChild
-        >
-          <Link to="/proposals-dashboard">
-            <FileText className="h-4 w-4 mr-3" />
-            Proposals
-          </Link>
-        </Button>
-        <Button 
-          variant="ghost"
-          className={`w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3 ${
-            isActive("/marketplace") ? "bg-primary/5 text-primary border-l-2 border-primary" : ""
-          }`}
-          asChild
-        >
-          <Link to="/marketplace">
-            <ShoppingCart className="h-4 w-4 mr-3" />
-            Marketplace
-          </Link>
-        </Button>
-        <Button 
-          variant="ghost"
-          className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3"
-          asChild
-        >
-          <Link to="#">
-            <Building className="h-4 w-4 mr-3" />
-            Lenders
-          </Link>
-        </Button>
-        <Button 
-          variant="ghost"
-          className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3"
-          asChild
-        >
-          <Link to="#">
-            <CreditCard className="h-4 w-4 mr-3" />
-            Financing
-          </Link>
-        </Button>
-        <Button 
-          variant="ghost"
-          className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3"
-          asChild
-        >
-          <Link to="#">
-            <Users className="h-4 w-4 mr-3" />
-            Team
-          </Link>
-        </Button>
-        <Button 
-          variant="ghost"
-          className={`w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3 ${
-            isActive("/vdr") ? "bg-primary/5 text-primary border-l-2 border-primary" : ""
-          }`}
-          asChild
-        >
-          <Link to="/vdr">
-            <Database className="h-4 w-4 mr-3" />
-            VDR
-          </Link>
-        </Button>
+        {navItems.map((item) => (
+          <SidebarNavButton
+            key={item.label}
+            to={item.to}
+            icon={item.icon}
+            label={item.label}
+          />
+        ))}
       </nav>
     </aside>
   );
