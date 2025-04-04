@@ -1,9 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, FolderPlus, Upload } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 
 // Import our new components
@@ -217,37 +215,6 @@ const VDR = () => {
                 handleBackClick={handleBackClick}
                 setCurrentFolder={setCurrentFolder}
               />
-            </div>
-            
-            <div className="flex flex-wrap gap-3">
-              <FileUploadDialog
-                isOpen={isUploadDialogOpen}
-                onOpenChange={setIsUploadDialogOpen}
-                onUploadComplete={handleFileUpload}
-              />
-              
-              <NewFolderDialog
-                isOpen={isNewFolderDialogOpen}
-                onOpenChange={setIsNewFolderDialogOpen}
-                onCreateFolder={handleCreateFolder}
-              />
-              
-              <Button 
-                className="rounded-none font-mono text-xs"
-                onClick={() => setIsUploadDialogOpen(true)}
-              >
-                <Upload className="h-4 w-4 mr-2" />
-                UPLOAD FILES
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                className="rounded-none font-mono text-xs"
-                onClick={() => setIsNewFolderDialogOpen(true)}
-              >
-                <FolderPlus className="h-4 w-4 mr-2" />
-                NEW FOLDER
-              </Button>
             </div>
           </div>
           
