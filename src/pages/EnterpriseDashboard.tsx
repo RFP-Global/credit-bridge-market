@@ -1,8 +1,9 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Radar, Signal, BarChart3, FileText, Users, Building, CreditCard, ArrowUpRight, Bell, Settings, ShoppingCart, User } from "lucide-react";
+import { Radar, Signal, BarChart3, FileText, Users, Building, CreditCard, ArrowUpRight, Bell, Settings, ShoppingCart, Database } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 
@@ -93,9 +94,9 @@ const EnterpriseDashboard = () => {
                 <Bell className="h-5 w-5" />
                 <span className="absolute top-0 right-0 h-2 w-2 bg-primary rounded-full"></span>
               </button>
-              <Link to="/enterprise-profile" className="p-2 rounded-full hover:bg-primary/10 flex items-center">
-                <User className="h-5 w-5" />
-              </Link>
+              <button className="p-2 rounded-full hover:bg-primary/10">
+                <Settings className="h-5 w-5" />
+              </button>
               <Button 
                 variant="outline" 
                 size="sm" 
@@ -172,12 +173,14 @@ const EnterpriseDashboard = () => {
                 <Users className="h-4 w-4 mr-3" />
                 Team
               </Button>
-              <Link to="/enterprise-profile" className="block">
-                <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3">
-                  <User className="h-4 w-4 mr-3" />
-                  Profile
-                </Button>
-              </Link>
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3"
+                onClick={() => navigate("/vdr")}
+              >
+                <Database className="h-4 w-4 mr-3" />
+                VDR
+              </Button>
             </nav>
           </aside>
           
