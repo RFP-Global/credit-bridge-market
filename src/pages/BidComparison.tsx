@@ -15,7 +15,9 @@ interface Bid {
   id: string;
   amount: string;
   interestRate: string;
+  interestRateType: "Fixed" | "Floating";
   term: string;
+  facilityType: string;
   status: "Under Review" | "Approved" | "Rejected";
   submittedDate: string;
   additionalTerms: string;
@@ -66,7 +68,9 @@ const BidComparison = () => {
             id: "BID-001",
             amount: mockProposal.principal,
             interestRate: "5.75%",
+            interestRateType: "Fixed",
             term: "60 months",
+            facilityType: "Term Loan",
             status: "Under Review",
             submittedDate: "2023-11-15",
             additionalTerms: "No prepayment penalty after 24 months",
@@ -80,7 +84,9 @@ const BidComparison = () => {
             id: "BID-002",
             amount: mockProposal.principal,
             interestRate: "5.50%",
+            interestRateType: "Floating",
             term: "48 months",
+            facilityType: "Revolving Credit",
             status: "Under Review",
             submittedDate: "2023-11-16",
             additionalTerms: "Includes optional line of credit",
@@ -97,7 +103,9 @@ const BidComparison = () => {
                    id === "RFP-2023-003" ? "$7.8M" : 
                    "$0",
             interestRate: "6.00%",
+            interestRateType: "Fixed",
             term: "72 months",
+            facilityType: "Bridge Loan",
             status: "Under Review",
             submittedDate: "2023-11-18",
             additionalTerms: "Fixed rate for first 36 months",
@@ -185,7 +193,13 @@ const BidComparison = () => {
                     <span>Interest Rate</span>
                   </div>
                   <div className="font-mono text-sm mb-6 h-12 flex items-center">
+                    <span>Interest Rate Type</span>
+                  </div>
+                  <div className="font-mono text-sm mb-6 h-12 flex items-center">
                     <span>Term</span>
+                  </div>
+                  <div className="font-mono text-sm mb-6 h-12 flex items-center">
+                    <span>Facility Type</span>
                   </div>
                   <div className="font-mono text-sm mb-6 h-12 flex items-center">
                     <span>Submission Date</span>
@@ -218,7 +232,20 @@ const BidComparison = () => {
                     <div className="font-mono text-lg mb-6 h-12 flex items-center">{bid.id}</div>
                     <div className="font-mono text-lg mb-6 h-12 flex items-center">{bid.amount}</div>
                     <div className="font-mono text-lg mb-6 h-12 flex items-center text-green-400">{bid.interestRate}</div>
+                    <div className="font-mono text-lg mb-6 h-12 flex items-center">
+                      <Badge className={`
+                        ${bid.interestRateType === "Fixed" ? "bg-blue-500/20 text-blue-300" : "bg-purple-500/20 text-purple-300"}
+                        rounded-full px-2 py-1
+                      `}>
+                        {bid.interestRateType}
+                      </Badge>
+                    </div>
                     <div className="font-mono text-lg mb-6 h-12 flex items-center">{bid.term}</div>
+                    <div className="font-mono text-lg mb-6 h-12 flex items-center">
+                      <Badge className="bg-gray-500/20 text-gray-300 rounded-full px-2 py-1">
+                        {bid.facilityType}
+                      </Badge>
+                    </div>
                     <div className="font-mono text-sm mb-6 h-12 flex items-center text-muted-foreground">{bid.submittedDate}</div>
                     
                     <div className="mb-6 min-h-24">
