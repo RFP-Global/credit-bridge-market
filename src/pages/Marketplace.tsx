@@ -1,5 +1,5 @@
+
 import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import FullscreenButton from "@/components/FullscreenButton";
 import MarketplaceHeader from "@/components/marketplace/MarketplaceHeader";
@@ -10,12 +10,8 @@ import { useMarketplace } from "@/hooks/useMarketplace";
 import { financeProposals } from "@/data/marketplaceProposals";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import RadarScreen from "@/components/RadarScreen";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 
 const Marketplace = () => {
-  const navigate = useNavigate();
-  
   // Extract unique values for filters
   const facilityTypes = useMemo(() => 
     [...new Set(financeProposals.map(p => p.facilityType))], 
@@ -51,17 +47,6 @@ const Marketplace = () => {
     clearFilters
   } = useMarketplace(financeProposals);
 
-  const handleBackToDashboard = () => {
-    const userType = localStorage.getItem('userType');
-    if (userType === 'enterprise') {
-      navigate('/enterprise-dashboard');
-    } else if (userType === 'lender') {
-      navigate('/lender-dashboard');
-    } else {
-      navigate('/');
-    }
-  };
-
   return (
     <div className="min-h-screen bg-black/90 text-gray-200 relative grid-bg font-typewriter">
       <Navbar />
@@ -74,39 +59,29 @@ const Marketplace = () => {
       
       <div className="container mx-auto px-4 py-6 pt-24 h-screen flex flex-col relative z-10">
         {/* Header section */}
-        <div className="bg-transparent pb-4 z-30 flex justify-between items-center">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={handleBackToDashboard}
-            className="border-gray-700/50 text-cyan-300 bg-transparent hover:bg-cyan-900/20"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
-          </Button>
-          
+        <div className="bg-transparent pb-4 z-30">
           <MarketplaceHeader 
             resultsCount={filteredProposals.length}
             clearFilters={clearFilters}
           />
+
+          <MarketplaceFilters 
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            facilityTypeFilter={facilityTypeFilter}
+            setFacilityTypeFilter={setFacilityTypeFilter}
+            financingTypeFilter={financingTypeFilter}
+            setFinancingTypeFilter={setFinancingTypeFilter}
+            statusFilter={statusFilter}
+            setStatusFilter={setStatusFilter}
+            industryFilter={industryFilter}
+            setIndustryFilter={setIndustryFilter}
+            facilityTypes={facilityTypes}
+            industries={industries}
+            clearFilters={clearFilters}
+          />
         </div>
 
-        <MarketplaceFilters 
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          facilityTypeFilter={facilityTypeFilter}
-          setFacilityTypeFilter={setFacilityTypeFilter}
-          financingTypeFilter={financingTypeFilter}
-          setFinancingTypeFilter={setFinancingTypeFilter}
-          statusFilter={statusFilter}
-          setStatusFilter={setStatusFilter}
-          industryFilter={industryFilter}
-          setIndustryFilter={setIndustryFilter}
-          facilityTypes={facilityTypes}
-          industries={industries}
-          clearFilters={clearFilters}
-        />
-        
         {/* Scrollable table area with fixed headers */}
         <div className="flex-1 overflow-hidden">
           <ScrollArea className="h-[calc(100vh-340px)]">

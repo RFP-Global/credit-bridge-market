@@ -1,147 +1,164 @@
 
-import { useState, useEffect } from "react";
+import { ProfileData } from "@/types/profile";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ProfileData } from "@/types/profile";
-import { Save } from "lucide-react";
+import { Building, User, Mail, Phone, MapPin, Calendar } from "lucide-react";
 
 interface ProfileFormProps {
   profileData: ProfileData;
-  onSave: (updatedData: ProfileData) => void;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleSave: (e: React.FormEvent) => void;
+  isLoading: boolean;
 }
 
-const ProfileForm = ({ profileData, onSave }: ProfileFormProps) => {
-  const [formData, setFormData] = useState<ProfileData>(profileData);
-
-  useEffect(() => {
-    // Update form data when profileData changes
-    setFormData(profileData);
-  }, [profileData]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSave(formData);
-  };
-
+const ProfileForm = ({ profileData, handleChange, handleSave, isLoading }: ProfileFormProps) => {
   return (
-    <div className="border border-primary/20 bg-background/50 backdrop-blur-sm p-6 space-y-6">
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-2">
-          <Label htmlFor="companyName">Company Name</Label>
+    <form onSubmit={handleSave} className="space-y-6">
+      <div className="space-y-2">
+        <Label htmlFor="companyName" className="text-sm font-mono">ORGANIZATION NAME</Label>
+        <div className="relative">
+          <Building className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
           <Input
             id="companyName"
             name="companyName"
-            value={formData.companyName}
+            type="text"
+            value={profileData.companyName}
             onChange={handleChange}
-            className="bg-background/50"
+            className="font-mono text-sm pl-10"
           />
         </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="fullName">Full Name</Label>
+      </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="fullName" className="text-sm font-mono">REPRESENTATIVE NAME</Label>
+        <div className="relative">
+          <User className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
           <Input
             id="fullName"
             name="fullName"
-            value={formData.fullName}
+            type="text"
+            value={profileData.fullName}
             onChange={handleChange}
-            className="bg-background/50"
+            className="font-mono text-sm pl-10"
           />
         </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="email">Email Address</Label>
+      </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="email" className="text-sm font-mono">EMAIL</Label>
+        <div className="relative">
+          <Mail className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
           <Input
             id="email"
             name="email"
             type="email"
-            value={formData.email}
+            value={profileData.email}
             onChange={handleChange}
-            className="bg-background/50"
+            className="font-mono text-sm pl-10"
           />
         </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="phone">Phone Number</Label>
+      </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="phone" className="text-sm font-mono">PHONE</Label>
+        <div className="relative">
+          <Phone className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
           <Input
             id="phone"
             name="phone"
-            value={formData.phone}
+            type="text"
+            value={profileData.phone}
             onChange={handleChange}
-            className="bg-background/50"
+            className="font-mono text-sm pl-10"
           />
         </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="address">Company Address</Label>
+      </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="address" className="text-sm font-mono">ADDRESS</Label>
+        <div className="relative">
+          <MapPin className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
           <Input
             id="address"
             name="address"
-            value={formData.address}
+            type="text"
+            value={profileData.address}
             onChange={handleChange}
-            className="bg-background/50"
+            className="font-mono text-sm pl-10"
           />
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="industry">Industry</Label>
-            <Input
-              id="industry"
-              name="industry"
-              value={formData.industry}
-              onChange={handleChange}
-              className="bg-background/50"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="founded">Year Founded</Label>
+      </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="industry" className="text-sm font-mono">INDUSTRY</Label>
+        <div className="relative">
+          <Building className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
+          <Input
+            id="industry"
+            name="industry"
+            type="text"
+            value={profileData.industry}
+            onChange={handleChange}
+            className="font-mono text-sm pl-10"
+          />
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="founded" className="text-sm font-mono">FOUNDED</Label>
+          <div className="relative">
+            <Calendar className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
             <Input
               id="founded"
               name="founded"
-              value={formData.founded}
+              type="text"
+              value={profileData.founded}
               onChange={handleChange}
-              className="bg-background/50"
+              className="font-mono text-sm pl-10"
             />
           </div>
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="employees">Number of Employees</Label>
-          <Input
-            id="employees"
-            name="employees"
-            value={formData.employees}
-            onChange={handleChange}
-            className="bg-background/50"
-          />
+          <Label htmlFor="employees" className="text-sm font-mono">EMPLOYEES</Label>
+          <div className="relative">
+            <User className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
+            <Input
+              id="employees"
+              name="employees"
+              type="text"
+              value={profileData.employees}
+              onChange={handleChange}
+              className="font-mono text-sm pl-10"
+            />
+          </div>
         </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="description">Company Description</Label>
-          <Textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows={4}
-            className="bg-background/50"
-          />
-        </div>
-        
-        <Button type="submit" className="font-mono">
-          <Save className="h-4 w-4 mr-2" />
-          Save Profile
+      </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="description" className="text-sm font-mono">COMPANY DESCRIPTION</Label>
+        <Textarea
+          id="description"
+          name="description"
+          value={profileData.description}
+          onChange={handleChange}
+          className="font-mono text-sm min-h-[120px]"
+        />
+      </div>
+      
+      <div className="flex justify-end pt-4">
+        <Button 
+          type="submit"
+          className="font-mono text-xs"
+          disabled={isLoading}
+        >
+          {isLoading ? "Saving..." : "Save Changes"}
         </Button>
-      </form>
-    </div>
+      </div>
+    </form>
   );
 };
 

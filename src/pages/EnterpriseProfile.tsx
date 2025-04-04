@@ -1,89 +1,80 @@
 
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { ProfileData } from "@/types/profile";
+import { useState } from "react";
+import { toast } from "@/hooks/use-toast";
+import Navbar from "@/components/Navbar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import ProfileForm from "@/components/profile/ProfileForm";
 import ProfileDetails from "@/components/profile/ProfileDetails";
 import AccountSidebar from "@/components/profile/AccountSidebar";
-import { toast } from "@/hooks/use-toast";
-import { Loading } from "@/components/ui/loading";
+import { ProfileData } from "@/types/profile";
 
 const EnterpriseProfile = () => {
+  // In a real app, we would fetch this data from an API
+  const [profileData, setProfileData] = useState<ProfileData>({
+    companyName: "TerraForge Inc.",
+    fullName: "Alex Johnson",
+    email: "alex@terraforge.com",
+    phone: "+1 (555) 123-4567",
+    address: "123 Innovation Way, Tech City, CA 94105",
+    industry: "Renewable Energy",
+    founded: "2015",
+    employees: "50-200",
+    description: "TerraForge Inc. is a leader in renewable energy solutions, specializing in innovative solar and wind power technologies."
+  });
+
   const [isEditing, setIsEditing] = useState(false);
-  const [profileData, setProfileData] = useState<ProfileData | null>(null);
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const currentEnterpriseId = localStorage.getItem('currentEnterpriseId');
-    
-    if (currentEnterpriseId) {
-      const storedProfile = localStorage.getItem(`enterpriseProfile_${currentEnterpriseId}`);
-      if (storedProfile) {
-        setProfileData(JSON.parse(storedProfile));
-      } else {
-        // No profile found, redirect to login
-        toast({
-          title: "Profile Not Found",
-          description: "Unable to load your profile information",
-          variant: "destructive",
-        });
-        navigate("/enterprise-login");
-      }
-    } else {
-      // No current enterprise ID, redirect to login
-      toast({
-        title: "Authentication Required",
-        description: "Please login to access your profile",
-        variant: "destructive",
-      });
-      navigate("/enterprise-login");
-    }
-  }, [navigate]);
-
-  const handleProfileUpdate = (updatedData: ProfileData) => {
-    const currentEnterpriseId = localStorage.getItem('currentEnterpriseId');
-    if (currentEnterpriseId) {
-      // Update profile in localStorage
-      localStorage.setItem(`enterpriseProfile_${currentEnterpriseId}`, JSON.stringify(updatedData));
-      setProfileData(updatedData);
-      
-      toast({
-        title: "Profile Updated",
-        description: "Your profile has been successfully updated",
-      });
-      
-      setIsEditing(false);
-    }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setProfileData(prev => ({ ...prev, [name]: value }));
   };
 
-  if (!profileData) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loading 
-          variant="spinner"
-          text="Loading your profile..." 
-          centered 
-        />
-      </div>
-    );
-  }
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    // Simulate saving profile data
+    setTimeout(() => {
+      setIsLoading(false);
+      setIsEditing(false);
+      toast({
+        title: "Profile Updated",
+        description: "Your enterprise profile has been updated successfully",
+      });
+    }, 1000);
+  };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="container mx-auto px-6 py-8">
+    <div className="min-h-screen bg-background overflow-x-hidden">
+      <Navbar />
+      
+      <div className="container mx-auto px-6 py-10">
         <ProfileHeader isEditing={isEditing} setIsEditing={setIsEditing} />
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="md:col-span-2">
-            {isEditing ? (
-              <ProfileForm profileData={profileData} onSave={handleProfileUpdate} />
-            ) : (
-              <ProfileDetails profileData={profileData} />
-            )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <Card className="border border-primary/20 bg-background/50 backdrop-blur-sm">
+              <CardHeader className="border-b border-primary/10 pb-4">
+                <CardTitle className="font-mono text-sm">ENTERPRISE DETAILS</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6">
+                {isEditing ? (
+                  <ProfileForm 
+                    profileData={profileData} 
+                    handleChange={handleChange} 
+                    handleSave={handleSave} 
+                    isLoading={isLoading}
+                  />
+                ) : (
+                  <ProfileDetails profileData={profileData} />
+                )}
+              </CardContent>
+            </Card>
           </div>
           
-          <div className="md:col-span-1">
+          <div>
             <AccountSidebar profileData={profileData} />
           </div>
         </div>

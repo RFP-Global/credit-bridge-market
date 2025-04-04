@@ -23,9 +23,6 @@ const EnterpriseLogin = () => {
       setIsLoading(false);
       
       if (email && password) {
-        // Set user type to localStorage
-        localStorage.setItem('userType', 'enterprise');
-        
         toast({
           title: "Access Granted",
           description: "Welcome to the Enterprise Portal",

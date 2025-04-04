@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -56,15 +57,11 @@ const LenderSignUp = () => {
     // Simulate sign up process
     setTimeout(() => {
       setIsLoading(false);
-      
-      // Set user type to localStorage
-      localStorage.setItem('userType', 'lender');
-      
       toast({
         title: "Account Created",
         description: "Your lender account has been registered",
       });
-      navigate("/lender-dashboard");
+      navigate("/lender-login");
     }, 1500);
   };
 
