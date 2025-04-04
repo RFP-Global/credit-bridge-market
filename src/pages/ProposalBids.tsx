@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { 
   BarChart3, FileText, ArrowLeft, Signal, Radar, 
-  Bell, Settings, Building, CreditCard, ShoppingCart, Users, CheckCircle, Clock, DollarSign, StarIcon
+  Bell, Settings, Building, CreditCard, ShoppingCart, Users, CheckCircle, Clock, DollarSign
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,12 +13,18 @@ import { toast } from "@/hooks/use-toast";
 
 interface Bid {
   id: string;
-  lenderName: string;
   amount: string;
   interestRate: string;
   term: string;
   status: "Under Review" | "Approved" | "Rejected";
   submittedDate: string;
+  additionalTerms: string;
+}
+
+interface WinningTerms {
+  amount: string;
+  interestRate: string;
+  term: string;
   additionalTerms: string;
 }
 
@@ -30,6 +36,7 @@ interface Proposal {
   principal: string;
   bidDeadline: string;
   description?: string;
+  winningTerms?: WinningTerms;
 }
 
 const ProposalBids = () => {
@@ -66,14 +73,22 @@ const ProposalBids = () => {
                       id === "RFP-2023-002" ? "2023-12-15" : 
                       id === "RFP-2023-003" ? "2024-01-15" : 
                       "N/A",
-          description: "This project aims to create a sustainable and modern development that meets the highest environmental standards while delivering exceptional returns for investors."
+          description: "This project aims to create a sustainable and modern development that meets the highest environmental standards while delivering exceptional returns for investors.",
+          winningTerms: {
+            amount: id === "RFP-2023-001" ? "$2.4M" : 
+                   id === "RFP-2023-002" ? "$5.7M" : 
+                   id === "RFP-2023-003" ? "$8.1M" : 
+                   "$0",
+            interestRate: "5.50%",
+            term: "60 months",
+            additionalTerms: "No prepayment penalty after 24 months, includes optional line of credit"
+          }
         };
         
         // Mock data for bids
         const mockBids: Bid[] = [
           {
             id: "BID-001",
-            lenderName: "Global Capital Partners",
             amount: mockProposal.principal,
             interestRate: "5.75%",
             term: "60 months",
@@ -83,7 +98,6 @@ const ProposalBids = () => {
           },
           {
             id: "BID-002",
-            lenderName: "Meridian Finance Group",
             amount: mockProposal.principal,
             interestRate: "5.50%",
             term: "48 months",
@@ -93,7 +107,6 @@ const ProposalBids = () => {
           },
           {
             id: "BID-003",
-            lenderName: "EastWest Funding",
             amount: id === "RFP-2023-001" ? "$2.2M" : 
                    id === "RFP-2023-002" ? "$5.5M" : 
                    id === "RFP-2023-003" ? "$7.8M" : 
@@ -294,7 +307,7 @@ const ProposalBids = () => {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                   <Card className="border-primary/20 bg-background/50">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-sm font-mono">PRINCIPAL AMOUNT</CardTitle>
@@ -306,20 +319,24 @@ const ProposalBids = () => {
                   </Card>
                   <Card className="border-primary/20 bg-background/50">
                     <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-mono">BID DEADLINE</CardTitle>
+                      <CardTitle className="text-sm font-mono">WINNING DEAL TERMS</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-3xl font-mono">{proposal.bidDeadline}</div>
-                      <p className="text-xs text-muted-foreground mt-1">Final submission date</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="border-primary/20 bg-background/50">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-mono">TOTAL BIDS</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-3xl font-mono">{bids.length}</div>
-                      <p className="text-xs text-muted-foreground mt-1">From verified lenders</p>
+                      <div className="grid grid-cols-3 gap-2 mb-2">
+                        <div>
+                          <p className="text-xs text-muted-foreground">AMOUNT</p>
+                          <p className="font-mono">{proposal.winningTerms?.amount || "N/A"}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground">INTEREST</p>
+                          <p className="font-mono">{proposal.winningTerms?.interestRate || "N/A"}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground">TERM</p>
+                          <p className="font-mono">{proposal.winningTerms?.term || "N/A"}</p>
+                        </div>
+                      </div>
+                      <p className="text-xs mt-2">{proposal.winningTerms?.additionalTerms || "No additional terms"}</p>
                     </CardContent>
                   </Card>
                 </div>
@@ -345,7 +362,6 @@ const ProposalBids = () => {
                       <TableHeader>
                         <TableRow>
                           <TableHead className="w-[100px]">BID ID</TableHead>
-                          <TableHead>LENDER</TableHead>
                           <TableHead>AMOUNT</TableHead>
                           <TableHead>INTEREST</TableHead>
                           <TableHead>TERM</TableHead>
@@ -358,7 +374,6 @@ const ProposalBids = () => {
                         {bids.map((bid) => (
                           <TableRow key={bid.id}>
                             <TableCell className="font-mono text-xs">{bid.id}</TableCell>
-                            <TableCell className="font-extralight">{bid.lenderName}</TableCell>
                             <TableCell className="font-mono font-extralight">{bid.amount}</TableCell>
                             <TableCell className="font-mono font-extralight">{bid.interestRate}</TableCell>
                             <TableCell className="font-mono font-extralight">{bid.term}</TableCell>
