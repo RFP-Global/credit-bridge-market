@@ -8,11 +8,7 @@ import FolderItem from "@/components/vdr/FolderItem";
 import FileItem from "@/components/vdr/FileItem";
 import EmptyState from "@/components/vdr/EmptyState";
 
-interface VDRContentProps {
-  onUploadClick: () => void;
-}
-
-const VDRContent = ({ onUploadClick }: VDRContentProps) => {
+const VDRContent = () => {
   const {
     searchQuery,
     setSearchQuery,
