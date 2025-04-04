@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Menu, X, Terminal, Radar, Signal, Book, Building } from 'lucide-react';
@@ -80,9 +81,6 @@ const Navbar = () => {
                   <Link to="/enterprise-dashboard">ENTERPRISE DASHBOARD</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
-                  <Link to="/lender-dashboard">LENDER DASHBOARD</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
                   <Link to="/intelligence">INTELLIGENCE</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
@@ -137,13 +135,6 @@ const Navbar = () => {
               onClick={() => setMobileMenuOpen(false)}
             >
               ENTERPRISE DASHBOARD
-            </Link>
-            <Link 
-              to="/lender-dashboard" 
-              className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              LENDER DASHBOARD
             </Link>
             <Link 
               to="/intelligence" 
