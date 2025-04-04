@@ -1,82 +1,110 @@
 
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Upload } from "lucide-react";
+import { useState } from "react";
 import { useVDR } from "@/contexts/vdr/VDRContext";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { FileCheck, Upload, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import DocumentRequirementTable from "./document-verification/DocumentRequirementTable";
 import DocumentRequirementHeader from "./document-verification/DocumentRequirementHeader";
 import DocumentRequirementAlert from "./document-verification/DocumentRequirementAlert";
-import DocumentRequirementTable from "./document-verification/DocumentRequirementTable";
 import { DocumentRequirement } from "./document-verification/types";
 
 const DocumentVerification = () => {
-  // Sample required documents for demonstration
-  const requiredDocuments: DocumentRequirement[] = [
+  const { files, folders } = useVDR();
+  const [selectedRequirement, setSelectedRequirement] = useState<DocumentRequirement | null>(null);
+  
+  // Sample document requirements list
+  const documentRequirements: DocumentRequirement[] = [
     {
-      id: "doc1",
-      name: "Financial Statements",
-      description: "Last 3 years of audited financial statements",
+      id: "req-1",
+      name: "Articles of Incorporation",
+      description: "Legal document establishing the corporation",
+      status: "uploaded"
+    },
+    {
+      id: "req-2",
+      name: "Financial Statements (3 years)",
+      description: "Annual financial statements including balance sheet, income statement, and cash flow statement",
       status: "pending"
     },
     {
-      id: "doc2",
+      id: "req-3",
       name: "Business Plan",
-      description: "Detailed business plan with projections",
+      description: "Comprehensive business plan including market analysis, financial projections, and growth strategy",
+      status: "approved"
+    },
+    {
+      id: "req-4",
+      name: "Tax Returns (3 years)",
+      description: "Federal and state tax returns for the past three fiscal years",
       status: "pending"
     },
     {
-      id: "doc3",
-      name: "Tax Returns",
-      description: "Last 2 years of business tax returns",
-      status: "pending"
+      id: "req-5",
+      name: "Property Appraisal",
+      description: "Professional appraisal of property value and condition",
+      status: "rejected"
     },
     {
-      id: "doc4",
-      name: "Bank Statements",
-      description: "Last 6 months of bank statements",
-      status: "pending"
-    },
-    {
-      id: "doc5",
-      name: "Collateral Documentation",
-      description: "Documentation for all proposed collateral",
+      id: "req-6",
+      name: "Environmental Assessment",
+      description: "Phase I/II environmental site assessment reports",
       status: "pending"
     }
   ];
-
-  const { setIsUploadDialogOpen } = useVDR();
-
+  
+  // Calculate completion percentage
+  const completedRequirements = documentRequirements.filter(
+    req => req.status === "uploaded" || req.status === "approved"
+  ).length;
+  
+  const completionPercentage = Math.round(
+    (completedRequirements / documentRequirements.length) * 100
+  );
+  
+  // Event handler for the upload button
+  const handleUploadClick = () => {
+    // If this component had access to the upload dialog state setter, it would use it here
+    // For now, we'll trigger a custom event that the parent can listen for
+    const event = new CustomEvent('vdr:open-upload-dialog', {
+      bubbles: true,
+      detail: { source: 'document-verification' }
+    });
+    document.dispatchEvent(event);
+  };
+  
   return (
-    <div className="container mx-auto px-6 py-8 space-y-6">
+    <div className="space-y-6">
       <DocumentRequirementHeader 
-        onUploadClick={() => setIsUploadDialogOpen(true)} 
+        completionPercentage={completionPercentage} 
+        totalRequirements={documentRequirements.length}
+        completedRequirements={completedRequirements}
       />
       
-      <DocumentRequirementAlert 
-        completedCount={0} 
-        totalCount={requiredDocuments.length} 
-      />
+      <DocumentRequirementAlert />
       
-      <DocumentRequirementTable 
-        documents={requiredDocuments} 
-        onUploadClick={() => setIsUploadDialogOpen(true)}
-      />
-      
-      <div className="flex justify-between items-center">
-        <Button 
-          variant="outline" 
-          className="font-mono"
-        >
-          Back
-        </Button>
-        
-        <Button 
-          variant="default" 
-          className="font-mono"
-          disabled
-        >
-          Next
-        </Button>
-      </div>
+      <Card className="border-primary/20">
+        <CardHeader className="pb-3">
+          <div className="flex justify-between items-center">
+            <div>
+              <CardTitle className="text-lg font-mono">Required Documents</CardTitle>
+              <CardDescription>Upload and manage required documentation for your project</CardDescription>
+            </div>
+            <Button onClick={handleUploadClick} className="rounded-none font-mono text-xs">
+              <Upload className="h-4 w-4 mr-2" />
+              UPLOAD DOCUMENT
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <DocumentRequirementTable 
+            requirements={documentRequirements}
+            selectedRequirement={selectedRequirement}
+            setSelectedRequirement={setSelectedRequirement}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 };

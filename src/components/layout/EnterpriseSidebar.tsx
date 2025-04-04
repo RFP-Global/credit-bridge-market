@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,9 +11,9 @@ const EnterpriseSidebar = () => {
     { to: "/enterprise-dashboard", icon: BarChart3, label: "Dashboard" },
     { to: "/proposals-dashboard", icon: FileText, label: "Proposals" },
     { to: "/marketplace", icon: ShoppingCart, label: "Marketplace" },
-    { to: "#", icon: Building, label: "Lenders" },
-    { to: "#", icon: CreditCard, label: "Financing" },
-    { to: "#", icon: Users, label: "Team" },
+    { to: "/lenders", icon: Building, label: "Lenders" },
+    { to: "/financing", icon: CreditCard, label: "Financing" },
+    { to: "/team", icon: Users, label: "Team" },
     { to: "/vdr", icon: Database, label: "VDR" },
   ];
 
