@@ -22,11 +22,14 @@ const LenderLogin = () => {
       setIsLoading(false);
       
       if (email && password) {
+        // Set user type to localStorage
+        localStorage.setItem('userType', 'lender');
+        
         toast({
           title: "Access Granted",
           description: "Welcome to the Lender Portal",
         });
-        navigate("/");
+        navigate("/lender-dashboard");
       } else {
         toast({
           title: "Authentication Failed",

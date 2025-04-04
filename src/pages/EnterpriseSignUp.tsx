@@ -85,6 +85,9 @@ const EnterpriseSignUp = () => {
       localStorage.setItem('currentEnterpriseId', enterpriseId);
       localStorage.setItem(`enterpriseProfile_${enterpriseId}`, JSON.stringify(profileData));
       
+      // Set user type to localStorage
+      localStorage.setItem('userType', 'enterprise');
+      
       navigate("/enterprise-dashboard");
     }, 1500);
   };
