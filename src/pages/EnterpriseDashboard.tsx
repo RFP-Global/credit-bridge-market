@@ -1,8 +1,9 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Radar, Signal, BarChart3, FileText, Users, Building, CreditCard, ArrowUpRight, Bell, Settings, ShoppingCart, User } from "lucide-react";
+import { Radar, Signal, BarChart3, FileText, CreditCard, ArrowUpRight, Bell, Settings, CircleDollarSign, Users, Building, CheckCircle, Clock, User } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import { ProfileData } from "@/types/profile";
@@ -11,7 +12,9 @@ const EnterpriseDashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   
+  // Fetch the enterprise profile data
   useEffect(() => {
     const currentEnterpriseId = localStorage.getItem('currentEnterpriseId');
     
@@ -20,14 +23,16 @@ const EnterpriseDashboard = () => {
       if (storedProfile) {
         setProfileData(JSON.parse(storedProfile));
       } else {
+        // No profile found, redirect to login
         toast({
-          title: "Session Expired",
-          description: "Please login again to access your dashboard",
+          title: "Profile Not Found",
+          description: "Unable to load your profile information",
           variant: "destructive",
         });
         navigate("/enterprise-login");
       }
     } else {
+      // No current enterprise ID, redirect to login
       toast({
         title: "Authentication Required",
         description: "Please login to access your dashboard",
@@ -35,23 +40,22 @@ const EnterpriseDashboard = () => {
       });
       navigate("/enterprise-login");
     }
+    setIsLoading(false);
   }, [navigate]);
   
-  const recentProposals = [
-    { id: 1, name: "Riverside Development", type: "Commercial Real Estate", status: "Under Review", amount: "$2.4M" },
-    { id: 2, name: "Green Energy Initiative", type: "Renewable Energy", status: "Approved", amount: "$5.7M" },
-    { id: 3, name: "Medical Center Expansion", type: "Healthcare", status: "Draft", amount: "$8.1M" }
+  const activeDeals = [
+    { id: 1, name: "Equipment Financing", amount: "$1.2M", status: "Review" },
+    { id: 2, name: "Expansion Capital", amount: "$3.5M", status: "Draft" }
   ];
   
   const notifications = [
-    { id: 1, text: "New lender response on Riverside Development", time: "2 hours ago" },
-    { id: 2, text: "Document approval required for Green Energy Initiative", time: "Yesterday" },
-    { id: 3, text: "Market report for Q2 2023 available", time: "3 days ago" }
+    { id: 1, text: "New lender match: Global Capital", time: "2 hours ago" },
+    { id: 2, text: "Your RFP needs additional documents", time: "Yesterday" },
+    { id: 3, text: "New industry report available", time: "3 days ago" }
   ];
 
   const handleLogout = () => {
     localStorage.removeItem('currentEnterpriseId');
-    
     toast({
       title: "Logged Out",
       description: "Successfully logged out of your enterprise account",
@@ -59,7 +63,7 @@ const EnterpriseDashboard = () => {
     navigate("/");
   };
 
-  if (!profileData) {
+  if (isLoading || !profileData) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
@@ -80,7 +84,7 @@ const EnterpriseDashboard = () => {
       
       <div className="scanline z-10"></div>
       
-      <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-primary/20">
+      <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm">
         <div className="container mx-auto px-6 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
@@ -89,7 +93,7 @@ const EnterpriseDashboard = () => {
                   <Radar className="h-6 w-6 text-primary" />
                   <Signal className="h-4 w-4 text-primary/70 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                 </div>
-                <span className="font-mono text-xl">RFP GLOBAL</span>
+                <span className="font-typewriter text-xl">RFP GLOBAL</span>
               </Link>
               <span className="ml-4 text-xs font-mono text-foreground/60 border-l border-primary/20 pl-4">ENTERPRISE PORTAL</span>
             </div>
@@ -99,13 +103,13 @@ const EnterpriseDashboard = () => {
                 <Bell className="h-5 w-5" />
                 <span className="absolute top-0 right-0 h-2 w-2 bg-primary rounded-full"></span>
               </button>
-              <Link to="/enterprise-profile" className="p-2 rounded-full hover:bg-primary/10 flex items-center">
+              <Link to="/enterprise-profile" className="p-2 rounded-full hover:bg-primary/10">
                 <User className="h-5 w-5" />
               </Link>
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="rounded-none font-mono border-primary/30 text-xs"
+                className="rounded-none font-mono text-xs"
                 onClick={handleLogout}
               >
                 LOGOUT
@@ -118,31 +122,24 @@ const EnterpriseDashboard = () => {
       <div className="container mx-auto px-6 py-8 relative z-10">
         <div className="flex flex-col md:flex-row gap-6">
           <aside className="w-full md:w-64 space-y-6">
-            <Card className="border border-primary/20 bg-background/50 backdrop-blur-sm overflow-hidden">
+            <Card className="bg-background/50 backdrop-blur-sm overflow-hidden">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-mono">ENTERPRISE ACCOUNT</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-3">
                   <div className="bg-primary/10 w-10 h-10 rounded-full flex items-center justify-center text-xs font-mono">
-                    {profileData?.companyName?.substring(0, 2).toUpperCase() || 'EN'}
+                    {profileData.companyName.substring(0, 2).toUpperCase()}
                   </div>
                   <div>
-                    <p className="font-mono text-sm">{profileData?.companyName?.toUpperCase() || 'ENTERPRISE INC.'}</p>
-                    <p className="text-xs text-muted-foreground">{profileData?.email || 'admin@enterprise.com'}</p>
+                    <p className="font-mono text-sm">{profileData.companyName.toUpperCase()}</p>
+                    <p className="text-xs text-muted-foreground">{profileData.email}</p>
                   </div>
                 </div>
                 <div className="text-xs text-muted-foreground pt-2 border-t border-primary/10">
-                  <p className="flex justify-between py-1"><span>Account Level:</span> <span className="font-mono">ENTERPRISE</span></p>
-                  <p className="flex justify-between py-1"><span>Active Proposals:</span> <span className="font-mono">7</span></p>
-                  <p className="flex justify-between py-1"><span>Industry:</span> <span className="font-mono">{profileData?.industry || 'Technology'}</span></p>
-                </div>
-                <div className="pt-2">
-                  <Link to="/enterprise-profile">
-                    <Button variant="outline" size="sm" className="w-full text-xs font-mono">
-                      View Profile
-                    </Button>
-                  </Link>
+                  <p className="flex justify-between py-1"><span>Industry:</span> <span className="font-mono">{profileData.industry.toUpperCase()}</span></p>
+                  <p className="flex justify-between py-1"><span>Active RFPs:</span> <span className="font-mono">2</span></p>
+                  <p className="flex justify-between py-1"><span>Total Financing:</span> <span className="font-mono">$4.7M</span></p>
                 </div>
               </CardContent>
             </Card>
@@ -152,110 +149,112 @@ const EnterpriseDashboard = () => {
                 <BarChart3 className="h-4 w-4 mr-3" />
                 Dashboard
               </Button>
-              <Button 
-                variant="ghost" 
-                className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3"
-                onClick={() => navigate("/proposals-dashboard")}
-              >
-                <FileText className="h-4 w-4 mr-3" />
-                Proposals
+              <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3" asChild>
+                <Link to="/proposals-dashboard">
+                  <FileText className="h-4 w-4 mr-3" />
+                  My RFPs
+                </Link>
               </Button>
               <Button 
                 variant="ghost" 
                 className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3"
-                onClick={() => navigate("/marketplace")}
+                asChild
               >
-                <ShoppingCart className="h-4 w-4 mr-3" />
-                Marketplace
+                <Link to="/create-proposal">
+                  <CreditCard className="h-4 w-4 mr-3" />
+                  Create RFP
+                </Link>
               </Button>
-              <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3">
-                <Building className="h-4 w-4 mr-3" />
-                Lenders
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3"
+                asChild
+              >
+                <Link to="/enterprise-profile">
+                  <Building className="h-4 w-4 mr-3" />
+                  Company Profile
+                </Link>
               </Button>
-              <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3">
-                <CreditCard className="h-4 w-4 mr-3" />
-                Financing
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3"
+                asChild
+              >
+                <Link to="/transaction-archive">
+                  <CircleDollarSign className="h-4 w-4 mr-3" />
+                  Transactions
+                </Link>
               </Button>
-              <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3">
-                <Users className="h-4 w-4 mr-3" />
-                Team
-              </Button>
-              <Link to="/enterprise-profile" className="block">
-                <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3">
-                  <User className="h-4 w-4 mr-3" />
-                  Profile
-                </Button>
-              </Link>
             </nav>
           </aside>
           
           <main className="flex-1">
             <div className="border-b border-primary/10 pb-4 mb-6">
-              <h1 className="text-2xl font-mono">Welcome, {profileData?.fullName?.split(' ')[0] || 'User'}</h1>
-              <p className="text-sm text-muted-foreground">Your personalized enterprise dashboard for {profileData?.companyName || 'your organization'}.</p>
+              <h1 className="text-2xl font-mono">Welcome, {profileData.fullName}</h1>
+              <p className="text-sm text-muted-foreground">Monitor your RFPs and financing opportunities.</p>
             </div>
             
             <Tabs defaultValue="overview" className="space-y-6" onValueChange={setActiveTab}>
-              <TabsList className="bg-background/50 border border-primary/20">
+              <TabsList className="bg-background/50">
                 <TabsTrigger value="overview" className="font-mono text-xs">OVERVIEW</TabsTrigger>
-                <TabsTrigger value="proposals" className="font-mono text-xs">PROPOSALS</TabsTrigger>
+                <TabsTrigger value="rfps" className="font-mono text-xs">ACTIVE RFPS</TabsTrigger>
                 <TabsTrigger value="notifications" className="font-mono text-xs">NOTIFICATIONS</TabsTrigger>
               </TabsList>
               
               <TabsContent value="overview" className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Card className="border-primary/20 bg-background/50">
+                  <Card className="bg-background/50">
                     <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-mono">ACTIVE PROPOSALS</CardTitle>
+                      <CardTitle className="text-sm font-mono">ACTIVE RFPS</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-3xl font-mono">7</div>
-                      <p className="text-xs text-muted-foreground mt-1">+2 from last month</p>
+                      <div className="text-3xl font-mono">2</div>
+                      <p className="text-xs text-muted-foreground mt-1">Seeking capital</p>
                     </CardContent>
                   </Card>
-                  <Card className="border-primary/20 bg-background/50">
+                  <Card className="bg-background/50">
                     <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-mono">LENDER RESPONSES</CardTitle>
+                      <CardTitle className="text-sm font-mono">MATCHED LENDERS</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-3xl font-mono">24</div>
-                      <p className="text-xs text-muted-foreground mt-1">+8 in the last 7 days</p>
+                      <div className="text-3xl font-mono">6</div>
+                      <p className="text-xs text-muted-foreground mt-1">Interested in your RFPs</p>
                     </CardContent>
                   </Card>
-                  <Card className="border-primary/20 bg-background/50">
+                  <Card className="bg-background/50">
                     <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-mono">TOTAL FINANCING</CardTitle>
+                      <CardTitle className="text-sm font-mono">FINANCING SECURED</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-3xl font-mono">$28.5M</div>
-                      <p className="text-xs text-muted-foreground mt-1">Across all active proposals</p>
+                      <div className="text-3xl font-mono">$4.7M</div>
+                      <p className="text-xs text-muted-foreground mt-1">Across all RFPs</p>
                     </CardContent>
                   </Card>
                 </div>
                 
-                <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
+                <Card className="bg-background/50 backdrop-blur-sm">
                   <CardHeader>
-                    <CardTitle className="text-sm font-mono">RECENT PROPOSALS</CardTitle>
-                    <CardDescription>Your latest financing proposals</CardDescription>
+                    <CardTitle className="text-sm font-mono">ACTIVE RFPS</CardTitle>
+                    <CardDescription>Your current financing requests</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {recentProposals.map(proposal => (
-                        <div key={proposal.id} className="border-b border-primary/10 pb-3 last:border-0 last:pb-0">
+                      {activeDeals.map(deal => (
+                        <div key={deal.id} className="border-b border-primary/10 pb-3 last:border-0 last:pb-0">
                           <div className="flex justify-between items-start">
                             <div>
-                              <h3 className="font-mono text-sm">{proposal.name}</h3>
-                              <p className="text-xs text-muted-foreground">{proposal.type}</p>
+                              <h3 className="font-mono text-sm">{deal.name}</h3>
+                              <p className="text-xs text-muted-foreground">{profileData.companyName}</p>
                             </div>
                             <div className="text-right">
                               <span className={`text-xs px-2 py-1 font-mono ${
-                                proposal.status === "Approved" ? "bg-green-100 text-green-800" : 
-                                proposal.status === "Under Review" ? "bg-amber-100 text-amber-800" : 
+                                deal.status === "Approved" ? "bg-green-100 text-green-800" : 
+                                deal.status === "Review" ? "bg-amber-100 text-amber-800" : 
                                 "bg-blue-100 text-blue-800"
                               }`}>
-                                {proposal.status}
+                                {deal.status}
                               </span>
-                              <p className="text-xs font-mono mt-1">{proposal.amount}</p>
+                              <p className="text-xs font-mono mt-1">{deal.amount}</p>
                             </div>
                           </div>
                         </div>
@@ -263,34 +262,56 @@ const EnterpriseDashboard = () => {
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="w-full font-mono text-xs rounded-none border-primary/20"
-                      onClick={() => navigate("/proposals-dashboard")}
-                    >
-                      VIEW ALL PROPOSALS
-                      <ArrowUpRight className="ml-2 h-3 w-3" />
+                    <Button variant="outline" size="sm" className="w-full font-mono text-xs rounded-none" asChild>
+                      <Link to="/proposals-dashboard">
+                        VIEW ALL RFPS
+                        <ArrowUpRight className="ml-2 h-3 w-3" />
+                      </Link>
                     </Button>
                   </CardFooter>
                 </Card>
+                
+                <Card className="bg-background/50 backdrop-blur-sm">
+                  <CardHeader>
+                    <CardTitle className="text-sm font-mono">PERFORMANCE METRICS</CardTitle>
+                    <CardDescription>Your financing activity</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <div className="flex items-center">
+                            <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                            <span className="text-sm">Completed RFPs</span>
+                          </div>
+                          <div className="text-2xl font-mono">3</div>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex items-center">
+                            <Clock className="h-4 w-4 text-amber-500 mr-2" />
+                            <span className="text-sm">Pending Review</span>
+                          </div>
+                          <div className="text-2xl font-mono">2</div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </TabsContent>
               
-              <TabsContent value="proposals" className="space-y-4">
-                <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
+              <TabsContent value="rfps" className="space-y-4">
+                <Card className="bg-background/50 backdrop-blur-sm">
                   <CardHeader>
-                    <CardTitle className="text-sm font-mono">ALL PROPOSALS</CardTitle>
-                    <CardDescription>Manage your financing proposals</CardDescription>
+                    <CardTitle className="text-sm font-mono">ALL ACTIVE RFPS</CardTitle>
+                    <CardDescription>Manage your financing requests</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="text-center py-8 px-4">
-                      <p className="text-muted-foreground">Proposals tab content would be displayed here.</p>
-                      <p className="text-sm mt-2">This is a placeholder for the proposals listing and management interface.</p>
-                      <Button 
-                        className="mt-4 font-mono text-xs"
-                        onClick={() => navigate("/proposals-dashboard")}
-                      >
-                        VIEW PROPOSALS DASHBOARD
+                      <p className="text-muted-foreground">Complete RFP listing would be displayed here.</p>
+                      <Button className="mt-4" asChild>
+                        <Link to="/proposals-dashboard">
+                          Go to RFP Dashboard
+                        </Link>
                       </Button>
                     </div>
                   </CardContent>
@@ -298,7 +319,7 @@ const EnterpriseDashboard = () => {
               </TabsContent>
               
               <TabsContent value="notifications" className="space-y-4">
-                <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
+                <Card className="bg-background/50 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle className="text-sm font-mono">NOTIFICATIONS</CardTitle>
                     <CardDescription>Recent activity and alerts</CardDescription>
@@ -321,7 +342,7 @@ const EnterpriseDashboard = () => {
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <Button variant="outline" size="sm" className="w-full font-mono text-xs rounded-none border-primary/20">
+                    <Button variant="outline" size="sm" className="w-full font-mono text-xs rounded-none">
                       VIEW ALL NOTIFICATIONS
                       <ArrowUpRight className="ml-2 h-3 w-3" />
                     </Button>
