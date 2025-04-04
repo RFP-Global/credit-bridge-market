@@ -1,6 +1,6 @@
 
 import React from "react";
-import { DollarSign, ChevronRight, Clock, TableIcon } from "lucide-react";
+import { DollarSign, ChevronRight, Clock, TableIcon, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Bid } from "@/types/bids";
