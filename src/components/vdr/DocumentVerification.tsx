@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { AlertCircle, Upload, Info, Clock, CheckCircle, FileText } from "lucide-react";
 import { useVDR } from "@/contexts/vdr/VDRContext";
 import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface DocumentRequirement {
   id: string;
@@ -49,41 +49,44 @@ const DocumentVerification = () => {
     }
   ];
 
-  const { setIsUploadDialogOpen } = useVDR();
+  const { uploadDialogOpen } = useVDR();
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "approved":
-        return <Badge className="bg-emerald-500/20 text-emerald-500 flex items-center gap-1"><CheckCircle className="h-3 w-3" /> Approved</Badge>;
+        return <Badge variant="secondary" className="bg-emerald-500/20 text-emerald-500 flex items-center gap-1"><CheckCircle className="h-3 w-3" /> Approved</Badge>;
       case "rejected":
-        return <Badge className="bg-red-500/20 text-red-500 flex items-center gap-1"><AlertCircle className="h-3 w-3" /> Rejected</Badge>;
+        return <Badge variant="destructive" className="bg-red-500/20 text-red-500 flex items-center gap-1"><AlertCircle className="h-3 w-3" /> Rejected</Badge>;
       case "uploaded":
-        return <Badge className="bg-blue-500/20 text-blue-500 flex items-center gap-1"><FileText className="h-3 w-3" /> Uploaded</Badge>;
+        return <Badge variant="outline" className="bg-blue-500/20 text-blue-500 flex items-center gap-1"><FileText className="h-3 w-3" /> Uploaded</Badge>;
       default:
-        return <Badge className="bg-amber-500/20 text-amber-500 flex items-center gap-1"><Clock className="h-3 w-3" /> Awaiting Upload</Badge>;
+        return <Badge variant="outline" className="bg-amber-500/20 text-amber-500 flex items-center gap-1"><Clock className="h-3 w-3" /> Awaiting Upload</Badge>;
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="container mx-auto px-6 py-8 space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-mono mb-1">Required Documents</h2>
-          <p className="text-muted-foreground">Please upload all required documentation to proceed with your application.</p>
+          <h2 className="text-2xl font-mono mb-2 text-primary">Required Documents</h2>
+          <p className="text-muted-foreground text-sm">
+            Please upload all required documentation to proceed with your application.
+          </p>
         </div>
         
         <Button 
           variant="default" 
           className="font-mono"
-          onClick={() => setIsUploadDialogOpen(true)}
+          onClick={() => uploadDialogOpen(true)}
         >
           <Upload className="h-4 w-4 mr-2" />
           UPLOAD DOCUMENT
         </Button>
       </div>
       
-      <Alert variant="warning" className="bg-amber-500/10 border-amber-500/20">
+      <Alert variant="default">
         <AlertCircle className="h-4 w-4 text-amber-500" />
+        <AlertTitle className="text-amber-500">Document Verification</AlertTitle>
         <AlertDescription className="text-amber-500">
           0 out of {requiredDocuments.length} required documents uploaded
         </AlertDescription>
@@ -92,28 +95,28 @@ const DocumentVerification = () => {
       <div className="rounded-md border">
         <Table>
           <TableHeader>
-            <TableRow className="bg-primary/5 border-b border-primary/20">
-              <TableHead className="text-primary font-mono">DOCUMENT TYPE</TableHead>
+            <TableRow>
+              <TableHead className="text-primary font-mono w-[200px]">DOCUMENT TYPE</TableHead>
               <TableHead className="text-primary font-mono">DESCRIPTION</TableHead>
-              <TableHead className="text-primary font-mono">STATUS</TableHead>
-              <TableHead className="text-primary font-mono w-[100px]">ACTION</TableHead>
+              <TableHead className="text-primary font-mono w-[150px]">STATUS</TableHead>
+              <TableHead className="text-primary font-mono w-[100px] text-right">ACTION</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {requiredDocuments.map((doc) => (
-              <TableRow key={doc.id} className="border-b border-primary/10">
+              <TableRow key={doc.id} className="hover:bg-muted/50">
                 <TableCell className="font-medium">{doc.name}</TableCell>
-                <TableCell className="flex items-center">
-                  <Info className="h-4 w-4 text-primary/60 mr-2" />
+                <TableCell className="text-muted-foreground flex items-center gap-2">
+                  <Info className="h-4 w-4 text-primary/60" />
                   {doc.description}
                 </TableCell>
                 <TableCell>{getStatusBadge(doc.status)}</TableCell>
-                <TableCell>
+                <TableCell className="text-right">
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="rounded-none border-primary/20 text-xs"
-                    onClick={() => setIsUploadDialogOpen(true)}
+                    className="text-xs"
+                    onClick={() => uploadDialogOpen(true)}
                   >
                     <Upload className="h-3 w-3 mr-1" />
                     Upload
@@ -125,18 +128,18 @@ const DocumentVerification = () => {
         </Table>
       </div>
       
-      <div className="flex justify-between items-center mt-10">
+      <div className="flex justify-between items-center">
         <Button 
           variant="outline" 
-          className="rounded-none font-mono border-primary/20"
+          className="font-mono"
         >
           Back
         </Button>
         
         <Button 
           variant="default" 
-          className="rounded-none font-mono"
-          disabled={true}
+          className="font-mono"
+          disabled
         >
           Next
         </Button>
