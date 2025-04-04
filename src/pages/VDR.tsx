@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { 
@@ -29,13 +28,14 @@ const VDR = () => {
   const [newFolderName, setNewFolderName] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
 
-  // Mock data for folders and files
   const folders = [
     { id: "f1", name: "Financial Documents", parent: "root" },
     { id: "f2", name: "Legal Documents", parent: "root" },
     { id: "f3", name: "Project Materials", parent: "root" },
-    { id: "f4", name: "Q1 Reports", parent: "f1" },
-    { id: "f5", name: "Q2 Reports", parent: "f1" },
+    { id: "f4", name: "Financial Statements", parent: "root" },
+    { id: "f5", name: "KYC Documentation", parent: "root" },
+    { id: "f6", name: "Q1 Reports", parent: "f1" },
+    { id: "f7", name: "Q2 Reports", parent: "f1" },
   ];
 
   const files = [
@@ -44,9 +44,12 @@ const VDR = () => {
     { id: "d3", name: "Financial Statement.xlsx", folder: "f1", size: "3.1 MB", date: "2024-03-20", type: "xlsx" },
     { id: "d4", name: "NDA Template.pdf", folder: "f2", size: "0.8 MB", date: "2024-03-01", type: "pdf" },
     { id: "d5", name: "Project Timeline.pptx", folder: "f3", size: "6.5 MB", date: "2024-03-25", type: "pptx" },
+    { id: "d6", name: "Balance Sheet 2024.xlsx", folder: "f4", size: "2.3 MB", date: "2024-04-02", type: "xlsx" },
+    { id: "d7", name: "Income Statement.xlsx", folder: "f4", size: "1.9 MB", date: "2024-04-02", type: "xlsx" },
+    { id: "d8", name: "Passport Copy.pdf", folder: "f5", size: "1.2 MB", date: "2024-03-10", type: "pdf" },
+    { id: "d9", name: "Company Registration.pdf", folder: "f5", size: "2.8 MB", date: "2024-03-12", type: "pdf" },
   ];
 
-  // Filter folders and files based on current folder and search query
   const filteredFolders = folders
     .filter(folder => folder.parent === currentFolder)
     .filter(folder => folder.name.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -82,7 +85,6 @@ const VDR = () => {
       return;
     }
 
-    // In a real app, you would process the file upload here
     const fileNames = Array.from(selectedFiles).map(file => file.name).join(", ");
     
     toast({
@@ -104,7 +106,6 @@ const VDR = () => {
       return;
     }
 
-    // In a real app, you would create the folder in your backend
     toast({
       title: "Folder created",
       description: `Created folder: ${newFolderName}`,
