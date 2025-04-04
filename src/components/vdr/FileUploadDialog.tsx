@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Folder } from "@/contexts/vdr/types";
+import FileDropZone from "./FileDropZone";
 
 interface FileUploadDialogProps {
   isOpen: boolean;
@@ -30,8 +31,7 @@ const FileUploadDialog = ({ isOpen, onOpenChange, onUploadComplete }: FileUpload
   const [fileContents, setFileContents] = useState<{[filename: string]: string}>({});
   const [destinationFolder, setDestinationFolder] = useState<string>(currentFolder);
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+  const handleFileChange = (files: FileList) => {
     if (!files || files.length === 0) return;
     
     setSelectedFiles(files);
@@ -175,12 +175,7 @@ const FileUploadDialog = ({ isOpen, onOpenChange, onUploadComplete }: FileUpload
             </div>
           ) : (
             <>
-              <Input
-                id="file-upload"
-                type="file"
-                multiple
-                onChange={handleFileChange}
-              />
+              <FileDropZone onFileSelect={handleFileChange} />
               
               <div className="flex flex-col space-y-2">
                 <label htmlFor="folder-select" className="text-sm font-medium">
