@@ -299,7 +299,11 @@ const ProposalsDashboard = () => {
                       </TableHeader>
                       <TableBody>
                         {activeProposals.map((proposal) => (
-                          <TableRow key={proposal.id} className="cursor-pointer">
+                          <TableRow 
+                            key={proposal.id} 
+                            className="cursor-pointer hover:bg-primary/5 transition-colors"
+                            onClick={() => handleViewProposal(proposal.id)}
+                          >
                             <TableCell className="font-mono text-xs">{proposal.id}</TableCell>
                             <TableCell>
                               <div className="font-extralight">{proposal.name}</div>
@@ -314,12 +318,15 @@ const ProposalsDashboard = () => {
                                 <span className="flex items-center"><Bookmark className="h-3 w-3 mr-1" />{proposal.saves}</span>
                               </div>
                             </TableCell>
-                            <TableCell>
+                            <TableCell onClick={(e) => e.stopPropagation()}>
                               <Button 
                                 variant="outline" 
                                 size="sm" 
                                 className="font-extralight text-xs h-7 px-2"
-                                onClick={() => handleViewProposal(proposal.id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleViewProposal(proposal.id);
+                                }}
                               >
                                 View Bids
                               </Button>
@@ -353,7 +360,11 @@ const ProposalsDashboard = () => {
                       </TableHeader>
                       <TableBody>
                         {completedProposals.map((proposal) => (
-                          <TableRow key={proposal.id} className="cursor-pointer">
+                          <TableRow 
+                            key={proposal.id} 
+                            className="cursor-pointer hover:bg-primary/5 transition-colors"
+                            onClick={() => handleViewProposal(proposal.id)}
+                          >
                             <TableCell className="font-mono text-xs">{proposal.id}</TableCell>
                             <TableCell>
                               <div className="font-extralight">{proposal.name}</div>
@@ -368,12 +379,15 @@ const ProposalsDashboard = () => {
                                 <span className="flex items-center"><Bookmark className="h-3 w-3 mr-1" />{proposal.saves}</span>
                               </div>
                             </TableCell>
-                            <TableCell>
+                            <TableCell onClick={(e) => e.stopPropagation()}>
                               <Button 
                                 variant="outline" 
                                 size="sm" 
                                 className="font-extralight text-xs h-7 px-2"
-                                onClick={() => handleViewProposal(proposal.id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleViewProposal(proposal.id);
+                                }}
                               >
                                 View Bids
                               </Button>
@@ -406,7 +420,11 @@ const ProposalsDashboard = () => {
                       </TableHeader>
                       <TableBody>
                         {draftProposals.map((proposal) => (
-                          <TableRow key={proposal.id}>
+                          <TableRow 
+                            key={proposal.id}
+                            className="cursor-pointer hover:bg-primary/5 transition-colors"
+                            onClick={() => handleViewProposal(proposal.id)}
+                          >
                             <TableCell className="font-mono text-xs">{proposal.id}</TableCell>
                             <TableCell>
                               <div className="font-extralight">{proposal.name}</div>
@@ -414,8 +432,18 @@ const ProposalsDashboard = () => {
                             <TableCell className="font-extralight">{proposal.industry}</TableCell>
                             <TableCell className="font-mono font-extralight">{proposal.principal}</TableCell>
                             <TableCell className="font-mono text-xs font-extralight">{proposal.lastEdited}</TableCell>
-                            <TableCell>
-                              <Button variant="outline" size="sm" className="font-extralight text-xs h-7 px-2">Edit</Button>
+                            <TableCell onClick={(e) => e.stopPropagation()}>
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="font-extralight text-xs h-7 px-2"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleViewProposal(proposal.id);
+                                }}
+                              >
+                                Edit
+                              </Button>
                             </TableCell>
                           </TableRow>
                         ))}
