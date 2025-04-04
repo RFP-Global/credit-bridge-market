@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { 
@@ -11,12 +12,17 @@ import {
   ArrowLeft, 
   Radar, 
   Signal,
-  Database
+  Database,
+  FileJson,
+  FileImage,
+  FileCode,
+  FileAudio,
+  X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
@@ -32,6 +38,13 @@ const VDR = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
+  const [previewFile, setPreviewFile] = useState<{
+    id: string;
+    name: string;
+    type: string;
+    content?: string;
+  } | null>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const folders = [
     { id: "f1", name: "Financial Documents", parent: "root" },
@@ -43,15 +56,13 @@ const VDR = () => {
   ];
 
   const [files, setFiles] = useState([
-    { id: "d1", name: "Annual Report 2024.pdf", folder: "root", size: "4.2 MB", date: "2024-04-01", type: "pdf" },
-    { id: "d2", name: "Corporate Structure.docx", folder: "root", size: "1.8 MB", date: "2024-03-15", type: "docx" },
-    { id: "d3", name: "Financial Statement.xlsx", folder: "f1", size: "3.1 MB", date: "2024-03-20", type: "xlsx" },
-    { id: "d4", name: "NDA Template.pdf", folder: "f2", size: "0.8 MB", date: "2024-03-01", type: "pdf" },
-    { id: "d5", name: "Project Timeline.pptx", folder: "f3", size: "6.5 MB", date: "2024-03-25", type: "pptx" },
-    { id: "d6", name: "Balance Sheet 2024.xlsx", folder: "f4", size: "2.3 MB", date: "2024-04-02", type: "xlsx" },
-    { id: "d7", name: "Income Statement.xlsx", folder: "f4", size: "1.9 MB", date: "2024-04-02", type: "xlsx" },
-    { id: "d8", name: "Passport Copy.pdf", folder: "f5", size: "1.2 MB", date: "2024-03-10", type: "pdf" },
-    { id: "d9", name: "Company Registration.pdf", folder: "f5", size: "2.8 MB", date: "2024-03-12", type: "pdf" },
+    { id: "d1", name: "Annual Report 2024.pdf", folder: "root", size: "4.2 MB", date: "2024-04-01", type: "pdf", content: "This is a sample annual report for 2024..." },
+    { id: "d2", name: "Corporate Structure.docx", folder: "root", size: "1.8 MB", date: "2024-03-15", type: "docx", content: "Corporate structure details and organization chart..." },
+    { id: "d3", name: "Financial Statement.xlsx", folder: "f1", size: "3.1 MB", date: "2024-03-20", type: "xlsx", content: "Financial statement data with quarterly breakdowns..." },
+    { id: "d4", name: "NDA Template.pdf", folder: "f2", size: "0.8 MB", date: "2024-03-01", type: "pdf", content: "Non-disclosure agreement template for partners and vendors..." },
+    { id: "d5", name: "Project Timeline.pptx", folder: "f3", size: "6.5 MB", date: "2024-03-25", type: "pptx", content: "Project timeline with milestones and deliverables..." },
+    { id: "d8", name: "Passport Copy.pdf", folder: "f5", size: "1.2 MB", date: "2024-03-10", type: "pdf", content: "Digitized copy of identification documents..." },
+    { id: "d9", name: "Company Registration.pdf", folder: "f5", size: "2.8 MB", date: "2024-03-12", type: "pdf", content: "Official company registration certificate and documents..." },
   ]);
 
   const filteredFolders = folders
@@ -106,13 +117,17 @@ const VDR = () => {
       const today = new Date().toISOString().split('T')[0];
       const fileType = file.name.split('.').pop() || '';
       
+      // Generate placeholder content for demonstration
+      const placeholderContent = `Content of ${file.name} - This is a placeholder for the actual file content that would be displayed in a real application.`;
+      
       return {
         id: fileId,
         name: file.name,
         folder: currentFolder,
         size: `${fileSize} MB`,
         date: today,
-        type: fileType
+        type: fileType,
+        content: placeholderContent
       };
     });
     
@@ -178,6 +193,11 @@ const VDR = () => {
     }
   };
 
+  const handleFileClick = (file: any) => {
+    setPreviewFile(file);
+    setIsPreviewOpen(true);
+  };
+
   const getCurrentFolderPath = () => {
     if (currentFolder === "root") return "Home";
     
@@ -199,8 +219,89 @@ const VDR = () => {
         return <FileText className="text-green-500" />;
       case "pptx":
         return <FileText className="text-orange-500" />;
+      case "jpg":
+      case "jpeg":
+      case "png":
+        return <FileImage className="text-purple-500" />;
+      case "json":
+        return <FileJson className="text-yellow-500" />;
+      case "mp3":
+      case "wav":
+        return <FileAudio className="text-indigo-500" />;
+      case "js":
+      case "ts":
+      case "html":
+      case "css":
+        return <FileCode className="text-cyan-500" />;
       default:
         return <FileText />;
+    }
+  };
+
+  const getFilePreviewContent = (file: any) => {
+    if (!file) return null;
+    
+    const fileExtension = file.type.toLowerCase();
+    
+    switch (fileExtension) {
+      case "jpg":
+      case "jpeg":
+      case "png":
+      case "gif":
+        // In a real application, you would use actual file URLs or base64 data
+        return (
+          <div className="flex items-center justify-center p-4">
+            <div className="text-center">
+              <div className="border border-primary/20 rounded-md p-8 bg-muted/20 mb-4">
+                <FileImage className="h-20 w-20 mx-auto text-muted-foreground" />
+                <p className="mt-4 text-sm">Image preview would be displayed here</p>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {file.name} • {file.size}
+              </p>
+            </div>
+          </div>
+        );
+      case "pdf":
+        return (
+          <div className="p-4">
+            <div className="border border-primary/20 rounded-md p-4 bg-muted/10 mb-4">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  {getFileIcon(file.type)}
+                  <span className="font-medium">{file.name}</span>
+                </div>
+                <span className="text-xs text-muted-foreground">{file.size}</span>
+              </div>
+              <div className="space-y-2">
+                <div className="h-6 bg-muted/30 rounded w-full"></div>
+                <div className="h-6 bg-muted/30 rounded w-11/12"></div>
+                <div className="h-6 bg-muted/30 rounded w-10/12"></div>
+                <div className="h-6 bg-muted/30 rounded w-full"></div>
+                <div className="h-6 bg-muted/30 rounded w-9/12"></div>
+              </div>
+              <p className="mt-4 text-xs text-muted-foreground">PDF preview would render here in a real application</p>
+            </div>
+            <pre className="text-xs p-4 bg-muted/10 rounded-md overflow-auto max-h-60">
+              {file.content}
+            </pre>
+          </div>
+        );
+      default:
+        return (
+          <div className="p-4">
+            <div className="border border-primary/20 rounded-md p-4 bg-muted/10 mb-4">
+              <div className="flex items-center gap-2 mb-2">
+                {getFileIcon(file.type)}
+                <span className="font-medium">{file.name}</span>
+              </div>
+              <p className="text-xs text-muted-foreground mb-4">File preview is not available for this file type</p>
+              <pre className="text-xs p-4 bg-muted/10 rounded-md overflow-auto max-h-60">
+                {file.content}
+              </pre>
+            </div>
+          </div>
+        );
     }
   };
 
@@ -399,7 +500,11 @@ const VDR = () => {
             ))}
             
             {filteredFiles.map((file) => (
-              <Card key={file.id} className="border-primary/20 bg-background/50 backdrop-blur-sm hover:border-primary/40 transition-colors">
+              <Card 
+                key={file.id} 
+                className="border-primary/20 bg-background/50 backdrop-blur-sm hover:border-primary/40 transition-colors"
+                onClick={() => handleFileClick(file)}
+              >
                 <CardContent className="p-4 flex items-start gap-3">
                   <div className="bg-primary/10 p-2 rounded">
                     {getFileIcon(file.type)}
@@ -445,6 +550,28 @@ const VDR = () => {
           </div>
         </div>
       </div>
+
+      {/* File Preview Dialog */}
+      <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+        <DialogContent className="sm:max-w-3xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {previewFile && getFileIcon(previewFile.type)}
+              <span>{previewFile?.name}</span>
+            </DialogTitle>
+          </DialogHeader>
+          {previewFile && getFilePreviewContent(previewFile)}
+          <DialogFooter>
+            <Button variant="outline" size="sm" className="gap-2">
+              <Download className="h-4 w-4" />
+              Download
+            </Button>
+            <DialogClose asChild>
+              <Button variant="ghost" size="sm">Close</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>
