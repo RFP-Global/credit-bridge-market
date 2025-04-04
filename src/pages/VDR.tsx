@@ -7,6 +7,7 @@ import VDRLayout from "@/components/vdr/VDRLayout";
 import VDRHeader from "@/components/vdr/VDRHeader";
 import VDRContent from "@/components/vdr/VDRContent";
 import VDRDialogs from "@/components/vdr/VDRDialogs";
+import FullscreenButton from "@/components/FullscreenButton";
 
 const VDR = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const VDR = () => {
         />
         
         <VDRContent />
+        <FullscreenButton />
         
         <VDRDialogs 
           isUploadDialogOpen={isUploadDialogOpen}
