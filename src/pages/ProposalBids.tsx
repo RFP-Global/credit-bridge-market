@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { 
@@ -307,39 +306,32 @@ const ProposalBids = () => {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                  <Card className="border-primary/20 bg-background/50">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-mono">PRINCIPAL AMOUNT</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-3xl font-mono">{proposal.principal}</div>
-                      <p className="text-xs text-muted-foreground mt-1">Requested financing</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="border-primary/20 bg-background/50">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-mono">WINNING DEAL TERMS</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-3 gap-2 mb-2">
-                        <div>
-                          <p className="text-xs text-muted-foreground">AMOUNT</p>
-                          <p className="font-mono">{proposal.winningTerms?.amount || "N/A"}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">INTEREST</p>
-                          <p className="font-mono">{proposal.winningTerms?.interestRate || "N/A"}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">TERM</p>
-                          <p className="font-mono">{proposal.winningTerms?.term || "N/A"}</p>
-                        </div>
-                      </div>
-                      <p className="text-xs mt-2">{proposal.winningTerms?.additionalTerms || "No additional terms"}</p>
-                    </CardContent>
-                  </Card>
+        
+        <div className="grid grid-cols-1 gap-4 mb-6">
+          <Card className="border-primary/20 bg-background/50">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-mono">WINNING DEAL TERMS</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-3 gap-4 mb-2">
+                <div>
+                  <p className="text-xs text-muted-foreground">AMOUNT</p>
+                  <p className="font-mono text-2xl">{proposal.winningTerms?.amount || "N/A"}</p>
                 </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">INTEREST</p>
+                  <p className="font-mono text-2xl">{proposal.winningTerms?.interestRate || "N/A"}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">TERM</p>
+                  <p className="font-mono text-2xl">{proposal.winningTerms?.term || "N/A"}</p>
+                </div>
+              </div>
+              <p className="text-sm mt-4">{proposal.winningTerms?.additionalTerms || "No additional terms"}</p>
+            </CardContent>
+          </Card>
+        </div>
+        
                 
                 {proposal.description && (
                   <Card className="border-primary/20 bg-background/50 mb-6">
