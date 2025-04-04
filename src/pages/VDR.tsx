@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search } from "lucide-react";
+import { Search, Upload } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 
-// Import our new components
 import VDRHeader from "@/components/vdr/VDRHeader";
 import FolderNavigation from "@/components/vdr/FolderNavigation";
 import FolderItem from "@/components/vdr/FolderItem";
@@ -15,7 +15,6 @@ import FileUploadDialog from "@/components/vdr/FileUploadDialog";
 import NewFolderDialog from "@/components/vdr/NewFolderDialog";
 import DeleteFileDialog from "@/components/vdr/DeleteFileDialog";
 
-// Define types for our data
 interface Folder {
   id: string;
   name: string;
@@ -43,7 +42,6 @@ const VDR = () => {
   const [previewFile, setPreviewFile] = useState<File | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
-  // Define default folders
   const defaultFolders: Folder[] = [
     { id: "f1", name: "Financial Documents", parent: "root" },
     { id: "f2", name: "Legal Documents", parent: "root" },
@@ -53,7 +51,6 @@ const VDR = () => {
     { id: "f7", name: "Q2 Reports", parent: "f1" },
   ];
 
-  // Define default files
   const defaultFiles: File[] = [
     { id: "d1", name: "Annual Report 2024.pdf", folder: "root", size: "4.2 MB", date: "2024-04-01", type: "pdf", content: "This is a sample annual report for 2024..." },
     { id: "d2", name: "Corporate Structure.docx", folder: "root", size: "1.8 MB", date: "2024-03-15", type: "docx", content: "Corporate structure details and organization chart..." },
@@ -64,24 +61,20 @@ const VDR = () => {
     { id: "d9", name: "Company Registration.pdf", folder: "f5", size: "2.8 MB", date: "2024-03-12", type: "pdf", content: "Official company registration certificate and documents..." },
   ];
 
-  // Initialize folders state from localStorage or defaults
   const [folders, setFolders] = useState<Folder[]>(() => {
     const savedFolders = localStorage.getItem("vdr-folders");
     return savedFolders ? JSON.parse(savedFolders) : defaultFolders;
   });
 
-  // Initialize files state from localStorage or defaults
   const [files, setFiles] = useState<File[]>(() => {
     const savedFiles = localStorage.getItem("vdr-files");
     return savedFiles ? JSON.parse(savedFiles) : defaultFiles;
   });
 
-  // Save folders to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("vdr-folders", JSON.stringify(folders));
   }, [folders]);
 
-  // Save files to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("vdr-files", JSON.stringify(files));
   }, [files]);
@@ -118,7 +111,6 @@ const VDR = () => {
       const today = new Date().toISOString().split('T')[0];
       const fileType = file.name.split('.').pop() || '';
       
-      // Generate placeholder content for demonstration
       const placeholderContent = `Content of ${file.name} - This is a placeholder for the actual file content that would be displayed in a real application.`;
       
       return {
@@ -216,6 +208,16 @@ const VDR = () => {
                 setCurrentFolder={setCurrentFolder}
               />
             </div>
+            
+            <div className="flex items-center space-x-2">
+              <Button 
+                className="rounded-none font-mono text-xs"
+                onClick={() => setIsUploadDialogOpen(true)}
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                UPLOAD FILES
+              </Button>
+            </div>
           </div>
           
           <div className="flex justify-between items-center">
@@ -255,14 +257,18 @@ const VDR = () => {
         </div>
       </div>
 
-      {/* File Preview Dialog */}
+      <FileUploadDialog
+        isOpen={isUploadDialogOpen}
+        onOpenChange={setIsUploadDialogOpen}
+        onUploadComplete={handleFileUpload}
+      />
+
       <FilePreview
         file={previewFile}
         isOpen={isPreviewOpen}
         onOpenChange={setIsPreviewOpen}
       />
 
-      {/* Delete Confirmation Dialog */}
       <DeleteFileDialog
         fileToDelete={fileToDelete}
         isOpen={isDeleteDialogOpen}
