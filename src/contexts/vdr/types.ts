@@ -26,7 +26,7 @@ export interface VDRContextType {
   filteredFiles: File[];
   handleFolderClick: (folderId: string) => void;
   handleBackClick: () => void;
-  handleFileUpload: (selectedFiles: FileList, fileContents?: {[filename: string]: string}) => void;
+  handleFileUpload: (selectedFiles: FileList, fileContents?: {[filename: string]: string}, destinationFolder?: string) => void;
   handleCreateFolder: (folderName: string) => void;
   handleDeleteFile: (file: { id: string; name: string }) => void;
   handleFileClick: (file: File) => void;

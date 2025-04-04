@@ -31,8 +31,8 @@ const VDRDialogs = ({
     }
   };
 
-  const handleUploadComplete = (files: FileList, contents: {[filename: string]: string}) => {
-    handleFileUpload(files, contents);
+  const handleUploadComplete = (files: FileList, contents: {[filename: string]: string}, destinationFolder: string) => {
+    handleFileUpload(files, contents, destinationFolder);
     setIsUploadDialogOpen(false);
   };
 

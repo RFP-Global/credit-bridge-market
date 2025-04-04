@@ -57,8 +57,8 @@ export function VDRProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const handleFileUpload = (selectedFiles: FileList, fileContents?: {[filename: string]: string}) => {
-    handleFileUploadUtil(selectedFiles, currentFolder, setFiles, fileContents);
+  const handleFileUpload = (selectedFiles: FileList, fileContents?: {[filename: string]: string}, destinationFolder?: string) => {
+    handleFileUploadUtil(selectedFiles, currentFolder, setFiles, fileContents, destinationFolder);
   };
 
   const handleCreateFolder = (folderName: string) => {

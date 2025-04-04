@@ -3,20 +3,32 @@ import { useState, useRef, ChangeEvent } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Upload } from "lucide-react";
+import { Upload, FolderOpen } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useVDR } from "@/contexts/vdr/VDRContext";
+import { 
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Folder } from "@/contexts/vdr/types";
 
 interface FileUploadDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onUploadComplete: (files: FileList, contents: {[filename: string]: string}) => void;
+  onUploadComplete: (files: FileList, contents: {[filename: string]: string}, destinationFolder: string) => void;
 }
 
 const FileUploadDialog = ({ isOpen, onOpenChange, onUploadComplete }: FileUploadDialogProps) => {
+  const { folders, currentFolder } = useVDR();
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [fileContents, setFileContents] = useState<{[filename: string]: string}>({});
+  const [destinationFolder, setDestinationFolder] = useState<string>(currentFolder);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -24,6 +36,30 @@ const FileUploadDialog = ({ isOpen, onOpenChange, onUploadComplete }: FileUpload
     
     setSelectedFiles(files);
     readFileContents(files);
+  };
+
+  const getFolderName = (folderId: string): string => {
+    if (folderId === "root") return "Root";
+    const folder = folders.find(f => f.id === folderId);
+    return folder ? folder.name : "Unknown";
+  };
+
+  const getPathToFolder = (folderId: string, allFolders: Folder[]): string => {
+    if (folderId === "root") return "Root";
+    
+    const path: string[] = [];
+    let current = folderId;
+    
+    while (current !== "root") {
+      const folder = allFolders.find(f => f.id === current);
+      if (!folder) break;
+      
+      path.unshift(folder.name);
+      current = folder.parent;
+    }
+    
+    path.unshift("Root");
+    return path.join(" / ");
   };
 
   const readFileContents = async (files: FileList) => {
@@ -109,7 +145,7 @@ const FileUploadDialog = ({ isOpen, onOpenChange, onUploadComplete }: FileUpload
   const finishUpload = () => {
     if (!selectedFiles || selectedFiles.length === 0) return;
     
-    onUploadComplete(selectedFiles, fileContents);
+    onUploadComplete(selectedFiles, fileContents, destinationFolder);
     setIsUploading(false);
     setSelectedFiles(null);
     setFileContents({});
@@ -121,7 +157,7 @@ const FileUploadDialog = ({ isOpen, onOpenChange, onUploadComplete }: FileUpload
         <DialogHeader>
           <DialogTitle>Upload Files</DialogTitle>
           <DialogDescription>
-            Select files to upload to the current folder
+            Select files to upload and choose a destination folder
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -138,12 +174,41 @@ const FileUploadDialog = ({ isOpen, onOpenChange, onUploadComplete }: FileUpload
               </p>
             </div>
           ) : (
-            <Input
-              id="file-upload"
-              type="file"
-              multiple
-              onChange={handleFileChange}
-            />
+            <>
+              <Input
+                id="file-upload"
+                type="file"
+                multiple
+                onChange={handleFileChange}
+              />
+              
+              <div className="flex flex-col space-y-2">
+                <label htmlFor="folder-select" className="text-sm font-medium">
+                  Destination Folder
+                </label>
+                <Select
+                  value={destinationFolder}
+                  onValueChange={setDestinationFolder}
+                >
+                  <SelectTrigger className="w-full">
+                    <div className="flex items-center gap-2">
+                      <FolderOpen className="h-4 w-4" />
+                      <SelectValue placeholder="Select folder" />
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="root">Root</SelectItem>
+                      {folders.map((folder) => (
+                        <SelectItem key={folder.id} value={folder.id}>
+                          {getPathToFolder(folder.id, folders)}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            </>
           )}
         </div>
         <DialogFooter>

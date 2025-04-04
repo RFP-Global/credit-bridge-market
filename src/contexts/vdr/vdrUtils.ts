@@ -8,7 +8,7 @@ export const getParentFolder = (currentFolder: string, folders: Folder[]) => {
   return currentFolderObj ? currentFolderObj.parent : "root";
 };
 
-export const createNewFile = (file: globalThis.File, currentFolder: string, fileContent?: string) => {
+export const createNewFile = (file: globalThis.File, destinationFolder: string, fileContent?: string) => {
   const fileId = `d${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   const fileSize = (file.size / (1024 * 1024)).toFixed(1);
   const today = new Date().toISOString().split('T')[0];
@@ -17,7 +17,7 @@ export const createNewFile = (file: globalThis.File, currentFolder: string, file
   return {
     id: fileId,
     name: file.name,
-    folder: currentFolder,
+    folder: destinationFolder,
     size: `${fileSize} MB`,
     date: today,
     type: fileType,
@@ -29,21 +29,24 @@ export const handleFileUploadUtil = (
   selectedFiles: FileList, 
   currentFolder: string, 
   setFiles: React.Dispatch<React.SetStateAction<File[]>>,
-  fileContents?: {[filename: string]: string}
+  fileContents?: {[filename: string]: string},
+  destinationFolder?: string
 ) => {
+  const targetFolder = destinationFolder || currentFolder;
+  
   const newFiles = Array.from(selectedFiles).map((file) => {
     const fileContent = fileContents && fileContents[file.name] 
       ? fileContents[file.name]
       : undefined;
     
-    return createNewFile(file, currentFolder, fileContent);
+    return createNewFile(file, targetFolder, fileContent);
   });
   
   setFiles(prev => [...prev, ...newFiles]);
   
   toast({
     title: "Files uploaded successfully",
-    description: `Uploaded ${newFiles.length} file(s) to current folder`,
+    description: `Uploaded ${newFiles.length} file(s) to selected folder`,
   });
 };
 
