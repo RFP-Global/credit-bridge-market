@@ -522,50 +522,6 @@ const ProposalDetails = () => {
                 </CardContent>
               </Card>
             </div>
-            
-            <Card className="bg-black border-gray-800">
-              <CardHeader className="border-b border-gray-800">
-                <CardTitle className="text-sm font-mono flex items-center">
-                  <Calculator className="mr-2 h-4 w-4" />
-                  ADDITIONAL FINANCIAL METRICS
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div>
-                    <div className="flex justify-between items-center mb-1">
-                      <p className="text-xs text-gray-400">DAYS RECEIVABLES OUTSTANDING</p>
-                      <HelpCircle className="h-3 w-3 text-gray-400" />
-                    </div>
-                    <p className="font-semibold">{financialRatios.daysReceivablesOutstanding.toFixed(0)} days</p>
-                  </div>
-                  
-                  <div>
-                    <div className="flex justify-between items-center mb-1">
-                      <p className="text-xs text-gray-400">DAYS PAYABLES OUTSTANDING</p>
-                      <HelpCircle className="h-3 w-3 text-gray-400" />
-                    </div>
-                    <p className="font-semibold">{financialRatios.daysPayablesOutstanding.toFixed(0)} days</p>
-                  </div>
-                  
-                  <div>
-                    <div className="flex justify-between items-center mb-1">
-                      <p className="text-xs text-gray-400">ALTMAN Z-SCORE</p>
-                      <HelpCircle className="h-3 w-3 text-gray-400" />
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <p className="font-semibold">{financialRatios.zScore.toFixed(2)}</p>
-                      <CustomBadge variant={financialRatios.zScore > 2.99 ? "success" : 
-                        financialRatios.zScore > 1.8 ? "warning" : "destructive"} 
-                        className="text-xs">
-                        {financialRatios.zScore > 2.99 ? "SAFE" : 
-                          financialRatios.zScore > 1.8 ? "CAUTION" : "DISTRESS RISK"}
-                      </CustomBadge>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </TabsContent>
           
           <TabsContent value="credit" className="space-y-6">
