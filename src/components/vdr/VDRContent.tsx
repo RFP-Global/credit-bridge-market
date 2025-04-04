@@ -2,11 +2,13 @@
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
-import { useVDR } from "@/contexts/VDRContext";
+import { useVDR } from "@/contexts/vdr/VDRContext";
 import FolderNavigation from "@/components/vdr/FolderNavigation";
 import FolderItem from "@/components/vdr/FolderItem";
 import FileItem from "@/components/vdr/FileItem";
 import EmptyState from "@/components/vdr/EmptyState";
+import { useState } from "react";
+import OrganizeFileDialog from "./OrganizeFileDialog";
 
 const VDRContent = () => {
   const {
@@ -21,12 +23,27 @@ const VDRContent = () => {
     setFileToDelete,
     setIsDeleteDialogOpen,
     getCurrentFolderPath,
-    setCurrentFolder
+    setCurrentFolder,
+    folders,
+    handleMoveFile
   } = useVDR();
+
+  const [isOrganizeDialogOpen, setIsOrganizeDialogOpen] = useState(false);
+  const [fileToOrganize, setFileToOrganize] = useState<{ id: string; name: string; folder: string } | null>(null);
 
   const handleDeleteClick = (file: { id: string; name: string }) => {
     setFileToDelete(file);
     setIsDeleteDialogOpen(true);
+  };
+
+  const handleOrganizeClick = (file: any) => {
+    setFileToOrganize(file);
+    setIsOrganizeDialogOpen(true);
+  };
+
+  const handleOrganizeComplete = (fileId: string, destinationFolder: string) => {
+    handleMoveFile(fileId, destinationFolder);
+    setIsOrganizeDialogOpen(false);
   };
 
   return (
@@ -71,6 +88,7 @@ const VDRContent = () => {
               file={file}
               onFileClick={handleFileClick}
               onDeleteClick={handleDeleteClick}
+              onOrganizeClick={handleOrganizeClick}
             />
           ))}
           
@@ -79,6 +97,14 @@ const VDRContent = () => {
           )}
         </div>
       </div>
+      
+      <OrganizeFileDialog
+        file={fileToOrganize}
+        folders={folders}
+        isOpen={isOrganizeDialogOpen}
+        onOpenChange={setIsOrganizeDialogOpen}
+        onOrganizeComplete={handleOrganizeComplete}
+      />
     </div>
   );
 };

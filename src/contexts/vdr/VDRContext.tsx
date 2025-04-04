@@ -7,7 +7,8 @@ import {
   handleFileUploadUtil, 
   handleCreateFolderUtil, 
   handleDeleteFileUtil, 
-  getCurrentFolderPathUtil 
+  getCurrentFolderPathUtil,
+  handleMoveFileUtil
 } from "./vdrUtils";
 
 const VDRContext = createContext<VDRContextType | undefined>(undefined);
@@ -74,6 +75,10 @@ export function VDRProvider({ children }: { children: ReactNode }) {
     setIsPreviewOpen(true);
   };
 
+  const handleMoveFile = (fileId: string, destinationFolder: string) => {
+    handleMoveFileUtil(fileId, destinationFolder, setFiles);
+  };
+
   const getCurrentFolderPath = () => {
     return getCurrentFolderPathUtil(currentFolder, folders);
   };
@@ -94,6 +99,7 @@ export function VDRProvider({ children }: { children: ReactNode }) {
       handleCreateFolder,
       handleDeleteFile,
       handleFileClick,
+      handleMoveFile,
       previewFile,
       setPreviewFile,
       isPreviewOpen,

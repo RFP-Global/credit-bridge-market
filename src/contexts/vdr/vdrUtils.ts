@@ -81,6 +81,25 @@ export const handleDeleteFileUtil = (
   });
 };
 
+export const handleMoveFileUtil = (
+  fileId: string,
+  destinationFolder: string,
+  setFiles: React.Dispatch<React.SetStateAction<File[]>>
+) => {
+  setFiles(prevFiles => 
+    prevFiles.map(file => 
+      file.id === fileId 
+        ? { ...file, folder: destinationFolder } 
+        : file
+    )
+  );
+  
+  toast({
+    title: "File moved",
+    description: "File has been moved to the selected folder",
+  });
+};
+
 export const getCurrentFolderPathUtil = (currentFolder: string, folders: Folder[]) => {
   if (currentFolder === "root") return "Home";
   

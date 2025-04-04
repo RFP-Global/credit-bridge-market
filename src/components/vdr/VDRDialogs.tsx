@@ -1,8 +1,10 @@
 
+import { useState } from "react";
 import { useVDR } from "@/contexts/vdr/VDRContext";
 import FilePreview from "@/components/vdr/FilePreview";
 import DeleteFileDialog from "@/components/vdr/DeleteFileDialog";
 import FileUploadDialog from "@/components/vdr/FileUploadDialog";
+import OrganizeFileDialog from "@/components/vdr/OrganizeFileDialog";
 
 interface VDRDialogsProps {
   isUploadDialogOpen: boolean;
@@ -13,6 +15,9 @@ const VDRDialogs = ({
   isUploadDialogOpen,
   setIsUploadDialogOpen
 }: VDRDialogsProps) => {
+  const [isOrganizeDialogOpen, setIsOrganizeDialogOpen] = useState(false);
+  const [fileToOrganize, setFileToOrganize] = useState<{ id: string; name: string; folder: string } | null>(null);
+
   const {
     previewFile,
     isPreviewOpen,
@@ -21,7 +26,9 @@ const VDRDialogs = ({
     isDeleteDialogOpen,
     setIsDeleteDialogOpen,
     handleDeleteFile,
-    handleFileUpload
+    handleFileUpload,
+    handleMoveFile,
+    folders
   } = useVDR();
 
   const confirmDelete = () => {
@@ -31,9 +38,18 @@ const VDRDialogs = ({
     }
   };
 
+  const handleOrganizeClick = (file: any) => {
+    setFileToOrganize(file);
+    setIsOrganizeDialogOpen(true);
+  };
+
   const handleUploadComplete = (files: FileList, contents: {[filename: string]: string}, destinationFolder: string) => {
     handleFileUpload(files, contents, destinationFolder);
     setIsUploadDialogOpen(false);
+  };
+
+  const handleOrganizeComplete = (fileId: string, destinationFolder: string) => {
+    handleMoveFile(fileId, destinationFolder);
   };
 
   return (
@@ -55,6 +71,14 @@ const VDRDialogs = ({
         isOpen={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
         onConfirmDelete={confirmDelete}
+      />
+
+      <OrganizeFileDialog
+        file={fileToOrganize}
+        folders={folders}
+        isOpen={isOrganizeDialogOpen}
+        onOpenChange={setIsOrganizeDialogOpen}
+        onOrganizeComplete={handleOrganizeComplete}
       />
     </>
   );

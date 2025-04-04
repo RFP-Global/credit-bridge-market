@@ -30,6 +30,7 @@ export interface VDRContextType {
   handleCreateFolder: (folderName: string) => void;
   handleDeleteFile: (file: { id: string; name: string }) => void;
   handleFileClick: (file: File) => void;
+  handleMoveFile: (fileId: string, destinationFolder: string) => void; 
   previewFile: File | null;
   setPreviewFile: (file: File | null) => void;
   isPreviewOpen: boolean;
