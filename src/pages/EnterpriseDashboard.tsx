@@ -43,16 +43,63 @@ const EnterpriseDashboard = () => {
     setIsLoading(false);
   }, [navigate]);
   
-  const activeDeals = [
-    { id: 1, name: "Equipment Financing", amount: "$1.2M", status: "Review" },
-    { id: 2, name: "Expansion Capital", amount: "$3.5M", status: "Draft" }
-  ];
+  // Generate some realistic active deals for this company
+  const generateActiveDeals = (companyName: string) => {
+    const dealTypes = ["Equipment Financing", "Expansion Capital", "Working Capital", "Inventory Financing", "Debt Refinancing"];
+    const amounts = ["$1.2M", "$850K", "$3.5M", "$500K", "$2.1M"];
+    const statuses = ["Review", "Draft", "Pending", "Approved"];
+    
+    // Generate 1-3 deals randomly but deterministically based on company name
+    const numDeals = (companyName.length % 3) + 1;
+    const deals = [];
+    
+    for (let i = 0; i < numDeals; i++) {
+      const nameSum = Array.from(companyName).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+      const dealIndex = (nameSum + i) % dealTypes.length;
+      const amountIndex = (nameSum + i * 2) % amounts.length;
+      const statusIndex = (nameSum + i * 3) % statuses.length;
+      
+      deals.push({
+        id: i + 1,
+        name: dealTypes[dealIndex],
+        amount: amounts[amountIndex],
+        status: statuses[statusIndex]
+      });
+    }
+    
+    return deals;
+  };
   
-  const notifications = [
-    { id: 1, text: "New lender match: Global Capital", time: "2 hours ago" },
-    { id: 2, text: "Your RFP needs additional documents", time: "Yesterday" },
-    { id: 3, text: "New industry report available", time: "3 days ago" }
-  ];
+  // Generate notifications
+  const generateNotifications = (companyName: string) => {
+    const notificationTypes = [
+      "New lender match: Global Capital", 
+      "Your RFP needs additional documents", 
+      "New industry report available",
+      `${companyName} profile has been verified`,
+      "Financing opportunity alert"
+    ];
+    
+    const times = ["2 hours ago", "Yesterday", "3 days ago"];
+    
+    // Generate 2-4 notifications
+    const nameSum = Array.from(companyName).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+    const numNotifications = (nameSum % 3) + 2;
+    const notifications = [];
+    
+    for (let i = 0; i < numNotifications; i++) {
+      const noteIndex = (nameSum + i) % notificationTypes.length;
+      const timeIndex = (nameSum + i * 2) % times.length;
+      
+      notifications.push({
+        id: i + 1,
+        text: notificationTypes[noteIndex],
+        time: times[timeIndex]
+      });
+    }
+    
+    return notifications;
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('currentEnterpriseId');
@@ -73,6 +120,19 @@ const EnterpriseDashboard = () => {
       </div>
     );
   }
+
+  // Generate data specific to this company
+  const activeDeals = generateActiveDeals(profileData.companyName);
+  const notifications = generateNotifications(profileData.companyName);
+  
+  // Calculate metrics based on company name (to get consistent but different values)
+  const nameValue = Array.from(profileData.companyName).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  const completedRFPs = (nameValue % 5) + 1;
+  const pendingReviews = (nameValue % 3) + 1;
+  
+  // Generate financing amount that seems realistic based on company name
+  const baseAmount = 1.5 + (nameValue % 10) * 0.5; // Between 1.5M and 6M
+  const financingAmount = `$${baseAmount.toFixed(1)}M`;
 
   return (
     <div className="min-h-screen bg-background text-foreground relative grid-bg">
@@ -138,8 +198,8 @@ const EnterpriseDashboard = () => {
                 </div>
                 <div className="text-xs text-muted-foreground pt-2 border-t border-primary/10">
                   <p className="flex justify-between py-1"><span>Industry:</span> <span className="font-mono">{profileData.industry.toUpperCase()}</span></p>
-                  <p className="flex justify-between py-1"><span>Active RFPs:</span> <span className="font-mono">2</span></p>
-                  <p className="flex justify-between py-1"><span>Total Financing:</span> <span className="font-mono">$4.7M</span></p>
+                  <p className="flex justify-between py-1"><span>Active RFPs:</span> <span className="font-mono">{activeDeals.length}</span></p>
+                  <p className="flex justify-between py-1"><span>Total Financing:</span> <span className="font-mono">{financingAmount}</span></p>
                 </div>
               </CardContent>
             </Card>
@@ -208,7 +268,7 @@ const EnterpriseDashboard = () => {
                       <CardTitle className="text-sm font-mono">ACTIVE RFPS</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-3xl font-mono">2</div>
+                      <div className="text-3xl font-mono">{activeDeals.length}</div>
                       <p className="text-xs text-muted-foreground mt-1">Seeking capital</p>
                     </CardContent>
                   </Card>
@@ -217,7 +277,7 @@ const EnterpriseDashboard = () => {
                       <CardTitle className="text-sm font-mono">MATCHED LENDERS</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-3xl font-mono">6</div>
+                      <div className="text-3xl font-mono">{(nameValue % 8) + 2}</div>
                       <p className="text-xs text-muted-foreground mt-1">Interested in your RFPs</p>
                     </CardContent>
                   </Card>
@@ -226,7 +286,7 @@ const EnterpriseDashboard = () => {
                       <CardTitle className="text-sm font-mono">FINANCING SECURED</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-3xl font-mono">$4.7M</div>
+                      <div className="text-3xl font-mono">{financingAmount}</div>
                       <p className="text-xs text-muted-foreground mt-1">Across all RFPs</p>
                     </CardContent>
                   </Card>
@@ -250,6 +310,7 @@ const EnterpriseDashboard = () => {
                               <span className={`text-xs px-2 py-1 font-mono ${
                                 deal.status === "Approved" ? "bg-green-100 text-green-800" : 
                                 deal.status === "Review" ? "bg-amber-100 text-amber-800" : 
+                                deal.status === "Pending" ? "bg-blue-100 text-blue-800" :
                                 "bg-blue-100 text-blue-800"
                               }`}>
                                 {deal.status}
@@ -284,14 +345,14 @@ const EnterpriseDashboard = () => {
                             <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
                             <span className="text-sm">Completed RFPs</span>
                           </div>
-                          <div className="text-2xl font-mono">3</div>
+                          <div className="text-2xl font-mono">{completedRFPs}</div>
                         </div>
                         <div className="space-y-2">
                           <div className="flex items-center">
                             <Clock className="h-4 w-4 text-amber-500 mr-2" />
                             <span className="text-sm">Pending Review</span>
                           </div>
-                          <div className="text-2xl font-mono">2</div>
+                          <div className="text-2xl font-mono">{pendingReviews}</div>
                         </div>
                       </div>
                     </div>
@@ -306,15 +367,51 @@ const EnterpriseDashboard = () => {
                     <CardDescription>Manage your financing requests</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-center py-8 px-4">
-                      <p className="text-muted-foreground">Complete RFP listing would be displayed here.</p>
-                      <Button className="mt-4" asChild>
-                        <Link to="/proposals-dashboard">
-                          Go to RFP Dashboard
-                        </Link>
-                      </Button>
+                    <div className="space-y-4">
+                      {activeDeals.length > 0 ? (
+                        activeDeals.map(deal => (
+                          <div key={deal.id} className="border-b border-primary/10 pb-4 last:border-0 last:pb-0">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <h3 className="font-mono text-sm">{deal.name}</h3>
+                                <p className="text-xs text-muted-foreground">{profileData.companyName}</p>
+                                <p className="text-xs mt-1">Created on {new Date().toLocaleDateString()}</p>
+                              </div>
+                              <div className="text-right">
+                                <span className={`text-xs px-2 py-1 font-mono ${
+                                  deal.status === "Approved" ? "bg-green-100 text-green-800" : 
+                                  deal.status === "Review" ? "bg-amber-100 text-amber-800" : 
+                                  deal.status === "Pending" ? "bg-blue-100 text-blue-800" :
+                                  "bg-blue-100 text-blue-800"
+                                }`}>
+                                  {deal.status}
+                                </span>
+                                <p className="text-xs font-mono mt-1">{deal.amount}</p>
+                              </div>
+                            </div>
+                            <div className="mt-3 flex justify-end">
+                              <Button variant="ghost" size="sm" className="text-xs">View Details</Button>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-center py-8">
+                          <p className="text-muted-foreground">No active RFPs found.</p>
+                          <Button className="mt-4" asChild>
+                            <Link to="/create-proposal">Create Your First RFP</Link>
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   </CardContent>
+                  <CardFooter>
+                    <Button variant="outline" size="sm" className="w-full font-mono text-xs rounded-none" asChild>
+                      <Link to="/proposals-dashboard">
+                        GO TO RFP DASHBOARD
+                        <ArrowUpRight className="ml-2 h-3 w-3" />
+                      </Link>
+                    </Button>
+                  </CardFooter>
                 </Card>
               </TabsContent>
               
