@@ -31,6 +31,27 @@ const EnterpriseDashboard = () => {
     navigate("/");
   };
 
+  const handleViewProposal = (proposalId: number) => {
+    // Navigate to the proposal details page
+    navigate(`/proposals-dashboard`);
+    
+    // Show a toast notification
+    toast({
+      title: "Navigating to proposal",
+      description: `Viewing details for proposal #${proposalId}`,
+    });
+  };
+
+  const handleViewAllProposals = (tabName: string) => {
+    // Navigate to the proposals dashboard with the relevant tab selected
+    navigate(`/proposals-dashboard`);
+    
+    toast({
+      title: "Viewing all proposals",
+      description: `Showing ${tabName} proposals`,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground relative grid-bg">
       <div className="absolute inset-0 z-0">
@@ -200,7 +221,11 @@ const EnterpriseDashboard = () => {
                   <CardContent>
                     <div className="space-y-4">
                       {recentProposals.map(proposal => (
-                        <div key={proposal.id} className="border-b border-primary/10 pb-3 last:border-0 last:pb-0">
+                        <div 
+                          key={proposal.id} 
+                          className="border-b border-primary/10 pb-3 last:border-0 last:pb-0 cursor-pointer hover:bg-primary/5"
+                          onClick={() => handleViewProposal(proposal.id)}
+                        >
                           <div className="flex justify-between items-start">
                             <div>
                               <h3 className="font-mono text-sm">{proposal.name}</h3>
@@ -241,17 +266,42 @@ const EnterpriseDashboard = () => {
                     <CardTitle className="text-sm font-mono">ALL PROPOSALS</CardTitle>
                     <CardDescription>Manage your financing proposals</CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <div className="text-center py-8 px-4">
-                      <p className="text-muted-foreground">Proposals tab content would be displayed here.</p>
-                      <p className="text-sm mt-2">This is a placeholder for the proposals listing and management interface.</p>
-                      <Button 
-                        className="mt-4 font-mono text-xs"
-                        onClick={() => navigate("/proposals-dashboard")}
+                  <CardContent className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div 
+                        className="border border-primary/20 p-4 rounded-md hover:bg-primary/5 cursor-pointer transition-colors"
+                        onClick={() => handleViewAllProposals("active")}
                       >
-                        VIEW PROPOSALS DASHBOARD
-                      </Button>
+                        <h3 className="font-mono text-sm mb-2">ACTIVE PROPOSALS</h3>
+                        <p className="text-2xl font-mono">7</p>
+                        <p className="text-xs text-muted-foreground mt-1">Currently in marketplace</p>
+                      </div>
+                      
+                      <div 
+                        className="border border-primary/20 p-4 rounded-md hover:bg-primary/5 cursor-pointer transition-colors"
+                        onClick={() => handleViewAllProposals("completed")}
+                      >
+                        <h3 className="font-mono text-sm mb-2">COMPLETED PROPOSALS</h3>
+                        <p className="text-2xl font-mono">12</p>
+                        <p className="text-xs text-muted-foreground mt-1">Successfully financed</p>
+                      </div>
+                      
+                      <div 
+                        className="border border-primary/20 p-4 rounded-md hover:bg-primary/5 cursor-pointer transition-colors"
+                        onClick={() => handleViewAllProposals("drafts")}
+                      >
+                        <h3 className="font-mono text-sm mb-2">DRAFT PROPOSALS</h3>
+                        <p className="text-2xl font-mono">3</p>
+                        <p className="text-xs text-muted-foreground mt-1">In progress</p>
+                      </div>
                     </div>
+                    
+                    <Button 
+                      className="w-full font-mono text-xs"
+                      onClick={() => navigate("/proposals-dashboard")}
+                    >
+                      VIEW PROPOSALS DASHBOARD
+                    </Button>
                   </CardContent>
                 </Card>
               </TabsContent>
