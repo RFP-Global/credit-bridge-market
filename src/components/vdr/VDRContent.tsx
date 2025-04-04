@@ -1,7 +1,6 @@
 
-import { Search, Upload } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 import { useVDR } from "@/contexts/VDRContext";
 import FolderNavigation from "@/components/vdr/FolderNavigation";
@@ -46,16 +45,6 @@ const VDRContent = ({ onUploadClick }: VDRContentProps) => {
               handleBackClick={handleBackClick}
               setCurrentFolder={setCurrentFolder}
             />
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            <Button 
-              className="rounded-none font-mono text-xs"
-              onClick={onUploadClick}
-            >
-              <Upload className="h-4 w-4 mr-2" />
-              UPLOAD FILES
-            </Button>
           </div>
         </div>
         
