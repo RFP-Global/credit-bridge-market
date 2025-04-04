@@ -22,19 +22,18 @@ const VDRHeader = ({ onBackClick, onUploadClick }: VDRHeaderProps) => {
               <span className="font-mono text-xl">RFP GLOBAL</span>
             </Link>
             <span className="ml-4 text-xs font-mono text-foreground/60 border-l border-primary/20 pl-4">VIRTUAL DATA ROOM</span>
-            
+          </div>
+          
+          <div className="flex items-center space-x-4">
             <Button 
               variant="outline" 
               size="sm" 
-              className="ml-4 rounded-none font-mono border-primary/30 text-xs"
+              className="rounded-none font-mono border-primary/30 text-xs"
               onClick={onUploadClick}
             >
               <Upload className="h-4 w-4 mr-1" />
               UPLOAD DOCUMENT
             </Button>
-          </div>
-          
-          <div className="flex items-center space-x-4">
             <Button 
               variant="outline" 
               size="sm" 
