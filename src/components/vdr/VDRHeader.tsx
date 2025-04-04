@@ -1,13 +1,14 @@
 
 import { Link } from "react-router-dom";
-import { Radar, Signal, ArrowLeft } from "lucide-react";
+import { Radar, Signal, ArrowLeft, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface VDRHeaderProps {
   onBackClick: () => void;
+  onUploadClick: () => void;
 }
 
-const VDRHeader = ({ onBackClick }: VDRHeaderProps) => {
+const VDRHeader = ({ onBackClick, onUploadClick }: VDRHeaderProps) => {
   return (
     <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-primary/20">
       <div className="container mx-auto px-6 py-3">
@@ -21,6 +22,16 @@ const VDRHeader = ({ onBackClick }: VDRHeaderProps) => {
               <span className="font-mono text-xl">RFP GLOBAL</span>
             </Link>
             <span className="ml-4 text-xs font-mono text-foreground/60 border-l border-primary/20 pl-4">VIRTUAL DATA ROOM</span>
+            
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="ml-4 rounded-none font-mono border-primary/30 text-xs"
+              onClick={onUploadClick}
+            >
+              <Upload className="h-4 w-4 mr-1" />
+              UPLOAD DOCUMENT
+            </Button>
           </div>
           
           <div className="flex items-center space-x-4">

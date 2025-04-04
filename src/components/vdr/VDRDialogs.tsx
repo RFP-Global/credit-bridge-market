@@ -2,8 +2,17 @@
 import { useVDR } from "@/contexts/VDRContext";
 import FilePreview from "@/components/vdr/FilePreview";
 import DeleteFileDialog from "@/components/vdr/DeleteFileDialog";
+import FileUploadDialog from "@/components/vdr/FileUploadDialog";
 
-const VDRDialogs = () => {
+interface VDRDialogsProps {
+  isUploadDialogOpen: boolean;
+  setIsUploadDialogOpen: (open: boolean) => void;
+}
+
+const VDRDialogs = ({
+  isUploadDialogOpen,
+  setIsUploadDialogOpen
+}: VDRDialogsProps) => {
   const {
     previewFile,
     isPreviewOpen,
@@ -11,7 +20,8 @@ const VDRDialogs = () => {
     fileToDelete,
     isDeleteDialogOpen,
     setIsDeleteDialogOpen,
-    handleDeleteFile
+    handleDeleteFile,
+    handleFileUpload
   } = useVDR();
 
   const confirmDelete = () => {
@@ -23,6 +33,12 @@ const VDRDialogs = () => {
 
   return (
     <>
+      <FileUploadDialog
+        isOpen={isUploadDialogOpen}
+        onOpenChange={setIsUploadDialogOpen}
+        onUploadComplete={handleFileUpload}
+      />
+
       <FilePreview
         file={previewFile}
         isOpen={isPreviewOpen}
