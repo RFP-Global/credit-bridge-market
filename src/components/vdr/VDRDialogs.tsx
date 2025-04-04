@@ -31,12 +31,17 @@ const VDRDialogs = ({
     }
   };
 
+  const handleUploadComplete = (files: FileList, contents: {[filename: string]: string}) => {
+    handleFileUpload(files, contents);
+    setIsUploadDialogOpen(false);
+  };
+
   return (
     <>
       <FileUploadDialog
         isOpen={isUploadDialogOpen}
         onOpenChange={setIsUploadDialogOpen}
-        onUploadComplete={handleFileUpload}
+        onUploadComplete={handleUploadComplete}
       />
 
       <FilePreview

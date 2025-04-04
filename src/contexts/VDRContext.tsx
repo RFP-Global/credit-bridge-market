@@ -1,4 +1,3 @@
-
 import { createContext, useState, useContext, useEffect, ReactNode } from "react";
 import { toast } from "@/hooks/use-toast";
 
@@ -29,7 +28,7 @@ interface VDRContextType {
   filteredFiles: File[];
   handleFolderClick: (folderId: string) => void;
   handleBackClick: () => void;
-  handleFileUpload: (selectedFiles: FileList) => void;
+  handleFileUpload: (selectedFiles: FileList, fileContents?: {[filename: string]: string}) => void;
   handleCreateFolder: (folderName: string) => void;
   handleDeleteFile: (file: { id: string; name: string }) => void;
   handleFileClick: (file: File) => void;
@@ -116,14 +115,16 @@ export function VDRProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const handleFileUpload = (selectedFiles: FileList) => {
+  const handleFileUpload = (selectedFiles: FileList, fileContents?: {[filename: string]: string}) => {
     const newFiles = Array.from(selectedFiles).map((file, index) => {
       const fileId = `d${Date.now()}-${index}`;
       const fileSize = (file.size / (1024 * 1024)).toFixed(1);
       const today = new Date().toISOString().split('T')[0];
       const fileType = file.name.split('.').pop() || '';
       
-      const placeholderContent = `Content of ${file.name} - This is a placeholder for the actual file content that would be displayed in a real application.`;
+      const fileContent = fileContents && fileContents[file.name] 
+        ? fileContents[file.name]
+        : `Content of ${file.name} - This is a placeholder for the actual file content that would be displayed in a real application.`;
       
       return {
         id: fileId,
@@ -132,7 +133,7 @@ export function VDRProvider({ children }: { children: ReactNode }) {
         size: `${fileSize} MB`,
         date: today,
         type: fileType,
-        content: placeholderContent
+        content: fileContent
       };
     });
     

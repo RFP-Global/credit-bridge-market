@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useRef, ChangeEvent } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,13 +9,71 @@ import { toast } from "@/hooks/use-toast";
 interface FileUploadDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onUploadComplete: (files: FileList) => void;
+  onUploadComplete: (files: FileList, contents: {[filename: string]: string}) => void;
 }
 
 const FileUploadDialog = ({ isOpen, onOpenChange, onUploadComplete }: FileUploadDialogProps) => {
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [fileContents, setFileContents] = useState<{[filename: string]: string}>({});
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    
+    setSelectedFiles(files);
+    readFileContents(files);
+  };
+
+  const readFileContents = async (files: FileList) => {
+    const contents: {[filename: string]: string} = {};
+    
+    // Create an array of promises to read each file
+    const readPromises = Array.from(files).map(file => {
+      return new Promise<void>((resolve) => {
+        const reader = new FileReader();
+        
+        reader.onload = (event) => {
+          if (event.target && event.target.result) {
+            // Store the result as a string
+            let content: string;
+            if (typeof event.target.result === 'string') {
+              content = event.target.result;
+            } else {
+              // Convert ArrayBuffer to string if necessary
+              const decoder = new TextDecoder();
+              content = decoder.decode(event.target.result);
+            }
+            contents[file.name] = content;
+          }
+          resolve();
+        };
+        
+        reader.onerror = () => {
+          contents[file.name] = `Error reading file: ${file.name}`;
+          resolve();
+        };
+        
+        // For binary files, we'd want readAsArrayBuffer
+        // but for text content preview, we'll use readAsText
+        if (file.type.includes('image/') || 
+            file.type.includes('video/') || 
+            file.type.includes('audio/') ||
+            file.type.includes('application/pdf')) {
+          // For these types, just store a placeholder message
+          contents[file.name] = `[Binary content of ${file.name}]`;
+          resolve();
+        } else {
+          reader.readAsText(file);
+        }
+      });
+    });
+    
+    // Wait for all files to be read
+    await Promise.all(readPromises);
+    setFileContents(contents);
+  };
 
   const handleUpload = () => {
     if (!selectedFiles || selectedFiles.length === 0) {
@@ -51,9 +109,10 @@ const FileUploadDialog = ({ isOpen, onOpenChange, onUploadComplete }: FileUpload
   const finishUpload = () => {
     if (!selectedFiles || selectedFiles.length === 0) return;
     
-    onUploadComplete(selectedFiles);
+    onUploadComplete(selectedFiles, fileContents);
     setIsUploading(false);
     setSelectedFiles(null);
+    setFileContents({});
   };
 
   return (
@@ -83,7 +142,7 @@ const FileUploadDialog = ({ isOpen, onOpenChange, onUploadComplete }: FileUpload
               id="file-upload"
               type="file"
               multiple
-              onChange={(e) => setSelectedFiles(e.target.files)}
+              onChange={handleFileChange}
             />
           )}
         </div>

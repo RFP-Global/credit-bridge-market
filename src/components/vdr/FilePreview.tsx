@@ -3,6 +3,7 @@ import { useState } from "react";
 import { FileText, FileImage, FileJson, FileCode, FileAudio, Download, X } from "lucide-react";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface FilePreviewProps {
   file: {
@@ -56,7 +57,6 @@ const FilePreview = ({ file, isOpen, onOpenChange }: FilePreviewProps) => {
       case "jpeg":
       case "png":
       case "gif":
-        // In a real application, you would use actual file URLs or base64 data
         return (
           <div className="flex items-center justify-center p-4">
             <div className="text-center">
@@ -90,9 +90,34 @@ const FilePreview = ({ file, isOpen, onOpenChange }: FilePreviewProps) => {
               </div>
               <p className="mt-4 text-xs text-muted-foreground">PDF preview would render here in a real application</p>
             </div>
-            <pre className="text-xs p-4 bg-muted/10 rounded-md overflow-auto max-h-60">
-              {file.content}
-            </pre>
+            <ScrollArea className="h-60 rounded-md border border-primary/20 p-4">
+              <pre className="text-xs whitespace-pre-wrap">
+                {file.content}
+              </pre>
+            </ScrollArea>
+          </div>
+        );
+      case "txt":
+      case "html":
+      case "css":
+      case "js":
+      case "ts":
+      case "json":
+      case "xml":
+        return (
+          <div className="p-4">
+            <div className="border border-primary/20 rounded-md p-4 bg-muted/10 mb-4">
+              <div className="flex items-center gap-2 mb-2">
+                {getFileIcon(file.type)}
+                <span className="font-medium">{file.name}</span>
+                <span className="text-xs text-muted-foreground ml-auto">{file.size}</span>
+              </div>
+            </div>
+            <ScrollArea className="h-80 rounded-md border border-primary/20 p-4">
+              <pre className="text-xs whitespace-pre-wrap">
+                {file.content}
+              </pre>
+            </ScrollArea>
           </div>
         );
       default:
@@ -104,9 +129,11 @@ const FilePreview = ({ file, isOpen, onOpenChange }: FilePreviewProps) => {
                 <span className="font-medium">{file.name}</span>
               </div>
               <p className="text-xs text-muted-foreground mb-4">File preview is not available for this file type</p>
-              <pre className="text-xs p-4 bg-muted/10 rounded-md overflow-auto max-h-60">
-                {file.content}
-              </pre>
+              <ScrollArea className="h-60 rounded-md border border-primary/20 p-4">
+                <pre className="text-xs whitespace-pre-wrap">
+                  {file.content}
+                </pre>
+              </ScrollArea>
             </div>
           </div>
         );
@@ -115,14 +142,16 @@ const FilePreview = ({ file, isOpen, onOpenChange }: FilePreviewProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-3xl">
+      <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {file && getFileIcon(file.type)}
             <span>{file?.name}</span>
           </DialogTitle>
         </DialogHeader>
-        {file && getFilePreviewContent(file)}
+        <div className="flex-1 overflow-auto">
+          {file && getFilePreviewContent(file)}
+        </div>
         <DialogFooter>
           <Button variant="outline" size="sm" className="gap-2">
             <Download className="h-4 w-4" />
