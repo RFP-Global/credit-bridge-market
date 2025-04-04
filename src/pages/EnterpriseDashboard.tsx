@@ -22,6 +22,22 @@ const EnterpriseDashboard = () => {
     { id: 3, text: "Market report for Q2 2023 available", time: "3 days ago" }
   ];
 
+  const activeProposals = [
+    { id: 1, name: "Riverside Development", industry: "Commercial Real Estate", status: "OPEN", principal: "$2.4M", proposalId: "RFP-2023-001" },
+    { id: 2, name: "Green Energy Initiative", industry: "Renewable Energy", status: "OPEN", principal: "$5.7M", proposalId: "RFP-2023-002" },
+    { id: 3, name: "Medical Center Expansion", industry: "Healthcare", status: "OPEN", principal: "$8.1M", proposalId: "RFP-2023-003" }
+  ];
+
+  const completedProposals = [
+    { id: 4, name: "Office Park Development", industry: "Commercial Real Estate", status: "COMPLETED", principal: "$4.2M", proposalId: "RFP-2022-045" },
+    { id: 5, name: "Solar Farm Project", industry: "Renewable Energy", status: "COMPLETED", principal: "$7.8M", proposalId: "RFP-2022-038" }
+  ];
+
+  const draftProposals = [
+    { id: 6, name: "City Infrastructure", industry: "Municipal", status: "DRAFT", principal: "$12.5M", proposalId: "DRAFT-001" },
+    { id: 7, name: "Hotel Renovation", industry: "Hospitality", status: "DRAFT", principal: "$3.8M", proposalId: "DRAFT-002" }
+  ];
+
   const handleLogout = () => {
     toast({
       title: "Logged Out",
@@ -264,31 +280,88 @@ const EnterpriseDashboard = () => {
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div 
-                        className="border border-primary/20 p-4 rounded-md hover:bg-primary/5 cursor-pointer transition-colors"
-                        onClick={() => handleViewAllProposals("active")}
-                      >
+                      <div className="border border-primary/20 p-4 rounded-md hover:bg-primary/5 transition-colors">
                         <h3 className="font-mono text-sm mb-2">ACTIVE PROPOSALS</h3>
                         <p className="text-2xl font-mono">7</p>
                         <p className="text-xs text-muted-foreground mt-1">Currently in marketplace</p>
+                        
+                        <div className="mt-4 space-y-2">
+                          {activeProposals.map(proposal => (
+                            <div 
+                              key={proposal.id}
+                              className="border-t border-primary/10 pt-2 cursor-pointer hover:text-primary"
+                              onClick={() => handleViewProposal(proposal)}
+                            >
+                              <p className="text-sm font-mono">{proposal.name}</p>
+                              <p className="text-xs text-muted-foreground">{proposal.principal}</p>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="w-full mt-4 text-xs"
+                          onClick={() => handleViewAllProposals("active")}
+                        >
+                          View All Active
+                        </Button>
                       </div>
                       
-                      <div 
-                        className="border border-primary/20 p-4 rounded-md hover:bg-primary/5 cursor-pointer transition-colors"
-                        onClick={() => handleViewAllProposals("completed")}
-                      >
+                      <div className="border border-primary/20 p-4 rounded-md hover:bg-primary/5 transition-colors">
                         <h3 className="font-mono text-sm mb-2">COMPLETED PROPOSALS</h3>
                         <p className="text-2xl font-mono">12</p>
                         <p className="text-xs text-muted-foreground mt-1">Successfully financed</p>
+                        
+                        <div className="mt-4 space-y-2">
+                          {completedProposals.map(proposal => (
+                            <div 
+                              key={proposal.id}
+                              className="border-t border-primary/10 pt-2 cursor-pointer hover:text-primary"
+                              onClick={() => handleViewProposal(proposal)}
+                            >
+                              <p className="text-sm font-mono">{proposal.name}</p>
+                              <p className="text-xs text-muted-foreground">{proposal.principal}</p>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="w-full mt-4 text-xs"
+                          onClick={() => handleViewAllProposals("completed")}
+                        >
+                          View All Completed
+                        </Button>
                       </div>
                       
-                      <div 
-                        className="border border-primary/20 p-4 rounded-md hover:bg-primary/5 cursor-pointer transition-colors"
-                        onClick={() => handleViewAllProposals("drafts")}
-                      >
+                      <div className="border border-primary/20 p-4 rounded-md hover:bg-primary/5 transition-colors">
                         <h3 className="font-mono text-sm mb-2">DRAFT PROPOSALS</h3>
                         <p className="text-2xl font-mono">3</p>
                         <p className="text-xs text-muted-foreground mt-1">In progress</p>
+                        
+                        <div className="mt-4 space-y-2">
+                          {draftProposals.map(proposal => (
+                            <div 
+                              key={proposal.id}
+                              className="border-t border-primary/10 pt-2 cursor-pointer hover:text-primary"
+                              onClick={() => handleViewProposal(proposal)}
+                            >
+                              <p className="text-sm font-mono">{proposal.name}</p>
+                              <p className="text-xs text-muted-foreground">{proposal.principal}</p>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="w-full mt-4 text-xs"
+                          onClick={() => handleViewAllProposals("drafts")}
+                        >
+                          View All Drafts
+                        </Button>
                       </div>
                     </div>
                     
