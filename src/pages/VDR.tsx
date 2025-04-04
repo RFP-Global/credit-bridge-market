@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { 
@@ -18,6 +19,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 const VDR = () => {
   const navigate = useNavigate();
@@ -27,6 +29,10 @@ const VDR = () => {
   const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
+  const [fileToDelete, setFileToDelete] = useState<{ id: string; name: string } | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
 
   const folders = [
     { id: "f1", name: "Financial Documents", parent: "root" },
@@ -38,7 +44,7 @@ const VDR = () => {
     { id: "f7", name: "Q2 Reports", parent: "f1" },
   ];
 
-  const files = [
+  const [files, setFiles] = useState([
     { id: "d1", name: "Annual Report 2024.pdf", folder: "root", size: "4.2 MB", date: "2024-04-01", type: "pdf" },
     { id: "d2", name: "Corporate Structure.docx", folder: "root", size: "1.8 MB", date: "2024-03-15", type: "docx" },
     { id: "d3", name: "Financial Statement.xlsx", folder: "f1", size: "3.1 MB", date: "2024-03-20", type: "xlsx" },
@@ -48,7 +54,7 @@ const VDR = () => {
     { id: "d7", name: "Income Statement.xlsx", folder: "f4", size: "1.9 MB", date: "2024-04-02", type: "xlsx" },
     { id: "d8", name: "Passport Copy.pdf", folder: "f5", size: "1.2 MB", date: "2024-03-10", type: "pdf" },
     { id: "d9", name: "Company Registration.pdf", folder: "f5", size: "2.8 MB", date: "2024-03-12", type: "pdf" },
-  ];
+  ]);
 
   const filteredFolders = folders
     .filter(folder => folder.parent === currentFolder)
@@ -75,6 +81,54 @@ const VDR = () => {
     }
   };
 
+  const simulateFileUpload = () => {
+    setIsUploading(true);
+    setUploadProgress(0);
+    
+    const interval = setInterval(() => {
+      setUploadProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          setTimeout(() => {
+            finishUpload();
+          }, 500);
+          return 100;
+        }
+        return prev + 10;
+      });
+    }, 300);
+  };
+
+  const finishUpload = () => {
+    if (!selectedFiles || selectedFiles.length === 0) return;
+    
+    const newFiles = Array.from(selectedFiles).map((file, index) => {
+      const fileId = `d${Date.now()}-${index}`;
+      const fileSize = (file.size / (1024 * 1024)).toFixed(1);
+      const today = new Date().toISOString().split('T')[0];
+      const fileType = file.name.split('.').pop() || '';
+      
+      return {
+        id: fileId,
+        name: file.name,
+        folder: currentFolder,
+        size: `${fileSize} MB`,
+        date: today,
+        type: fileType
+      };
+    });
+    
+    setFiles(prev => [...prev, ...newFiles]);
+    setIsUploading(false);
+    setSelectedFiles(null);
+    setIsUploadDialogOpen(false);
+    
+    toast({
+      title: "Files uploaded successfully",
+      description: `Uploaded ${newFiles.length} file(s) to current folder`,
+    });
+  };
+
   const handleUpload = () => {
     if (!selectedFiles || selectedFiles.length === 0) {
       toast({
@@ -85,15 +139,7 @@ const VDR = () => {
       return;
     }
 
-    const fileNames = Array.from(selectedFiles).map(file => file.name).join(", ");
-    
-    toast({
-      title: "Files uploaded successfully",
-      description: `Uploaded: ${fileNames}`,
-    });
-    
-    setIsUploadDialogOpen(false);
-    setSelectedFiles(null);
+    simulateFileUpload();
   };
 
   const handleCreateFolder = () => {
@@ -113,6 +159,25 @@ const VDR = () => {
     
     setIsNewFolderDialogOpen(false);
     setNewFolderName("");
+  };
+
+  const handleDeleteClick = (file: { id: string; name: string }) => {
+    setFileToDelete(file);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (fileToDelete) {
+      setFiles(files.filter(file => file.id !== fileToDelete.id));
+      setIsDeleteDialogOpen(false);
+      
+      toast({
+        title: "File deleted",
+        description: `Successfully deleted: ${fileToDelete.name}`,
+      });
+      
+      setFileToDelete(null);
+    }
   };
 
   const getCurrentFolderPath = () => {
@@ -220,21 +285,39 @@ const VDR = () => {
                     </DialogDescription>
                   </DialogHeader>
                   <div className="grid gap-4 py-4">
-                    <Input
-                      id="file-upload"
-                      type="file"
-                      multiple
-                      onChange={(e) => setSelectedFiles(e.target.files)}
-                    />
+                    {isUploading ? (
+                      <div className="space-y-2">
+                        <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-primary transition-all duration-300 ease-in-out" 
+                            style={{ width: `${uploadProgress}%` }}
+                          ></div>
+                        </div>
+                        <p className="text-xs text-center text-muted-foreground">
+                          Uploading... {uploadProgress}%
+                        </p>
+                      </div>
+                    ) : (
+                      <Input
+                        id="file-upload"
+                        type="file"
+                        multiple
+                        onChange={(e) => setSelectedFiles(e.target.files)}
+                      />
+                    )}
                   </div>
                   <DialogFooter>
-                    <Button 
-                      variant="ghost" 
-                      onClick={() => setIsUploadDialogOpen(false)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button onClick={handleUpload}>Upload</Button>
+                    {!isUploading && (
+                      <>
+                        <Button 
+                          variant="ghost" 
+                          onClick={() => setIsUploadDialogOpen(false)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button onClick={handleUpload}>Upload</Button>
+                      </>
+                    )}
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
@@ -335,7 +418,15 @@ const VDR = () => {
                   <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                     <Download className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-destructive">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 w-8 p-0 text-destructive"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteClick(file);
+                    }}
+                  >
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </CardFooter>
@@ -356,6 +447,23 @@ const VDR = () => {
           </div>
         </div>
       </div>
+
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete File</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{fileToDelete?.name}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setIsDeleteDialogOpen(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
