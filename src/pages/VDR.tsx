@@ -13,7 +13,6 @@ import DocumentVerification from "@/components/vdr/DocumentVerification";
 const VDR = () => {
   const navigate = useNavigate();
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
-  // Removed isNewFolderDialogOpen state
   const [isFilePreviewOpen, setIsFilePreviewOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   
@@ -30,12 +29,11 @@ const VDR = () => {
         <VDRHeader 
           onBackClick={handleBackClick}
           setIsUploadDialogOpen={setIsUploadDialogOpen}
-          // Removed setIsNewFolderDialogOpen prop
         />
         
         <div className="container mx-auto px-6 py-8">
           <Tabs defaultValue="browser" className="w-full">
-            <TabsList className="grid grid-cols-3 mb-6 w-[400px]">
+            <TabsList className="grid grid-cols-3 mb-6 w-full max-w-[600px] mx-auto gap-4">
               <TabsTrigger value="browser" className="font-mono text-xs flex gap-2">
                 <Folder className="h-4 w-4" />
                 FILE BROWSER
@@ -73,7 +71,6 @@ const VDR = () => {
         <VDRDialogs 
           isUploadDialogOpen={isUploadDialogOpen}
           setIsUploadDialogOpen={setIsUploadDialogOpen}
-          // Removed isNewFolderDialogOpen and setIsNewFolderDialogOpen props
           isFilePreviewOpen={isFilePreviewOpen}
           setIsFilePreviewOpen={setIsFilePreviewOpen}
           selectedFile={selectedFile}
