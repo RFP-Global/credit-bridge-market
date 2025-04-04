@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { 
@@ -7,7 +6,7 @@ import {
   Check, Scale
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
@@ -45,18 +44,14 @@ const ProposalBids = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   
-  // Mock data for the selected proposal
   const [proposal, setProposal] = useState<Proposal | null>(null);
   const [bids, setBids] = useState<Bid[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedBids, setSelectedBids] = useState<string[]>([]);
   
   useEffect(() => {
-    // Simulate API call to get proposal details
     const fetchProposalDetails = () => {
-      // In a real app, this would be an API call
       setTimeout(() => {
-        // Mock data for the proposal
         const mockProposal: Proposal = {
           id: id || "",
           name: id === "RFP-2023-001" ? "Riverside Development" : 
@@ -88,7 +83,6 @@ const ProposalBids = () => {
           }
         };
         
-        // Mock data for bids
         const mockBids: Bid[] = [
           {
             id: "BID-001",
@@ -145,7 +139,6 @@ const ProposalBids = () => {
       description: `You've accepted bid ${bidId}. The lender will be notified.`,
     });
     
-    // Update the bids list to mark this bid as approved
     setBids(prevBids => 
       prevBids.map(bid => 
         bid.id === bidId 
@@ -161,7 +154,6 @@ const ProposalBids = () => {
       description: `You've rejected bid ${bidId}. The lender will be notified.`,
     });
     
-    // Update the bids list to mark this bid as rejected
     setBids(prevBids => 
       prevBids.map(bid => 
         bid.id === bidId 
@@ -181,7 +173,6 @@ const ProposalBids = () => {
       return;
     }
     
-    // Build the query parameter with selected bid IDs
     const bidParams = selectedBids.join(',');
     navigate(`/bid-comparison/${id}?bids=${bidParams}`);
   };
