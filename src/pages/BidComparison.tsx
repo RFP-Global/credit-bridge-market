@@ -40,6 +40,23 @@ const BidComparison = () => {
   const [bids, setBids] = useState<Bid[]>([]);
   const [loading, setLoading] = useState(true);
   
+  // Function to calculate total cost of a loan
+  const calculateTotalCost = (amount: string, interestRate: string, term: string): string => {
+    // Parse the input values
+    const principal = parseFloat(amount.replace(/[^0-9.]/g, '')) * 1000000; // Convert $XM to a number
+    const rate = parseFloat(interestRate.replace('%', '')) / 100; // Convert percentage to decimal
+    const months = parseInt(term.split(' ')[0]); // Extract months from "XX months"
+    
+    // For simplified calculation (ignoring compounding), we'll use the formula:
+    // Total = Principal + (Principal * Rate * Term in years)
+    const years = months / 12;
+    const interest = principal * rate * years;
+    const total = principal + interest;
+    
+    // Format the result
+    return `$${(total / 1000000).toFixed(2)}M`;
+  };
+  
   useEffect(() => {
     // Simulate API call to get proposal details
     const fetchProposalDetails = () => {
@@ -202,6 +219,9 @@ const BidComparison = () => {
                     <span>Facility Type</span>
                   </div>
                   <div className="font-mono text-sm mb-6 h-12 flex items-center">
+                    <span>Total Cost</span>
+                  </div>
+                  <div className="font-mono text-sm mb-6 h-12 flex items-center">
                     <span>Submission Date</span>
                   </div>
                   <div className="font-mono text-sm mb-6">
@@ -245,6 +265,10 @@ const BidComparison = () => {
                       <Badge className="bg-gray-500/20 text-gray-300 rounded-full px-2 py-1">
                         {bid.facilityType}
                       </Badge>
+                    </div>
+                    <div className="font-mono text-lg mb-6 h-12 flex items-center text-amber-400 font-bold">
+                      {calculateTotalCost(bid.amount, bid.interestRate, bid.term)}
+                      <DollarSign className="h-4 w-4 ml-1 text-amber-400" />
                     </div>
                     <div className="font-mono text-sm mb-6 h-12 flex items-center text-muted-foreground">{bid.submittedDate}</div>
                     
