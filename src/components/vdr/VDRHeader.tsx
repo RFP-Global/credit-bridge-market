@@ -29,19 +29,19 @@ const VDRHeader = ({ onBackClick, onUploadClick }: VDRHeaderProps) => {
               variant="outline" 
               size="sm" 
               className="rounded-none font-mono border-primary/30 text-xs"
-              onClick={onUploadClick}
+              onClick={onBackClick}
             >
-              <Upload className="h-4 w-4 mr-1" />
-              UPLOAD DOCUMENT
+              <ArrowLeft className="h-4 w-4 mr-1" />
+              BACK TO DASHBOARD
             </Button>
             <Button 
               variant="outline" 
               size="sm" 
               className="rounded-none font-mono border-primary/30 text-xs"
-              onClick={onBackClick}
+              onClick={onUploadClick}
             >
-              <ArrowLeft className="h-4 w-4 mr-1" />
-              BACK TO DASHBOARD
+              <Upload className="h-4 w-4 mr-1" />
+              UPLOAD DOCUMENT
             </Button>
           </div>
         </div>
