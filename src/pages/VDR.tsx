@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { 
@@ -38,7 +37,6 @@ const VDR = () => {
     { id: "f1", name: "Financial Documents", parent: "root" },
     { id: "f2", name: "Legal Documents", parent: "root" },
     { id: "f3", name: "Project Materials", parent: "root" },
-    { id: "f4", name: "Financial Statements", parent: "root" },
     { id: "f5", name: "KYC Documentation", parent: "root" },
     { id: "f6", name: "Q1 Reports", parent: "f1" },
     { id: "f7", name: "Q2 Reports", parent: "f1" },
