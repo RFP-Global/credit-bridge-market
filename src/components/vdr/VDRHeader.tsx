@@ -1,14 +1,46 @@
 
 import { Link } from "react-router-dom";
-import { Radar, Signal, ArrowLeft, Upload } from "lucide-react";
+import { Radar, Signal, ArrowLeft, Upload, FolderPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface VDRHeaderProps {
-  onBackClick: () => void;
-  onUploadClick: () => void;
+  onBackClick?: () => void;
+  onUploadClick?: () => void;
+  setIsUploadDialogOpen?: (value: boolean) => void;
+  setIsNewFolderDialogOpen?: (value: boolean) => void;
 }
 
-const VDRHeader = ({ onBackClick, onUploadClick }: VDRHeaderProps) => {
+const VDRHeader = ({ 
+  onBackClick, 
+  onUploadClick,
+  setIsUploadDialogOpen,
+  setIsNewFolderDialogOpen
+}: VDRHeaderProps) => {
+  const navigate = useNavigate();
+  
+  const handleBackClick = () => {
+    if (onBackClick) {
+      onBackClick();
+    } else {
+      navigate('/enterprise-dashboard');
+    }
+  };
+  
+  const handleUploadClick = () => {
+    if (onUploadClick) {
+      onUploadClick();
+    } else if (setIsUploadDialogOpen) {
+      setIsUploadDialogOpen(true);
+    }
+  };
+  
+  const handleNewFolderClick = () => {
+    if (setIsNewFolderDialogOpen) {
+      setIsNewFolderDialogOpen(true);
+    }
+  };
+
   return (
     <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-primary/20">
       <div className="container mx-auto px-6 py-3">
@@ -29,7 +61,7 @@ const VDRHeader = ({ onBackClick, onUploadClick }: VDRHeaderProps) => {
               variant="outline" 
               size="sm" 
               className="rounded-none font-mono border-primary/30 text-xs"
-              onClick={onBackClick}
+              onClick={handleBackClick}
             >
               <ArrowLeft className="h-4 w-4 mr-1" />
               BACK TO DASHBOARD
@@ -38,11 +70,22 @@ const VDRHeader = ({ onBackClick, onUploadClick }: VDRHeaderProps) => {
               variant="outline" 
               size="sm" 
               className="rounded-none font-mono border-primary/30 text-xs"
-              onClick={onUploadClick}
+              onClick={handleUploadClick}
             >
               <Upload className="h-4 w-4 mr-1" />
               UPLOAD DOCUMENT
             </Button>
+            {setIsNewFolderDialogOpen && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="rounded-none font-mono border-primary/30 text-xs"
+                onClick={handleNewFolderClick}
+              >
+                <FolderPlus className="h-4 w-4 mr-1" />
+                NEW FOLDER
+              </Button>
+            )}
           </div>
         </div>
       </div>

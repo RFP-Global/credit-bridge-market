@@ -1,14 +1,22 @@
 
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, FileEdit } from "lucide-react";
 
 interface ProfileHeaderProps {
-  isEditing: boolean;
-  setIsEditing: (value: boolean) => void;
+  isEditing?: boolean;
+  setIsEditing?: (value: boolean) => void;
+  profileData?: any;
 }
 
-const ProfileHeader = ({ isEditing, setIsEditing }: ProfileHeaderProps) => {
+const ProfileHeader = ({ isEditing, setIsEditing, profileData }: ProfileHeaderProps) => {
+  const [isEditingState, setIsEditingState] = useState(false);
+  
+  // Use props if provided, otherwise use local state
+  const editing = isEditing !== undefined ? isEditing : isEditingState;
+  const setEditing = setIsEditing || setIsEditingState;
+  
   return (
     <div className="flex items-center justify-between mb-8">
       <div className="flex items-center">
@@ -23,11 +31,11 @@ const ProfileHeader = ({ isEditing, setIsEditing }: ProfileHeaderProps) => {
       </div>
       
       <Button 
-        variant={isEditing ? "default" : "outline"}
-        onClick={() => setIsEditing(!isEditing)}
+        variant={editing ? "default" : "outline"}
+        onClick={() => setEditing(!editing)}
         className="font-mono text-xs"
       >
-        {isEditing ? (
+        {editing ? (
           <>Cancel Editing</>
         ) : (
           <>

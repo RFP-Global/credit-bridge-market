@@ -4,14 +4,19 @@ import { VDRProvider } from "@/contexts/vdr/VDRContext";
 import VDRContent from "@/components/vdr/VDRContent";
 import VDRDialogs from "@/components/vdr/VDRDialogs";
 import VDRHeader from "@/components/vdr/VDRHeader";
-import VDRLayout from "@/components/vdr/VDRLayout";
 import EnterpriseLayout from "@/components/layout/EnterpriseLayout";
+import { useNavigate } from "react-router-dom";
 
 const VDR = () => {
+  const navigate = useNavigate();
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
   const [isFilePreviewOpen, setIsFilePreviewOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  
+  const handleBackClick = () => {
+    navigate('/enterprise-dashboard');
+  };
   
   return (
     <EnterpriseLayout 
@@ -20,6 +25,7 @@ const VDR = () => {
     >
       <VDRProvider>
         <VDRHeader 
+          onBackClick={handleBackClick}
           setIsUploadDialogOpen={setIsUploadDialogOpen}
           setIsNewFolderDialogOpen={setIsNewFolderDialogOpen}
         />

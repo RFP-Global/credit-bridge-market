@@ -5,15 +5,28 @@ import FilePreview from "@/components/vdr/FilePreview";
 import DeleteFileDialog from "@/components/vdr/DeleteFileDialog";
 import FileUploadDialog from "@/components/vdr/FileUploadDialog";
 import OrganizeFileDialog from "@/components/vdr/OrganizeFileDialog";
+import NewFolderDialog from "@/components/vdr/NewFolderDialog";
 
 interface VDRDialogsProps {
   isUploadDialogOpen: boolean;
   setIsUploadDialogOpen: (open: boolean) => void;
+  isNewFolderDialogOpen?: boolean;
+  setIsNewFolderDialogOpen?: (open: boolean) => void;
+  isFilePreviewOpen?: boolean;
+  setIsFilePreviewOpen?: (open: boolean) => void;
+  selectedFile?: any;
+  setSelectedFile?: (file: any) => void;
 }
 
 const VDRDialogs = ({
   isUploadDialogOpen,
-  setIsUploadDialogOpen
+  setIsUploadDialogOpen,
+  isNewFolderDialogOpen = false,
+  setIsNewFolderDialogOpen = () => {},
+  isFilePreviewOpen = false,
+  setIsFilePreviewOpen = () => {},
+  selectedFile = null,
+  setSelectedFile = () => {}
 }: VDRDialogsProps) => {
   const [isOrganizeDialogOpen, setIsOrganizeDialogOpen] = useState(false);
   const [fileToOrganize, setFileToOrganize] = useState<{ id: string; name: string; folder: string } | null>(null);
@@ -28,8 +41,14 @@ const VDRDialogs = ({
     handleDeleteFile,
     handleFileUpload,
     handleMoveFile,
-    folders
+    folders,
+    handleCreateFolder
   } = useVDR();
+
+  // Use context values or props, preferring props if provided
+  const previewFileToUse = selectedFile || previewFile;
+  const isPreviewOpenToUse = isFilePreviewOpen !== undefined ? isFilePreviewOpen : isPreviewOpen;
+  const setIsPreviewOpenToUse = setIsFilePreviewOpen || setIsPreviewOpen;
 
   useEffect(() => {
     const handleOrganizeFileEvent = (event: Event) => {
@@ -64,6 +83,13 @@ const VDRDialogs = ({
     setIsOrganizeDialogOpen(false);
   };
 
+  const handleNewFolderComplete = (folderName: string) => {
+    handleCreateFolder(folderName);
+    if (setIsNewFolderDialogOpen) {
+      setIsNewFolderDialogOpen(false);
+    }
+  };
+
   return (
     <>
       <FileUploadDialog
@@ -72,10 +98,18 @@ const VDRDialogs = ({
         onUploadComplete={handleUploadComplete}
       />
 
+      {isNewFolderDialogOpen !== undefined && setIsNewFolderDialogOpen && (
+        <NewFolderDialog
+          isOpen={isNewFolderDialogOpen}
+          onOpenChange={setIsNewFolderDialogOpen}
+          onCreateFolder={handleNewFolderComplete}
+        />
+      )}
+
       <FilePreview
-        file={previewFile}
-        isOpen={isPreviewOpen}
-        onOpenChange={setIsPreviewOpen}
+        file={previewFileToUse}
+        isOpen={isPreviewOpenToUse}
+        onOpenChange={setIsPreviewOpenToUse}
       />
 
       <DeleteFileDialog
