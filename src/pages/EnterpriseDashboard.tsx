@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,9 +11,9 @@ const EnterpriseDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
   
   const recentProposals = [
-    { id: 1, name: "Riverside Development", type: "Commercial Real Estate", status: "Under Review", amount: "$2.4M" },
-    { id: 2, name: "Green Energy Initiative", type: "Renewable Energy", status: "Approved", amount: "$5.7M" },
-    { id: 3, name: "Medical Center Expansion", type: "Healthcare", status: "Draft", amount: "$8.1M" }
+    { id: 1, name: "Riverside Development", type: "Commercial Real Estate", status: "Under Review", amount: "$2.4M", proposalId: "RFP-2023-001" },
+    { id: 2, name: "Green Energy Initiative", type: "Renewable Energy", status: "Approved", amount: "$5.7M", proposalId: "RFP-2023-002" },
+    { id: 3, name: "Medical Center Expansion", type: "Healthcare", status: "Draft", amount: "$8.1M", proposalId: "RFP-2023-003" }
   ];
   
   const notifications = [
@@ -31,19 +30,16 @@ const EnterpriseDashboard = () => {
     navigate("/");
   };
 
-  const handleViewProposal = (proposalId: number) => {
-    // Navigate to the proposal details page
-    navigate(`/proposals-dashboard`);
+  const handleViewProposal = (proposal) => {
+    navigate(`/proposal-bids/${proposal.proposalId}`);
     
-    // Show a toast notification
     toast({
       title: "Navigating to proposal",
-      description: `Viewing details for proposal #${proposalId}`,
+      description: `Viewing details for ${proposal.name}`,
     });
   };
 
   const handleViewAllProposals = (tabName: string) => {
-    // Navigate to the proposals dashboard with the relevant tab selected
     navigate(`/proposals-dashboard`);
     
     toast({
@@ -224,7 +220,7 @@ const EnterpriseDashboard = () => {
                         <div 
                           key={proposal.id} 
                           className="border-b border-primary/10 pb-3 last:border-0 last:pb-0 cursor-pointer hover:bg-primary/5"
-                          onClick={() => handleViewProposal(proposal.id)}
+                          onClick={() => handleViewProposal(proposal)}
                         >
                           <div className="flex justify-between items-start">
                             <div>
