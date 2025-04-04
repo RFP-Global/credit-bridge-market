@@ -1,5 +1,5 @@
 
-import { useVDR } from "@/contexts/VDRContext";
+import { useVDR } from "@/contexts/vdr/VDRContext";
 import FilePreview from "@/components/vdr/FilePreview";
 import DeleteFileDialog from "@/components/vdr/DeleteFileDialog";
 import FileUploadDialog from "@/components/vdr/FileUploadDialog";
