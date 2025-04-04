@@ -1,13 +1,13 @@
 
 export interface ProfileData {
-  id: string; // Added unique identifier
+  id: string;
   companyName: string;
   fullName: string;
   email: string;
   phone: string;
   address: string;
   industry: string;
-  founded: string;
-  employees: string;
+  yearFounded: string;
+  size: string; // Adding the size field to make it consistent
   description: string;
 }
