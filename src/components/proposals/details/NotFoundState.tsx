@@ -21,7 +21,7 @@ const NotFoundState: React.FC = () => {
                 The proposal you are looking for could not be found or may have been removed.
               </p>
               
-              <Alert variant="warning" className="bg-amber-500/10 border-amber-500/20 mb-6">
+              <Alert variant="destructive" className="bg-amber-500/10 border-amber-500/20 mb-6">
                 <AlertTriangle className="h-4 w-4 text-amber-500" />
                 <AlertDescription className="text-amber-500">
                   Please check the URL or try accessing this proposal from the marketplace.
