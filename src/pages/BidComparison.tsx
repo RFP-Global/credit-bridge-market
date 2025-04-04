@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import { 
   ArrowLeft, Signal, Radar, Table as TableIcon, 
   DollarSign, ChevronRight, CheckCircle 
@@ -35,6 +35,7 @@ interface Proposal {
 const BidComparison = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   
   const [proposal, setProposal] = useState<Proposal | null>(null);
   const [bids, setBids] = useState<Bid[]>([]);
@@ -134,14 +135,25 @@ const BidComparison = () => {
           }
         ];
         
+        // Check if specific bids were requested via URL params
+        const queryParams = new URLSearchParams(location.search);
+        const selectedBidIds = queryParams.get('bids')?.split(',');
+        
+        if (selectedBidIds && selectedBidIds.length > 0) {
+          // Filter to only show selected bids
+          const filteredBids = mockBids.filter(bid => selectedBidIds.includes(bid.id));
+          setBids(filteredBids.length > 0 ? filteredBids : mockBids);
+        } else {
+          setBids(mockBids);
+        }
+        
         setProposal(mockProposal);
-        setBids(mockBids);
         setLoading(false);
       }, 500);
     };
     
     fetchProposalDetails();
-  }, [id]);
+  }, [id, location.search]);
   
   const handleAcceptBid = (bidId: string) => {
     toast({

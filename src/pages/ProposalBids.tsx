@@ -3,13 +3,15 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { 
   BarChart3, FileText, ArrowLeft, Signal, Radar, 
-  Bell, Settings, Building, CreditCard, ShoppingCart, Users, CheckCircle, Clock, DollarSign, ArrowUpRight
+  Bell, Settings, Building, CreditCard, ShoppingCart, Users, CheckCircle, Clock, DollarSign, ArrowUpRight,
+  Check, Scale
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface Bid {
   id: string;
@@ -47,6 +49,7 @@ const ProposalBids = () => {
   const [proposal, setProposal] = useState<Proposal | null>(null);
   const [bids, setBids] = useState<Bid[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedBids, setSelectedBids] = useState<string[]>([]);
   
   useEffect(() => {
     // Simulate API call to get proposal details
@@ -169,12 +172,26 @@ const ProposalBids = () => {
   };
 
   const handleCompareBids = () => {
-    // This would navigate to a bid comparison page
-    navigate(`/bid-comparison/${id}`);
-    toast({
-      title: "Navigating to Bid Comparison",
-      description: "This would take you to a page where you can compare bids side by side.",
-    });
+    if (selectedBids.length < 2) {
+      toast({
+        title: "Please Select Bids",
+        description: "You need to select at least 2 bids to compare.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Build the query parameter with selected bid IDs
+    const bidParams = selectedBids.join(',');
+    navigate(`/bid-comparison/${id}?bids=${bidParams}`);
+  };
+  
+  const toggleBidSelection = (bidId: string) => {
+    setSelectedBids(prev => 
+      prev.includes(bidId) 
+        ? prev.filter(id => id !== bidId) 
+        : [...prev, bidId]
+    );
   };
 
   return (
@@ -345,14 +362,29 @@ const ProposalBids = () => {
                 )}
                 
                 <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
-                  <CardHeader>
+                  <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle className="text-sm font-mono">RECEIVED BIDS</CardTitle>
-                    <CardDescription>Financing offers from lenders</CardDescription>
+                    <div className="flex space-x-2 items-center">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="rounded-none text-xs"
+                        onClick={handleCompareBids}
+                        disabled={selectedBids.length < 2}
+                      >
+                        <Scale className="h-4 w-4 mr-1" />
+                        Compare
+                      </Button>
+                      <CardDescription className="text-xs">
+                        {selectedBids.length} selected
+                      </CardDescription>
+                    </div>
                   </CardHeader>
                   <CardContent>
                     <Table>
                       <TableHeader>
                         <TableRow>
+                          <TableHead className="w-[50px]">SELECT</TableHead>
                           <TableHead className="w-[100px]">BID ID</TableHead>
                           <TableHead>AMOUNT</TableHead>
                           <TableHead>INTEREST</TableHead>
@@ -365,6 +397,14 @@ const ProposalBids = () => {
                       <TableBody>
                         {bids.map((bid) => (
                           <TableRow key={bid.id}>
+                            <TableCell>
+                              <Checkbox 
+                                checked={selectedBids.includes(bid.id)} 
+                                onCheckedChange={() => toggleBidSelection(bid.id)}
+                                disabled={bid.status !== "Under Review"}
+                                id={`checkbox-${bid.id}`}
+                              />
+                            </TableCell>
                             <TableCell className="font-mono text-xs">{bid.id}</TableCell>
                             <TableCell className="font-mono font-extralight">{bid.amount}</TableCell>
                             <TableCell className="font-mono font-extralight">{bid.interestRate}</TableCell>
