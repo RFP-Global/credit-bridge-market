@@ -5,13 +5,10 @@ import FilePreview from "@/components/vdr/FilePreview";
 import DeleteFileDialog from "@/components/vdr/DeleteFileDialog";
 import FileUploadDialog from "@/components/vdr/FileUploadDialog";
 import OrganizeFileDialog from "@/components/vdr/OrganizeFileDialog";
-import NewFolderDialog from "@/components/vdr/NewFolderDialog";
 
 interface VDRDialogsProps {
   isUploadDialogOpen: boolean;
   setIsUploadDialogOpen: (open: boolean) => void;
-  isNewFolderDialogOpen?: boolean;
-  setIsNewFolderDialogOpen?: (open: boolean) => void;
   isFilePreviewOpen?: boolean;
   setIsFilePreviewOpen?: (open: boolean) => void;
   selectedFile?: any;
@@ -21,8 +18,6 @@ interface VDRDialogsProps {
 const VDRDialogs = ({
   isUploadDialogOpen,
   setIsUploadDialogOpen,
-  isNewFolderDialogOpen = false,
-  setIsNewFolderDialogOpen = () => {},
   isFilePreviewOpen = false,
   setIsFilePreviewOpen = () => {},
   selectedFile = null,
@@ -41,8 +36,7 @@ const VDRDialogs = ({
     handleDeleteFile,
     handleFileUpload,
     handleMoveFile,
-    folders,
-    handleCreateFolder
+    folders
   } = useVDR();
 
   // Use context values or props, preferring props if provided
@@ -83,13 +77,6 @@ const VDRDialogs = ({
     setIsOrganizeDialogOpen(false);
   };
 
-  const handleNewFolderComplete = (folderName: string) => {
-    handleCreateFolder(folderName);
-    if (setIsNewFolderDialogOpen) {
-      setIsNewFolderDialogOpen(false);
-    }
-  };
-
   return (
     <>
       <FileUploadDialog
@@ -97,14 +84,6 @@ const VDRDialogs = ({
         onOpenChange={setIsUploadDialogOpen}
         onUploadComplete={handleUploadComplete}
       />
-
-      {isNewFolderDialogOpen !== undefined && setIsNewFolderDialogOpen && (
-        <NewFolderDialog
-          isOpen={isNewFolderDialogOpen}
-          onOpenChange={setIsNewFolderDialogOpen}
-          onCreateFolder={handleNewFolderComplete}
-        />
-      )}
 
       <FilePreview
         file={previewFileToUse}

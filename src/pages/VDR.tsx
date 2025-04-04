@@ -13,7 +13,7 @@ import DocumentVerification from "@/components/vdr/DocumentVerification";
 const VDR = () => {
   const navigate = useNavigate();
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
-  const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
+  // Removed isNewFolderDialogOpen state
   const [isFilePreviewOpen, setIsFilePreviewOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   
@@ -30,7 +30,7 @@ const VDR = () => {
         <VDRHeader 
           onBackClick={handleBackClick}
           setIsUploadDialogOpen={setIsUploadDialogOpen}
-          setIsNewFolderDialogOpen={setIsNewFolderDialogOpen}
+          // Removed setIsNewFolderDialogOpen prop
         />
         
         <div className="container mx-auto px-6 py-8">
@@ -73,8 +73,7 @@ const VDR = () => {
         <VDRDialogs 
           isUploadDialogOpen={isUploadDialogOpen}
           setIsUploadDialogOpen={setIsUploadDialogOpen}
-          isNewFolderDialogOpen={isNewFolderDialogOpen}
-          setIsNewFolderDialogOpen={setIsNewFolderDialogOpen}
+          // Removed isNewFolderDialogOpen and setIsNewFolderDialogOpen props
           isFilePreviewOpen={isFilePreviewOpen}
           setIsFilePreviewOpen={setIsFilePreviewOpen}
           selectedFile={selectedFile}

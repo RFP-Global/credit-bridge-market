@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { Radar, Signal, ArrowLeft, Upload, FolderPlus } from "lucide-react";
+import { Radar, Signal, ArrowLeft, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
@@ -8,14 +8,12 @@ interface VDRHeaderProps {
   onBackClick?: () => void;
   onUploadClick?: () => void;
   setIsUploadDialogOpen?: (value: boolean) => void;
-  setIsNewFolderDialogOpen?: (value: boolean) => void;
 }
 
 const VDRHeader = ({ 
   onBackClick, 
   onUploadClick,
-  setIsUploadDialogOpen,
-  setIsNewFolderDialogOpen
+  setIsUploadDialogOpen
 }: VDRHeaderProps) => {
   const navigate = useNavigate();
   
@@ -32,12 +30,6 @@ const VDRHeader = ({
       onUploadClick();
     } else if (setIsUploadDialogOpen) {
       setIsUploadDialogOpen(true);
-    }
-  };
-  
-  const handleNewFolderClick = () => {
-    if (setIsNewFolderDialogOpen) {
-      setIsNewFolderDialogOpen(true);
     }
   };
 
@@ -75,17 +67,6 @@ const VDRHeader = ({
               <Upload className="h-4 w-4 mr-1" />
               UPLOAD DOCUMENT
             </Button>
-            {setIsNewFolderDialogOpen && (
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="rounded-none font-mono border-primary/30 text-xs"
-                onClick={handleNewFolderClick}
-              >
-                <FolderPlus className="h-4 w-4 mr-1" />
-                NEW FOLDER
-              </Button>
-            )}
           </div>
         </div>
       </div>
