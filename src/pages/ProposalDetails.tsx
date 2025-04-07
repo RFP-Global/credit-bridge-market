@@ -9,16 +9,6 @@ import { getCompatibilityScore } from "@/components/underwriting/utils/styleUtil
 import { Progress } from "@/components/ui/progress";
 import { Shield, Zap, CheckCircle, AlertCircle } from "lucide-react";
 
-// Component imports
-import LoadingState from "@/components/proposals/details/LoadingState";
-import NotFoundState from "@/components/proposals/details/NotFoundState";
-import ProposalHeader from "@/components/proposals/details/ProposalHeader";
-import OverviewTab from "@/components/proposals/details/OverviewTab";
-import FinancialsTab from "@/components/proposals/details/FinancialsTab";
-import CreditProfileTab from "@/components/proposals/details/CreditProfileTab";
-import CompanyInfoTab from "@/components/proposals/details/CompanyInfoTab";
-import CategoryDetailsModal from "@/components/proposals/details/CategoryDetailsModal";
-
 interface FinancialRatios {
   debtServiceCoverageRatio: number;
   currentRatio: number;
@@ -67,6 +57,7 @@ interface CreditHistory {
 interface UnderwritingCompatibility {
   overallScore: number;
   categoryScores: {
+    financialStrength: number;
     businessStability: number;
     competitivePosition: number;
     collateralStrength: number;
@@ -152,17 +143,22 @@ const ProposalDetails = () => {
         const creditRating = foundProposal.creditRating;
         const baseScore = (creditRating / 10) * 100;
         
+        const financialStrength = Math.min(100, Math.max(20, baseScore + Math.random() * 20 - 10));
         const businessStability = Math.min(100, Math.max(20, baseScore + Math.random() * 20 - 10));
         const competitivePosition = Math.min(100, Math.max(20, baseScore + Math.random() * 20 - 10));
         const collateralStrength = Math.min(100, Math.max(20, baseScore + Math.random() * 20 - 10));
         const industryRisk = Math.min(100, Math.max(20, baseScore + Math.random() * 20 - 10));
         const bankingRelationship = Math.min(100, Math.max(20, baseScore + Math.random() * 20 - 10));
         
-        const overallScore = Math.round((businessStability + competitivePosition + collateralStrength + industryRisk + bankingRelationship) / 5);
+        const overallScore = Math.round(
+          (financialStrength + businessStability + competitivePosition + 
+           collateralStrength + industryRisk + bankingRelationship) / 6
+        );
         
         setCompatibility({
           overallScore,
           categoryScores: {
+            financialStrength: Math.round(financialStrength),
             businessStability: Math.round(businessStability),
             competitivePosition: Math.round(competitivePosition),
             collateralStrength: Math.round(collateralStrength),
@@ -213,6 +209,12 @@ const ProposalDetails = () => {
 
   const handleCategoryClick = (categoryName: string, categoryScore: number) => {
     const categoryComponents = {
+      "Financial Strength": [
+        { name: "EBITDA", score: Math.round(categoryScore * 0.9), description: "Earnings Before Interest, Taxes, Depreciation, and Amortization" },
+        { name: "Debt/EBITDA", score: Math.round(categoryScore * 1.1), description: "Ratio of total debt to EBITDA" },
+        { name: "Current Ratio", score: Math.round(categoryScore * 0.95), description: "Current assets divided by current liabilities" },
+        { name: "Revenue Growth", score: Math.round(categoryScore * 1.05), description: "Year-over-year revenue growth" }
+      ],
       "Business Stability": [
         { name: "Years in Business", score: Math.round(categoryScore * 0.9), description: "Evaluates the longevity and establishment of the business" },
         { name: "Revenue Consistency", score: Math.round(categoryScore * 1.1), description: "Measures the stability of revenue streams over time" },
@@ -370,6 +372,20 @@ const ProposalDetails = () => {
                     <div>
                       <div className="flex justify-between items-center mb-2">
                         <p className="text-sm cursor-pointer hover:text-primary transition-colors" 
+                           onClick={() => handleCategoryClick("Financial Strength", compatibility.categoryScores.financialStrength)}>
+                          Financial Strength
+                        </p>
+                        <p className="text-sm font-semibold">{compatibility.categoryScores.financialStrength}%</p>
+                      </div>
+                      <Progress 
+                        value={compatibility.categoryScores.financialStrength} 
+                        className="h-2" 
+                      />
+                    </div>
+                    
+                    <div>
+                      <div className="flex justify-between items-center mb-2">
+                        <p className="text-sm cursor-pointer hover:text-primary transition-colors" 
                            onClick={() => handleCategoryClick("Business Stability", compatibility.categoryScores.businessStability)}>
                           Business Stability
                         </p>
@@ -377,7 +393,7 @@ const ProposalDetails = () => {
                       </div>
                       <Progress 
                         value={compatibility.categoryScores.businessStability} 
-                        className="h-2" 
+                        className="h-2"
                       />
                     </div>
                     
