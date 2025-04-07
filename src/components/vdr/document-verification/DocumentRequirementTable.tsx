@@ -8,10 +8,17 @@ import DocumentStatusBadge from "./DocumentStatusBadge";
 
 interface DocumentRequirementTableProps {
   documents: DocumentRequirement[];
-  onUploadClick: () => void;
+  selectedRequirement: DocumentRequirement | null;
+  setSelectedRequirement: React.Dispatch<React.SetStateAction<DocumentRequirement | null>>;
+  onUploadClick?: () => void;
 }
 
-const DocumentRequirementTable = ({ documents, onUploadClick }: DocumentRequirementTableProps) => {
+const DocumentRequirementTable = ({ 
+  documents, 
+  selectedRequirement, 
+  setSelectedRequirement,
+  onUploadClick 
+}: DocumentRequirementTableProps) => {
   return (
     <div className="rounded-md border">
       <Table>
@@ -25,7 +32,11 @@ const DocumentRequirementTable = ({ documents, onUploadClick }: DocumentRequirem
         </TableHeader>
         <TableBody>
           {documents.map((doc) => (
-            <TableRow key={doc.id} className="hover:bg-muted/50">
+            <TableRow 
+              key={doc.id} 
+              className={`hover:bg-muted/50 ${selectedRequirement?.id === doc.id ? 'bg-primary/10' : ''}`}
+              onClick={() => setSelectedRequirement(doc)}
+            >
               <TableCell className="font-medium">{doc.name}</TableCell>
               <TableCell className="text-muted-foreground flex items-center gap-2">
                 <Info className="h-4 w-4 text-primary/60" />
@@ -39,7 +50,10 @@ const DocumentRequirementTable = ({ documents, onUploadClick }: DocumentRequirem
                   variant="outline" 
                   size="sm" 
                   className="text-xs"
-                  onClick={onUploadClick}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (onUploadClick) onUploadClick();
+                  }}
                 >
                   <Upload className="h-3 w-3 mr-1" />
                   Upload

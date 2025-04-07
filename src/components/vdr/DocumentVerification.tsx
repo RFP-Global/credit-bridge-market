@@ -80,9 +80,13 @@ const DocumentVerification = () => {
         completionPercentage={completionPercentage} 
         totalRequirements={documentRequirements.length}
         completedRequirements={completedRequirements}
+        onUploadClick={handleUploadClick}
       />
       
-      <DocumentRequirementAlert />
+      <DocumentRequirementAlert 
+        completedCount={completedRequirements}
+        totalCount={documentRequirements.length}
+      />
       
       <Card className="border-primary/20">
         <CardHeader className="pb-3">
@@ -99,9 +103,10 @@ const DocumentVerification = () => {
         </CardHeader>
         <CardContent>
           <DocumentRequirementTable 
-            requirements={documentRequirements}
+            documents={documentRequirements}
             selectedRequirement={selectedRequirement}
             setSelectedRequirement={setSelectedRequirement}
+            onUploadClick={handleUploadClick}
           />
         </CardContent>
       </Card>
