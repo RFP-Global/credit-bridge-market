@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,6 +17,7 @@ import OverviewTab from "@/components/proposals/details/OverviewTab";
 import FinancialsTab from "@/components/proposals/details/FinancialsTab";
 import CreditProfileTab from "@/components/proposals/details/CreditProfileTab";
 import CompanyInfoTab from "@/components/proposals/details/CompanyInfoTab";
+import CategoryDetailsModal from "@/components/proposals/details/CategoryDetailsModal";
 
 interface FinancialRatios {
   debtServiceCoverageRatio: number;
@@ -91,6 +91,12 @@ const ProposalDetails = () => {
   const [compatibility, setCompatibility] = useState<UnderwritingCompatibility | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const [categoryModalOpen, setCategoryModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<{
+    name: string;
+    score: number;
+    components: { name: string; score: number; description?: string }[];
+  } | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -203,6 +209,51 @@ const ProposalDetails = () => {
 
   const handleBid = () => {
     navigate(`/proposal/${id}/bid`);
+  };
+
+  const handleCategoryClick = (categoryName: string, categoryScore: number) => {
+    const categoryComponents = {
+      "Business Stability": [
+        { name: "Years in Business", score: Math.round(categoryScore * 0.9), description: "Evaluates the longevity and establishment of the business" },
+        { name: "Revenue Consistency", score: Math.round(categoryScore * 1.1), description: "Measures the stability of revenue streams over time" },
+        { name: "Management Experience", score: Math.round(categoryScore * 0.95), description: "Assesses leadership experience and industry knowledge" }
+      ],
+      "Competitive Position": [
+        { name: "Market Share", score: Math.round(categoryScore * 1.05), description: "Percentage of market controlled relative to competitors" },
+        { name: "Product Differentiation", score: Math.round(categoryScore * 0.9), description: "Uniqueness of offerings compared to competitors" },
+        { name: "Customer Loyalty", score: Math.round(categoryScore * 1.1), description: "Strength of customer relationships and retention" }
+      ],
+      "Collateral Strength": [
+        { name: "Asset Quality", score: Math.round(categoryScore * 0.95), description: "Value and liquidity of assets being used as collateral" },
+        { name: "Loan-to-Value Ratio", score: Math.round(categoryScore * 1.05), description: "Ratio of loan amount to the value of assets" },
+        { name: "Asset Depreciation Rate", score: Math.round(categoryScore * 0.9), description: "Speed at which collateral assets lose value" }
+      ],
+      "Industry & Market Risk": [
+        { name: "Industry Growth Rate", score: Math.round(categoryScore * 1.1), description: "Overall growth trends in the company's industry" },
+        { name: "Market Volatility", score: Math.round(categoryScore * 0.9), description: "Stability of the market where the company operates" },
+        { name: "Regulatory Environment", score: Math.round(categoryScore * 0.95), description: "Impact of regulations on business operations" }
+      ],
+      "Banking Relationship": [
+        { name: "Credit History", score: Math.round(categoryScore * 1.05), description: "Past payment behavior with financial institutions" },
+        { name: "Relationship Longevity", score: Math.round(categoryScore * 0.95), description: "Duration of banking relationships" },
+        { name: "Product Utilization", score: Math.round(categoryScore * 1.0), description: "Range of financial products used by the business" }
+      ]
+    };
+    
+    const normalizeComponents = (components: any[]) => {
+      return components.map(comp => ({
+        ...comp,
+        score: Math.min(100, Math.max(0, comp.score))
+      }));
+    };
+    
+    setSelectedCategory({
+      name: categoryName,
+      score: categoryScore,
+      components: normalizeComponents(categoryComponents[categoryName as keyof typeof categoryComponents] || [])
+    });
+    
+    setCategoryModalOpen(true);
   };
 
   if (loading) {
@@ -318,61 +369,71 @@ const ProposalDetails = () => {
                   <div className="space-y-4">
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <p className="text-sm">Business Stability</p>
+                        <p className="text-sm cursor-pointer hover:text-primary transition-colors" 
+                           onClick={() => handleCategoryClick("Business Stability", compatibility.categoryScores.businessStability)}>
+                          Business Stability
+                        </p>
                         <p className="text-sm font-semibold">{compatibility.categoryScores.businessStability}%</p>
                       </div>
                       <Progress 
                         value={compatibility.categoryScores.businessStability} 
                         className="h-2" 
-                        // Removed indicatorClassName prop and will modify the Progress component if needed
                       />
                     </div>
                     
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <p className="text-sm">Competitive Position</p>
+                        <p className="text-sm cursor-pointer hover:text-primary transition-colors" 
+                           onClick={() => handleCategoryClick("Competitive Position", compatibility.categoryScores.competitivePosition)}>
+                          Competitive Position
+                        </p>
                         <p className="text-sm font-semibold">{compatibility.categoryScores.competitivePosition}%</p>
                       </div>
                       <Progress 
                         value={compatibility.categoryScores.competitivePosition} 
                         className="h-2"
-                        // Removed indicatorClassName prop
                       />
                     </div>
                     
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <p className="text-sm">Collateral Strength</p>
+                        <p className="text-sm cursor-pointer hover:text-primary transition-colors" 
+                           onClick={() => handleCategoryClick("Collateral Strength", compatibility.categoryScores.collateralStrength)}>
+                          Collateral Strength
+                        </p>
                         <p className="text-sm font-semibold">{compatibility.categoryScores.collateralStrength}%</p>
                       </div>
                       <Progress 
                         value={compatibility.categoryScores.collateralStrength} 
                         className="h-2"
-                        // Removed indicatorClassName prop
                       />
                     </div>
                     
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <p className="text-sm">Industry & Market Risk</p>
+                        <p className="text-sm cursor-pointer hover:text-primary transition-colors" 
+                           onClick={() => handleCategoryClick("Industry & Market Risk", compatibility.categoryScores.industryRisk)}>
+                          Industry & Market Risk
+                        </p>
                         <p className="text-sm font-semibold">{compatibility.categoryScores.industryRisk}%</p>
                       </div>
                       <Progress 
                         value={compatibility.categoryScores.industryRisk} 
                         className="h-2"
-                        // Removed indicatorClassName prop
                       />
                     </div>
                     
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <p className="text-sm">Banking & Relationship</p>
+                        <p className="text-sm cursor-pointer hover:text-primary transition-colors" 
+                           onClick={() => handleCategoryClick("Banking Relationship", compatibility.categoryScores.bankingRelationship)}>
+                          Banking & Relationship
+                        </p>
                         <p className="text-sm font-semibold">{compatibility.categoryScores.bankingRelationship}%</p>
                       </div>
                       <Progress 
                         value={compatibility.categoryScores.bankingRelationship} 
                         className="h-2"
-                        // Removed indicatorClassName prop
                       />
                     </div>
                   </div>
@@ -425,6 +486,16 @@ const ProposalDetails = () => {
           </TabsContent>
         </Tabs>
       </div>
+      
+      {selectedCategory && (
+        <CategoryDetailsModal
+          open={categoryModalOpen}
+          onOpenChange={setCategoryModalOpen}
+          categoryName={selectedCategory.name}
+          categoryScore={selectedCategory.score}
+          components={selectedCategory.components}
+        />
+      )}
     </div>
   );
 };
