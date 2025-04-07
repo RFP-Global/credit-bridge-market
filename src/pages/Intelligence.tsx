@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
-import { ChevronDown, Settings, Filter, Download, Globe, Store, Briefcase, Map } from "lucide-react";
+import { ChevronDown, Settings, Filter, Download, Globe, Store, Briefcase, Map, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BusinessSizeAnalytics from "@/components/intelligence/BusinessSizeAnalytics";
@@ -8,6 +9,7 @@ import IndustryTypeAnalytics from "@/components/intelligence/IndustryTypeAnalyti
 import BusinessStructureAnalytics from "@/components/intelligence/BusinessStructureAnalytics";
 import GeographyAnalytics from "@/components/intelligence/GeographyAnalytics";
 import FullscreenButton from "@/components/FullscreenButton";
+import { useLocation, useNavigate } from "react-router-dom";
 
 // Updated chart colors to use blue shades
 export const CHART_COLORS = {
@@ -43,6 +45,20 @@ export const CHART_COLORS = {
 const Intelligence = () => {
   const [activeTab, setActiveTab] = useState("business");
   const [timeFilter, setTimeFilter] = useState("last-year");
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  // Determine if user is coming from lender dashboard based on the URL path
+  const isLenderRole = location.pathname.includes('lender-dashboard') || 
+                     location.state?.from === 'lender-dashboard';
+                     
+  // Determine the dashboard route based on user role
+  const dashboardRoute = isLenderRole ? '/lender-dashboard' : '/enterprise-dashboard';
+
+  // Handle navigation back to the appropriate dashboard
+  const handleBackToDashboard = () => {
+    navigate(dashboardRoute);
+  };
 
   // Mock data for business size analytics
   const businessSizeData = [
@@ -178,10 +194,19 @@ const Intelligence = () => {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-2">
             <Store className="h-6 w-6 text-gray-400" />
-            <h1 className="text-2xl font-mono text-gray-200">Analytice</h1>
+            <h1 className="text-2xl font-mono text-gray-200">Analytics</h1>
           </div>
           
           <div className="flex items-center space-x-3">
+            <Button 
+              variant="outline" 
+              className="flex items-center h-8 bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-800 font-mono text-xs"
+              onClick={handleBackToDashboard}
+            >
+              <ArrowLeft className="h-3.5 w-3.5 mr-2" />
+              Back to Dashboard
+            </Button>
+            
             <Button 
               variant="outline" 
               className="flex items-center h-8 bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-800 font-mono text-xs"
