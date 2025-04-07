@@ -24,7 +24,11 @@ const watchlistDeals = [
   { id: 9, name: "Agricultural Tech Campus", company: "GrowSmart Technologies", amount: "$6.1M", status: "Interested", notes: "Strong financials, expanding sector" }
 ];
 
-const DealsTab = () => {
+interface DealsTabProps {
+  defaultTab?: "active" | "closed" | "watchlist";
+}
+
+const DealsTab = ({ defaultTab = "active" }: DealsTabProps) => {
   return (
     <Card className="bg-background/50 backdrop-blur-sm">
       <CardHeader>
@@ -32,7 +36,7 @@ const DealsTab = () => {
         <CardDescription>Track and manage all your financing deals</CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="active" className="space-y-4">
+        <Tabs defaultValue={defaultTab} className="space-y-4">
           <TabsList className="bg-background/50">
             <TabsTrigger value="active" className="font-mono text-xs">
               <Clock className="h-3.5 w-3.5 mr-2" />

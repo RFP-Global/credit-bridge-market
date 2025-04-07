@@ -3,12 +3,11 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LenderHeader from "@/components/lender/LenderHeader";
 import LenderSidebar from "@/components/lender/LenderSidebar";
-import OverviewTab from "@/components/lender/OverviewTab";
 import DealsTab from "@/components/lender/DealsTab";
-import NotificationsTab from "@/components/lender/NotificationsTab";
+import { Clock, CheckCircle, Eye } from "lucide-react";
 
 const LenderDashboard = () => {
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("active");
 
   return (
     <div className="min-h-screen bg-background text-foreground relative grid-bg">
@@ -32,23 +31,32 @@ const LenderDashboard = () => {
               <p className="text-sm text-muted-foreground">Monitor your active deals and opportunities.</p>
             </div>
             
-            <Tabs defaultValue="overview" className="space-y-6" onValueChange={setActiveTab}>
+            <Tabs defaultValue="active" className="space-y-6" onValueChange={setActiveTab}>
               <TabsList className="bg-background/50">
-                <TabsTrigger value="overview" className="font-mono text-xs">OVERVIEW</TabsTrigger>
-                <TabsTrigger value="deals" className="font-mono text-xs">ACTIVE DEALS</TabsTrigger>
-                <TabsTrigger value="notifications" className="font-mono text-xs">NOTIFICATIONS</TabsTrigger>
+                <TabsTrigger value="active" className="font-mono text-xs">
+                  <Clock className="h-3.5 w-3.5 mr-2" />
+                  ACTIVE DEALS
+                </TabsTrigger>
+                <TabsTrigger value="closed" className="font-mono text-xs">
+                  <CheckCircle className="h-3.5 w-3.5 mr-2" />
+                  CLOSED DEALS
+                </TabsTrigger>
+                <TabsTrigger value="watchlist" className="font-mono text-xs">
+                  <Eye className="h-3.5 w-3.5 mr-2" />
+                  WATCHLIST
+                </TabsTrigger>
               </TabsList>
               
-              <TabsContent value="overview">
-                <OverviewTab />
+              <TabsContent value="active">
+                <DealsTab defaultTab="active" />
               </TabsContent>
               
-              <TabsContent value="deals">
-                <DealsTab />
+              <TabsContent value="closed">
+                <DealsTab defaultTab="closed" />
               </TabsContent>
               
-              <TabsContent value="notifications">
-                <NotificationsTab />
+              <TabsContent value="watchlist">
+                <DealsTab defaultTab="watchlist" />
               </TabsContent>
             </Tabs>
           </main>
