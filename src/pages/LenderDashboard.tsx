@@ -48,15 +48,15 @@ const LenderDashboard = () => {
               </TabsList>
               
               <TabsContent value="active">
-                <DealsTab defaultTab="active" />
+                <DealsTab type="active" />
               </TabsContent>
               
               <TabsContent value="closed">
-                <DealsTab defaultTab="closed" />
+                <DealsTab type="closed" />
               </TabsContent>
               
               <TabsContent value="watchlist">
-                <DealsTab defaultTab="watchlist" />
+                <DealsTab type="watchlist" />
               </TabsContent>
             </Tabs>
           </main>
