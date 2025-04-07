@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,6 +9,15 @@ import { useToast } from "@/hooks/use-toast";
 import { getCompatibilityScore } from "@/components/underwriting/utils/styleUtils";
 import { Progress } from "@/components/ui/progress";
 import { Shield, Zap, CheckCircle, AlertCircle } from "lucide-react";
+
+// Component imports
+import LoadingState from "@/components/proposals/details/LoadingState";
+import NotFoundState from "@/components/proposals/details/NotFoundState";
+import ProposalHeader from "@/components/proposals/details/ProposalHeader";
+import OverviewTab from "@/components/proposals/details/OverviewTab";
+import FinancialsTab from "@/components/proposals/details/FinancialsTab";
+import CreditProfileTab from "@/components/proposals/details/CreditProfileTab";
+import CompanyInfoTab from "@/components/proposals/details/CompanyInfoTab";
 
 interface FinancialRatios {
   debtServiceCoverageRatio: number;
@@ -257,7 +267,7 @@ const ProposalDetails = () => {
                 <div className="col-span-1 bg-black/40 border border-gray-800 rounded-md p-6">
                   <div className="flex items-center mb-6">
                     <Shield className="h-5 w-5 mr-2 text-primary" />
-                    <h3 className="text-lg font-medium">Underwriting Match</h3>
+                    <h3 className="text-lg font-medium">Compatibility Match</h3>
                   </div>
                   
                   <div className="flex flex-col items-center justify-center space-y-4 py-6">
@@ -314,11 +324,7 @@ const ProposalDetails = () => {
                       <Progress 
                         value={compatibility.categoryScores.businessStability} 
                         className="h-2" 
-                        indicatorClassName={
-                          compatibility.categoryScores.businessStability >= 80 ? "bg-green-500" : 
-                          compatibility.categoryScores.businessStability >= 60 ? "bg-blue-500" : 
-                          compatibility.categoryScores.businessStability >= 40 ? "bg-yellow-500" : "bg-red-500"
-                        }
+                        // Removed indicatorClassName prop and will modify the Progress component if needed
                       />
                     </div>
                     
@@ -330,11 +336,7 @@ const ProposalDetails = () => {
                       <Progress 
                         value={compatibility.categoryScores.competitivePosition} 
                         className="h-2"
-                        indicatorClassName={
-                          compatibility.categoryScores.competitivePosition >= 80 ? "bg-green-500" : 
-                          compatibility.categoryScores.competitivePosition >= 60 ? "bg-blue-500" : 
-                          compatibility.categoryScores.competitivePosition >= 40 ? "bg-yellow-500" : "bg-red-500"
-                        }
+                        // Removed indicatorClassName prop
                       />
                     </div>
                     
@@ -346,11 +348,7 @@ const ProposalDetails = () => {
                       <Progress 
                         value={compatibility.categoryScores.collateralStrength} 
                         className="h-2"
-                        indicatorClassName={
-                          compatibility.categoryScores.collateralStrength >= 80 ? "bg-green-500" : 
-                          compatibility.categoryScores.collateralStrength >= 60 ? "bg-blue-500" : 
-                          compatibility.categoryScores.collateralStrength >= 40 ? "bg-yellow-500" : "bg-red-500"
-                        }
+                        // Removed indicatorClassName prop
                       />
                     </div>
                     
@@ -362,11 +360,7 @@ const ProposalDetails = () => {
                       <Progress 
                         value={compatibility.categoryScores.industryRisk} 
                         className="h-2"
-                        indicatorClassName={
-                          compatibility.categoryScores.industryRisk >= 80 ? "bg-green-500" : 
-                          compatibility.categoryScores.industryRisk >= 60 ? "bg-blue-500" : 
-                          compatibility.categoryScores.industryRisk >= 40 ? "bg-yellow-500" : "bg-red-500"
-                        }
+                        // Removed indicatorClassName prop
                       />
                     </div>
                     
@@ -378,11 +372,7 @@ const ProposalDetails = () => {
                       <Progress 
                         value={compatibility.categoryScores.bankingRelationship} 
                         className="h-2"
-                        indicatorClassName={
-                          compatibility.categoryScores.bankingRelationship >= 80 ? "bg-green-500" : 
-                          compatibility.categoryScores.bankingRelationship >= 60 ? "bg-blue-500" : 
-                          compatibility.categoryScores.bankingRelationship >= 40 ? "bg-yellow-500" : "bg-red-500"
-                        }
+                        // Removed indicatorClassName prop
                       />
                     </div>
                   </div>
