@@ -1,10 +1,16 @@
 
 import { Button } from "@/components/ui/button";
 import { FileText, BarChart3, DollarSign, BriefcaseBusiness, Users } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LenderAccountCard from "./LenderAccountCard";
 
 const LenderSidebar = () => {
+  const navigate = useNavigate();
+
+  const handleMarketplaceClick = () => {
+    navigate('/marketplace', { state: { from: 'lender-dashboard' } });
+  };
+
   return (
     <aside className="w-full md:w-64 space-y-6">
       <LenderAccountCard />
@@ -27,12 +33,10 @@ const LenderSidebar = () => {
         <Button 
           variant="ghost" 
           className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3"
-          asChild
+          onClick={handleMarketplaceClick}
         >
-          <Link to="/marketplace">
-            <DollarSign className="h-4 w-4 mr-3" />
-            Marketplace
-          </Link>
+          <DollarSign className="h-4 w-4 mr-3" />
+          Marketplace
         </Button>
         <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3">
           <BriefcaseBusiness className="h-4 w-4 mr-3" />

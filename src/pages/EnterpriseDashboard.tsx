@@ -59,7 +59,7 @@ const EnterpriseDashboard = () => {
   };
 
   const handleNavigateToMarketplace = () => {
-    navigate('/marketplace');
+    navigate('/marketplace', { state: { from: 'enterprise-dashboard' } });
   };
 
   return (
