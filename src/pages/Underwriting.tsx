@@ -1,10 +1,9 @@
-
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Info, FileSpreadsheet, Settings, History } from "lucide-react";
+import { Info, FileSpreadsheet, Settings } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -14,7 +13,6 @@ import {
 import LenderHeader from "@/components/lender/LenderHeader";
 import LenderSidebar from "@/components/lender/LenderSidebar";
 import { AlgorithmTab } from "@/components/underwriting/AlgorithmTab";
-import { ScoringHistory } from "@/components/underwriting/ScoringHistory";
 import { AlgorithmSettings } from "@/components/underwriting/AlgorithmSettings";
 import { UnderwritingPreferences } from "@/components/underwriting/UnderwritingPreferences";
 import { CriteriaGroup } from "@/components/underwriting/types";
@@ -278,7 +276,6 @@ const Underwriting = () => {
     const newGroups = [...criteriaGroups];
     newGroups[groupIndex].criteria[criterionIndex].weight = newWeight;
     
-    // Adjust other weights in the same group to maintain total of 100
     const group = newGroups[groupIndex];
     const totalOtherWeight = group.criteria.reduce((sum, criterion, idx) => 
       idx === criterionIndex ? sum : sum + criterion.weight, 0);
@@ -292,11 +289,9 @@ const Underwriting = () => {
         }
       });
       
-      // Adjust for rounding errors
       const adjustedTotal = group.criteria.reduce((sum, criterion) => sum + criterion.weight, 0);
       if (adjustedTotal !== 100) {
         const diff = 100 - adjustedTotal;
-        // Find the largest weight that's not the one we just changed and adjust it
         let maxIdx = -1;
         let maxWeight = -1;
         
@@ -321,7 +316,6 @@ const Underwriting = () => {
     const newGroups = [...criteriaGroups];
     newGroups[groupIndex].weight = newWeight;
     
-    // Adjust other weights to maintain total of 100
     const totalOtherWeight = newGroups.reduce((sum, group, idx) => 
       idx === groupIndex ? sum : sum + group.weight, 0);
     
@@ -334,11 +328,9 @@ const Underwriting = () => {
         }
       });
       
-      // Adjust for rounding errors
       const adjustedTotal = newGroups.reduce((sum, group) => sum + group.weight, 0);
       if (adjustedTotal !== 100) {
         const diff = 100 - adjustedTotal;
-        // Find the largest weight that's not the one we just changed and adjust it
         let maxIdx = -1;
         let maxWeight = -1;
         
@@ -367,7 +359,6 @@ const Underwriting = () => {
   };
 
   const recalculateScores = (groups: CriteriaGroup[]) => {
-    // Recalculate group scores
     groups.forEach(group => {
       let weightSum = 0;
       let scoreSum = 0;
@@ -380,7 +371,6 @@ const Underwriting = () => {
       group.score = weightSum > 0 ? parseFloat((scoreSum / weightSum).toFixed(2)) : 0;
     });
     
-    // Recalculate total score
     let totalWeightedScore = 0;
     let totalWeight = 0;
     
@@ -476,10 +466,6 @@ const Underwriting = () => {
                   <Settings className="h-3.5 w-3.5 mr-2" />
                   RISK ALGORITHM
                 </TabsTrigger>
-                <TabsTrigger value="history" className="font-mono text-xs flex items-center">
-                  <History className="h-3.5 w-3.5 mr-2" />
-                  SCORING HISTORY
-                </TabsTrigger>
                 <TabsTrigger value="settings" className="font-mono text-xs">
                   ALGORITHM SETTINGS
                 </TabsTrigger>
@@ -498,10 +484,6 @@ const Underwriting = () => {
                   getScoreColor={getScoreColor}
                   getScoreBackground={getScoreBackground}
                 />
-              </TabsContent>
-              
-              <TabsContent value="history">
-                <ScoringHistory getScoreBackground={getScoreBackground} />
               </TabsContent>
               
               <TabsContent value="settings">
