@@ -1,35 +1,14 @@
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Radar, Signal, BarChart3, FileText, CreditCard, ArrowUpRight, Bell, Settings, DollarSign, Users, BriefcaseBusiness, CheckCircle, Clock } from "lucide-react";
-import { useNavigate, Link } from "react-router-dom";
-import { toast } from "@/hooks/use-toast";
+import LenderHeader from "@/components/lender/LenderHeader";
+import LenderSidebar from "@/components/lender/LenderSidebar";
+import OverviewTab from "@/components/lender/OverviewTab";
+import DealsTab from "@/components/lender/DealsTab";
+import NotificationsTab from "@/components/lender/NotificationsTab";
 
 const LenderDashboard = () => {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
-  
-  const activeDeals = [
-    { id: 1, name: "Riverside Development", company: "TerraForge Inc.", amount: "$2.4M", status: "Review" },
-    { id: 2, name: "Green Energy Initiative", company: "EcoSystems LLC", amount: "$5.7M", status: "Approved" },
-    { id: 3, name: "Medical Center Expansion", company: "HealthCore Solutions", amount: "$8.1M", status: "Pending" }
-  ];
-  
-  const notifications = [
-    { id: 1, text: "New RFP: Downtown Office Complex", time: "2 hours ago" },
-    { id: 2, text: "TerraForge Inc. has accepted your term sheet", time: "Yesterday" },
-    { id: 3, text: "New industry report available: Real Estate Q2", time: "3 days ago" }
-  ];
-
-  const handleLogout = () => {
-    toast({
-      title: "Logged Out",
-      description: "Successfully logged out of your lender account",
-    });
-    navigate("/");
-  };
 
   return (
     <div className="min-h-screen bg-background text-foreground relative grid-bg">
@@ -41,99 +20,11 @@ const LenderDashboard = () => {
       
       <div className="scanline z-10"></div>
       
-      <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm">
-        <div className="container mx-auto px-6 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <Link to="/" className="flex items-center">
-                <div className="relative mr-2">
-                  <Radar className="h-6 w-6 text-primary" />
-                  <Signal className="h-4 w-4 text-primary/70 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-                </div>
-                <span className="font-typewriter text-xl">RFP GLOBAL</span>
-              </Link>
-              <span className="ml-4 text-xs font-mono text-foreground/60 border-l border-primary/20 pl-4">LENDER PORTAL</span>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <button className="p-2 rounded-full hover:bg-primary/10 relative">
-                <Bell className="h-5 w-5" />
-                <span className="absolute top-0 right-0 h-2 w-2 bg-primary rounded-full"></span>
-              </button>
-              <button className="p-2 rounded-full hover:bg-primary/10">
-                <Settings className="h-5 w-5" />
-              </button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="rounded-none font-mono text-xs"
-                onClick={handleLogout}
-              >
-                LOGOUT
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <LenderHeader />
       
       <div className="container mx-auto px-6 py-8 relative z-10">
         <div className="flex flex-col md:flex-row gap-6">
-          <aside className="w-full md:w-64 space-y-6">
-            <Card className="bg-background/50 backdrop-blur-sm overflow-hidden">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-mono">LENDER ACCOUNT</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="bg-primary/10 w-10 h-10 rounded-full flex items-center justify-center text-xs font-mono">GC</div>
-                  <div>
-                    <p className="font-mono text-sm">GLOBAL CAPITAL</p>
-                    <p className="text-xs text-muted-foreground">finance@globalcapital.com</p>
-                  </div>
-                </div>
-                <div className="text-xs text-muted-foreground pt-2 border-t border-primary/10">
-                  <p className="flex justify-between py-1"><span>Account Type:</span> <span className="font-mono">INSTITUTIONAL</span></p>
-                  <p className="flex justify-between py-1"><span>Active Deals:</span> <span className="font-mono">12</span></p>
-                  <p className="flex justify-between py-1"><span>Total Portfolio:</span> <span className="font-mono">$145.8M</span></p>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <nav className="space-y-1">
-              <Button 
-                variant="ghost" 
-                className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3 bg-primary/5 text-primary border-l-2 border-primary"
-                asChild
-              >
-                <Link to="/lender-dashboard">
-                  <BarChart3 className="h-4 w-4 mr-3" />
-                  Dashboard
-                </Link>
-              </Button>
-              <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3">
-                <FileText className="h-4 w-4 mr-3" />
-                Active RFPs
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3"
-                asChild
-              >
-                <Link to="/marketplace">
-                  <DollarSign className="h-4 w-4 mr-3" />
-                  Marketplace
-                </Link>
-              </Button>
-              <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3">
-                <BriefcaseBusiness className="h-4 w-4 mr-3" />
-                Portfolio
-              </Button>
-              <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3">
-                <Users className="h-4 w-4 mr-3" />
-                Borrowers
-              </Button>
-            </nav>
-          </aside>
+          <LenderSidebar />
           
           <main className="flex-1">
             <div className="border-b border-primary/10 pb-4 mb-6">
@@ -148,147 +39,16 @@ const LenderDashboard = () => {
                 <TabsTrigger value="notifications" className="font-mono text-xs">NOTIFICATIONS</TabsTrigger>
               </TabsList>
               
-              <TabsContent value="overview" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Card className="bg-background/50">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-mono">ACTIVE DEALS</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-3xl font-mono">12</div>
-                      <p className="text-xs text-muted-foreground mt-1">+3 from last month</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-background/50">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-mono">AVAILABLE RFPs</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-3xl font-mono">37</div>
-                      <p className="text-xs text-muted-foreground mt-1">+8 in the last 7 days</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-background/50">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-mono">PORTFOLIO VALUE</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-3xl font-mono">$145.8M</div>
-                      <p className="text-xs text-muted-foreground mt-1">Across all active deals</p>
-                    </CardContent>
-                  </Card>
-                </div>
-                
-                <Card className="bg-background/50 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="text-sm font-mono">ACTIVE DEALS</CardTitle>
-                    <CardDescription>Your current financing deals</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {activeDeals.map(deal => (
-                        <div key={deal.id} className="border-b border-primary/10 pb-3 last:border-0 last:pb-0">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h3 className="font-mono text-sm">{deal.name}</h3>
-                              <p className="text-xs text-muted-foreground">{deal.company}</p>
-                            </div>
-                            <div className="text-right">
-                              <span className={`text-xs px-2 py-1 font-mono ${
-                                deal.status === "Approved" ? "bg-green-100 text-green-800" : 
-                                deal.status === "Review" ? "bg-amber-100 text-amber-800" : 
-                                "bg-blue-100 text-blue-800"
-                              }`}>
-                                {deal.status}
-                              </span>
-                              <p className="text-xs font-mono mt-1">{deal.amount}</p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" size="sm" className="w-full font-mono text-xs rounded-none">
-                      VIEW ALL DEALS
-                      <ArrowUpRight className="ml-2 h-3 w-3" />
-                    </Button>
-                  </CardFooter>
-                </Card>
-                
-                <Card className="bg-background/50 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="text-sm font-mono">PERFORMANCE METRICS</CardTitle>
-                    <CardDescription>Your financing activity</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <div className="flex items-center">
-                            <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                            <span className="text-sm">Accepted Deals</span>
-                          </div>
-                          <div className="text-2xl font-mono">24</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="flex items-center">
-                            <Clock className="h-4 w-4 text-amber-500 mr-2" />
-                            <span className="text-sm">Pending Review</span>
-                          </div>
-                          <div className="text-2xl font-mono">8</div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+              <TabsContent value="overview">
+                <OverviewTab />
               </TabsContent>
               
-              <TabsContent value="deals" className="space-y-4">
-                <Card className="bg-background/50 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="text-sm font-mono">ALL ACTIVE DEALS</CardTitle>
-                    <CardDescription>Manage your financing deals</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center py-8 px-4">
-                      <p className="text-muted-foreground">Deals tab content would be displayed here.</p>
-                      <p className="text-sm mt-2">This is a placeholder for the deals listing and management interface.</p>
-                    </div>
-                  </CardContent>
-                </Card>
+              <TabsContent value="deals">
+                <DealsTab />
               </TabsContent>
               
-              <TabsContent value="notifications" className="space-y-4">
-                <Card className="bg-background/50 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="text-sm font-mono">NOTIFICATIONS</CardTitle>
-                    <CardDescription>Recent activity and alerts</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      {notifications.map(notification => (
-                        <div key={notification.id} className="border-b border-primary/10 pb-3 last:border-0 last:pb-0">
-                          <div className="flex items-start gap-3">
-                            <div className="bg-primary/10 w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">
-                              <Bell className="h-4 w-4" />
-                            </div>
-                            <div>
-                              <p className="text-sm">{notification.text}</p>
-                              <p className="text-xs text-muted-foreground">{notification.time}</p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" size="sm" className="w-full font-mono text-xs rounded-none">
-                      VIEW ALL NOTIFICATIONS
-                      <ArrowUpRight className="ml-2 h-3 w-3" />
-                    </Button>
-                  </CardFooter>
-                </Card>
+              <TabsContent value="notifications">
+                <NotificationsTab />
               </TabsContent>
             </Tabs>
           </main>
