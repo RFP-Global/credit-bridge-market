@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Menu, X, Terminal, Radar, Signal, Book, Building } from 'lucide-react';
@@ -85,7 +84,13 @@ const Navbar = () => {
                   <Link to="/marketplace">MARKETPLACE</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
-                  <Link to={dashboardRoute}>{isLenderRole ? "LENDER DASHBOARD" : "ENTERPRISE DASHBOARD"}</Link>
+                  <Link to={isLenderRole ? "/lender-dashboard" : "/enterprise-dashboard"}>
+                    {isLenderRole ? "LENDER DASHBOARD" : "ENTERPRISE DASHBOARD"}
+                  </Link>
+                </DropdownMenuItem>
+                {/* Add back the Lender Dashboard option */}
+                <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
+                  <Link to="/lender-dashboard">LENDER DASHBOARD</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
                   <Link to="/intelligence">INTELLIGENCE</Link>
