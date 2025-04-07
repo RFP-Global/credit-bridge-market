@@ -1,7 +1,8 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Menu, X, Terminal, Radar, Signal, Book, Building } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -12,6 +13,10 @@ import {
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  
+  // Determine if user is coming from lender dashboard based on the URL path
+  const isLenderRole = location.pathname.includes('lender-dashboard');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,6 +35,9 @@ const Navbar = () => {
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
+
+  // Determine the dashboard route based on user role
+  const dashboardRoute = isLenderRole ? '/lender-dashboard' : '/enterprise-dashboard';
 
   return (
     <header className={`fixed w-full z-50 transition-all duration-300 ${
@@ -77,10 +85,7 @@ const Navbar = () => {
                   <Link to="/marketplace">MARKETPLACE</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
-                  <Link to="/enterprise-dashboard">ENTERPRISE DASHBOARD</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
-                  <Link to="/lender-dashboard">LENDER DASHBOARD</Link>
+                  <Link to={dashboardRoute}>{isLenderRole ? "LENDER DASHBOARD" : "ENTERPRISE DASHBOARD"}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
                   <Link to="/intelligence">INTELLIGENCE</Link>
@@ -132,18 +137,11 @@ const Navbar = () => {
               MARKETPLACE
             </Link>
             <Link 
-              to="/enterprise-dashboard" 
+              to={dashboardRoute}
               className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
               onClick={() => setMobileMenuOpen(false)}
             >
-              ENTERPRISE DASHBOARD
-            </Link>
-            <Link 
-              to="/lender-dashboard" 
-              className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              LENDER DASHBOARD
+              {isLenderRole ? "LENDER DASHBOARD" : "ENTERPRISE DASHBOARD"}
             </Link>
             <Link 
               to="/intelligence" 

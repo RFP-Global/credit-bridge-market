@@ -100,9 +100,15 @@ const LenderDashboard = () => {
             </Card>
             
             <nav className="space-y-1">
-              <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3 bg-primary/5 text-primary border-l-2 border-primary">
-                <BarChart3 className="h-4 w-4 mr-3" />
-                Dashboard
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3 bg-primary/5 text-primary border-l-2 border-primary"
+                asChild
+              >
+                <Link to="/lender-dashboard">
+                  <BarChart3 className="h-4 w-4 mr-3" />
+                  Dashboard
+                </Link>
               </Button>
               <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3">
                 <FileText className="h-4 w-4 mr-3" />
