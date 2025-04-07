@@ -22,6 +22,9 @@ export interface Criterion {
   min: number;
   max: number;
   step: number;
+  preferredMin?: number;
+  preferredMax?: number;
+  unit?: string;
 }
 
 export interface CriteriaGroup {

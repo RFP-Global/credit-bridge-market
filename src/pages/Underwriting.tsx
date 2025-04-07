@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
@@ -37,7 +36,10 @@ const Underwriting = () => {
           score: 4,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          unit: "$M",
+          preferredMin: 3.5,
+          preferredMax: 10
         },
         {
           name: "Debt/EBITDA",
@@ -47,7 +49,10 @@ const Underwriting = () => {
           score: 3,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          unit: "x",
+          preferredMin: 2.0,
+          preferredMax: 4.0
         },
         {
           name: "Current Ratio",
@@ -57,7 +62,10 @@ const Underwriting = () => {
           score: 4,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          unit: "x",
+          preferredMin: 1.5,
+          preferredMax: 3.0
         },
         {
           name: "Revenue Growth",
@@ -67,7 +75,10 @@ const Underwriting = () => {
           score: 5,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          unit: "%",
+          preferredMin: 5,
+          preferredMax: 25
         }
       ]
     },
@@ -359,6 +370,38 @@ const Underwriting = () => {
     setCriteriaGroups(newGroups);
   };
 
+  const updateCriterionRange = (groupIndex: number, criterionIndex: number, min: number, max: number) => {
+    const newGroups = [...criteriaGroups];
+    const criterion = newGroups[groupIndex].criteria[criterionIndex];
+    
+    criterion.preferredMin = min;
+    criterion.preferredMax = max;
+    
+    // Automatically adjust score based on how well the current value fits in the range
+    const currentValue = parseFloat(criterion.value.replace(/[^0-9.-]+/g, ""));
+    if (!isNaN(currentValue)) {
+      if (currentValue >= min && currentValue <= max) {
+        // Value is within range - higher score
+        criterion.score = 4 + (1 - (max - currentValue) / (max - min));
+        if (criterion.score > 5) criterion.score = 5;
+      } else if (currentValue < min) {
+        // Value is below range
+        const distance = (min - currentValue) / min;
+        criterion.score = 3 - (distance * 2);
+        if (criterion.score < 1) criterion.score = 1;
+      } else {
+        // Value is above range
+        const distance = (currentValue - max) / max;
+        criterion.score = 3 - (distance * 2);
+        if (criterion.score < 1) criterion.score = 1;
+      }
+      criterion.score = parseFloat(criterion.score.toFixed(1));
+    }
+    
+    recalculateScores(newGroups);
+    setCriteriaGroups(newGroups);
+  };
+
   const recalculateScores = (groups: CriteriaGroup[]) => {
     groups.forEach(group => {
       let weightSum = 0;
@@ -423,7 +466,7 @@ const Underwriting = () => {
               <div>
                 <h1 className="text-2xl font-mono">Underwriting Engine</h1>
                 <p className="text-sm text-muted-foreground">
-                  Customize your risk assessment algorithm and scoring criteria
+                  Customize borrower metric ranges and scoring criteria for your lending preferences
                 </p>
               </div>
               <div className="flex items-center gap-3">
@@ -482,6 +525,7 @@ const Underwriting = () => {
                   updateGroupWeight={updateGroupWeight}
                   updateCriterionWeight={updateCriterionWeight}
                   updateCriterionScore={updateCriterionScore}
+                  updateCriterionRange={updateCriterionRange}
                   getScoreColor={getScoreColor}
                   getScoreBackground={getScoreBackground}
                 />

@@ -1,7 +1,9 @@
 
+import { useState } from "react";
 import { ChevronDown, ChevronUp, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { Input } from "@/components/ui/input";
 import {
   Tooltip,
   TooltipContent,
@@ -16,6 +18,7 @@ interface CriterionItemProps {
   groupIndex: number;
   updateCriterionWeight: (groupIndex: number, criterionIndex: number, newWeight: number) => void;
   updateCriterionScore: (groupIndex: number, criterionIndex: number, newScore: number) => void;
+  updateCriterionRange?: (groupIndex: number, criterionIndex: number, min: number, max: number) => void;
   getScoreColor: (score: number) => string;
   getScoreBackground: (score: number) => string;
 }
@@ -26,9 +29,23 @@ export const CriterionItem = ({
   groupIndex,
   updateCriterionWeight,
   updateCriterionScore,
+  updateCriterionRange,
   getScoreColor,
   getScoreBackground,
 }: CriterionItemProps) => {
+  const [minValue, setMinValue] = useState(criterion.preferredMin?.toString() || "");
+  const [maxValue, setMaxValue] = useState(criterion.preferredMax?.toString() || "");
+
+  const handleRangeUpdate = () => {
+    if (updateCriterionRange && minValue && maxValue) {
+      const min = parseFloat(minValue);
+      const max = parseFloat(maxValue);
+      if (!isNaN(min) && !isNaN(max) && min <= max) {
+        updateCriterionRange(groupIndex, criterionIndex, min, max);
+      }
+    }
+  };
+
   return (
     <div className="space-y-2 border-b border-gray-800/40 pb-4 last:border-0 last:pb-0">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
@@ -135,6 +152,43 @@ export const CriterionItem = ({
             </Button>
           </div>
         </div>
+      </div>
+
+      <div className="mt-3 pt-3 border-t border-gray-800/30">
+        <div className="text-xs font-medium mb-2">Preferred Range {criterion.unit ? `(${criterion.unit})` : ''}</div>
+        <div className="flex items-center gap-3">
+          <div className="flex flex-1 items-center gap-2">
+            <span className="text-xs text-muted-foreground">Min:</span>
+            <Input
+              value={minValue}
+              onChange={(e) => setMinValue(e.target.value)}
+              className="h-7 text-xs"
+              placeholder={`Min ${criterion.unit || ''}`}
+            />
+          </div>
+          <div className="flex flex-1 items-center gap-2">
+            <span className="text-xs text-muted-foreground">Max:</span>
+            <Input
+              value={maxValue}
+              onChange={(e) => setMaxValue(e.target.value)}
+              className="h-7 text-xs"
+              placeholder={`Max ${criterion.unit || ''}`}
+            />
+          </div>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="h-7 text-xs"
+            onClick={handleRangeUpdate}
+          >
+            Set Range
+          </Button>
+        </div>
+        {criterion.preferredMin !== undefined && criterion.preferredMax !== undefined && (
+          <div className="mt-2 text-xs text-blue-400">
+            Current preferred range: {criterion.preferredMin} - {criterion.preferredMax} {criterion.unit || ''}
+          </div>
+        )}
       </div>
     </div>
   );
