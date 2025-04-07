@@ -8,7 +8,7 @@ import DealHeader from "@/components/lender/DealHeader";
 import DealOverviewTab from "@/components/lender/tabs/DealOverviewTab";
 import DealFinancialsTab from "@/components/lender/tabs/DealFinancialsTab";
 import DealCompanyTab from "@/components/lender/tabs/DealCompanyTab";
-import DealHistoryTab from "@/components/lender/tabs/DealHistoryTab";
+import DealCompatibilityTab from "@/components/lender/tabs/DealCompatibilityTab";
 
 const DealDetails = () => {
   const location = useLocation();
@@ -60,7 +60,7 @@ const DealDetails = () => {
             <TabsTrigger value="overview" className="font-mono text-xs">OVERVIEW</TabsTrigger>
             <TabsTrigger value="financials" className="font-mono text-xs">FINANCIALS</TabsTrigger>
             <TabsTrigger value="company" className="font-mono text-xs">COMPANY INFO</TabsTrigger>
-            <TabsTrigger value="history" className="font-mono text-xs">HISTORY</TabsTrigger>
+            <TabsTrigger value="compatibility" className="font-mono text-xs">COMPATIBILITY</TabsTrigger>
           </TabsList>
           
           <TabsContent value="overview">
@@ -75,8 +75,8 @@ const DealDetails = () => {
             <DealCompanyTab dealData={dealData} />
           </TabsContent>
           
-          <TabsContent value="history">
-            <DealHistoryTab dealData={dealData} dealType={dealType} />
+          <TabsContent value="compatibility">
+            <DealCompatibilityTab dealData={dealData} dealType={dealType} />
           </TabsContent>
         </Tabs>
       </div>
