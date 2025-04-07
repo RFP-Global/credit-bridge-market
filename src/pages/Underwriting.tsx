@@ -15,11 +15,18 @@ import LenderSidebar from "@/components/lender/LenderSidebar";
 import { AlgorithmTab } from "@/components/underwriting/AlgorithmTab";
 import { AlgorithmSettings } from "@/components/underwriting/AlgorithmSettings";
 import { UnderwritingPreferences } from "@/components/underwriting/UnderwritingPreferences";
-import { CriteriaGroup } from "@/components/underwriting/types";
+import { CriteriaGroup, ScoreThreshold } from "@/components/underwriting/types";
 
 const Underwriting = () => {
   const [activeTab, setActiveTab] = useState<string>("preferences");
   const [totalScore, setTotalScore] = useState(4.45);
+  
+  const [scoreThresholds, setScoreThresholds] = useState<ScoreThreshold[]>([
+    { threshold: 4.5, color: "text-green-500" },
+    { threshold: 3.5, color: "text-blue-500" },
+    { threshold: 2.5, color: "text-yellow-500" },
+    { threshold: 0, color: "text-red-500" }
+  ]);
   
   const [criteriaGroups, setCriteriaGroups] = useState<CriteriaGroup[]>([
     {
@@ -377,20 +384,16 @@ const Underwriting = () => {
     criterion.preferredMin = min;
     criterion.preferredMax = max;
     
-    // Automatically adjust score based on how well the current value fits in the range
     const currentValue = parseFloat(criterion.value.replace(/[^0-9.-]+/g, ""));
     if (!isNaN(currentValue)) {
       if (currentValue >= min && currentValue <= max) {
-        // Value is within range - higher score
         criterion.score = 4 + (1 - (max - currentValue) / (max - min));
         if (criterion.score > 5) criterion.score = 5;
       } else if (currentValue < min) {
-        // Value is below range
         const distance = (min - currentValue) / min;
         criterion.score = 3 - (distance * 2);
         if (criterion.score < 1) criterion.score = 1;
       } else {
-        // Value is above range
         const distance = (currentValue - max) / max;
         criterion.score = 3 - (distance * 2);
         if (criterion.score < 1) criterion.score = 1;
@@ -427,9 +430,11 @@ const Underwriting = () => {
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 4.5) return "text-green-500";
-    if (score >= 3.5) return "text-blue-500";
-    if (score >= 2.5) return "text-yellow-500";
+    for (const threshold of scoreThresholds) {
+      if (score >= threshold.threshold) {
+        return threshold.color;
+      }
+    }
     return "text-red-500";
   };
 

@@ -34,3 +34,8 @@ export interface CriteriaGroup {
   score: number;
   criteria: Criterion[];
 }
+
+export interface ScoreThreshold {
+  threshold: number;
+  color: string;
+}

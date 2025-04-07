@@ -1,9 +1,37 @@
 
+import { useState } from "react";
 import { Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ScoreThreshold } from "./types";
 
 export const AlgorithmSettings = () => {
+  // Initial thresholds state
+  const [thresholds, setThresholds] = useState([
+    { id: "high", label: "Low Risk Threshold", value: 4.5, color: "#10b981" }, // green-500
+    { id: "moderate", label: "Moderate Risk Threshold", value: 3.5, color: "#3b82f6" }, // blue-500
+    { id: "medium", label: "Medium-High Risk Threshold", value: 2.5, color: "#eab308" }, // yellow-500
+    { id: "low", label: "High Risk Threshold", value: 0, color: "#ef4444" }, // red-500
+  ]);
+
+  const handleThresholdChange = (id: string, value: number) => {
+    setThresholds(prev => 
+      prev.map(threshold => 
+        threshold.id === id ? { ...threshold, value } : threshold
+      )
+    );
+  };
+
+  const handleColorChange = (id: string, color: string) => {
+    setThresholds(prev => 
+      prev.map(threshold => 
+        threshold.id === id ? { ...threshold, color } : threshold
+      )
+    );
+  };
+
   return (
     <Card className="bg-black/40 border-gray-800">
       <CardHeader>
@@ -18,34 +46,34 @@ export const AlgorithmSettings = () => {
             <div className="space-y-2">
               <div className="font-medium">Risk Threshold Settings</div>
               <div className="grid gap-3">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center">
-                    <div className="h-3 w-3 rounded-full bg-green-500 mr-2"></div>
-                    <span className="text-sm">Low Risk Threshold</span>
+                {thresholds.map(threshold => (
+                  <div key={threshold.id} className="flex justify-between items-center">
+                    <div className="flex items-center">
+                      <div 
+                        className="h-3 w-3 rounded-full mr-2" 
+                        style={{ backgroundColor: threshold.color }}
+                      ></div>
+                      <span className="text-sm">{threshold.label}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="number"
+                        value={threshold.value}
+                        onChange={(e) => handleThresholdChange(threshold.id, parseFloat(e.target.value))}
+                        className="w-16 h-8 text-xs"
+                        step="0.1"
+                        min="0"
+                        max="5"
+                      />
+                      <Input
+                        type="color"
+                        value={threshold.color}
+                        onChange={(e) => handleColorChange(threshold.id, e.target.value)}
+                        className="w-8 h-8 p-1"
+                      />
+                    </div>
                   </div>
-                  <div className="text-sm">≥ 4.5</div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center">
-                    <div className="h-3 w-3 rounded-full bg-blue-500 mr-2"></div>
-                    <span className="text-sm">Moderate Risk Threshold</span>
-                  </div>
-                  <div className="text-sm">≥ 3.5</div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center">
-                    <div className="h-3 w-3 rounded-full bg-yellow-500 mr-2"></div>
-                    <span className="text-sm">Medium-High Risk Threshold</span>
-                  </div>
-                  <div className="text-sm">≥ 2.5</div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center">
-                    <div className="h-3 w-3 rounded-full bg-red-500 mr-2"></div>
-                    <span className="text-sm">High Risk Threshold</span>
-                  </div>
-                  <div className="text-sm">&lt; 2.5</div>
-                </div>
+                ))}
               </div>
             </div>
             
