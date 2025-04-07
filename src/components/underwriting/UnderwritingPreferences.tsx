@@ -80,6 +80,26 @@ export const UnderwritingPreferences = () => {
     setCategories(updatedCategories);
   };
 
+  const updateMetricScore = (categoryIndex: number, metricIndex: number, newScore: number) => {
+    const updatedCategories = [...categories];
+    const category = updatedCategories[categoryIndex];
+    
+    // Update the metric score
+    category.metrics[metricIndex].score = newScore;
+    
+    // Recalculate the category total score
+    const totalWeightedScore = category.metrics.reduce(
+      (sum, metric) => sum + (metric.score * metric.weighting), 0
+    );
+    const totalWeighting = category.metrics.reduce(
+      (sum, metric) => sum + metric.weighting, 0
+    );
+    
+    category.totalScore = parseFloat((totalWeightedScore / totalWeighting).toFixed(2));
+    
+    setCategories(updatedCategories);
+  };
+
   const getScoreColorClass = (score: number) => {
     if (score >= 8) return 'text-green-500';
     if (score >= 6) return 'text-blue-500';
@@ -233,6 +253,98 @@ export const UnderwritingPreferences = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Metrics adjustments */}
+            <Card className="bg-black/40 border-gray-800 mb-4">
+              <CardHeader className="py-3 border-b border-gray-800">
+                <CardTitle className="text-base font-semibold">Adjust Individual Metrics</CardTitle>
+              </CardHeader>
+              <CardContent className="py-4">
+                <div className="space-y-6">
+                  {category.metrics.map((metric, metricIndex) => (
+                    <div key={metricIndex} className="space-y-2 border-b border-gray-800/40 pb-4 last:border-0 last:pb-0">
+                      <div className="flex items-center justify-between">
+                        <div className="font-medium">{metric.name}</div>
+                        <div className="flex items-center gap-3">
+                          <div className="text-xs text-muted-foreground">
+                            Weight: {metric.weighting}%
+                          </div>
+                          <div className={`font-medium ${getScoreColorClass(metric.score)}`}>
+                            Score: {metric.score}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-xs text-muted-foreground">
+                          <span>Metric Score</span>
+                          <span>{metric.score} / 10</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="h-6 w-6 p-0"
+                            onClick={() => {
+                              const newScore = Math.max(1, metric.score - 1);
+                              updateMetricScore(index, metricIndex, newScore);
+                            }}
+                          >
+                            -
+                          </Button>
+                          <Slider
+                            value={[metric.score]}
+                            min={1}
+                            max={10}
+                            step={1}
+                            className="flex-1"
+                            onValueChange={(value) => updateMetricScore(index, metricIndex, value[0])}
+                          />
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="h-6 w-6 p-0"
+                            onClick={() => {
+                              const newScore = Math.min(10, metric.score + 1);
+                              updateMetricScore(index, metricIndex, newScore);
+                            }}
+                          >
+                            +
+                          </Button>
+                        </div>
+                        <div className="flex gap-1 mt-1">
+                          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
+                            <button
+                              key={value}
+                              className={`h-1.5 flex-1 rounded-full transition-colors ${
+                                metric.score >= value 
+                                  ? value >= 8 ? 'bg-green-500' : 
+                                    value >= 6 ? 'bg-blue-500' : 
+                                    value >= 4 ? 'bg-yellow-500' : 'bg-red-500'
+                                  : 'bg-gray-800/30'
+                              }`}
+                              onClick={() => updateMetricScore(index, metricIndex, value)}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {metric.value && (
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Current value: {metric.value}
+                        </div>
+                      )}
+                      {metric.formula && (
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Formula: {metric.formula}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+            
             <UnderwritingCategoryCard category={category} />
           </TabsContent>
         ))}
