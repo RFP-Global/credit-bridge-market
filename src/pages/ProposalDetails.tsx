@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,15 +8,6 @@ import { useToast } from "@/hooks/use-toast";
 import { getCompatibilityScore } from "@/components/underwriting/utils/styleUtils";
 import { Progress } from "@/components/ui/progress";
 import { Shield, Zap, CheckCircle, AlertCircle } from "lucide-react";
-
-// Component imports
-import LoadingState from "@/components/proposals/details/LoadingState";
-import NotFoundState from "@/components/proposals/details/NotFoundState";
-import ProposalHeader from "@/components/proposals/details/ProposalHeader";
-import OverviewTab from "@/components/proposals/details/OverviewTab";
-import FinancialsTab from "@/components/proposals/details/FinancialsTab";
-import CreditProfileTab from "@/components/proposals/details/CreditProfileTab";
-import CompanyInfoTab from "@/components/proposals/details/CompanyInfoTab";
 
 interface FinancialRatios {
   debtServiceCoverageRatio: number;
@@ -143,18 +133,15 @@ const ProposalDetails = () => {
           defaultRate: 0
         });
         
-        // Generate underwriting compatibility data based on proposal
         const creditRating = foundProposal.creditRating;
-        const baseScore = (creditRating / 10) * 100; // Convert to 0-100 scale
+        const baseScore = (creditRating / 10) * 100;
         
-        // Create random but plausible category scores that average to around the baseScore
         const businessStability = Math.min(100, Math.max(20, baseScore + Math.random() * 20 - 10));
         const competitivePosition = Math.min(100, Math.max(20, baseScore + Math.random() * 20 - 10));
         const collateralStrength = Math.min(100, Math.max(20, baseScore + Math.random() * 20 - 10));
         const industryRisk = Math.min(100, Math.max(20, baseScore + Math.random() * 20 - 10));
         const bankingRelationship = Math.min(100, Math.max(20, baseScore + Math.random() * 20 - 10));
         
-        // Overall score is the average of the category scores
         const overallScore = Math.round((businessStability + competitivePosition + collateralStrength + industryRisk + bankingRelationship) / 5);
         
         setCompatibility({
@@ -235,7 +222,7 @@ const ProposalDetails = () => {
             <TabsTrigger value="financials" className="font-mono text-xs">FINANCIALS</TabsTrigger>
             <TabsTrigger value="credit" className="font-mono text-xs">CREDIT PROFILE</TabsTrigger>
             <TabsTrigger value="company" className="font-mono text-xs">COMPANY INFO</TabsTrigger>
-            <TabsTrigger value="compatibility" className="font-mono text-xs">UNDERWRITING</TabsTrigger>
+            <TabsTrigger value="compatibility" className="font-mono text-xs">COMPATIBILITY</TabsTrigger>
           </TabsList>
           
           <TabsContent value="overview">
@@ -284,7 +271,6 @@ const ProposalDetails = () => {
                           stroke="#1a1a1a" 
                           strokeWidth="10" 
                         />
-                        {/* Dynamic color based on score */}
                         <circle 
                           cx="50" 
                           cy="50" 
@@ -429,15 +415,15 @@ const ProposalDetails = () => {
               </div>
               
               <div className="bg-black/40 border border-gray-800 rounded-md p-6">
-                <h3 className="text-lg font-medium mb-4">Underwriting Notes</h3>
+                <h3 className="text-lg font-medium mb-4">Compatibility Notes</h3>
                 <p className="text-sm text-gray-300 mb-4">
-                  This deal has been analyzed using your underwriting preferences. The compatibility 
+                  This deal has been analyzed using your compatibility preferences. The compatibility 
                   score reflects the alignment between your lending criteria and this opportunity's 
                   characteristics.
                 </p>
                 <p className="text-sm text-gray-300">
                   {compatibility.overallScore >= 80 
-                    ? "This opportunity is a strong match for your lending criteria. We recommend proceeding with this deal based on your underwriting preferences."
+                    ? "This opportunity is a strong match for your lending criteria. We recommend proceeding with this deal based on your compatibility assessment."
                     : compatibility.overallScore >= 60
                     ? "This opportunity is a good match overall, though there are some areas that may need additional review before proceeding."
                     : compatibility.overallScore >= 40
