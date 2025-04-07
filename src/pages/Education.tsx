@@ -1,10 +1,10 @@
-
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
-import { Book, Filter, Download, Building } from "lucide-react";
+import { Book, Filter, Download, Building, Code } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -179,6 +179,7 @@ const lenderTypes = [
 ];
 
 const Education = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("facilities");
   const [timeFilter, setTimeFilter] = useState("all-time");
   const [selectedFacility, setSelectedFacility] = useState<typeof creditFacilityTypes[0] | null>(null);
@@ -199,6 +200,11 @@ const Education = () => {
 
   const handleCloseDialog = () => {
     setDialogOpen(false);
+  };
+
+  const handleCreateProposal = (facilityId: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    navigate(`/facility-builder?template=${facilityId}`);
   };
 
   return (
@@ -276,7 +282,7 @@ const Education = () => {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      <p className="text-sm text-gray-300">{facility.content}</p>
+                      <p className="text-sm text-gray-300">{facility.content.substring(0, 150)}...</p>
                       
                       <Accordion type="single" collapsible className="w-full">
                         <AccordionItem value="details" className="border-cyan-800/30">
@@ -306,6 +312,16 @@ const Education = () => {
                         </AccordionItem>
                       </Accordion>
                     </CardContent>
+                    <CardFooter>
+                      <Button
+                        onClick={(e) => handleCreateProposal(facility.id, e)}
+                        variant="cyan"
+                        className="w-full bg-gradient-to-r from-black/60 to-cyan-950/60 hover:from-cyan-950/60 hover:to-black/60 border border-cyan-800/50 text-cyan-300 font-mono text-xs"
+                      >
+                        <Code className="h-4 w-4 mr-2" />
+                        Create Proposal Using This Template
+                      </Button>
+                    </CardFooter>
                   </Card>
                 ))}
               </div>
@@ -333,7 +349,7 @@ const Education = () => {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      <p className="text-sm text-gray-300">{lender.content}</p>
+                      <p className="text-sm text-gray-300">{lender.content.substring(0, 150)}...</p>
                       
                       <Accordion type="single" collapsible className="w-full">
                         <AccordionItem value="details" className="border-cyan-800/30">

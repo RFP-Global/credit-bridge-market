@@ -57,6 +57,14 @@ const FacilityDetailsDialog: React.FC<FacilityDetailsProps> = ({
     }
   };
   
+  const handleCreateProposal = () => {
+    // Close the dialog and navigate to the facility builder with the facility type
+    onClose();
+    if (facility) {
+      navigate(`/facility-builder?template=${facility.id}`);
+    }
+  };
+  
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="bg-black/90 border-cyan-800/50 text-gray-200 max-w-4xl max-h-[85vh] overflow-hidden">
@@ -136,7 +144,7 @@ const FacilityDetailsDialog: React.FC<FacilityDetailsProps> = ({
               />
             )}
             
-            <div className="border-t border-cyan-800/30 pt-6">
+            <div className="border-t border-cyan-800/30 pt-6 space-y-4">
               <Button
                 onClick={handleMechanicsClick}
                 variant="cyan"
@@ -149,6 +157,21 @@ const FacilityDetailsDialog: React.FC<FacilityDetailsProps> = ({
                   </span>
                 </div>
               </Button>
+              
+              {facility && (
+                <Button
+                  onClick={handleCreateProposal}
+                  variant="cyan"
+                  className="w-full bg-gradient-to-r from-black/60 to-cyan-950/60 hover:from-cyan-950/60 hover:to-black/60 border border-cyan-800/50 text-cyan-300 font-mono flex items-center justify-center py-4"
+                >
+                  <div className="flex items-center gap-2">
+                    <Code className="h-5 w-5 text-cyan-400" />
+                    <span>
+                      Create Proposal Using {facility.title} Template
+                    </span>
+                  </div>
+                </Button>
+              )}
             </div>
           </div>
         </ScrollArea>
