@@ -9,6 +9,7 @@ import BusinessStructureAnalytics from "@/components/intelligence/BusinessStruct
 import GeographyAnalytics from "@/components/intelligence/GeographyAnalytics";
 import FullscreenButton from "@/components/FullscreenButton";
 import { useLocation, useNavigate } from "react-router-dom";
+import Navbar from "@/components/Navbar";
 
 export const CHART_COLORS = {
   workingCapital: "#33bbef",
@@ -177,9 +178,10 @@ const Intelligence = () => {
 
   return (
     <div className="min-h-screen bg-black text-gray-300 overflow-x-hidden">
+      <Navbar />
       <FullscreenButton />
       
-      <div className="container mx-auto px-4 py-8 mt-16">
+      <div className="container mx-auto px-4 py-8 mt-24">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-2">
             <Store className="h-6 w-6 text-gray-400" />
