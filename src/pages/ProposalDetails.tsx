@@ -1,262 +1,40 @@
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Navbar from "@/components/Navbar";
 import { financeProposals } from "@/data/marketplaceProposals";
-import { FinanceProposal } from "@/types/marketplace";
 import { useToast } from "@/hooks/use-toast";
 import { getCompatibilityScore } from "@/components/underwriting/utils/styleUtils";
 import { Progress } from "@/components/ui/progress";
 import { Shield, Zap, CheckCircle, AlertCircle } from "lucide-react";
-
-interface FinancialRatios {
-  debtServiceCoverageRatio: number;
-  currentRatio: number;
-  quickRatio: number;
-  debtToEquityRatio: number;
-  returnOnAssets: number;
-  returnOnEquity: number;
-  grossMargin: number;
-  operatingMargin: number;
-  netProfitMargin: number;
-  assetTurnover: number;
-  inventoryTurnover: number;
-  daysReceivablesOutstanding: number;
-  daysPayablesOutstanding: number;
-  workingCapitalTurnover: number;
-  zScore: number;
-}
-
-interface CompanyDemographics {
-  founded: string;
-  employees: number;
-  ownership: string;
-  industrySubsector: string;
-  location: string;
-  annualRevenue: string;
-  totalAssets: string;
-  totalLiabilities: string;
-  netWorth: string;
-  publiclyTraded: boolean;
-  keyExecutives: string[];
-}
-
-interface CreditHistory {
-  creditScore: number;
-  paymentHistory: number;
-  delinquencies: number;
-  bankruptcies: number;
-  taxLiens: number;
-  judgments: number;
-  outstandingDebt: string;
-  utilizationRatio: number;
-  previousLoans: number;
-  defaultRate: number;
-}
-
-interface UnderwritingCompatibility {
-  overallScore: number;
-  categoryScores: {
-    financialStrength: number;
-    businessStability: number;
-    competitivePosition: number;
-    collateralStrength: number;
-    industryRisk: number;
-    bankingRelationship: number;
-  };
-  criteriaFit: {
-    name: string;
-    matches: boolean;
-    yourCriteria: string;
-    dealValue: string;
-  }[];
-}
+import { useProposalDetails } from "@/hooks/useProposalDetails";
+import LoadingState from "@/components/proposals/details/LoadingState";
+import NotFoundState from "@/components/proposals/details/NotFoundState";
+import ProposalHeader from "@/components/proposals/details/ProposalHeader";
+import OverviewTab from "@/components/proposals/details/OverviewTab";
+import FinancialsTab from "@/components/proposals/details/FinancialsTab";
+import CreditProfileTab from "@/components/proposals/details/CreditProfileTab";
+import CompanyInfoTab from "@/components/proposals/details/CompanyInfoTab";
+import CategoryDetailsModal from "@/components/proposals/details/CategoryDetailsModal";
+import CompatibilityTab from "@/components/proposals/details/CompatibilityTab";
 
 const ProposalDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [proposal, setProposal] = useState<FinanceProposal | null>(null);
-  const [financialRatios, setFinancialRatios] = useState<FinancialRatios | null>(null);
-  const [demographics, setDemographics] = useState<CompanyDemographics | null>(null);
-  const [creditHistory, setCreditHistory] = useState<CreditHistory | null>(null);
-  const [compatibility, setCompatibility] = useState<UnderwritingCompatibility | null>(null);
-  const [loading, setLoading] = useState(true);
-  const { toast } = useToast();
-  const [categoryModalOpen, setCategoryModalOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<{
-    name: string;
-    score: number;
-    components: { name: string; score: number; description?: string }[];
-  } | null>(null);
-
-  useEffect(() => {
-    if (id) {
-      const foundProposal = financeProposals.find(p => p.id === id);
-      if (foundProposal) {
-        setProposal(foundProposal);
-        
-        setFinancialRatios({
-          debtServiceCoverageRatio: 1.35,
-          currentRatio: 1.8,
-          quickRatio: 1.2,
-          debtToEquityRatio: 0.65,
-          returnOnAssets: 0.09,
-          returnOnEquity: 0.14,
-          grossMargin: 0.38,
-          operatingMargin: 0.12,
-          netProfitMargin: 0.08,
-          assetTurnover: 1.5,
-          inventoryTurnover: 6.8,
-          daysReceivablesOutstanding: 42,
-          daysPayablesOutstanding: 38,
-          workingCapitalTurnover: 4.2,
-          zScore: 3.1
-        });
-        
-        setDemographics({
-          founded: "2011",
-          employees: 85,
-          ownership: "Private",
-          industrySubsector: foundProposal.industry + " Services",
-          location: "Chicago, IL",
-          annualRevenue: "$8.5M",
-          totalAssets: "$12.4M",
-          totalLiabilities: "$5.2M",
-          netWorth: "$7.2M",
-          publiclyTraded: false,
-          keyExecutives: ["Jane Smith, CEO", "Michael Chen, CFO", "Robert Williams, COO"]
-        });
-        
-        setCreditHistory({
-          creditScore: foundProposal.creditRating * 100,
-          paymentHistory: 98,
-          delinquencies: 0,
-          bankruptcies: 0,
-          taxLiens: 0,
-          judgments: 0,
-          outstandingDebt: "$3.8M",
-          utilizationRatio: 0.45,
-          previousLoans: 3,
-          defaultRate: 0
-        });
-        
-        const creditRating = foundProposal.creditRating;
-        const baseScore = (creditRating / 10) * 100;
-        
-        const financialStrength = Math.min(100, Math.max(20, baseScore + Math.random() * 20 - 10));
-        const businessStability = Math.min(100, Math.max(20, baseScore + Math.random() * 20 - 10));
-        const competitivePosition = Math.min(100, Math.max(20, baseScore + Math.random() * 20 - 10));
-        const collateralStrength = Math.min(100, Math.max(20, baseScore + Math.random() * 20 - 10));
-        const industryRisk = Math.min(100, Math.max(20, baseScore + Math.random() * 20 - 10));
-        const bankingRelationship = Math.min(100, Math.max(20, baseScore + Math.random() * 20 - 10));
-        
-        const overallScore = Math.round(
-          (financialStrength + businessStability + competitivePosition + 
-           collateralStrength + industryRisk + bankingRelationship) / 6
-        );
-        
-        setCompatibility({
-          overallScore,
-          categoryScores: {
-            financialStrength: Math.round(financialStrength),
-            businessStability: Math.round(businessStability),
-            competitivePosition: Math.round(competitivePosition),
-            collateralStrength: Math.round(collateralStrength),
-            industryRisk: Math.round(industryRisk),
-            bankingRelationship: Math.round(bankingRelationship)
-          },
-          criteriaFit: [
-            { 
-              name: "Funding Range", 
-              matches: true, 
-              yourCriteria: "$250K - $10M", 
-              dealValue: foundProposal.principal 
-            },
-            { 
-              name: "Industry", 
-              matches: true, 
-              yourCriteria: "All Industries", 
-              dealValue: foundProposal.industry 
-            },
-            { 
-              name: "Credit Rating", 
-              matches: creditRating >= 6, 
-              yourCriteria: "6.0+", 
-              dealValue: creditRating.toFixed(1) 
-            },
-            { 
-              name: "Term Length", 
-              matches: true, 
-              yourCriteria: "12-60 Months", 
-              dealValue: foundProposal.term 
-            },
-            { 
-              name: "Facility Type", 
-              matches: true, 
-              yourCriteria: "All Types", 
-              dealValue: foundProposal.facilityType 
-            }
-          ]
-        });
-      }
-      setLoading(false);
-    }
-  }, [id]);
-
-  const handleBid = () => {
-    navigate(`/proposal/${id}/bid`);
-  };
-
-  const handleCategoryClick = (categoryName: string, categoryScore: number) => {
-    const categoryComponents = {
-      "Financial Strength": [
-        { name: "EBITDA", score: Math.round(categoryScore * 0.9), description: "Earnings Before Interest, Taxes, Depreciation, and Amortization" },
-        { name: "Debt/EBITDA", score: Math.round(categoryScore * 1.1), description: "Ratio of total debt to EBITDA" },
-        { name: "Current Ratio", score: Math.round(categoryScore * 0.95), description: "Current assets divided by current liabilities" },
-        { name: "Revenue Growth", score: Math.round(categoryScore * 1.05), description: "Year-over-year revenue growth" }
-      ],
-      "Business Stability": [
-        { name: "Years in Business", score: Math.round(categoryScore * 0.9), description: "Evaluates the longevity and establishment of the business" },
-        { name: "Revenue Consistency", score: Math.round(categoryScore * 1.1), description: "Measures the stability of revenue streams over time" },
-        { name: "Management Experience", score: Math.round(categoryScore * 0.95), description: "Assesses leadership experience and industry knowledge" }
-      ],
-      "Competitive Position": [
-        { name: "Market Share", score: Math.round(categoryScore * 1.05), description: "Percentage of market controlled relative to competitors" },
-        { name: "Product Differentiation", score: Math.round(categoryScore * 0.9), description: "Uniqueness of offerings compared to competitors" },
-        { name: "Customer Loyalty", score: Math.round(categoryScore * 1.1), description: "Strength of customer relationships and retention" }
-      ],
-      "Collateral Strength": [
-        { name: "Asset Quality", score: Math.round(categoryScore * 0.95), description: "Value and liquidity of assets being used as collateral" },
-        { name: "Loan-to-Value Ratio", score: Math.round(categoryScore * 1.05), description: "Ratio of loan amount to the value of assets" },
-        { name: "Asset Depreciation Rate", score: Math.round(categoryScore * 0.9), description: "Speed at which collateral assets lose value" }
-      ],
-      "Industry & Market Risk": [
-        { name: "Industry Growth Rate", score: Math.round(categoryScore * 1.1), description: "Overall growth trends in the company's industry" },
-        { name: "Market Volatility", score: Math.round(categoryScore * 0.9), description: "Stability of the market where the company operates" },
-        { name: "Regulatory Environment", score: Math.round(categoryScore * 0.95), description: "Impact of regulations on business operations" }
-      ],
-      "Banking Relationship": [
-        { name: "Credit History", score: Math.round(categoryScore * 1.05), description: "Past payment behavior with financial institutions" },
-        { name: "Relationship Longevity", score: Math.round(categoryScore * 0.95), description: "Duration of banking relationships" },
-        { name: "Product Utilization", score: Math.round(categoryScore * 1.0), description: "Range of financial products used by the business" }
-      ]
-    };
-    
-    const normalizeComponents = (components: any[]) => {
-      return components.map(comp => ({
-        ...comp,
-        score: Math.min(100, Math.max(0, comp.score))
-      }));
-    };
-    
-    setSelectedCategory({
-      name: categoryName,
-      score: categoryScore,
-      components: normalizeComponents(categoryComponents[categoryName as keyof typeof categoryComponents] || [])
-    });
-    
-    setCategoryModalOpen(true);
-  };
+  const { 
+    proposal, 
+    financialRatios, 
+    demographics, 
+    creditHistory, 
+    compatibility, 
+    loading,
+    categoryModalOpen,
+    selectedCategory,
+    setCategoryModalOpen,
+    handleCategoryClick,
+    handleBid
+  } = useProposalDetails(id);
 
   if (loading) {
     return <LoadingState />;
@@ -315,190 +93,10 @@ const ProposalDetails = () => {
           </TabsContent>
           
           <TabsContent value="compatibility">
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="col-span-1 bg-black/40 border border-gray-800 rounded-md p-6">
-                  <div className="flex items-center mb-6">
-                    <Shield className="h-5 w-5 mr-2 text-primary" />
-                    <h3 className="text-lg font-medium">Compatibility Match</h3>
-                  </div>
-                  
-                  <div className="flex flex-col items-center justify-center space-y-4 py-6">
-                    <div className="relative w-36 h-36 flex items-center justify-center">
-                      <svg className="w-full h-full" viewBox="0 0 100 100">
-                        <circle 
-                          cx="50" 
-                          cy="50" 
-                          r="45" 
-                          fill="none" 
-                          stroke="#1a1a1a" 
-                          strokeWidth="10" 
-                        />
-                        <circle 
-                          cx="50" 
-                          cy="50" 
-                          r="45" 
-                          fill="none" 
-                          stroke={compatibility.overallScore >= 80 ? "#10b981" : 
-                                 compatibility.overallScore >= 60 ? "#3b82f6" : 
-                                 compatibility.overallScore >= 40 ? "#f59e0b" : "#ef4444"} 
-                          strokeWidth="10"
-                          strokeDasharray={`${2 * Math.PI * 45 * compatibility.overallScore / 100} ${2 * Math.PI * 45 * (1 - compatibility.overallScore / 100)}`}
-                          strokeDashoffset={2 * Math.PI * 45 * 0.25}
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="text-4xl font-bold">{compatibility.overallScore}%</div>
-                      </div>
-                    </div>
-                    
-                    <div className="text-center space-y-2">
-                      <p className="text-sm text-gray-400">Compatibility Score</p>
-                      <div className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${getCompatibilityScore(compatibility.overallScore).color}`}>
-                        {getCompatibilityScore(compatibility.overallScore).label}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="col-span-1 md:col-span-2 bg-black/40 border border-gray-800 rounded-md p-6">
-                  <div className="flex items-center mb-6">
-                    <Zap className="h-5 w-5 mr-2 text-primary" />
-                    <h3 className="text-lg font-medium">Category Scores</h3>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <p className="text-sm cursor-pointer hover:text-primary transition-colors" 
-                           onClick={() => handleCategoryClick("Financial Strength", compatibility.categoryScores.financialStrength)}>
-                          Financial Strength
-                        </p>
-                        <p className="text-sm font-semibold">{compatibility.categoryScores.financialStrength}%</p>
-                      </div>
-                      <Progress 
-                        value={compatibility.categoryScores.financialStrength} 
-                        className="h-2" 
-                      />
-                    </div>
-                    
-                    <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <p className="text-sm cursor-pointer hover:text-primary transition-colors" 
-                           onClick={() => handleCategoryClick("Business Stability", compatibility.categoryScores.businessStability)}>
-                          Business Stability
-                        </p>
-                        <p className="text-sm font-semibold">{compatibility.categoryScores.businessStability}%</p>
-                      </div>
-                      <Progress 
-                        value={compatibility.categoryScores.businessStability} 
-                        className="h-2"
-                      />
-                    </div>
-                    
-                    <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <p className="text-sm cursor-pointer hover:text-primary transition-colors" 
-                           onClick={() => handleCategoryClick("Competitive Position", compatibility.categoryScores.competitivePosition)}>
-                          Competitive Position
-                        </p>
-                        <p className="text-sm font-semibold">{compatibility.categoryScores.competitivePosition}%</p>
-                      </div>
-                      <Progress 
-                        value={compatibility.categoryScores.competitivePosition} 
-                        className="h-2"
-                      />
-                    </div>
-                    
-                    <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <p className="text-sm cursor-pointer hover:text-primary transition-colors" 
-                           onClick={() => handleCategoryClick("Collateral Strength", compatibility.categoryScores.collateralStrength)}>
-                          Collateral Strength
-                        </p>
-                        <p className="text-sm font-semibold">{compatibility.categoryScores.collateralStrength}%</p>
-                      </div>
-                      <Progress 
-                        value={compatibility.categoryScores.collateralStrength} 
-                        className="h-2"
-                      />
-                    </div>
-                    
-                    <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <p className="text-sm cursor-pointer hover:text-primary transition-colors" 
-                           onClick={() => handleCategoryClick("Industry & Market Risk", compatibility.categoryScores.industryRisk)}>
-                          Industry & Market Risk
-                        </p>
-                        <p className="text-sm font-semibold">{compatibility.categoryScores.industryRisk}%</p>
-                      </div>
-                      <Progress 
-                        value={compatibility.categoryScores.industryRisk} 
-                        className="h-2"
-                      />
-                    </div>
-                    
-                    <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <p className="text-sm cursor-pointer hover:text-primary transition-colors" 
-                           onClick={() => handleCategoryClick("Banking Relationship", compatibility.categoryScores.bankingRelationship)}>
-                          Banking & Relationship
-                        </p>
-                        <p className="text-sm font-semibold">{compatibility.categoryScores.bankingRelationship}%</p>
-                      </div>
-                      <Progress 
-                        value={compatibility.categoryScores.bankingRelationship} 
-                        className="h-2"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-black/40 border border-gray-800 rounded-md p-6">
-                <h3 className="text-lg font-medium mb-4">Lending Criteria Match</h3>
-                <div className="space-y-4">
-                  {compatibility.criteriaFit.map((criteria, index) => (
-                    <div key={index} className="flex items-center justify-between border-b border-gray-800 pb-3 last:border-0 last:pb-0">
-                      <div className="flex items-center">
-                        {criteria.matches ? (
-                          <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                        ) : (
-                          <AlertCircle className="h-4 w-4 text-yellow-500 mr-2" />
-                        )}
-                        <div>
-                          <p className="text-sm font-medium">{criteria.name}</p>
-                          <p className="text-xs text-gray-400">Your criteria: {criteria.yourCriteria}</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-medium">{criteria.dealValue}</p>
-                        {!criteria.matches && <p className="text-xs text-yellow-500">Mismatch</p>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="bg-black/40 border border-gray-800 rounded-md p-6">
-                <h3 className="text-lg font-medium mb-4">Compatibility Notes</h3>
-                <p className="text-sm text-gray-300 mb-4">
-                  This deal has been analyzed using your compatibility preferences. The compatibility 
-                  score reflects the alignment between your lending criteria and this opportunity's 
-                  characteristics.
-                </p>
-                <p className="text-sm text-gray-300">
-                  {compatibility.overallScore >= 80 
-                    ? "This opportunity is a strong match for your lending criteria. We recommend proceeding with this deal based on your compatibility assessment."
-                    : compatibility.overallScore >= 60
-                    ? "This opportunity is a good match overall, though there are some areas that may need additional review before proceeding."
-                    : compatibility.overallScore >= 40
-                    ? "This opportunity shows moderate alignment with your criteria. Several important factors require careful consideration."
-                    : "This opportunity has significant misalignment with your lending preferences. We recommend caution before proceeding."}
-                </p>
-              </div>
-            </div>
+            <CompatibilityTab
+              compatibility={compatibility}
+              onCategoryClick={handleCategoryClick}
+            />
           </TabsContent>
         </Tabs>
       </div>

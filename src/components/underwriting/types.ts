@@ -5,6 +5,7 @@ export interface UnderwritingMetric {
   formula?: string;
   score: number;
   weighting: number;
+  description?: string;
 }
 
 export interface UnderwritingCategory {
