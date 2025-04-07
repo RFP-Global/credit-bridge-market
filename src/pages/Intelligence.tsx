@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ChevronDown, Settings, Filter, Download, Globe, Store, Briefcase, Map, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -182,46 +181,9 @@ const Intelligence = () => {
       <FullscreenButton />
       
       <div className="container mx-auto px-4 py-8 mt-24">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center space-x-2">
-            <Store className="h-6 w-6 text-gray-400" />
-            <h1 className="text-2xl font-mono text-gray-200">Analytics</h1>
-          </div>
-          
-          <div className="flex items-center space-x-3">
-            <Button 
-              variant="outline" 
-              className="flex items-center h-8 bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-800 font-mono text-xs"
-              onClick={handleBackNavigation}
-            >
-              <ArrowLeft className="h-3.5 w-3.5 mr-2" />
-              {backButtonText}
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              className="flex items-center h-8 bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-800 font-mono text-xs"
-            >
-              <Filter className="h-3.5 w-3.5 mr-2" />
-              Filters
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              className="flex items-center h-8 bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-800 font-mono text-xs"
-            >
-              <Download className="h-3.5 w-3.5 mr-2" />
-              Export
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              className="flex items-center h-8 bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-800 font-mono text-xs"
-            >
-              <Settings className="h-3.5 w-3.5 mr-2" />
-              Settings
-            </Button>
-          </div>
+        <div className="flex items-center space-x-2 mb-6">
+          <Store className="h-6 w-6 text-gray-400" />
+          <h1 className="text-2xl font-mono text-gray-200">Analytics</h1>
         </div>
 
         <Tabs defaultValue="business" className="w-full" value={activeTab} onValueChange={setActiveTab}>
