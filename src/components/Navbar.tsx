@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Menu, X, Terminal, Radar, Signal, Book, Building } from 'lucide-react';
+import { Menu, X, Terminal, Radar, Signal } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   DropdownMenu, 
@@ -8,6 +9,7 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
+import { mainMenuItems, getAccessButton } from '@/config/navConfig';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -37,6 +39,7 @@ const Navbar = () => {
 
   // Determine the dashboard route based on user role
   const dashboardRoute = isLenderRole ? '/lender-dashboard' : '/enterprise-dashboard';
+  const accessButton = getAccessButton();
 
   return (
     <header className={`fixed w-full z-50 transition-all duration-300 ${
@@ -60,9 +63,9 @@ const Navbar = () => {
               className="rounded-none px-6 text-sm font-mono border-primary/30" 
               asChild
             >
-              <Link to="/access">
-                <Terminal className="h-4 w-4 mr-2" />
-                ACCESS
+              <Link to={accessButton.path}>
+                {accessButton.icon}
+                {accessButton.title}
               </Link>
             </Button>
             
@@ -75,35 +78,18 @@ const Navbar = () => {
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-background/95 backdrop-blur-md border border-primary/20 rounded-none w-48">
-                <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
-                  <Link to="/">
-                    HOME PAGE
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
-                  <Link to="/marketplace">MARKETPLACE</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
-                  <Link to={isLenderRole ? "/lender-dashboard" : "/enterprise-dashboard"}>
-                    {isLenderRole ? "LENDER DASHBOARD" : "ENTERPRISE DASHBOARD"}
-                  </Link>
-                </DropdownMenuItem>
-                {/* Add back the Lender Dashboard option */}
-                <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
-                  <Link to="/lender-dashboard">LENDER DASHBOARD</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
-                  <Link to="/intelligence">INTELLIGENCE</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
-                  <Link to="/education">EDUCATION</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="font-mono text-sm focus:bg-primary/10 focus:text-primary">
-                  <Link to="/facility-builder">
-                    <Building className="h-4 w-4 mr-2" />
-                    FACILITY BUILDER
-                  </Link>
-                </DropdownMenuItem>
+                {mainMenuItems.map((item) => (
+                  <DropdownMenuItem 
+                    key={item.title} 
+                    asChild 
+                    className="font-mono text-sm focus:bg-primary/10 focus:text-primary"
+                  >
+                    <Link to={item.path}>
+                      {item.icon}
+                      {item.title}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -127,49 +113,17 @@ const Navbar = () => {
       }`}>
         <div className="container mx-auto px-6 py-4 space-y-6">
           <nav className="flex flex-col space-y-4">
-            <Link 
-              to="/" 
-              className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              HOME PAGE
-            </Link>
-            <Link 
-              to="/marketplace" 
-              className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              MARKETPLACE
-            </Link>
-            <Link 
-              to={dashboardRoute}
-              className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {isLenderRole ? "LENDER DASHBOARD" : "ENTERPRISE DASHBOARD"}
-            </Link>
-            <Link 
-              to="/intelligence" 
-              className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              INTELLIGENCE
-            </Link>
-            <Link 
-              to="/education" 
-              className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              EDUCATION
-            </Link>
-            <Link 
-              to="/facility-builder" 
-              className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <Building className="h-4 w-4 mr-2 inline-block" />
-              FACILITY BUILDER
-            </Link>
+            {mainMenuItems.map((item) => (
+              <Link 
+                key={item.title}
+                to={item.path} 
+                className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {item.icon}
+                {item.title}
+              </Link>
+            ))}
           </nav>
           <div className="flex flex-col space-y-4">
             <Button 
@@ -177,9 +131,9 @@ const Navbar = () => {
               className="rounded-none w-full font-mono text-sm border-primary/30" 
               asChild
             >
-              <Link to="/access">
-                <Terminal className="h-4 w-4 mr-2" />
-                ACCESS
+              <Link to={accessButton.path}>
+                {accessButton.icon}
+                {accessButton.title}
               </Link>
             </Button>
           </div>
