@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
@@ -427,7 +428,7 @@ const Underwriting = () => {
               </div>
               <div className="flex items-center gap-3">
                 <div className="bg-black/40 border border-primary/20 rounded-md p-3 flex flex-col items-center">
-                  <div className="text-xs text-muted-foreground mb-1">OVERALL RISK SCORE</div>
+                  <div className="text-xs text-muted-foreground mb-1">RISK PREFERENCE</div>
                   <div className={`text-2xl font-bold ${getScoreColor(totalScore)}`}>
                     {totalScore.toFixed(2)}
                   </div>
