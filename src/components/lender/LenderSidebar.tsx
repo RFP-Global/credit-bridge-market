@@ -1,8 +1,9 @@
 
 import { Button } from "@/components/ui/button";
-import { FileText, BarChart3, DollarSign, BriefcaseBusiness, Users } from "lucide-react";
+import { FileText, BarChart3, DollarSign, BriefcaseBusiness, Users, Database, Archive, Brain } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import LenderAccountCard from "./LenderAccountCard";
+import SidebarNavButton from "@/components/layout/SidebarNavButton";
 
 const LenderSidebar = () => {
   const navigate = useNavigate();
@@ -23,12 +24,8 @@ const LenderSidebar = () => {
         >
           <Link to="/lender-dashboard">
             <BarChart3 className="h-4 w-4 mr-3" />
-            Dashboard
+            Deal Activity
           </Link>
-        </Button>
-        <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3">
-          <FileText className="h-4 w-4 mr-3" />
-          Active RFPs
         </Button>
         <Button 
           variant="ghost" 
@@ -38,13 +35,35 @@ const LenderSidebar = () => {
           <DollarSign className="h-4 w-4 mr-3" />
           Marketplace
         </Button>
-        <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3">
-          <BriefcaseBusiness className="h-4 w-4 mr-3" />
-          Portfolio
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3"
+          asChild
+        >
+          <Link to="/intelligence">
+            <Brain className="h-4 w-4 mr-3" />
+            Intelligence
+          </Link>
         </Button>
-        <Button variant="ghost" className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3">
-          <Users className="h-4 w-4 mr-3" />
-          Borrowers
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3"
+          asChild
+        >
+          <Link to="/transaction-archive">
+            <Archive className="h-4 w-4 mr-3" />
+            Transaction Archive
+          </Link>
+        </Button>
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start text-left font-mono text-sm rounded-none h-auto py-3"
+          asChild
+        >
+          <Link to="/lenders">
+            <Users className="h-4 w-4 mr-3" />
+            Enterprise Community
+          </Link>
         </Button>
       </nav>
     </aside>
