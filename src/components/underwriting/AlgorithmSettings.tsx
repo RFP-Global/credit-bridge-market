@@ -44,7 +44,7 @@ export const AlgorithmSettings = () => {
                     <div className="h-3 w-3 rounded-full bg-red-500 mr-2"></div>
                     <span className="text-sm">High Risk Threshold</span>
                   </div>
-                  <div className="text-sm">< 2.5</div>
+                  <div className="text-sm">&lt; 2.5</div>
                 </div>
               </div>
             </div>
