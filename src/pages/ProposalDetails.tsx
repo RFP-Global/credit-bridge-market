@@ -1,14 +1,7 @@
 
-import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Navbar from "@/components/Navbar";
-import { financeProposals } from "@/data/marketplaceProposals";
-import { useToast } from "@/hooks/use-toast";
-import { getCompatibilityScore } from "@/components/underwriting/utils/styleUtils";
-import { Progress } from "@/components/ui/progress";
-import { Shield, Zap, CheckCircle, AlertCircle } from "lucide-react";
-import { useProposalDetails } from "@/hooks/useProposalDetails";
 import LoadingState from "@/components/proposals/details/LoadingState";
 import NotFoundState from "@/components/proposals/details/NotFoundState";
 import ProposalHeader from "@/components/proposals/details/ProposalHeader";
@@ -18,10 +11,10 @@ import CreditProfileTab from "@/components/proposals/details/CreditProfileTab";
 import CompanyInfoTab from "@/components/proposals/details/CompanyInfoTab";
 import CategoryDetailsModal from "@/components/proposals/details/CategoryDetailsModal";
 import CompatibilityTab from "@/components/proposals/details/CompatibilityTab";
+import { useProposalDetails } from "@/hooks/useProposalDetails";
 
 const ProposalDetails = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const { 
     proposal, 
     financialRatios, 
