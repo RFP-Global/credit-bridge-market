@@ -7,16 +7,6 @@ import { BarChart3, FileText, ShoppingCart, Building, CreditCard, Users, Databas
 import SidebarNavButton from "./SidebarNavButton";
 
 const EnterpriseSidebar = () => {
-  const navItems = [
-    { to: "/enterprise-dashboard", icon: BarChart3, label: "Dashboard" },
-    { to: "/proposals-dashboard", icon: FileText, label: "Proposals" },
-    { to: "/marketplace", icon: ShoppingCart, label: "Marketplace" },
-    { to: "/lenders", icon: Building, label: "Lenders" },
-    { to: "/financing", icon: CreditCard, label: "Financing" },
-    { to: "/team", icon: Users, label: "Team" },
-    { to: "/vdr", icon: Database, label: "VDR" },
-  ];
-
   return (
     <aside className="w-full md:w-64 space-y-6">
       <Card className="border border-primary/20 bg-background/50 backdrop-blur-sm overflow-hidden">
@@ -47,14 +37,48 @@ const EnterpriseSidebar = () => {
       </Card>
       
       <nav className="space-y-1">
-        {navItems.map((item) => (
-          <SidebarNavButton
-            key={item.label}
-            to={item.to}
-            icon={item.icon}
-            label={item.label}
-          />
-        ))}
+        <SidebarNavButton
+          to="/enterprise-dashboard"
+          icon={BarChart3}
+          label="Dashboard"
+          state={{ from: 'enterprise-dashboard' }}
+        />
+        <SidebarNavButton
+          to="/proposals-dashboard"
+          icon={FileText}
+          label="Proposals"
+          state={{ from: 'enterprise-dashboard' }}
+        />
+        <SidebarNavButton
+          to="/marketplace"
+          icon={ShoppingCart}
+          label="Marketplace"
+          state={{ from: 'enterprise-dashboard' }}
+        />
+        <SidebarNavButton
+          to="/lenders"
+          icon={Building}
+          label="Lenders"
+          state={{ from: 'enterprise-dashboard' }}
+        />
+        <SidebarNavButton
+          to="/financing"
+          icon={CreditCard}
+          label="Financing"
+          state={{ from: 'enterprise-dashboard' }}
+        />
+        <SidebarNavButton
+          to="/team"
+          icon={Users}
+          label="Team"
+          state={{ from: 'enterprise-dashboard' }}
+        />
+        <SidebarNavButton
+          to="/vdr"
+          icon={Database}
+          label="VDR"
+          state={{ from: 'enterprise-dashboard' }}
+        />
       </nav>
     </aside>
   );

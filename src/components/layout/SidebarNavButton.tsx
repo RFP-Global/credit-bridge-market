@@ -8,11 +8,17 @@ interface SidebarNavButtonProps {
   to: string;
   icon: LucideIcon;
   label: string;
+  state?: Record<string, unknown>;
 }
 
-const SidebarNavButton = ({ to, icon: Icon, label }: SidebarNavButtonProps) => {
+const SidebarNavButton = ({ to, icon: Icon, label, state }: SidebarNavButtonProps) => {
   const location = useLocation();
   const isActive = location.pathname === to;
+  
+  // Preserve the dashboard origin when navigating
+  const navigationState = state || { 
+    from: location.pathname.includes('lender') ? 'lender-dashboard' : 'enterprise-dashboard'
+  };
 
   return (
     <Button 
@@ -22,7 +28,7 @@ const SidebarNavButton = ({ to, icon: Icon, label }: SidebarNavButtonProps) => {
       }`}
       asChild
     >
-      <Link to={to}>
+      <Link to={to} state={navigationState}>
         <Icon className="h-4 w-4 mr-3" />
         {label}
       </Link>

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ChevronDown, Settings, Filter, Download, Globe, Store, Briefcase, Map, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -36,9 +37,10 @@ const Intelligence = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  const isLenderRole = location.pathname.includes('lender-dashboard') || 
-                     location.state?.from === 'lender-dashboard';
-                     
+  // Detect which dashboard to return to (lender or enterprise)
+  const isLenderRole = location.state?.from === 'lender-dashboard' || 
+                     location.pathname.includes('lender-dashboard');
+  
   const dashboardRoute = isLenderRole ? '/lender-dashboard' : '/enterprise-dashboard';
 
   const handleBackToDashboard = () => {
@@ -184,7 +186,7 @@ const Intelligence = () => {
               onClick={handleBackToDashboard}
             >
               <ArrowLeft className="h-3.5 w-3.5 mr-2" />
-              Back to Dashboard
+              Back to {isLenderRole ? "Lender" : "Enterprise"} Dashboard
             </Button>
             
             <Button 
