@@ -1,19 +1,14 @@
 
-export interface Criterion {
+export interface UnderwritingMetric {
   name: string;
-  description: string;
-  value: number | string;
-  weight: number;
+  value?: string | number;
+  formula?: string;
   score: number;
-  min?: number;
-  max?: number;
-  step?: number;
+  weighting: number;
 }
 
-export interface CriteriaGroup {
+export interface UnderwritingCategory {
   name: string;
-  description: string;
-  weight: number;
-  criteria: Criterion[];
-  score: number;
+  metrics: UnderwritingMetric[];
+  totalScore: number;
 }

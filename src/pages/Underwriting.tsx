@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Info } from "lucide-react";
+import { Info, FileSpreadsheet, Settings, History } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -16,10 +16,11 @@ import LenderSidebar from "@/components/lender/LenderSidebar";
 import { AlgorithmTab } from "@/components/underwriting/AlgorithmTab";
 import { ScoringHistory } from "@/components/underwriting/ScoringHistory";
 import { AlgorithmSettings } from "@/components/underwriting/AlgorithmSettings";
+import { UnderwritingPreferences } from "@/components/underwriting/UnderwritingPreferences";
 import { CriteriaGroup } from "@/components/underwriting/types";
 
 const Underwriting = () => {
-  const [activeTab, setActiveTab] = useState<string>("algorithm");
+  const [activeTab, setActiveTab] = useState<string>("preferences");
   const [totalScore, setTotalScore] = useState(4.45);
   
   const [criteriaGroups, setCriteriaGroups] = useState<CriteriaGroup[]>([
@@ -467,16 +468,26 @@ const Underwriting = () => {
             
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
               <TabsList className="bg-background/50 mb-4">
-                <TabsTrigger value="algorithm" className="font-mono text-xs">
+                <TabsTrigger value="preferences" className="font-mono text-xs flex items-center">
+                  <FileSpreadsheet className="h-3.5 w-3.5 mr-2" />
+                  UNDERWRITING PREFERENCES
+                </TabsTrigger>
+                <TabsTrigger value="algorithm" className="font-mono text-xs flex items-center">
+                  <Settings className="h-3.5 w-3.5 mr-2" />
                   RISK ALGORITHM
                 </TabsTrigger>
-                <TabsTrigger value="history" className="font-mono text-xs">
+                <TabsTrigger value="history" className="font-mono text-xs flex items-center">
+                  <History className="h-3.5 w-3.5 mr-2" />
                   SCORING HISTORY
                 </TabsTrigger>
                 <TabsTrigger value="settings" className="font-mono text-xs">
                   ALGORITHM SETTINGS
                 </TabsTrigger>
               </TabsList>
+              
+              <TabsContent value="preferences" className="space-y-6">
+                <UnderwritingPreferences />
+              </TabsContent>
               
               <TabsContent value="algorithm" className="space-y-6">
                 <AlgorithmTab 

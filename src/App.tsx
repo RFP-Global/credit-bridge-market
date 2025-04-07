@@ -35,6 +35,7 @@ import Lenders from "./pages/Lenders";
 import LenderProfile from "./pages/LenderProfile";
 import Financing from "./pages/Financing";
 import Team from "./pages/Team";
+import Underwriting from "./pages/Underwriting";
 import { useState } from "react";
 
 const App = () => {
@@ -79,6 +80,7 @@ const App = () => {
             <Route path="/lender/:id" element={<LenderProfile />} />
             <Route path="/financing" element={<Financing />} />
             <Route path="/team" element={<Team />} />
+            <Route path="/underwriting" element={<Underwriting />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
