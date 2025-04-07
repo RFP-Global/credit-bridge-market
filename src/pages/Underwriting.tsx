@@ -1,18 +1,10 @@
 
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Slider } from "@/components/ui/slider";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { ChevronDown, ChevronUp, Info, Save } from "lucide-react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Info } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -21,25 +13,10 @@ import {
 } from "@/components/ui/tooltip";
 import LenderHeader from "@/components/lender/LenderHeader";
 import LenderSidebar from "@/components/lender/LenderSidebar";
-
-interface CriteriaGroup {
-  name: string;
-  description: string;
-  weight: number;
-  criteria: Criterion[];
-  score: number;
-}
-
-interface Criterion {
-  name: string;
-  description: string;
-  value: number | string;
-  weight: number;
-  score: number;
-  min?: number;
-  max?: number;
-  step?: number;
-}
+import { AlgorithmTab } from "@/components/underwriting/AlgorithmTab";
+import { ScoringHistory } from "@/components/underwriting/ScoringHistory";
+import { AlgorithmSettings } from "@/components/underwriting/AlgorithmSettings";
+import { CriteriaGroup } from "@/components/underwriting/types";
 
 const Underwriting = () => {
   const [activeTab, setActiveTab] = useState<string>("algorithm");
@@ -278,7 +255,7 @@ const Underwriting = () => {
           value: "Excellent",
           weight: 20,
           score: 5,
-          min: 1, 
+          min: 1,
           max: 5,
           step: 1
         },
@@ -502,381 +479,22 @@ const Underwriting = () => {
               </TabsList>
               
               <TabsContent value="algorithm" className="space-y-6">
-                <div className="flex flex-col md:flex-row items-start gap-6 mb-6">
-                  <Card className="w-full md:w-1/3 bg-black/40 border-gray-800">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-mono flex items-center justify-between">
-                        <span>CATEGORY WEIGHTS</span>
-                        <Badge variant="outline" className="ml-2 font-mono">100%</Badge>
-                      </CardTitle>
-                      <CardDescription>
-                        Adjust the relative importance of each category
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      {criteriaGroups.map((group, groupIndex) => (
-                        <div key={group.name} className="space-y-1">
-                          <div className="flex justify-between items-center">
-                            <div className="text-sm font-medium">{group.name}</div>
-                            <div className="flex items-center gap-2">
-                              <div className={`text-sm font-medium ${getScoreColor(group.score)}`}>
-                                {group.score.toFixed(2)}
-                              </div>
-                              <div className="text-xs text-muted-foreground">{group.weight}%</div>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Button 
-                              variant="outline" 
-                              size="icon" 
-                              className="h-6 w-6"
-                              onClick={() => updateGroupWeight(groupIndex, Math.max(5, group.weight - 5))}
-                              disabled={group.weight <= 5}
-                            >
-                              <ChevronDown className="h-3 w-3" />
-                            </Button>
-                            <Slider
-                              value={[group.weight]}
-                              min={5}
-                              max={50}
-                              step={5}
-                              className="flex-1"
-                              onValueChange={(value) => updateGroupWeight(groupIndex, value[0])}
-                            />
-                            <Button 
-                              variant="outline" 
-                              size="icon"
-                              className="h-6 w-6"
-                              onClick={() => updateGroupWeight(groupIndex, Math.min(50, group.weight + 5))}
-                              disabled={group.weight >= 50}
-                            >
-                              <ChevronUp className="h-3 w-3" />
-                            </Button>
-                          </div>
-                          <Progress value={group.weight} className="h-1.5" />
-                        </div>
-                      ))}
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="w-full md:w-2/3 bg-black/40 border-gray-800">
-                    <CardHeader className="pb-2 border-b border-gray-800">
-                      <CardTitle className="text-sm font-mono">RISK SCORE BREAKDOWN</CardTitle>
-                      <CardDescription>
-                        Current risk score calculation based on category weights
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="pt-4">
-                      <div className="space-y-4">
-                        {criteriaGroups.map((group, index) => (
-                          <div key={group.name} className="flex items-center gap-3">
-                            <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium bg-primary/10">
-                              {group.weight}%
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex justify-between items-center mb-1">
-                                <div className="text-sm font-medium">{group.name}</div>
-                                <div className={`text-sm font-bold ${getScoreColor(group.score)}`}>
-                                  {group.score.toFixed(2)}
-                                </div>
-                              </div>
-                              <div className="w-full h-2 bg-gray-800/50 rounded-full overflow-hidden">
-                                <div 
-                                  className={`h-full ${getScoreBackground(group.score)}`}
-                                  style={{ width: `${(group.score / 5) * 100}%` }}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-                
-                <Accordion type="single" collapsible className="w-full space-y-4">
-                  {criteriaGroups.map((group, groupIndex) => (
-                    <AccordionItem 
-                      key={group.name} 
-                      value={group.name}
-                      className="border border-gray-800 rounded-md overflow-hidden bg-black/40 px-0"
-                    >
-                      <AccordionTrigger className="px-6 py-4 hover:bg-gray-900/20 [&[data-state=open]>div>svg]:rotate-180">
-                        <div className="flex items-center justify-between w-full pr-2">
-                          <div className="flex items-center">
-                            <span className="font-semibold">{group.name}</span>
-                            <Badge className="ml-3" variant="outline">
-                              {group.weight}%
-                            </Badge>
-                          </div>
-                          <div className="flex items-center">
-                            <span className={`font-bold mr-2 ${getScoreColor(group.score)}`}>
-                              {group.score.toFixed(2)}
-                            </span>
-                            <ChevronDown className="h-4 w-4 transition-transform duration-200" />
-                          </div>
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent className="pb-4 pt-2 px-6">
-                        <div className="text-sm text-muted-foreground mb-4">
-                          {group.description}
-                        </div>
-                        <div className="space-y-6">
-                          {group.criteria.map((criterion, criterionIndex) => (
-                            <div key={criterion.name} className="space-y-2 border-b border-gray-800/40 pb-4 last:border-0 last:pb-0">
-                              <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
-                                <div>
-                                  <div className="flex items-center">
-                                    <div className="font-medium">{criterion.name}</div>
-                                    <TooltipProvider>
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
-                                          <Info className="h-3.5 w-3.5 ml-1.5 text-muted-foreground" />
-                                        </TooltipTrigger>
-                                        <TooltipContent side="top" className="max-w-[250px] text-xs">
-                                          {criterion.description}
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    </TooltipProvider>
-                                    <div className="text-xs text-muted-foreground ml-3">
-                                      Current value: {criterion.value}
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                  <div className="text-xs text-muted-foreground">
-                                    Weight: {criterion.weight}%
-                                  </div>
-                                  <div className={`font-medium ${getScoreColor(criterion.score)}`}>
-                                    Score: {criterion.score}
-                                  </div>
-                                </div>
-                              </div>
-                              
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                  <div className="flex justify-between text-xs text-muted-foreground">
-                                    <span>Criterion Weight</span>
-                                    <span>{criterion.weight}%</span>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <Button 
-                                      variant="outline" 
-                                      size="icon" 
-                                      className="h-6 w-6"
-                                      onClick={() => updateCriterionWeight(groupIndex, criterionIndex, Math.max(5, criterion.weight - 5))}
-                                      disabled={criterion.weight <= 5}
-                                    >
-                                      <ChevronDown className="h-3 w-3" />
-                                    </Button>
-                                    <Slider
-                                      value={[criterion.weight]}
-                                      min={5}
-                                      max={70}
-                                      step={5}
-                                      className="flex-1"
-                                      onValueChange={(value) => updateCriterionWeight(groupIndex, criterionIndex, value[0])}
-                                    />
-                                    <Button 
-                                      variant="outline" 
-                                      size="icon"
-                                      className="h-6 w-6"
-                                      onClick={() => updateCriterionWeight(groupIndex, criterionIndex, Math.min(70, criterion.weight + 5))}
-                                      disabled={criterion.weight >= 70}
-                                    >
-                                      <ChevronUp className="h-3 w-3" />
-                                    </Button>
-                                  </div>
-                                </div>
-                                
-                                <div className="space-y-2">
-                                  <div className="flex justify-between text-xs text-muted-foreground">
-                                    <span>Risk Score</span>
-                                    <span>{criterion.score} / 5</span>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <Button 
-                                      variant="outline" 
-                                      size="icon" 
-                                      className="h-6 w-6"
-                                      onClick={() => updateCriterionScore(groupIndex, criterionIndex, Math.max(1, criterion.score - 1))}
-                                      disabled={criterion.score <= 1}
-                                    >
-                                      <ChevronDown className="h-3 w-3" />
-                                    </Button>
-                                    <div className="flex-1 flex">
-                                      {[1, 2, 3, 4, 5].map((value) => (
-                                        <button
-                                          key={value}
-                                          className={`h-6 flex-1 border-r last:border-r-0 border-gray-800 transition-colors ${
-                                            criterion.score >= value 
-                                              ? getScoreBackground(value)
-                                              : 'bg-gray-800/30'
-                                          }`}
-                                          onClick={() => updateCriterionScore(groupIndex, criterionIndex, value)}
-                                        />
-                                      ))}
-                                    </div>
-                                    <Button 
-                                      variant="outline" 
-                                      size="icon"
-                                      className="h-6 w-6"
-                                      onClick={() => updateCriterionScore(groupIndex, criterionIndex, Math.min(5, criterion.score + 1))}
-                                      disabled={criterion.score >= 5}
-                                    >
-                                      <ChevronUp className="h-3 w-3" />
-                                    </Button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-                
-                <div className="flex justify-end mt-8">
-                  <Button className="bg-blue-600 hover:bg-blue-700">
-                    <Save className="mr-2 h-4 w-4" />
-                    Save Algorithm Configuration
-                  </Button>
-                </div>
+                <AlgorithmTab 
+                  criteriaGroups={criteriaGroups}
+                  updateGroupWeight={updateGroupWeight}
+                  updateCriterionWeight={updateCriterionWeight}
+                  updateCriterionScore={updateCriterionScore}
+                  getScoreColor={getScoreColor}
+                  getScoreBackground={getScoreBackground}
+                />
               </TabsContent>
               
               <TabsContent value="history">
-                <Card className="bg-black/40 border-gray-800">
-                  <CardHeader>
-                    <CardTitle className="text-sm font-mono">SCORING HISTORY</CardTitle>
-                    <CardDescription>
-                      Review previous scoring algorithm versions and changes
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-6">
-                      <div className="space-y-4">
-                        {[
-                          { date: "2023-12-15", score: 4.45, description: "Increased weight of Financial Strength, reduced Industry Risk" },
-                          { date: "2023-11-01", score: 4.32, description: "Adjusted Management Strength criteria weights" },
-                          { date: "2023-09-22", score: 4.21, description: "Initial algorithm configuration" }
-                        ].map((item, i) => (
-                          <div key={i} className="flex items-start border-b border-gray-800/40 pb-4 last:border-0 last:pb-0">
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium mr-4 ${getScoreBackground(item.score)}`}>
-                              {item.score}
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex flex-col md:flex-row md:items-center justify-between mb-1">
-                                <div className="font-medium">Algorithm v{3-i}.0</div>
-                                <div className="text-sm text-muted-foreground">{item.date}</div>
-                              </div>
-                              <p className="text-sm text-muted-foreground">{item.description}</p>
-                            </div>
-                            <Button variant="ghost" size="sm" className="ml-2">
-                              Restore
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                <ScoringHistory getScoreBackground={getScoreBackground} />
               </TabsContent>
               
               <TabsContent value="settings">
-                <Card className="bg-black/40 border-gray-800">
-                  <CardHeader>
-                    <CardTitle className="text-sm font-mono">ALGORITHM SETTINGS</CardTitle>
-                    <CardDescription>
-                      Configure global settings for the risk assessment algorithm
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-6">
-                      <div className="grid gap-6 md:grid-cols-2">
-                        <div className="space-y-2">
-                          <div className="font-medium">Risk Threshold Settings</div>
-                          <div className="grid gap-3">
-                            <div className="flex justify-between items-center">
-                              <div className="flex items-center">
-                                <div className="h-3 w-3 rounded-full bg-green-500 mr-2"></div>
-                                <span className="text-sm">Low Risk Threshold</span>
-                              </div>
-                              <div className="text-sm">≥ 4.5</div>
-                            </div>
-                            <div className="flex justify-between items-center">
-                              <div className="flex items-center">
-                                <div className="h-3 w-3 rounded-full bg-blue-500 mr-2"></div>
-                                <span className="text-sm">Moderate Risk Threshold</span>
-                              </div>
-                              <div className="text-sm">≥ 3.5</div>
-                            </div>
-                            <div className="flex justify-between items-center">
-                              <div className="flex items-center">
-                                <div className="h-3 w-3 rounded-full bg-yellow-500 mr-2"></div>
-                                <span className="text-sm">Medium-High Risk Threshold</span>
-                              </div>
-                              <div className="text-sm">≥ 2.5</div>
-                            </div>
-                            <div className="flex justify-between items-center">
-                              <div className="flex items-center">
-                                <div className="h-3 w-3 rounded-full bg-red-500 mr-2"></div>
-                                <span className="text-sm">High Risk Threshold</span>
-                              </div>
-                              <div className="text-sm">< 2.5</div>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <div className="font-medium">Auto-Reject Settings</div>
-                          <div className="space-y-3">
-                            <div className="flex items-center justify-between">
-                              <label className="text-sm" htmlFor="auto-reject">Auto-reject applications below score</label>
-                              <select id="auto-reject" className="h-9 bg-background border border-input rounded-md px-3 py-1 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                                <option>2.5</option>
-                                <option>3.0</option>
-                                <option>3.5</option>
-                                <option>None</option>
-                              </select>
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <label className="text-sm" htmlFor="auto-approve">Auto-approve applications above score</label>
-                              <select id="auto-approve" className="h-9 bg-background border border-input rounded-md px-3 py-1 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                                <option>None</option>
-                                <option>4.0</option>
-                                <option>4.5</option>
-                                <option>4.8</option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <div className="font-medium">Algorithm Version Control</div>
-                        <div className="flex items-center justify-between p-3 border border-gray-800 rounded-md">
-                          <div>
-                            <div className="font-medium">Current Version: v3.0</div>
-                            <div className="text-sm text-muted-foreground">Last updated: December 15, 2023</div>
-                          </div>
-                          <div className="flex space-x-2">
-                            <Button variant="outline" size="sm">Export Configuration</Button>
-                            <Button variant="outline" size="sm">Import Configuration</Button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex justify-end mt-8 space-x-2">
-                      <Button variant="outline">Reset to Defaults</Button>
-                      <Button className="bg-blue-600 hover:bg-blue-700">
-                        <Save className="mr-2 h-4 w-4" />
-                        Save Settings
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                <AlgorithmSettings />
               </TabsContent>
             </Tabs>
           </main>
