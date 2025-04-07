@@ -3,11 +3,14 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 import { UnderwritingCategoryCard } from "./UnderwritingCategoryCard";
 import { UnderwritingCategory } from "./types";
+import { getScoreColor } from "./utils/styleUtils";
 
 export const UnderwritingPreferences = () => {
-  const [categories] = useState<UnderwritingCategory[]>([
+  const [categories, setCategories] = useState<UnderwritingCategory[]>([
     {
       name: "Business Stability",
       metrics: [
@@ -71,6 +74,19 @@ export const UnderwritingPreferences = () => {
 
   const riskLevel = getRiskLevel(overallScore);
 
+  const updateCategoryScore = (categoryIndex: number, newScore: number) => {
+    const updatedCategories = [...categories];
+    updatedCategories[categoryIndex].totalScore = parseFloat(newScore.toFixed(2));
+    setCategories(updatedCategories);
+  };
+
+  const getScoreColorClass = (score: number) => {
+    if (score >= 8) return 'text-green-500';
+    if (score >= 6) return 'text-blue-500';
+    if (score >= 4) return 'text-yellow-500';
+    return 'text-red-500';
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-6">
@@ -101,8 +117,32 @@ export const UnderwritingPreferences = () => {
                     <div className="text-xs text-muted-foreground mb-1">
                       {category.name.toUpperCase()}
                     </div>
-                    <div className="text-xl font-bold text-blue-400">
-                      {category.totalScore.toFixed(2)}
+                    <div className="flex justify-between items-center">
+                      <div className={`text-xl font-bold ${getScoreColorClass(category.totalScore)}`}>
+                        {category.totalScore.toFixed(2)}
+                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-6 w-6 p-0"
+                        onClick={() => {
+                          const newScore = Math.max(1, Math.min(10, category.totalScore - 0.5));
+                          updateCategoryScore(index, newScore);
+                        }}
+                      >
+                        -
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        className="h-6 w-6 p-0"
+                        onClick={() => {
+                          const newScore = Math.max(1, Math.min(10, category.totalScore + 0.5));
+                          updateCategoryScore(index, newScore);
+                        }}
+                      >
+                        +
+                      </Button>
                     </div>
                   </div>
                 ))}
@@ -165,6 +205,34 @@ export const UnderwritingPreferences = () => {
         
         {categories.map((category, index) => (
           <TabsContent key={index} value={category.name} className="space-y-6">
+            <Card className="bg-black/40 border-gray-800 mb-4">
+              <CardContent className="pt-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="font-medium">Adjust Category Score</div>
+                  <div className={`font-bold ${getScoreColorClass(category.totalScore)}`}>
+                    {category.totalScore.toFixed(2)} / 10
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs">1</span>
+                  <Slider
+                    value={[category.totalScore]}
+                    min={1}
+                    max={10}
+                    step={0.1}
+                    className="flex-1"
+                    onValueChange={(value) => updateCategoryScore(index, value[0])}
+                  />
+                  <span className="text-xs">10</span>
+                </div>
+                <div className="flex justify-between text-xs text-muted-foreground mt-2">
+                  <span>High Risk</span>
+                  <span>Medium-High Risk</span>
+                  <span>Moderate Risk</span>
+                  <span>Low Risk</span>
+                </div>
+              </CardContent>
+            </Card>
             <UnderwritingCategoryCard category={category} />
           </TabsContent>
         ))}
