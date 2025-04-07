@@ -2,7 +2,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Eye, CheckCircle, Clock } from "lucide-react";
+import { Eye, CheckCircle, Clock, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // Mock data for the different deal types
 const activeDeals = [
@@ -28,6 +29,19 @@ interface DealsTabProps {
 }
 
 const DealsTab = ({ type }: DealsTabProps) => {
+  const navigate = useNavigate();
+  
+  const handleDealClick = (dealId: number) => {
+    navigate(`/lender-dashboard/deal/${dealId}`, { 
+      state: { 
+        dealType: type,
+        dealData: type === "active" ? activeDeals.find(d => d.id === dealId) :
+                 type === "closed" ? closedDeals.find(d => d.id === dealId) :
+                 watchlistDeals.find(d => d.id === dealId)
+      } 
+    });
+  };
+
   return (
     <Card className="bg-background/50 backdrop-blur-sm">
       <CardHeader>
@@ -57,7 +71,11 @@ const DealsTab = ({ type }: DealsTabProps) => {
             </TableHeader>
             <TableBody>
               {activeDeals.map(deal => (
-                <TableRow key={deal.id} className="border-b border-primary/10 hover:bg-primary/5">
+                <TableRow 
+                  key={deal.id} 
+                  className="border-b border-primary/10 hover:bg-primary/5 cursor-pointer"
+                  onClick={() => handleDealClick(deal.id)}
+                >
                   <TableCell className="font-mono text-sm">{deal.name}</TableCell>
                   <TableCell className="text-xs">{deal.company}</TableCell>
                   <TableCell className="font-mono text-sm">{deal.amount}</TableCell>
@@ -72,7 +90,17 @@ const DealsTab = ({ type }: DealsTabProps) => {
                   </TableCell>
                   <TableCell className="text-xs">{deal.dueDate}</TableCell>
                   <TableCell className="text-right">
-                    <Button variant="ghost" size="sm" className="font-mono text-xs">DETAILS</Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="font-mono text-xs"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDealClick(deal.id);
+                      }}
+                    >
+                      DETAILS <ArrowRight className="ml-1 h-3 w-3" />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -94,7 +122,11 @@ const DealsTab = ({ type }: DealsTabProps) => {
             </TableHeader>
             <TableBody>
               {closedDeals.map(deal => (
-                <TableRow key={deal.id} className="border-b border-primary/10 hover:bg-primary/5">
+                <TableRow 
+                  key={deal.id} 
+                  className="border-b border-primary/10 hover:bg-primary/5 cursor-pointer"
+                  onClick={() => handleDealClick(deal.id)}
+                >
                   <TableCell className="font-mono text-sm">{deal.name}</TableCell>
                   <TableCell className="text-xs">{deal.company}</TableCell>
                   <TableCell className="font-mono text-sm">{deal.amount}</TableCell>
@@ -108,7 +140,17 @@ const DealsTab = ({ type }: DealsTabProps) => {
                   </TableCell>
                   <TableCell className="text-xs">{deal.closeDate}</TableCell>
                   <TableCell className="text-right">
-                    <Button variant="ghost" size="sm" className="font-mono text-xs">REPORT</Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="font-mono text-xs"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDealClick(deal.id);
+                      }}
+                    >
+                      REPORT <ArrowRight className="ml-1 h-3 w-3" />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -130,7 +172,11 @@ const DealsTab = ({ type }: DealsTabProps) => {
             </TableHeader>
             <TableBody>
               {watchlistDeals.map(deal => (
-                <TableRow key={deal.id} className="border-b border-primary/10 hover:bg-primary/5">
+                <TableRow 
+                  key={deal.id} 
+                  className="border-b border-primary/10 hover:bg-primary/5 cursor-pointer"
+                  onClick={() => handleDealClick(deal.id)}
+                >
                   <TableCell className="text-xs">{deal.company}</TableCell>
                   <TableCell className="font-mono text-sm">{deal.name}</TableCell>
                   <TableCell className="font-mono text-sm">{deal.amount}</TableCell>
@@ -145,7 +191,17 @@ const DealsTab = ({ type }: DealsTabProps) => {
                   </TableCell>
                   <TableCell className="text-xs max-w-[200px] truncate">{deal.notes}</TableCell>
                   <TableCell className="text-right">
-                    <Button variant="ghost" size="sm" className="font-mono text-xs">TRACK</Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="font-mono text-xs"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDealClick(deal.id);
+                      }}
+                    >
+                      TRACK <ArrowRight className="ml-1 h-3 w-3" />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
