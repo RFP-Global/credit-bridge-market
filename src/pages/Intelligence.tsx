@@ -37,14 +37,21 @@ const Intelligence = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Detect which dashboard to return to (lender or enterprise)
-  const isLenderRole = location.state?.from === 'lender-dashboard' || 
-                     location.pathname.includes('lender-dashboard');
+  // Detect source: dashboard or main menu
+  const isFromDashboard = location.state?.from === 'lender-dashboard' || 
+                         location.state?.from === 'enterprise-dashboard';
   
-  const dashboardRoute = isLenderRole ? '/lender-dashboard' : '/enterprise-dashboard';
+  // Determine back button destination and text
+  const backDestination = isFromDashboard 
+    ? (location.state?.from === 'lender-dashboard' ? '/lender-dashboard' : '/enterprise-dashboard')
+    : '/';
+  
+  const backButtonText = isFromDashboard 
+    ? `Back to ${location.state?.from === 'lender-dashboard' ? 'Lender' : 'Enterprise'} Dashboard`
+    : 'Back to Home';
 
-  const handleBackToDashboard = () => {
-    navigate(dashboardRoute);
+  const handleBackNavigation = () => {
+    navigate(backDestination);
   };
 
   const businessSizeData = [
@@ -183,10 +190,10 @@ const Intelligence = () => {
             <Button 
               variant="outline" 
               className="flex items-center h-8 bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-800 font-mono text-xs"
-              onClick={handleBackToDashboard}
+              onClick={handleBackNavigation}
             >
               <ArrowLeft className="h-3.5 w-3.5 mr-2" />
-              Back to {isLenderRole ? "Lender" : "Enterprise"} Dashboard
+              {backButtonText}
             </Button>
             
             <Button 
