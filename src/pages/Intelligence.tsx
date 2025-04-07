@@ -1,6 +1,4 @@
-
 import { useState } from "react";
-import Navbar from "@/components/Navbar";
 import { ChevronDown, Settings, Filter, Download, Globe, Store, Briefcase, Map, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,35 +9,25 @@ import GeographyAnalytics from "@/components/intelligence/GeographyAnalytics";
 import FullscreenButton from "@/components/FullscreenButton";
 import { useLocation, useNavigate } from "react-router-dom";
 
-// Updated chart colors to use blue shades
 export const CHART_COLORS = {
-  // Primary colors
-  workingCapital: "#33bbef", // Bright blue
-  expansion: "#0284c7",      // Medium blue
-  equipment: "#0ea5e9",      // Ocean blue
-  other: "#38bdf8",          // Sky blue
-  
-  // Status colors
-  approved: "#0ea5e9",       // Ocean blue
-  rejected: "#0369a1",       // Deep blue
-  pending: "#7dd3fc",        // Light blue
-  
-  // Business size colors
-  small: "#38bdf8",          // Sky blue
-  medium: "#0ea5e9",         // Ocean blue
-  large: "#0284c7",          // Medium blue
-  
-  // Industry colors
-  retail: "#7dd3fc",         // Light blue
-  tech: "#38bdf8",           // Sky blue
-  construction: "#0ea5e9",   // Ocean blue
-  manufacturing: "#0284c7",  // Medium blue
-  healthcare: "#0369a1",     // Deep blue
-  
-  // Structure colors
-  llc: "#38bdf8",            // Sky blue
-  corporate: "#0ea5e9",      // Ocean blue
-  partnership: "#0284c7"     // Medium blue
+  workingCapital: "#33bbef",
+  expansion: "#0284c7",
+  equipment: "#0ea5e9",
+  other: "#38bdf8",
+  approved: "#0ea5e9",
+  rejected: "#0369a1",
+  pending: "#7dd3fc",
+  small: "#38bdf8",
+  medium: "#0ea5e9",
+  large: "#0284c7",
+  retail: "#7dd3fc",
+  tech: "#38bdf8",
+  construction: "#0ea5e9",
+  manufacturing: "#0284c7",
+  healthcare: "#0369a1",
+  llc: "#38bdf8",
+  corporate: "#0ea5e9",
+  partnership: "#0284c7"
 };
 
 const Intelligence = () => {
@@ -48,19 +36,15 @@ const Intelligence = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Determine if user is coming from lender dashboard based on the URL path
   const isLenderRole = location.pathname.includes('lender-dashboard') || 
                      location.state?.from === 'lender-dashboard';
                      
-  // Determine the dashboard route based on user role
   const dashboardRoute = isLenderRole ? '/lender-dashboard' : '/enterprise-dashboard';
 
-  // Handle navigation back to the appropriate dashboard
   const handleBackToDashboard = () => {
     navigate(dashboardRoute);
   };
 
-  // Mock data for business size analytics
   const businessSizeData = [
     { name: 'Small', workingCapital: 40, expansion: 70, equipment: 30, rate: 5.2 },
     { name: 'Medium', workingCapital: 100, expansion: 40, equipment: 55, rate: 4.8 },
@@ -88,7 +72,6 @@ const Intelligence = () => {
     { month: 'Jun', small: 15, medium: 30, large: 22 }
   ];
 
-  // Mock data for industry analytics
   const industryStackedData = [
     { 
       name: 'Manufacturing', 
@@ -152,7 +135,6 @@ const Intelligence = () => {
     { month: 'Jun', retail: 18, tech: 25, construction: 20, healthcare: 22, manufacturing: 42 }
   ];
 
-  // New industry loan request data with 7 industries
   const industryLoanRequestData = [
     { name: 'Manufacturing', size: 350 },
     { name: 'Construction', size: 300 },
@@ -163,7 +145,6 @@ const Intelligence = () => {
     { name: 'Hospitality', size: 120 }
   ];
 
-  // Mock data for business structure analytics
   const structureData = [
     { type: 'LLC', workingCapital: 60, expansion: 90, equipment: 30, rate: 7.5 },
     { type: 'Corporate', workingCapital: 80, expansion: 70, equipment: 85, rate: 5.5 },
@@ -187,7 +168,6 @@ const Intelligence = () => {
 
   return (
     <div className="min-h-screen bg-black text-gray-300 overflow-x-hidden">
-      <Navbar />
       <FullscreenButton />
       
       <div className="container mx-auto px-4 py-8 mt-16">
