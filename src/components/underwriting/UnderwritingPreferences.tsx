@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,9 +7,22 @@ import { Slider } from "@/components/ui/slider";
 import { UnderwritingCategoryCard } from "./UnderwritingCategoryCard";
 import { UnderwritingCategory } from "./types";
 import { getScoreColor } from "./utils/styleUtils";
+import CategoryDetailsModal from "../proposals/details/CategoryDetailsModal";
 
 export const UnderwritingPreferences = () => {
+  const [selectedCategory, setSelectedCategory] = useState<UnderwritingCategory | null>(null);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [categories, setCategories] = useState<UnderwritingCategory[]>([
+    {
+      name: "Financial Strength",
+      metrics: [
+        { name: "EBITDA", score: 7, weighting: 40, description: "Earnings Before Interest, Taxes, Depreciation, and Amortization" },
+        { name: "Debt/EBITDA", score: 5, weighting: 25, description: "Ratio of total debt to EBITDA" },
+        { name: "Current Ratio", score: 6, weighting: 20, description: "Current assets divided by current liabilities" },
+        { name: "Revenue Growth", score: 8, weighting: 15, description: "Year-over-year revenue growth" }
+      ],
+      totalScore: 6.45
+    },
     {
       name: "Business Stability",
       metrics: [
@@ -61,10 +73,8 @@ export const UnderwritingPreferences = () => {
     }
   ]);
 
-  // Calculate overall score
   const overallScore = categories.reduce((sum, category) => sum + category.totalScore, 0) / categories.length;
 
-  // Determine risk level based on overall score
   const getRiskLevel = (score: number) => {
     if (score >= 7) return { level: "Low Risk", color: "bg-green-500/20 text-green-500 border-green-500/20" };
     if (score >= 5) return { level: "Moderate Risk", color: "bg-blue-500/20 text-blue-500 border-blue-500/20" };
@@ -84,10 +94,8 @@ export const UnderwritingPreferences = () => {
     const updatedCategories = [...categories];
     const category = updatedCategories[categoryIndex];
     
-    // Update the metric score
     category.metrics[metricIndex].score = newScore;
     
-    // Recalculate the category total score
     const totalWeightedScore = category.metrics.reduce(
       (sum, metric) => sum + (metric.score * metric.weighting), 0
     );
@@ -105,6 +113,11 @@ export const UnderwritingPreferences = () => {
     if (score >= 6) return 'text-blue-500';
     if (score >= 4) return 'text-yellow-500';
     return 'text-red-500';
+  };
+
+  const openCategoryDetails = (category: UnderwritingCategory) => {
+    setSelectedCategory(category);
+    setDetailsModalOpen(true);
   };
 
   return (
@@ -133,7 +146,11 @@ export const UnderwritingPreferences = () => {
               </div>
               <div className="grid grid-cols-5 gap-4 mb-4">
                 {categories.map((category, index) => (
-                  <div key={index} className="bg-gray-800/50 p-3 rounded-md">
+                  <div 
+                    key={index} 
+                    className="bg-gray-800/50 p-3 rounded-md cursor-pointer hover:bg-gray-700/50 transition-colors"
+                    onClick={() => openCategoryDetails(category)}
+                  >
                     <div className="text-xs text-muted-foreground mb-1">
                       {category.name.toUpperCase()}
                     </div>
@@ -145,7 +162,8 @@ export const UnderwritingPreferences = () => {
                         variant="ghost" 
                         size="sm" 
                         className="h-6 w-6 p-0"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           const newScore = Math.max(1, Math.min(10, category.totalScore - 0.5));
                           updateCategoryScore(index, newScore);
                         }}
@@ -156,7 +174,8 @@ export const UnderwritingPreferences = () => {
                         variant="ghost" 
                         size="sm"
                         className="h-6 w-6 p-0"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           const newScore = Math.max(1, Math.min(10, category.totalScore + 0.5));
                           updateCategoryScore(index, newScore);
                         }}
@@ -254,7 +273,6 @@ export const UnderwritingPreferences = () => {
               </CardContent>
             </Card>
 
-            {/* Metrics adjustments */}
             <Card className="bg-black/40 border-gray-800 mb-4">
               <CardHeader className="py-3 border-b border-gray-800">
                 <CardTitle className="text-base font-semibold">Adjust Individual Metrics</CardTitle>
@@ -339,6 +357,11 @@ export const UnderwritingPreferences = () => {
                           Formula: {metric.formula}
                         </div>
                       )}
+                      {metric.description && (
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Description: {metric.description}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -349,6 +372,20 @@ export const UnderwritingPreferences = () => {
           </TabsContent>
         ))}
       </Tabs>
+
+      {selectedCategory && (
+        <CategoryDetailsModal
+          open={detailsModalOpen}
+          onOpenChange={setDetailsModalOpen}
+          categoryName={selectedCategory.name}
+          categoryScore={selectedCategory.totalScore}
+          components={selectedCategory.metrics.map(metric => ({
+            name: metric.name,
+            score: metric.score,
+            description: metric.description
+          }))}
+        />
+      )}
     </div>
   );
 };
