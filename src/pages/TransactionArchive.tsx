@@ -1,6 +1,4 @@
-
 import { useState, useMemo } from "react";
-import Navbar from "@/components/Navbar";
 import TransactionHistoryTable from "@/components/transaction/TransactionHistoryTable";
 import TransactionArchiveHeader from "@/components/transaction/TransactionArchiveHeader";
 import { historicalTransactions } from "@/data/transactionArchiveData";
@@ -10,7 +8,6 @@ const TransactionArchive = () => {
   const [industryFilter, setIndustryFilter] = useState("all");
   const [facilityTypeFilter, setFacilityTypeFilter] = useState("all");
   
-  // Get unique industries and facility types for filters
   const industries = useMemo(() => {
     return [...new Set(historicalTransactions.map(t => t.industry))];
   }, []);
@@ -19,7 +16,6 @@ const TransactionArchive = () => {
     return [...new Set(historicalTransactions.map(t => t.facilityType))];
   }, []);
   
-  // Filter transactions based on search query and filters
   const filteredTransactions = useMemo(() => {
     return historicalTransactions.filter(transaction => {
       const matchesSearch = searchQuery === "" || 
@@ -38,8 +34,7 @@ const TransactionArchive = () => {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="container mx-auto px-4 py-8 pt-24">
+      <div className="container mx-auto px-4 py-8 pt-8">
         <TransactionArchiveHeader 
           totalTransactions={filteredTransactions.length}
           onSearchChange={setSearchQuery}
