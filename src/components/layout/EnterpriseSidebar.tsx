@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BarChart3, FileText, ShoppingCart, Building, CreditCard, Users, Database } from "lucide-react";
+import { BarChart3, FileText, ShoppingCart, Building, Users, Database } from "lucide-react";
 import SidebarNavButton from "./SidebarNavButton";
 
 const EnterpriseSidebar = () => {
@@ -59,12 +59,6 @@ const EnterpriseSidebar = () => {
           to="/lenders"
           icon={Building}
           label="Lender Network"
-          state={{ from: 'enterprise-dashboard' }}
-        />
-        <SidebarNavButton
-          to="/financing"
-          icon={CreditCard}
-          label="Financing"
           state={{ from: 'enterprise-dashboard' }}
         />
         <SidebarNavButton

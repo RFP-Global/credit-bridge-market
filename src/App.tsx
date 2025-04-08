@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -32,7 +33,6 @@ import BidComparison from "./pages/BidComparison";
 import VDR from "./pages/VDR";
 import Lenders from "./pages/Lenders";
 import LenderProfile from "./pages/LenderProfile";
-import Financing from "./pages/Financing";
 import Team from "./pages/Team";
 import Underwriting from "./pages/Underwriting";
 import { useState } from "react";
@@ -76,7 +76,6 @@ const App = () => {
             <Route path="/vdr" element={<VDR />} />
             <Route path="/lenders" element={<Lenders />} />
             <Route path="/lender/:id" element={<LenderProfile />} />
-            <Route path="/financing" element={<Financing />} />
             <Route path="/team" element={<Team />} />
             <Route path="/underwriting" element={<Underwriting />} />
             <Route path="*" element={<NotFound />} />
