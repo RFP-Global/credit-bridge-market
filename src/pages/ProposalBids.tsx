@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { 
@@ -254,17 +255,6 @@ const ProposalBids = () => {
                     <ArrowUpRight className="h-5 w-5" />
                   </Button>
                 </div>
-                
-                {proposal.description && (
-                  <Card className="border-primary/20 bg-background/50 mb-6">
-                    <CardHeader>
-                      <CardTitle className="text-sm font-mono">PROJECT DESCRIPTION</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm font-extralight">{proposal.description}</p>
-                    </CardContent>
-                  </Card>
-                )}
                 
                 <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
                   <CardHeader className="flex flex-row items-center justify-between">

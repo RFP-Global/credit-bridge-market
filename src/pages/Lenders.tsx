@@ -1,169 +1,612 @@
-
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import EnterpriseLayout from "@/components/layout/EnterpriseLayout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building, Phone, Mail, ArrowRight, Search, Shield, Eye, EyeOff } from "lucide-react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { 
+  Building, 
+  MapPin, 
+  Phone, 
+  Mail, 
+  Calendar, 
+  DollarSign, 
+  Hash, 
+  Globe, 
+  CheckCircle, 
+  Clock, 
+  MessageSquare, 
+  Heart, 
+  Share, 
+  Users,
+  Bookmark,
+  History
+} from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { lenders } from "@/data/lendersData";
+import EnterpriseLayout from "@/components/layout/EnterpriseLayout";
+import { toast } from "@/hooks/use-toast";
 
 const Lenders = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showDetails, setShowDetails] = useState<Record<number, boolean>>({});
-  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("all");
+  const [following, setFollowing] = useState<number[]>([]);
+  const [saved, setSaved] = useState<number[]>([]);
+  const [likes, setLikes] = useState<Record<string, number>>({});
   
-  const toggleDetails = (id: number) => {
-    setShowDetails(prev => ({
+  const toggleFollow = (lenderId: number) => {
+    setFollowing(prev => 
+      prev.includes(lenderId) 
+        ? prev.filter(id => id !== lenderId)
+        : [...prev, lenderId]
+    );
+    
+    const isFollowing = following.includes(lenderId);
+    const lender = lenders.find(l => l.id === lenderId);
+    
+    toast({
+      title: isFollowing ? "Unfollowed" : "Following",
+      description: isFollowing 
+        ? `You've unfollowed ${lender?.name}`
+        : `You're now following ${lender?.name}`,
+    });
+  };
+  
+  const toggleSave = (lenderId: number) => {
+    setSaved(prev => 
+      prev.includes(lenderId) 
+        ? prev.filter(id => id !== lenderId)
+        : [...prev, lenderId]
+    );
+    
+    const isSaved = saved.includes(lenderId);
+    const lender = lenders.find(l => l.id === lenderId);
+    
+    toast({
+      title: isSaved ? "Removed from saved" : "Saved",
+      description: isSaved 
+        ? `${lender?.name} removed from your saved lenders`
+        : `${lender?.name} added to your saved lenders`,
+    });
+  };
+  
+  const toggleLike = (dealId: string) => {
+    setLikes(prev => ({
       ...prev,
-      [id]: !prev[id]
+      [dealId]: (prev[dealId] || 0) + 1
     }));
+    
+    toast({
+      title: "Liked",
+      description: "You've liked this deal",
+    });
   };
-
-  const handleViewProfile = (id: number) => {
-    navigate(`/lender/${id}`);
+  
+  const handleContact = (lenderId: number) => {
+    const lender = lenders.find(l => l.id === lenderId);
+    
+    toast({
+      title: "Message Sent",
+      description: `Your message has been sent to ${lender?.name}`,
+    });
   };
-
-  const filteredLenders = lenders.filter(lender => 
-    lender.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    lender.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    lender.specialties.some(specialty => 
-      specialty.toLowerCase().includes(searchTerm.toLowerCase())
-    ) ||
-    lender.preferredRegions.some(region => 
-      region.toLowerCase().includes(searchTerm.toLowerCase())
-    ) ||
-    lender.fundingCapacity.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    lender.minimumDeal.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
+  
+  const filteredLenders = activeTab === "following"
+    ? lenders.filter(lender => following.includes(lender.id))
+    : activeTab === "saved"
+    ? lenders.filter(lender => saved.includes(lender.id))
+    : lenders;
+  
   return (
-    <EnterpriseLayout
-      title="Lenders Network"
-      description="Connect with qualified financial institutions for your projects."
-    >
-      <div className="container mx-auto px-6 py-8">
-        <div className="border-b border-primary/10 pb-4 mb-6">
-          <h1 className="text-2xl font-mono">Anonymous Lenders Network</h1>
-          <p className="text-sm text-muted-foreground">Search and connect with qualified lenders without revealing their identities.</p>
+    <EnterpriseLayout>
+      <div className="border-b border-primary/10 pb-4 mb-6">
+        <h1 className="text-2xl font-mono">Lender Community</h1>
+        <p className="text-sm text-muted-foreground">Connect with financial institutions in your network.</p>
+      </div>
+      
+      <Tabs defaultValue="all" className="space-y-6" onValueChange={setActiveTab}>
+        <div className="flex justify-between items-center">
+          <TabsList className="bg-background/50 border border-primary/20">
+            <TabsTrigger value="all" className="font-mono text-xs">ALL LENDERS</TabsTrigger>
+            <TabsTrigger value="following" className="font-mono text-xs">FOLLOWING</TabsTrigger>
+            <TabsTrigger value="saved" className="font-mono text-xs">SAVED</TabsTrigger>
+          </TabsList>
+          
+          <Button variant="outline" size="sm" className="font-mono text-xs">
+            <Users className="h-4 w-4 mr-2" />
+            Discover New Lenders
+          </Button>
         </div>
-
-        <div className="flex flex-col md:flex-row items-center gap-4 mb-8">
-          <div className="relative w-full md:w-1/2">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Search by specialty, region, funding size..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 rounded-md border-primary/20"
-            />
-          </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Shield className="h-4 w-4" />
-            <span>Lender identities are protected until connection is approved</span>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredLenders.length > 0 ? (
-            filteredLenders.map((lender) => (
-              <Card key={lender.id} className="border-primary/20 bg-background/50 backdrop-blur-sm hover:bg-primary/5 transition-colors">
-                <CardHeader>
-                  <div className="flex justify-between items-center">
-                    <CardTitle className="text-lg font-mono">{lender.code}</CardTitle>
-                    <Button 
-                      variant="ghost" 
-                      size="icon"
-                      onClick={() => toggleDetails(lender.id)}
-                    >
-                      {showDetails[lender.id] ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </Button>
+        
+        <TabsContent value="all" className="space-y-6">
+          <div className="grid grid-cols-1 gap-6">
+            {filteredLenders.map(lender => (
+              <Card key={lender.id} className="overflow-hidden border-primary/20">
+                <div className="bg-gradient-to-r from-primary/5 to-primary/10 h-32 relative"></div>
+                <div className="px-6 pb-6">
+                  <div className="flex justify-between relative -mt-10">
+                    <div className="flex items-end">
+                      <Avatar className="h-20 w-20 border-4 border-background bg-primary/10">
+                        <AvatarFallback className="bg-primary/20 text-xl">
+                          {lender.name.split(' ').map(word => word[0]).join('')}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="ml-4 mb-2">
+                        <h2 className="text-xl font-semibold">{lender.name}</h2>
+                        <p className="text-sm text-muted-foreground font-mono">{lender.code}</p>
+                      </div>
+                    </div>
+                    <div className="space-x-2 flex">
+                      <Button 
+                        variant={following.includes(lender.id) ? "default" : "outline"} 
+                        size="sm"
+                        className={following.includes(lender.id) ? "bg-primary text-primary-foreground" : ""}
+                        onClick={() => toggleFollow(lender.id)}
+                      >
+                        {following.includes(lender.id) ? "Following" : "Follow"}
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => handleContact(lender.id)}
+                      >
+                        <MessageSquare className="h-4 w-4 mr-2" />
+                        Message
+                      </Button>
+                    </div>
                   </div>
-                  <CardDescription>{lender.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {showDetails[lender.id] ? (
-                      <>
-                        <div className="text-sm mt-2">
-                          <span className="text-muted-foreground">Funding Capacity:</span> 
-                          <span className="font-mono ml-2">{lender.fundingCapacity}</span>
+                  
+                  <div className="mt-6">
+                    <p className="text-sm">{lender.description}</p>
+                    
+                    <div className="grid grid-cols-2 gap-4 mt-4">
+                      <div className="flex items-center">
+                        <Building className="h-4 w-4 text-primary mr-2" />
+                        <span className="text-sm">In business for {lender.yearsInBusiness} years</span>
+                      </div>
+                      <div className="flex items-center">
+                        <MapPin className="h-4 w-4 text-primary mr-2" />
+                        <span className="text-sm">Preferred Regions: {lender.preferredRegions.join(', ')}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <DollarSign className="h-4 w-4 text-primary mr-2" />
+                        <span className="text-sm">Funding Capacity: {lender.fundingCapacity}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Hash className="h-4 w-4 text-primary mr-2" />
+                        <span className="text-sm">Min Deal Size: {lender.minimumDeal}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex flex-wrap gap-2 mt-4">
+                      {lender.specialties.map((specialty, index) => (
+                        <Badge key={index} variant="outline" className="bg-primary/5">
+                          {specialty}
+                        </Badge>
+                      ))}
+                    </div>
+                    
+                    <div className="mt-6">
+                      <p className="text-sm font-medium mb-2">Contact Information</p>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="flex items-center">
+                          <Mail className="h-4 w-4 text-primary mr-2" />
+                          <span className="text-sm">{lender.email}</span>
                         </div>
-                        <div className="text-sm">
-                          <span className="text-muted-foreground">Minimum Deal Size:</span> 
-                          <span className="font-mono ml-2">{lender.minimumDeal}</span>
+                        <div className="flex items-center">
+                          <Phone className="h-4 w-4 text-primary mr-2" />
+                          <span className="text-sm">{lender.phone}</span>
                         </div>
-                        <div className="text-sm">
-                          <span className="text-muted-foreground">Years in Business:</span> 
-                          <span className="font-mono ml-2">{lender.yearsInBusiness}</span>
+                      </div>
+                    </div>
+                    
+                    <Separator className="my-6" />
+                    
+                    <div>
+                      <p className="text-sm font-medium mb-4">Recent Deals</p>
+                      <div className="space-y-4">
+                        {lender.recentDeals?.slice(0, 2).map(deal => (
+                          <Card key={deal.id} className="bg-background/50">
+                            <CardContent className="p-4">
+                              <div className="flex justify-between">
+                                <div>
+                                  <p className="font-medium">{deal.projectType}</p>
+                                  <div className="flex items-center mt-1 text-sm text-muted-foreground">
+                                    <MapPin className="h-3 w-3 mr-1" />
+                                    {deal.location}
+                                    <Separator orientation="vertical" className="mx-2 h-3" />
+                                    <DollarSign className="h-3 w-3 mr-1" />
+                                    {deal.amount}
+                                    <Separator orientation="vertical" className="mx-2 h-3" />
+                                    <Calendar className="h-3 w-3 mr-1" />
+                                    {new Date(deal.date).toLocaleDateString()}
+                                  </div>
+                                </div>
+                                <Badge variant="outline" className="bg-primary/5">
+                                  {deal.term}
+                                </Badge>
+                              </div>
+                              <div className="flex items-center justify-between mt-4 pt-3 border-t border-primary/10">
+                                <div className="flex items-center space-x-4">
+                                  <button 
+                                    className="flex items-center text-sm text-muted-foreground hover:text-foreground"
+                                    onClick={() => toggleLike(`${lender.id}-${deal.id}`)}
+                                  >
+                                    <Heart className="h-4 w-4 mr-1" />
+                                    {likes[`${lender.id}-${deal.id}`] || 0}
+                                  </button>
+                                  <button className="flex items-center text-sm text-muted-foreground hover:text-foreground">
+                                    <MessageSquare className="h-4 w-4 mr-1" />
+                                    0
+                                  </button>
+                                  <button className="flex items-center text-sm text-muted-foreground hover:text-foreground">
+                                    <Share className="h-4 w-4 mr-1" />
+                                    Share
+                                  </button>
+                                </div>
+                                <button 
+                                  className="text-sm text-muted-foreground hover:text-foreground"
+                                  onClick={() => toggleSave(lender.id)}
+                                >
+                                  <Bookmark className={`h-4 w-4 ${saved.includes(lender.id) ? "fill-current" : ""}`} />
+                                </button>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                      
+                      {lender.recentDeals && lender.recentDeals.length > 2 && (
+                        <Button variant="link" className="mt-2 p-0">
+                          <History className="h-4 w-4 mr-1" />
+                          View all {lender.recentDeals.length} deals
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="following" className="space-y-6">
+          {filteredLenders.length > 0 ? (
+            <div className="grid grid-cols-1 gap-6">
+              {
+                filteredLenders.map(lender => (
+                <Card key={lender.id} className="overflow-hidden border-primary/20">
+                  <div className="bg-gradient-to-r from-primary/5 to-primary/10 h-32 relative"></div>
+                  <div className="px-6 pb-6">
+                    <div className="flex justify-between relative -mt-10">
+                      <div className="flex items-end">
+                        <Avatar className="h-20 w-20 border-4 border-background bg-primary/10">
+                          <AvatarFallback className="bg-primary/20 text-xl">
+                            {lender.name.split(' ').map(word => word[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="ml-4 mb-2">
+                          <h2 className="text-xl font-semibold">{lender.name}</h2>
+                          <p className="text-sm text-muted-foreground font-mono">{lender.code}</p>
                         </div>
-                        <div className="text-sm">
-                          <span className="text-muted-foreground">Specialties:</span> 
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {lender.specialties.map((specialty, index) => (
-                              <span key={index} className="bg-primary/10 px-2 py-0.5 text-xs font-mono">
-                                {specialty}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                        <div className="text-sm">
-                          <span className="text-muted-foreground">Preferred Regions:</span> 
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {lender.preferredRegions.map((region, index) => (
-                              <span key={index} className="bg-primary/10 px-2 py-0.5 text-xs font-mono">
-                                {region}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                        
+                      </div>
+                      <div className="space-x-2 flex">
+                        <Button 
+                          variant="default" 
+                          size="sm"
+                          onClick={() => toggleFollow(lender.id)}
+                        >
+                          Following
+                        </Button>
                         <Button 
                           variant="outline" 
-                          size="sm" 
-                          className="w-full font-mono text-xs mt-4 rounded-none border-primary/20"
-                          onClick={() => handleViewProfile(lender.id)}
+                          size="sm"
+                          onClick={() => handleContact(lender.id)}
                         >
-                          VIEW FULL PROFILE
-                          <ArrowRight className="h-3.5 w-3.5 ml-2" />
+                          <MessageSquare className="h-4 w-4 mr-2" />
+                          Message
                         </Button>
-                      </>
-                    ) : (
-                      <div className="flex flex-col items-center justify-center py-4">
-                        <Shield className="h-10 w-10 text-primary/40 mb-2" />
-                        <p className="text-sm text-center text-muted-foreground">
-                          View more details about this lender
-                        </p>
                       </div>
-                    )}
+                    </div>
                     
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="w-full font-mono text-xs mt-4 rounded-none border-primary/20"
-                    >
-                      REQUEST CONNECTION
-                      <ArrowRight className="h-3.5 w-3.5 ml-2" />
-                    </Button>
+                    
+                    <div className="mt-6">
+                      <p className="text-sm">{lender.description}</p>
+                      
+                      <div className="grid grid-cols-2 gap-4 mt-4">
+                        <div className="flex items-center">
+                          <Building className="h-4 w-4 text-primary mr-2" />
+                          <span className="text-sm">In business for {lender.yearsInBusiness} years</span>
+                        </div>
+                        <div className="flex items-center">
+                          <MapPin className="h-4 w-4 text-primary mr-2" />
+                          <span className="text-sm">Preferred Regions: {lender.preferredRegions.join(', ')}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <DollarSign className="h-4 w-4 text-primary mr-2" />
+                          <span className="text-sm">Funding Capacity: {lender.fundingCapacity}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Hash className="h-4 w-4 text-primary mr-2" />
+                          <span className="text-sm">Min Deal Size: {lender.minimumDeal}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex flex-wrap gap-2 mt-4">
+                        {lender.specialties.map((specialty, index) => (
+                          <Badge key={index} variant="outline" className="bg-primary/5">
+                            {specialty}
+                          </Badge>
+                        ))}
+                      </div>
+                      
+                      <div className="mt-6">
+                        <p className="text-sm font-medium mb-2">Contact Information</p>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="flex items-center">
+                            <Mail className="h-4 w-4 text-primary mr-2" />
+                            <span className="text-sm">{lender.email}</span>
+                          </div>
+                          <div className="flex items-center">
+                            <Phone className="h-4 w-4 text-primary mr-2" />
+                            <span className="text-sm">{lender.phone}</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <Separator className="my-6" />
+                      
+                      <div>
+                        <p className="text-sm font-medium mb-4">Recent Deals</p>
+                        <div className="space-y-4">
+                          {lender.recentDeals?.slice(0, 2).map(deal => (
+                            <Card key={deal.id} className="bg-background/50">
+                              <CardContent className="p-4">
+                                <div className="flex justify-between">
+                                  <div>
+                                    <p className="font-medium">{deal.projectType}</p>
+                                    <div className="flex items-center mt-1 text-sm text-muted-foreground">
+                                      <MapPin className="h-3 w-3 mr-1" />
+                                      {deal.location}
+                                      <Separator orientation="vertical" className="mx-2 h-3" />
+                                      <DollarSign className="h-3 w-3 mr-1" />
+                                      {deal.amount}
+                                      <Separator orientation="vertical" className="mx-2 h-3" />
+                                      <Calendar className="h-3 w-3 mr-1" />
+                                      {new Date(deal.date).toLocaleDateString()}
+                                    </div>
+                                  </div>
+                                  <Badge variant="outline" className="bg-primary/5">
+                                    {deal.term}
+                                  </Badge>
+                                </div>
+                                <div className="flex items-center justify-between mt-4 pt-3 border-t border-primary/10">
+                                  <div className="flex items-center space-x-4">
+                                    <button 
+                                      className="flex items-center text-sm text-muted-foreground hover:text-foreground"
+                                      onClick={() => toggleLike(`${lender.id}-${deal.id}`)}
+                                    >
+                                      <Heart className="h-4 w-4 mr-1" />
+                                      {likes[`${lender.id}-${deal.id}`] || 0}
+                                    </button>
+                                    <button className="flex items-center text-sm text-muted-foreground hover:text-foreground">
+                                      <MessageSquare className="h-4 w-4 mr-1" />
+                                      0
+                                    </button>
+                                    <button className="flex items-center text-sm text-muted-foreground hover:text-foreground">
+                                      <Share className="h-4 w-4 mr-1" />
+                                      Share
+                                    </button>
+                                  </div>
+                                  <button 
+                                    className="text-sm text-muted-foreground hover:text-foreground"
+                                    onClick={() => toggleSave(lender.id)}
+                                  >
+                                    <Bookmark className={`h-4 w-4 ${saved.includes(lender.id) ? "fill-current" : ""}`} />
+                                  </button>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          ))}
+                        </div>
+                        
+                        {lender.recentDeals && lender.recentDeals.length > 2 && (
+                          <Button variant="link" className="mt-2 p-0">
+                            <History className="h-4 w-4 mr-1" />
+                            View all {lender.recentDeals.length} deals
+                          </Button>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </CardContent>
-              </Card>
-            ))
+                </Card>
+              ))
+              }
+            </div>
           ) : (
-            <div className="col-span-full flex flex-col items-center justify-center py-12">
-              <Search className="h-12 w-12 text-primary/20 mb-4" />
-              <h3 className="font-mono text-lg mb-2">No lenders found</h3>
-              <p className="text-muted-foreground text-center max-w-md">
-                Try adjusting your search criteria to find lenders that match your project needs.
-              </p>
+            <div className="text-center py-12 space-y-4">
+              <Users className="h-12 w-12 mx-auto text-muted-foreground" />
+              <h3 className="text-lg font-medium">No Followed Lenders</h3>
+              <p className="text-muted-foreground max-w-md mx-auto">You haven't followed any lenders yet. Follow lenders to see their updates and recent deals here.</p>
+              <Button 
+                variant="outline" 
+                onClick={() => setActiveTab("all")}
+              >
+                Browse Lenders
+              </Button>
             </div>
           )}
-        </div>
-      </div>
+        </TabsContent>
+        
+        <TabsContent value="saved" className="space-y-6">
+          {filteredLenders.length > 0 ? (
+            <div className="grid grid-cols-1 gap-6">
+              {
+                filteredLenders.map(lender => (
+                <Card key={lender.id} className="overflow-hidden border-primary/20">
+                  <div className="bg-gradient-to-r from-primary/5 to-primary/10 h-32 relative"></div>
+                  <div className="px-6 pb-6">
+                    <div className="flex justify-between relative -mt-10">
+                      <div className="flex items-end">
+                        <Avatar className="h-20 w-20 border-4 border-background bg-primary/10">
+                          <AvatarFallback className="bg-primary/20 text-xl">
+                            {lender.name.split(' ').map(word => word[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="ml-4 mb-2">
+                          <h2 className="text-xl font-semibold">{lender.name}</h2>
+                          <p className="text-sm text-muted-foreground font-mono">{lender.code}</p>
+                        </div>
+                      </div>
+                      <div className="space-x-2 flex">
+                        <Button 
+                          variant={following.includes(lender.id) ? "default" : "outline"} 
+                          size="sm"
+                          className={following.includes(lender.id) ? "bg-primary text-primary-foreground" : ""}
+                          onClick={() => toggleFollow(lender.id)}
+                        >
+                          {following.includes(lender.id) ? "Following" : "Follow"}
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleContact(lender.id)}
+                        >
+                          <MessageSquare className="h-4 w-4 mr-2" />
+                          Message
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    
+                    <div className="mt-6">
+                      <p className="text-sm">{lender.description}</p>
+                      
+                      <div className="grid grid-cols-2 gap-4 mt-4">
+                        <div className="flex items-center">
+                          <Building className="h-4 w-4 text-primary mr-2" />
+                          <span className="text-sm">In business for {lender.yearsInBusiness} years</span>
+                        </div>
+                        <div className="flex items-center">
+                          <MapPin className="h-4 w-4 text-primary mr-2" />
+                          <span className="text-sm">Preferred Regions: {lender.preferredRegions.join(', ')}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <DollarSign className="h-4 w-4 text-primary mr-2" />
+                          <span className="text-sm">Funding Capacity: {lender.fundingCapacity}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Hash className="h-4 w-4 text-primary mr-2" />
+                          <span className="text-sm">Min Deal Size: {lender.minimumDeal}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex flex-wrap gap-2 mt-4">
+                        {lender.specialties.map((specialty, index) => (
+                          <Badge key={index} variant="outline" className="bg-primary/5">
+                            {specialty}
+                          </Badge>
+                        ))}
+                      </div>
+                      
+                      <div className="mt-6">
+                        <p className="text-sm font-medium mb-2">Contact Information</p>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="flex items-center">
+                            <Mail className="h-4 w-4 text-primary mr-2" />
+                            <span className="text-sm">{lender.email}</span>
+                          </div>
+                          <div className="flex items-center">
+                            <Phone className="h-4 w-4 text-primary mr-2" />
+                            <span className="text-sm">{lender.phone}</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <Separator className="my-6" />
+                      
+                      <div>
+                        <p className="text-sm font-medium mb-4">Recent Deals</p>
+                        <div className="space-y-4">
+                          {lender.recentDeals?.slice(0, 2).map(deal => (
+                            <Card key={deal.id} className="bg-background/50">
+                              <CardContent className="p-4">
+                                <div className="flex justify-between">
+                                  <div>
+                                    <p className="font-medium">{deal.projectType}</p>
+                                    <div className="flex items-center mt-1 text-sm text-muted-foreground">
+                                      <MapPin className="h-3 w-3 mr-1" />
+                                      {deal.location}
+                                      <Separator orientation="vertical" className="mx-2 h-3" />
+                                      <DollarSign className="h-3 w-3 mr-1" />
+                                      {deal.amount}
+                                      <Separator orientation="vertical" className="mx-2 h-3" />
+                                      <Calendar className="h-3 w-3 mr-1" />
+                                      {new Date(deal.date).toLocaleDateString()}
+                                    </div>
+                                  </div>
+                                  <Badge variant="outline" className="bg-primary/5">
+                                    {deal.term}
+                                  </Badge>
+                                </div>
+                                <div className="flex items-center justify-between mt-4 pt-3 border-t border-primary/10">
+                                  <div className="flex items-center space-x-4">
+                                    <button 
+                                      className="flex items-center text-sm text-muted-foreground hover:text-foreground"
+                                      onClick={() => toggleLike(`${lender.id}-${deal.id}`)}
+                                    >
+                                      <Heart className="h-4 w-4 mr-1" />
+                                      {likes[`${lender.id}-${deal.id}`] || 0}
+                                    </button>
+                                    <button className="flex items-center text-sm text-muted-foreground hover:text-foreground">
+                                      <MessageSquare className="h-4 w-4 mr-1" />
+                                      0
+                                    </button>
+                                    <button className="flex items-center text-sm text-muted-foreground hover:text-foreground">
+                                      <Share className="h-4 w-4 mr-1" />
+                                      Share
+                                    </button>
+                                  </div>
+                                  <button 
+                                    className="text-sm text-muted-foreground hover:text-foreground"
+                                    onClick={() => toggleSave(lender.id)}
+                                  >
+                                    <Bookmark className="h-4 w-4 fill-current" />
+                                  </button>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          ))}
+                        </div>
+                        
+                        {lender.recentDeals && lender.recentDeals.length > 2 && (
+                          <Button variant="link" className="mt-2 p-0">
+                            <History className="h-4 w-4 mr-1" />
+                            View all {lender.recentDeals.length} deals
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ))
+              }
+            </div>
+          ) : (
+            <div className="text-center py-12 space-y-4">
+              <Bookmark className="h-12 w-12 mx-auto text-muted-foreground" />
+              <h3 className="text-lg font-medium">No Saved Lenders</h3>
+              <p className="text-muted-foreground max-w-md mx-auto">You haven't saved any lenders yet. Save lenders to quickly access them later.</p>
+              <Button 
+                variant="outline" 
+                onClick={() => setActiveTab("all")}
+              >
+                Browse Lenders
+              </Button>
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
     </EnterpriseLayout>
   );
 };
