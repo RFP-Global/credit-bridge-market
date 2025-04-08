@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { HistoricalTransaction } from "@/data/transactionArchiveData";
 import {
   Table,
@@ -19,6 +19,7 @@ interface TransactionHistoryTableProps {
 
 const TransactionHistoryTable = ({ transactions }: TransactionHistoryTableProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [sortField, setSortField] = useState<keyof HistoricalTransaction | null>(null);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
 
@@ -69,9 +70,11 @@ const TransactionHistoryTable = ({ transactions }: TransactionHistoryTableProps)
   });
 
   const handleRowClick = (transaction: HistoricalTransaction, index: number) => {
-    // Add the projectIndex to the transaction when navigating
-    navigate(`/transaction/${transaction.id}`, { 
-      state: { projectIndex: index } 
+    navigate(`/transaction-details/${transaction.id}`, { 
+      state: { 
+        projectIndex: index,
+        from: location.pathname
+      } 
     });
   };
   

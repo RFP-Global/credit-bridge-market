@@ -1,12 +1,21 @@
+
 import { useState, useMemo } from "react";
 import TransactionHistoryTable from "@/components/transaction/TransactionHistoryTable";
 import TransactionArchiveHeader from "@/components/transaction/TransactionArchiveHeader";
 import { historicalTransactions } from "@/data/transactionArchiveData";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const TransactionArchive = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [industryFilter, setIndustryFilter] = useState("all");
   const [facilityTypeFilter, setFacilityTypeFilter] = useState("all");
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Get the previous page from location state
+  const previousPage = location.state?.from || "/";
   
   const industries = useMemo(() => {
     return [...new Set(historicalTransactions.map(t => t.industry))];
@@ -32,9 +41,24 @@ const TransactionArchive = () => {
     });
   }, [searchQuery, industryFilter, facilityTypeFilter]);
 
+  const handleGoBack = () => {
+    navigate(previousPage);
+  };
+
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="container mx-auto px-4 py-8 pt-8">
+        <div className="flex items-center mb-6">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={handleGoBack} 
+            className="text-gray-300 hover:text-white"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" /> Back
+          </Button>
+        </div>
+        
         <TransactionArchiveHeader 
           totalTransactions={filteredTransactions.length}
           onSearchChange={setSearchQuery}
