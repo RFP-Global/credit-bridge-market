@@ -8,7 +8,6 @@ import FullscreenButton from "@/components/FullscreenButton";
 import IntelligenceHeader from "@/components/intelligence/IntelligenceHeader";
 import { useLocation } from "react-router-dom";
 import { CHART_COLORS } from "@/constants/chartColors";
-import Navbar from "@/components/Navbar";
 import {
   businessSizeData,
   businessSizeDefaultData,
@@ -33,10 +32,9 @@ const Intelligence = () => {
 
   return (
     <div className="min-h-screen bg-black text-gray-300 overflow-x-hidden">
-      <Navbar />
       <FullscreenButton />
       
-      <div className="container mx-auto px-4 py-8 mt-24">
+      <div className="container mx-auto px-4 py-8">
         <IntelligenceHeader previousPage={previousPage} />
 
         <div className="bg-gray-900 rounded-sm p-2 mb-6 border border-gray-800">
