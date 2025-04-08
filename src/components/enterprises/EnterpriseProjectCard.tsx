@@ -18,6 +18,9 @@ const EnterpriseProjectCard: React.FC<EnterpriseProjectCardProps> = ({
   likes,
   toggleLike
 }) => {
+  // Anonymize specific location details by only showing state/country
+  const anonymizedLocation = project.location.split(',').pop()?.trim() || project.location;
+  
   return (
     <Card className="overflow-hidden border-primary/10 bg-background">
       <CardContent className="p-3">
@@ -28,7 +31,7 @@ const EnterpriseProjectCard: React.FC<EnterpriseProjectCardProps> = ({
             </h3>
             <div className="flex items-center text-xs text-muted-foreground mt-1">
               <MapPin className="h-3 w-3 mr-1" />
-              {project.location}
+              {anonymizedLocation}
             </div>
           </div>
           <div>

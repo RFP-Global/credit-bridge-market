@@ -4,10 +4,11 @@ import { enterprises } from "@/data/enterprisesData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Users, Filter, Grid, List, Building, ArrowLeft } from "lucide-react";
+import { Search, Users, Filter, Grid, List, Building, ArrowLeft, EyeOff, AlertCircle } from "lucide-react";
 import EnterpriseCard from "@/components/enterprises/EnterpriseCard";
 import EmptyStateTab from "@/components/lenders/EmptyStateTab"; // Reusing this component
 import { useNavigate, useLocation } from "react-router-dom";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const EnterpriseNetworkPage = () => {
   const [activeTab, setActiveTab] = useState("explore");
@@ -76,13 +77,21 @@ const EnterpriseNetworkPage = () => {
           </Button>
         </div>
       
-        <div className="text-center mb-12">
+        <div className="text-center mb-6">
           <h1 className="text-4xl font-bold mb-4">Enterprise Network</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Connect with enterprise customers, follow their activities, 
             and discover potential financing opportunities for your business.
           </p>
         </div>
+        
+        <Alert className="mb-6 bg-primary/5 border-primary/20">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Enterprise Profiles are Anonymous</AlertTitle>
+          <AlertDescription className="flex items-center">
+            Enterprise identities are protected by default. Click the <EyeOff className="h-3 w-3 mx-1" /> icon to toggle profile visibility.
+          </AlertDescription>
+        </Alert>
         
         <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
           <div className="relative w-full md:w-1/3">
