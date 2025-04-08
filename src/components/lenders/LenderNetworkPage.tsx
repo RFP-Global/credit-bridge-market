@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { lenders } from "@/data/lendersData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,8 +7,8 @@ import { Search, Users, Filter, Grid, List, Building } from "lucide-react";
 import LenderCard from "@/components/lenders/LenderCard";
 import EmptyStateTab from "@/components/lenders/EmptyStateTab";
 import { Separator } from "@/components/ui/separator";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const LenderNetworkPage = () => {
   const [activeTab, setActiveTab] = useState("explore");
@@ -43,7 +42,6 @@ const LenderNetworkPage = () => {
   };
   
   const handleContact = (lenderId: number) => {
-    // Contact functionality would be implemented here
     console.log(`Contacting lender with ID: ${lenderId}`);
   };
   
