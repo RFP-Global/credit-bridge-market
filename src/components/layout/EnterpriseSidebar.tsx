@@ -58,7 +58,7 @@ const EnterpriseSidebar = () => {
         <SidebarNavButton
           to="/lenders"
           icon={Building}
-          label="Lenders"
+          label="Lender Network"
           state={{ from: 'enterprise-dashboard' }}
         />
         <SidebarNavButton
