@@ -7,7 +7,6 @@ import { Search, Users, Filter, Grid, List, Building } from "lucide-react";
 import LenderCard from "@/components/lenders/LenderCard";
 import EmptyStateTab from "@/components/lenders/EmptyStateTab";
 import { Separator } from "@/components/ui/separator";
-import Footer from "@/components/Footer";
 
 const LenderNetworkPage = () => {
   const [activeTab, setActiveTab] = useState("explore");
@@ -179,8 +178,6 @@ const LenderNetworkPage = () => {
           </TabsContent>
         </Tabs>
       </div>
-      
-      <Footer />
     </div>
   );
 };
