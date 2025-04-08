@@ -1,13 +1,10 @@
+
 import React, { useState } from "react";
 import { lenders } from "@/data/lendersData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Search, Users, Filter, Grid, List, User, ArrowLeft } from "lucide-react";
-import LenderCard from "@/components/lenders/LenderCard";
-import EmptyStateTab from "@/components/lenders/EmptyStateTab";
-import { Separator } from "@/components/ui/separator";
-import { useNavigate, useLocation } from "react-router-dom";
+import LenderNetworkHeader from "./LenderNetworkHeader";
+import LenderSearchControls from "./LenderSearchControls";
+import LenderGrid from "./LenderGrid";
 
 const LenderNetworkPage = () => {
   const [activeTab, setActiveTab] = useState("explore");
@@ -16,17 +13,6 @@ const LenderNetworkPage = () => {
   const [likes, setLikes] = useState<Record<string, number>>({});
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  
-  const navigate = useNavigate();
-  const location = useLocation();
-  
-  const goBack = () => {
-    if (location.state && location.state.from) {
-      navigate(location.state.from);
-    } else {
-      navigate(-1);
-    }
-  };
   
   const toggleFollow = (lenderId: number) => {
     setFollowing(prev => 
@@ -67,66 +53,22 @@ const LenderNetworkPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-12 mt-12">
-        <div className="flex items-center mb-6">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={goBack} 
-            className="mr-2"
-          >
-            <ArrowLeft className="h-4 w-4 mr-1" /> Back
-          </Button>
-        </div>
-      
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Banker Network</h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Connect with banking professionals, follow their activities, 
-            and discover potential financing partners for your business.
-          </p>
-        </div>
+        <LenderNetworkHeader />
         
-        <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-          <div className="relative w-full md:w-1/3">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search bankers by name, bank or specialty..."
-              className="pl-10"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              <Filter className="h-4 w-4 mr-1" /> Filter
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => setViewMode("grid")}
-              className={viewMode === "grid" ? "bg-primary/10" : ""}
-            >
-              <Grid className="h-4 w-4" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => setViewMode("list")}
-              className={viewMode === "list" ? "bg-primary/10" : ""}
-            >
-              <List className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
+        <LenderSearchControls 
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          viewMode={viewMode}
+          setViewMode={setViewMode}
+        />
         
         <Tabs defaultValue="explore" className="w-full" onValueChange={setActiveTab}>
           <TabsList className="w-full flex justify-start mb-8 bg-background border-b">
             <TabsTrigger value="explore" className="flex items-center gap-1 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
-              <User className="h-4 w-4" /> Explore
+              Explore
             </TabsTrigger>
             <TabsTrigger value="following" className="flex items-center gap-1 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
-              <Users className="h-4 w-4" /> Following ({followingLenders.length})
+              Following ({followingLenders.length})
             </TabsTrigger>
             <TabsTrigger value="saved" className="flex items-center gap-1 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
               Saved ({savedLenders.length})
@@ -134,71 +76,49 @@ const LenderNetworkPage = () => {
           </TabsList>
           
           <TabsContent value="explore">
-            {filteredLenders.length > 0 ? (
-              <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 gap-6" : "space-y-6"}>
-                {filteredLenders.map(lender => (
-                  <LenderCard
-                    key={lender.id}
-                    lender={lender}
-                    following={following}
-                    saved={saved}
-                    likes={likes}
-                    toggleFollow={toggleFollow}
-                    handleContact={handleContact}
-                    toggleSave={toggleSave}
-                    toggleLike={toggleLike}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">No bankers found matching your search criteria.</p>
-              </div>
-            )}
+            <LenderGrid 
+              lenders={filteredLenders}
+              following={following}
+              saved={saved}
+              likes={likes}
+              viewMode={viewMode}
+              toggleFollow={toggleFollow}
+              toggleSave={toggleSave}
+              toggleLike={toggleLike}
+              handleContact={handleContact}
+            />
           </TabsContent>
           
           <TabsContent value="following">
-            {followingLenders.length > 0 ? (
-              <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 gap-6" : "space-y-6"}>
-                {followingLenders.map(lender => (
-                  <LenderCard
-                    key={lender.id}
-                    lender={lender}
-                    following={following}
-                    saved={saved}
-                    likes={likes}
-                    toggleFollow={toggleFollow}
-                    handleContact={handleContact}
-                    toggleSave={toggleSave}
-                    toggleLike={toggleLike}
-                  />
-                ))}
-              </div>
-            ) : (
-              <EmptyStateTab type="following" setActiveTab={setActiveTab} />
-            )}
+            <LenderGrid 
+              lenders={followingLenders}
+              following={following}
+              saved={saved}
+              likes={likes}
+              viewMode={viewMode}
+              toggleFollow={toggleFollow}
+              toggleSave={toggleSave}
+              toggleLike={toggleLike}
+              handleContact={handleContact}
+              emptyType="following"
+              setActiveTab={setActiveTab}
+            />
           </TabsContent>
           
           <TabsContent value="saved">
-            {savedLenders.length > 0 ? (
-              <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 gap-6" : "space-y-6"}>
-                {savedLenders.map(lender => (
-                  <LenderCard
-                    key={lender.id}
-                    lender={lender}
-                    following={following}
-                    saved={saved}
-                    likes={likes}
-                    toggleFollow={toggleFollow}
-                    handleContact={handleContact}
-                    toggleSave={toggleSave}
-                    toggleLike={toggleLike}
-                  />
-                ))}
-              </div>
-            ) : (
-              <EmptyStateTab type="saved" setActiveTab={setActiveTab} />
-            )}
+            <LenderGrid 
+              lenders={savedLenders}
+              following={following}
+              saved={saved}
+              likes={likes}
+              viewMode={viewMode}
+              toggleFollow={toggleFollow}
+              toggleSave={toggleSave}
+              toggleLike={toggleLike}
+              handleContact={handleContact}
+              emptyType="saved"
+              setActiveTab={setActiveTab}
+            />
           </TabsContent>
         </Tabs>
       </div>
