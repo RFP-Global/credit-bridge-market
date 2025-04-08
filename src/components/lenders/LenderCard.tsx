@@ -11,7 +11,8 @@ import {
   MessageSquare,
   Bookmark,
   History,
-  ExternalLink
+  ExternalLink,
+  Briefcase
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -70,6 +71,7 @@ const LenderCard: React.FC<LenderCardProps> = ({
                 {lender.name} 
                 <ExternalLink className="h-4 w-4 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
+              <p className="text-sm text-muted-foreground">{lender.title}</p>
               <p className="text-sm text-muted-foreground font-mono">{lender.code}</p>
             </div>
           </div>
@@ -94,12 +96,17 @@ const LenderCard: React.FC<LenderCardProps> = ({
         </div>
         
         <div className="mt-6">
+          <div className="flex items-center mb-3">
+            <Building className="h-4 w-4 text-primary mr-2" />
+            <span className="text-sm font-medium">{lender.bankName}</span>
+          </div>
+          
           <p className="text-sm">{lender.description}</p>
           
           <div className="grid grid-cols-2 gap-4 mt-4">
             <div className="flex items-center">
-              <Building className="h-4 w-4 text-primary mr-2" />
-              <span className="text-sm">In business for {lender.yearsInBusiness} years</span>
+              <Briefcase className="h-4 w-4 text-primary mr-2" />
+              <span className="text-sm">{lender.yearsExperience || lender.yearsInBusiness} years experience</span>
             </div>
             <div className="flex items-center">
               <MapPin className="h-4 w-4 text-primary mr-2" />

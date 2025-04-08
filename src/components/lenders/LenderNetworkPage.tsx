@@ -1,10 +1,9 @@
-
 import React, { useState } from "react";
 import { lenders } from "@/data/lendersData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Users, Filter, Grid, List, Building, ArrowLeft } from "lucide-react";
+import { Search, Users, Filter, Grid, List, User, ArrowLeft } from "lucide-react";
 import LenderCard from "@/components/lenders/LenderCard";
 import EmptyStateTab from "@/components/lenders/EmptyStateTab";
 import { Separator } from "@/components/ui/separator";
@@ -21,7 +20,6 @@ const LenderNetworkPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Get the previous page from location state, default to dashboard if not available
   const goBack = () => {
     const previousPage = location.state?.from || "/enterprise-dashboard";
     navigate(previousPage);
@@ -56,6 +54,7 @@ const LenderNetworkPage = () => {
   
   const filteredLenders = lenders.filter(lender => 
     lender.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    lender.bankName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     lender.specialties.some(specialty => specialty.toLowerCase().includes(searchQuery.toLowerCase()))
   );
   
@@ -77,9 +76,9 @@ const LenderNetworkPage = () => {
         </div>
       
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Lender Network</h1>
+          <h1 className="text-4xl font-bold mb-4">Banker Network</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Connect with financial institutions, follow their activities, 
+            Connect with banking professionals, follow their activities, 
             and discover potential financing partners for your business.
           </p>
         </div>
@@ -88,7 +87,7 @@ const LenderNetworkPage = () => {
           <div className="relative w-full md:w-1/3">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search lenders by name or specialty..."
+              placeholder="Search bankers by name, bank or specialty..."
               className="pl-10"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -121,7 +120,7 @@ const LenderNetworkPage = () => {
         <Tabs defaultValue="explore" className="w-full" onValueChange={setActiveTab}>
           <TabsList className="w-full flex justify-start mb-8 bg-background border-b">
             <TabsTrigger value="explore" className="flex items-center gap-1 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
-              <Building className="h-4 w-4" /> Explore
+              <User className="h-4 w-4" /> Explore
             </TabsTrigger>
             <TabsTrigger value="following" className="flex items-center gap-1 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
               <Users className="h-4 w-4" /> Following ({followingLenders.length})
@@ -150,7 +149,7 @@ const LenderNetworkPage = () => {
               </div>
             ) : (
               <div className="text-center py-12">
-                <p className="text-muted-foreground">No lenders found matching your search criteria.</p>
+                <p className="text-muted-foreground">No bankers found matching your search criteria.</p>
               </div>
             )}
           </TabsContent>

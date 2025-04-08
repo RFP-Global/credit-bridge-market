@@ -43,7 +43,7 @@ const LenderSidebar = () => {
         <SidebarNavButton
           to="/team"
           icon={Users}
-          label="Enterprise Community"
+          label="Banker Network"
           state={{ from: 'lender-dashboard' }}
         />
         <SidebarNavButton

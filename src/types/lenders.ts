@@ -3,8 +3,10 @@ export interface Lender {
   id: number;
   code: string;
   name: string;
+  title: string;
+  bankName: string;
   description: string;
-  contactName: string;
+  contactName?: string;
   phone: string;
   email: string;
   fundingCapacity: string;
@@ -12,6 +14,7 @@ export interface Lender {
   minimumDeal: string;
   preferredRegions: string[];
   yearsInBusiness: number;
+  yearsExperience?: number;
   loanTypes?: string[];
   interestRates?: string;
   typicalTerms?: string;
