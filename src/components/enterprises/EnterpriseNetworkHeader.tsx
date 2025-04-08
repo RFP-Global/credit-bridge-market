@@ -10,10 +10,13 @@ const EnterpriseNetworkHeader = () => {
   const location = useLocation();
   
   const goBack = () => {
+    // Check if we have a valid 'from' path in location state
     if (location.state && location.state.from) {
+      // Navigate to the previous route stored in location state
       navigate(location.state.from);
     } else {
-      navigate(-1);
+      // If no state is available, go to a safe default route
+      navigate("/");
     }
   };
 

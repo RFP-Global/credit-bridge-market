@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { 
@@ -45,9 +46,17 @@ const EnterpriseDetailPage = () => {
   }, [id]);
   
   const handleBack = () => {
+    // Check if we have a valid 'from' path in location state
     if (location.state?.from) {
-      navigate(location.state.from);
+      // If the path includes "enterprise-network" and we came from a lender profile,
+      // go directly back to the lender profile to avoid a loop
+      if (location.state.from.includes("enterprise-network") && location.pathname.includes("enterprise")) {
+        navigate("/lenders");
+      } else {
+        navigate(location.state.from);
+      }
     } else {
+      // Default fallback to enterprise network
       navigate("/enterprise-network");
     }
   };
