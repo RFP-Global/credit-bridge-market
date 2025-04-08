@@ -9,8 +9,15 @@ const LenderNetworkHeader = () => {
   const location = useLocation();
   
   const goBack = () => {
+    // Check if we have a valid 'from' path in location state
     if (location.state && location.state.from) {
-      navigate(location.state.from);
+      // Make sure the path doesn't contain '/lenders' (which might cause a loop)
+      const fromPath = location.state.from;
+      if (fromPath.includes('/lenders')) {
+        navigate('/');
+      } else {
+        navigate(fromPath);
+      }
     } else {
       // If no specific previous page is stored, navigate to a safe fallback
       navigate("/");

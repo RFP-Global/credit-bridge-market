@@ -15,9 +15,11 @@ const SidebarNavButton = ({ to, icon: Icon, label, state }: SidebarNavButtonProp
   const location = useLocation();
   const isActive = location.pathname === to;
   
-  // Preserve the current location when navigating to allow for 'back' functionality
-  const navigationState = state || { 
-    from: location.pathname
+  // Create navigation state that properly tracks the current path
+  // but prevents navigation loops with the lenders page
+  const navigationState = {
+    ...(state || {}),
+    from: location.pathname !== '/lenders' ? location.pathname : '/'
   };
 
   return (
