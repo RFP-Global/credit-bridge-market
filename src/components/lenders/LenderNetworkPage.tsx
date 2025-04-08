@@ -7,7 +7,6 @@ import { Search, Users, Filter, Grid, List, Building } from "lucide-react";
 import LenderCard from "@/components/lenders/LenderCard";
 import EmptyStateTab from "@/components/lenders/EmptyStateTab";
 import { Separator } from "@/components/ui/separator";
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 const LenderNetworkPage = () => {
@@ -55,9 +54,7 @@ const LenderNetworkPage = () => {
   
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
-      
-      <div className="container mx-auto px-4 py-12 mt-20">
+      <div className="container mx-auto px-4 py-12 mt-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">Lender Network</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
