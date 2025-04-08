@@ -16,10 +16,10 @@ const SidebarNavButton = ({ to, icon: Icon, label, state }: SidebarNavButtonProp
   const isActive = location.pathname === to;
   
   // Create navigation state that properly tracks the current path
-  // but prevents navigation loops with the lenders page
+  // for all navigation including intelligence page
   const navigationState = {
     ...(state || {}),
-    from: location.pathname !== '/lenders' ? location.pathname : '/'
+    from: location.pathname
   };
 
   return (

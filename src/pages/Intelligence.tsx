@@ -37,21 +37,37 @@ const Intelligence = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Detect source: dashboard or main menu
-  const isFromDashboard = location.state?.from === 'lender-dashboard' || 
-                         location.state?.from === 'enterprise-dashboard';
+  // Get the previous page from location state
+  const previousPage = location.state?.from;
   
-  // Determine back button destination and text
-  const backDestination = isFromDashboard 
-    ? (location.state?.from === 'lender-dashboard' ? '/lender-dashboard' : '/enterprise-dashboard')
-    : '/';
+  // Default fallback destination
+  const defaultDestination = "/";
   
-  const backButtonText = isFromDashboard 
-    ? `Back to ${location.state?.from === 'lender-dashboard' ? 'Lender' : 'Enterprise'} Dashboard`
-    : 'Back to Home';
+  // Determine the appropriate back button text based on the previous page
+  let backButtonText = "Back to Home";
+  
+  if (previousPage) {
+    if (previousPage.includes('lender-dashboard')) {
+      backButtonText = "Back to Lender Dashboard";
+    } else if (previousPage.includes('enterprise-dashboard')) {
+      backButtonText = "Back to Enterprise Dashboard";
+    } else if (previousPage.includes('marketplace')) {
+      backButtonText = "Back to Marketplace";
+    } else if (previousPage.includes('underwriting')) {
+      backButtonText = "Back to Underwriting";
+    } else if (previousPage.includes('transaction-archive')) {
+      backButtonText = "Back to Transaction Archive";
+    }
+  }
 
   const handleBackNavigation = () => {
-    navigate(backDestination);
+    // Check if we have a valid 'from' path in location state
+    if (previousPage) {
+      navigate(previousPage);
+    } else {
+      // Default fallback
+      navigate(defaultDestination);
+    }
   };
 
   const businessSizeData = [
@@ -181,9 +197,21 @@ const Intelligence = () => {
       <FullscreenButton />
       
       <div className="container mx-auto px-4 py-8 mt-24">
-        <div className="flex items-center space-x-2 mb-6">
-          <Store className="h-6 w-6 text-gray-400" />
-          <h1 className="text-2xl font-mono text-gray-200">Analytics</h1>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-2">
+            <Store className="h-6 w-6 text-gray-400" />
+            <h1 className="text-2xl font-mono text-gray-200">Analytics</h1>
+          </div>
+          
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="rounded-none font-mono border-primary/30 text-xs"
+            onClick={handleBackNavigation}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            {backButtonText}
+          </Button>
         </div>
 
         <Tabs defaultValue="business" className="w-full" value={activeTab} onValueChange={setActiveTab}>
