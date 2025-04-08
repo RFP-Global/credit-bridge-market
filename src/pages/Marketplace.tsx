@@ -10,7 +10,7 @@ import { useMarketplace } from "@/hooks/useMarketplace";
 import { financeProposals } from "@/data/marketplaceProposals";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import RadarScreen from "@/components/RadarScreen";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Radar, Signal, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -27,6 +27,7 @@ const Marketplace = () => {
   );
 
   const location = useLocation();
+  const navigate = useNavigate();
   
   // Determine if user is coming from lender dashboard based on the URL path or state
   const isLenderRole = location.pathname.includes('lender-dashboard') || 
@@ -34,6 +35,16 @@ const Marketplace = () => {
                       
   // Determine the dashboard route based on user role
   const dashboardRoute = isLenderRole ? '/lender-dashboard' : '/enterprise-dashboard';
+
+  const handleBackNavigation = () => {
+    // Check if we have a valid 'from' path in location state
+    if (location.state && location.state.from) {
+      navigate(location.state.from);
+    } else {
+      // Default fallback
+      navigate(dashboardRoute);
+    }
+  };
 
   const {
     searchTerm,
@@ -88,12 +99,10 @@ const Marketplace = () => {
                 variant="outline" 
                 size="sm" 
                 className="rounded-none font-mono border-primary/30 text-xs"
-                asChild
+                onClick={handleBackNavigation}
               >
-                <Link to={dashboardRoute}>
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  BACK TO {isLenderRole ? "LENDER" : "ENTERPRISE"} DASHBOARD
-                </Link>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                BACK TO {isLenderRole ? "LENDER" : "ENTERPRISE"} DASHBOARD
               </Button>
             </div>
           </div>
