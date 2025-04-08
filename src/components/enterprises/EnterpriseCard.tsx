@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MapPin, Heart, Bookmark, Users, Phone, Mail, ArrowRight, EyeOff } from "lucide-react";
@@ -42,7 +43,7 @@ const EnterpriseCard = ({
   const compatibility = calculateEnterpriseCompatibility(currentUser, enterprise);
   
   const handleNavigateToEnterprise = () => {
-    console.log(`Navigating to enterprise profile: ${enterprise.id}`);
+    navigate(`/enterprise/${enterprise.id}`, { state: { from: window.location.pathname } });
   };
   
   const toggleIdentity = () => {

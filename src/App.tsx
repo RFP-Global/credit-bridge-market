@@ -38,6 +38,7 @@ import Underwriting from "./pages/Underwriting";
 import { useState } from "react";
 import TransactionDetailsView from "./pages/TransactionDetailsView";
 import EnterpriseNetwork from "./pages/EnterpriseNetwork";
+import EnterpriseDetail from "./pages/EnterpriseDetail";
 
 const App = () => {
   const [queryClient] = useState(() => new QueryClient());
@@ -78,6 +79,7 @@ const App = () => {
             <Route path="/lenders" element={<Lenders />} />
             <Route path="/lender/:id" element={<LenderProfile />} />
             <Route path="/enterprise-network" element={<EnterpriseNetwork />} />
+            <Route path="/enterprise/:id" element={<EnterpriseDetail />} />
             <Route path="/team" element={<Team />} />
             <Route path="/underwriting" element={<Underwriting />} />
             <Route path="*" element={<NotFound />} />
