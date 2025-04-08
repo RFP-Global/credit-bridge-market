@@ -1,8 +1,8 @@
 
 import React from "react";
-import { Enterprise } from "@/types/enterprises";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Building, Users } from "lucide-react";
+import { Enterprise } from "@/types/enterprises";
+import { Lender } from "@/types/lenders";
 import EnterpriseGrid from "./EnterpriseGrid";
 
 interface EnterpriseNetworkTabsProps {
@@ -19,9 +19,10 @@ interface EnterpriseNetworkTabsProps {
   toggleSave: (enterpriseId: number) => void;
   toggleLike: (projectId: string) => void;
   handleContact: (enterpriseId: number) => void;
+  currentUser?: Lender | null;
 }
 
-const EnterpriseNetworkTabs = ({
+const EnterpriseNetworkTabs: React.FC<EnterpriseNetworkTabsProps> = ({
   activeTab,
   setActiveTab,
   filteredEnterprises,
@@ -34,24 +35,23 @@ const EnterpriseNetworkTabs = ({
   toggleFollow,
   toggleSave,
   toggleLike,
-  handleContact
-}: EnterpriseNetworkTabsProps) => {
+  handleContact,
+  currentUser
+}) => {
   return (
-    <Tabs defaultValue="explore" className="w-full" onValueChange={setActiveTab}>
-      <TabsList className="w-full flex justify-start mb-8 bg-background border-b">
-        <TabsTrigger value="explore" className="flex items-center gap-1 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
-          <Building className="h-4 w-4" /> Explore
-        </TabsTrigger>
-        <TabsTrigger value="following" className="flex items-center gap-1 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
-          <Users className="h-4 w-4" /> Following ({followingEnterprises.length})
-        </TabsTrigger>
-        <TabsTrigger value="saved" className="flex items-center gap-1 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
-          Saved ({savedEnterprises.length})
-        </TabsTrigger>
+    <Tabs 
+      value={activeTab} 
+      onValueChange={setActiveTab}
+      className="mt-6"
+    >
+      <TabsList className="grid w-full grid-cols-3">
+        <TabsTrigger value="explore">Explore</TabsTrigger>
+        <TabsTrigger value="following">Following ({followingEnterprises.length})</TabsTrigger>
+        <TabsTrigger value="saved">Saved ({savedEnterprises.length})</TabsTrigger>
       </TabsList>
       
-      <TabsContent value="explore">
-        <EnterpriseGrid 
+      <TabsContent value="explore" className="pt-6">
+        <EnterpriseGrid
           enterprises={filteredEnterprises}
           following={following}
           saved={saved}
@@ -61,11 +61,12 @@ const EnterpriseNetworkTabs = ({
           toggleSave={toggleSave}
           toggleLike={toggleLike}
           handleContact={handleContact}
+          currentUser={currentUser}
         />
       </TabsContent>
       
-      <TabsContent value="following">
-        <EnterpriseGrid 
+      <TabsContent value="following" className="pt-6">
+        <EnterpriseGrid
           enterprises={followingEnterprises}
           following={following}
           saved={saved}
@@ -77,11 +78,12 @@ const EnterpriseNetworkTabs = ({
           handleContact={handleContact}
           emptyType="following"
           setActiveTab={setActiveTab}
+          currentUser={currentUser}
         />
       </TabsContent>
       
-      <TabsContent value="saved">
-        <EnterpriseGrid 
+      <TabsContent value="saved" className="pt-6">
+        <EnterpriseGrid
           enterprises={savedEnterprises}
           following={following}
           saved={saved}
@@ -93,6 +95,7 @@ const EnterpriseNetworkTabs = ({
           handleContact={handleContact}
           emptyType="saved"
           setActiveTab={setActiveTab}
+          currentUser={currentUser}
         />
       </TabsContent>
     </Tabs>

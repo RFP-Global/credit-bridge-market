@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MapPin, Heart, Bookmark, Users, Phone, Mail, ArrowRight, EyeOff } from "lucide-react";
@@ -7,7 +6,10 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Enterprise } from "@/types/enterprises";
+import { Lender } from "@/types/lenders";
 import EnterpriseProjectCard from "./EnterpriseProjectCard";
+import EnterpriseCompatibilityBadge from "./EnterpriseCompatibilityBadge";
+import { calculateEnterpriseCompatibility } from "@/utils/compatibilityUtils";
 
 interface EnterpriseCardProps {
   enterprise: Enterprise;
@@ -18,6 +20,7 @@ interface EnterpriseCardProps {
   toggleSave: (enterpriseId: number) => void;
   toggleLike: (projectId: string) => void;
   handleContact: (enterpriseId: number) => void;
+  currentUser?: Lender | null;
 }
 
 const EnterpriseCard = ({
@@ -28,15 +31,17 @@ const EnterpriseCard = ({
   toggleFollow,
   toggleSave,
   toggleLike,
-  handleContact
+  handleContact,
+  currentUser
 }: EnterpriseCardProps) => {
   const navigate = useNavigate();
   const isFollowing = following.includes(enterprise.id);
   const isSaved = saved.includes(enterprise.id);
   const [showIdentity, setShowIdentity] = useState(false);
   
+  const compatibility = calculateEnterpriseCompatibility(currentUser, enterprise);
+  
   const handleNavigateToEnterprise = () => {
-    // Future link to enterprise profile page
     console.log(`Navigating to enterprise profile: ${enterprise.id}`);
   };
   
@@ -44,13 +49,11 @@ const EnterpriseCard = ({
     setShowIdentity(prev => !prev);
   };
   
-  // Anonymized enterprise information
   const anonymizedName = `Enterprise ${enterprise.code}`;
   const anonymizedDescription = enterprise.description
     .replace(new RegExp(enterprise.name, 'gi'), anonymizedName)
     .replace(/\b([A-Za-z]+@[A-Za-z]+\.[A-Za-z]{2,})\b/g, "***@***.com");
   
-  // Display either full or anonymized info depending on state
   const displayName = showIdentity ? enterprise.name : anonymizedName;
   const displayDescription = showIdentity ? enterprise.description : anonymizedDescription;
   const displayContactName = showIdentity ? enterprise.contactName : "Contact Person";
@@ -106,6 +109,12 @@ const EnterpriseCard = ({
             </Button>
           </div>
         </div>
+        
+        {currentUser && (
+          <div className="mt-4">
+            <EnterpriseCompatibilityBadge score={compatibility.score} showDetail />
+          </div>
+        )}
         
         <div className="mt-4">
           <p className="text-sm text-muted-foreground line-clamp-2">{displayDescription}</p>

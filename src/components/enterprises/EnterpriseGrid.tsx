@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Enterprise } from "@/types/enterprises";
+import { Lender } from "@/types/lenders";
 import EnterpriseCard from "@/components/enterprises/EnterpriseCard";
 import EmptyStateTab from "@/components/lenders/EmptyStateTab";
 
@@ -16,6 +17,7 @@ interface EnterpriseGridProps {
   handleContact: (enterpriseId: number) => void;
   emptyType?: "following" | "saved";
   setActiveTab?: (tab: string) => void;
+  currentUser?: Lender | null;
 }
 
 const EnterpriseGrid = ({
@@ -29,7 +31,8 @@ const EnterpriseGrid = ({
   toggleLike,
   handleContact,
   emptyType,
-  setActiveTab
+  setActiveTab,
+  currentUser
 }: EnterpriseGridProps) => {
   if (enterprises.length === 0) {
     if (emptyType && setActiveTab) {
@@ -56,6 +59,7 @@ const EnterpriseGrid = ({
           handleContact={handleContact}
           toggleSave={toggleSave}
           toggleLike={toggleLike}
+          currentUser={currentUser}
         />
       ))}
     </div>

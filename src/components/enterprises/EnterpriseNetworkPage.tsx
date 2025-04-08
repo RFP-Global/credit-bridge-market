@@ -1,6 +1,8 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { enterprises } from "@/data/enterprisesData";
+import { getLenderById } from "@/data/lendersData";
+import { useLocation } from "react-router-dom";
 import EnterpriseNetworkHeader from "./EnterpriseNetworkHeader";
 import EnterpriseSearchControls from "./EnterpriseSearchControls";
 import EnterpriseNetworkTabs from "./EnterpriseNetworkTabs";
@@ -12,6 +14,16 @@ const EnterpriseNetworkPage = () => {
   const [likes, setLikes] = useState<Record<string, number>>({});
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  
+  const location = useLocation();
+  
+  // Determine if user is a lender based on the URL path or state
+  const isLenderRole = location.pathname.includes('lender-dashboard') || 
+                    (location.state?.from && location.state.from.includes('lender-dashboard'));
+  
+  // For demo purposes, if the user is a lender, use lender ID 1
+  // In a real app, this would come from authentication
+  const currentUser = isLenderRole ? getLenderById(1) : null;
   
   const toggleFollow = (enterpriseId: number) => {
     setFollowing(prev => 
@@ -75,6 +87,7 @@ const EnterpriseNetworkPage = () => {
           toggleSave={toggleSave}
           toggleLike={toggleLike}
           handleContact={handleContact}
+          currentUser={currentUser}
         />
       </div>
     </div>
