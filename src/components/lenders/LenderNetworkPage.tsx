@@ -21,8 +21,11 @@ const LenderNetworkPage = () => {
   const location = useLocation();
   
   const goBack = () => {
-    const previousPage = location.state?.from || "/enterprise-dashboard";
-    navigate(previousPage);
+    if (location.state && location.state.from) {
+      navigate(location.state.from);
+    } else {
+      navigate(-1);
+    }
   };
   
   const toggleFollow = (lenderId: number) => {

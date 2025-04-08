@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { enterprises } from "@/data/enterprisesData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,10 +20,12 @@ const EnterpriseNetworkPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Get the previous page from location state, default to lender dashboard if not available
   const goBack = () => {
-    const previousPage = location.state?.from || "/lender-dashboard";
-    navigate(previousPage);
+    if (location.state && location.state.from) {
+      navigate(location.state.from);
+    } else {
+      navigate(-1);
+    }
   };
   
   const toggleFollow = (enterpriseId: number) => {
