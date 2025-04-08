@@ -1,10 +1,9 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { 
   ArrowLeft, MapPin, Users, Phone, Mail, Building, CalendarClock, 
   Heart, Bookmark, Globe, Linkedin, Twitter, Facebook, Instagram,
-  BarChart, PieChart, DollarSign, Briefcase, User, EyeOff
+  BarChart, PieChart, DollarSign, Briefcase, User
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -27,7 +26,6 @@ const EnterpriseDetailPage = () => {
   const [enterprise, setEnterprise] = useState<Enterprise | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-  const [showIdentity, setShowIdentity] = useState(false);
   const [currentTab, setCurrentTab] = useState("overview");
   
   // Determine if user is a lender based on the URL path or state
@@ -62,10 +60,6 @@ const EnterpriseDetailPage = () => {
     setIsSaved(prev => !prev);
   };
   
-  const toggleIdentity = () => {
-    setShowIdentity(prev => !prev);
-  };
-  
   if (!enterprise) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -87,12 +81,13 @@ const EnterpriseDetailPage = () => {
     .replace(new RegExp(enterprise.name, 'gi'), anonymizedName)
     .replace(/\b([A-Za-z]+@[A-Za-z]+\.[A-Za-z]{2,})\b/g, "***@***.com");
   
-  const displayName = showIdentity ? enterprise.name : anonymizedName;
-  const displayDescription = showIdentity ? enterprise.description : anonymizedDescription;
-  const displayContactName = showIdentity ? enterprise.contactName : "Contact Person";
-  const displayPhone = showIdentity ? enterprise.phone : "XXX-XXX-XXXX";
-  const displayEmail = showIdentity ? enterprise.email : "contact@enterprise.com";
-  const displayCeo = enterprise.demographics?.ceo ? (showIdentity ? enterprise.demographics.ceo : "CEO") : undefined;
+  // Always use anonymized information
+  const displayName = anonymizedName;
+  const displayDescription = anonymizedDescription;
+  const displayContactName = "Contact Person";
+  const displayPhone = "XXX-XXX-XXXX";
+  const displayEmail = "contact@enterprise.com";
+  const displayCeo = enterprise.demographics?.ceo ? "CEO" : undefined;
   
   return (
     <div className="min-h-screen bg-background">
@@ -150,15 +145,6 @@ const EnterpriseDetailPage = () => {
                     >
                       <Bookmark className={`h-4 w-4 ${isSaved ? 'fill-yellow-500 text-yellow-500' : ''}`} />
                     </Button>
-                    
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-9 w-9 p-0"
-                      onClick={toggleIdentity}
-                    >
-                      <EyeOff className={`h-4 w-4 ${showIdentity ? '' : 'text-primary'}`} />
-                    </Button>
                   </div>
                 </div>
                 
@@ -183,45 +169,35 @@ const EnterpriseDetailPage = () => {
                   ))}
                 </div>
                 
-                {/* Social Media Links */}
+                {/* Social Media Links (always generic) */}
                 {enterprise.socialMedia && (
                   <div className="mt-4 flex items-center gap-3">
                     {enterprise.socialMedia.website && (
-                      <a href={showIdentity ? `https://${enterprise.socialMedia.website}` : '#'} 
-                         target="_blank" 
-                         rel="noopener noreferrer"
+                      <a href="#" 
                          className="text-muted-foreground hover:text-primary transition-colors">
                         <Globe className="h-5 w-5" />
                       </a>
                     )}
                     {enterprise.socialMedia.linkedin && (
-                      <a href={showIdentity ? `https://${enterprise.socialMedia.linkedin}` : '#'} 
-                         target="_blank" 
-                         rel="noopener noreferrer"
+                      <a href="#" 
                          className="text-muted-foreground hover:text-blue-600 transition-colors">
                         <Linkedin className="h-5 w-5" />
                       </a>
                     )}
                     {enterprise.socialMedia.twitter && (
-                      <a href={showIdentity ? `https://${enterprise.socialMedia.twitter}` : '#'} 
-                         target="_blank" 
-                         rel="noopener noreferrer"
+                      <a href="#" 
                          className="text-muted-foreground hover:text-blue-400 transition-colors">
                         <Twitter className="h-5 w-5" />
                       </a>
                     )}
                     {enterprise.socialMedia.facebook && (
-                      <a href={showIdentity ? `https://${enterprise.socialMedia.facebook}` : '#'} 
-                         target="_blank" 
-                         rel="noopener noreferrer"
+                      <a href="#" 
                          className="text-muted-foreground hover:text-blue-700 transition-colors">
                         <Facebook className="h-5 w-5" />
                       </a>
                     )}
                     {enterprise.socialMedia.instagram && (
-                      <a href={showIdentity ? `https://${enterprise.socialMedia.instagram}` : '#'} 
-                         target="_blank" 
-                         rel="noopener noreferrer"
+                      <a href="#" 
                          className="text-muted-foreground hover:text-pink-600 transition-colors">
                         <Instagram className="h-5 w-5" />
                       </a>
@@ -525,9 +501,7 @@ const EnterpriseDetailPage = () => {
                             <Globe className="h-5 w-5 text-muted-foreground" />
                             <div>
                               <p className="text-sm text-muted-foreground">Website</p>
-                              <p className="font-medium">
-                                {showIdentity ? enterprise.socialMedia.website : "www.company-website.com"}
-                              </p>
+                              <p className="font-medium">www.company-website.com</p>
                             </div>
                           </div>
                         )}
@@ -595,12 +569,6 @@ const EnterpriseDetailPage = () => {
                     </div>
                   )}
                 </div>
-                
-                <Separator className="my-4" />
-                
-                <Button onClick={toggleIdentity} variant="outline" className="w-full">
-                  {showIdentity ? "Hide Identity" : "Reveal Identity"}
-                </Button>
                 
                 {currentUser && compatibility && (
                   <>

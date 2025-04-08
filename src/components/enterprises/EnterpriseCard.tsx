@@ -1,7 +1,7 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { MapPin, Heart, Bookmark, Users, Phone, Mail, ArrowRight, EyeOff } from "lucide-react";
+import { MapPin, Heart, Bookmark, Users, Phone, Mail, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -38,7 +38,6 @@ const EnterpriseCard = ({
   const navigate = useNavigate();
   const isFollowing = following.includes(enterprise.id);
   const isSaved = saved.includes(enterprise.id);
-  const [showIdentity, setShowIdentity] = useState(false);
   
   const compatibility = calculateEnterpriseCompatibility(currentUser, enterprise);
   
@@ -46,20 +45,11 @@ const EnterpriseCard = ({
     navigate(`/enterprise/${enterprise.id}`, { state: { from: window.location.pathname } });
   };
   
-  const toggleIdentity = () => {
-    setShowIdentity(prev => !prev);
-  };
-  
+  // Always anonymize enterprise information
   const anonymizedName = `Enterprise ${enterprise.code}`;
   const anonymizedDescription = enterprise.description
     .replace(new RegExp(enterprise.name, 'gi'), anonymizedName)
     .replace(/\b([A-Za-z]+@[A-Za-z]+\.[A-Za-z]{2,})\b/g, "***@***.com");
-  
-  const displayName = showIdentity ? enterprise.name : anonymizedName;
-  const displayDescription = showIdentity ? enterprise.description : anonymizedDescription;
-  const displayContactName = showIdentity ? enterprise.contactName : "Contact Person";
-  const displayPhone = showIdentity ? enterprise.phone : "XXX-XXX-XXXX";
-  const displayEmail = showIdentity ? enterprise.email : "contact@enterprise.com";
   
   return (
     <Card className="overflow-hidden border-primary/10 bg-background hover:shadow-md transition-shadow duration-300">
@@ -71,7 +61,7 @@ const EnterpriseCard = ({
             </div>
             <div>
               <h3 className="text-lg font-medium hover:text-primary cursor-pointer" onClick={handleNavigateToEnterprise}>
-                {displayName}
+                {anonymizedName}
               </h3>
               <div className="flex items-center text-xs text-muted-foreground mt-1">
                 <MapPin className="h-3 w-3 mr-1" />
@@ -99,15 +89,6 @@ const EnterpriseCard = ({
             >
               <Bookmark className={`h-3 w-3 ${isSaved ? 'fill-yellow-500 text-yellow-500' : ''}`} />
             </Button>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-8 w-8 p-0"
-              onClick={toggleIdentity}
-            >
-              <EyeOff className={`h-3 w-3 ${showIdentity ? '' : 'text-primary'}`} />
-            </Button>
           </div>
         </div>
         
@@ -118,7 +99,7 @@ const EnterpriseCard = ({
         )}
         
         <div className="mt-4">
-          <p className="text-sm text-muted-foreground line-clamp-2">{displayDescription}</p>
+          <p className="text-sm text-muted-foreground line-clamp-2">{anonymizedDescription}</p>
         </div>
         
         <div className="mt-4 flex flex-wrap gap-1">
@@ -163,15 +144,15 @@ const EnterpriseCard = ({
           <div className="grid grid-cols-1 gap-2">
             <div className="flex items-center text-xs">
               <span className="text-muted-foreground mr-2">Contact:</span>
-              <span>{displayContactName}</span>
+              <span>Contact Person</span>
             </div>
             <div className="flex items-center text-xs">
               <Phone className="h-3 w-3 mr-1 text-muted-foreground" />
-              <span>{displayPhone}</span>
+              <span>XXX-XXX-XXXX</span>
             </div>
             <div className="flex items-center text-xs">
               <Mail className="h-3 w-3 mr-1 text-muted-foreground" />
-              <span>{displayEmail}</span>
+              <span>contact@enterprise.com</span>
             </div>
           </div>
         </div>
