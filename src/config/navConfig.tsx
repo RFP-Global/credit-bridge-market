@@ -38,11 +38,6 @@ export const mainMenuItems: NavMenuItem[] = [
     path: "/facility-builder",
     icon: <Building className="h-4 w-4 mr-2" />,
   },
-  {
-    title: "LENDERS",
-    path: "/lenders",
-    icon: <Building className="h-4 w-4 mr-2" />,
-  },
 ];
 
 export const getAccessButton = () => ({
