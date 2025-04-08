@@ -41,6 +41,9 @@ const Navbar = () => {
   const dashboardRoute = isLenderRole ? '/lender-dashboard' : '/enterprise-dashboard';
   const accessButton = getAccessButton();
 
+  // Create navigation state to track where the user came from
+  const navigationState = { from: location.pathname };
+
   return (
     <header className={`fixed w-full z-50 transition-all duration-300 ${
       scrolled ? 'bg-background/90 backdrop-blur-md border-b border-primary/20' : 'bg-transparent'
@@ -63,7 +66,7 @@ const Navbar = () => {
               className="rounded-none px-6 text-sm font-mono border-primary/30" 
               asChild
             >
-              <Link to={accessButton.path}>
+              <Link to={accessButton.path} state={navigationState}>
                 {accessButton.icon}
                 {accessButton.title}
               </Link>
@@ -84,7 +87,7 @@ const Navbar = () => {
                     asChild 
                     className="font-mono text-sm focus:bg-primary/10 focus:text-primary"
                   >
-                    <Link to={item.path}>
+                    <Link to={item.path} state={navigationState}>
                       {item.icon}
                       {item.title}
                     </Link>
@@ -117,6 +120,7 @@ const Navbar = () => {
               <Link 
                 key={item.title}
                 to={item.path} 
+                state={navigationState}
                 className="text-foreground/80 hover:text-primary transition-colors py-2 border-b border-primary/10 font-mono text-sm"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -131,7 +135,7 @@ const Navbar = () => {
               className="rounded-none w-full font-mono text-sm border-primary/30" 
               asChild
             >
-              <Link to={accessButton.path}>
+              <Link to={accessButton.path} state={navigationState}>
                 {accessButton.icon}
                 {accessButton.title}
               </Link>

@@ -15,9 +15,9 @@ const SidebarNavButton = ({ to, icon: Icon, label, state }: SidebarNavButtonProp
   const location = useLocation();
   const isActive = location.pathname === to;
   
-  // Preserve the dashboard origin when navigating
+  // Preserve the current location when navigating to allow for 'back' functionality
   const navigationState = state || { 
-    from: location.pathname.includes('lender') ? 'lender-dashboard' : 'enterprise-dashboard'
+    from: location.pathname
   };
 
   return (

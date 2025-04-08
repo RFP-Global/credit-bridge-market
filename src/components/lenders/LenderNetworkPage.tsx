@@ -1,12 +1,14 @@
+
 import React, { useState } from "react";
 import { lenders } from "@/data/lendersData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Users, Filter, Grid, List, Building } from "lucide-react";
+import { Search, Users, Filter, Grid, List, Building, ArrowLeft } from "lucide-react";
 import LenderCard from "@/components/lenders/LenderCard";
 import EmptyStateTab from "@/components/lenders/EmptyStateTab";
 import { Separator } from "@/components/ui/separator";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const LenderNetworkPage = () => {
   const [activeTab, setActiveTab] = useState("explore");
@@ -15,6 +17,15 @@ const LenderNetworkPage = () => {
   const [likes, setLikes] = useState<Record<string, number>>({});
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Get the previous page from location state, default to dashboard if not available
+  const goBack = () => {
+    const previousPage = location.state?.from || "/enterprise-dashboard";
+    navigate(previousPage);
+  };
   
   const toggleFollow = (lenderId: number) => {
     setFollowing(prev => 
@@ -54,6 +65,17 @@ const LenderNetworkPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-12 mt-12">
+        <div className="flex items-center mb-6">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={goBack} 
+            className="mr-2"
+          >
+            <ArrowLeft className="h-4 w-4 mr-1" /> Back
+          </Button>
+        </div>
+      
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">Lender Network</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
