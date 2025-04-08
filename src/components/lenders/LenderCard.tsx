@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { 
   Building, 
   MapPin, 
@@ -10,7 +10,8 @@ import {
   Phone, 
   MessageSquare,
   Bookmark,
-  History
+  History,
+  ExternalLink
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -41,6 +42,15 @@ const LenderCard: React.FC<LenderCardProps> = ({
   toggleSave,
   toggleLike
 }) => {
+  const navigate = useNavigate();
+  
+  // Handle navigation to lender profile
+  const navigateToProfile = (e: React.MouseEvent) => {
+    // Prevent event from bubbling to parent elements
+    e.stopPropagation();
+    navigate(`/lender/${lender.id}`, { state: { from: '/lenders' } });
+  };
+
   return (
     <Card key={lender.id} className="overflow-hidden border-primary/20">
       <div className="bg-gradient-to-r from-primary/5 to-primary/10 h-32 relative"></div>
@@ -53,7 +63,13 @@ const LenderCard: React.FC<LenderCardProps> = ({
               </AvatarFallback>
             </Avatar>
             <div className="ml-4 mb-2">
-              <h2 className="text-xl font-semibold">{lender.name}</h2>
+              <button 
+                onClick={navigateToProfile} 
+                className="text-xl font-semibold hover:text-primary flex items-center group"
+              >
+                {lender.name} 
+                <ExternalLink className="h-4 w-4 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </button>
               <p className="text-sm text-muted-foreground font-mono">{lender.code}</p>
             </div>
           </div>
@@ -140,11 +156,21 @@ const LenderCard: React.FC<LenderCardProps> = ({
             </div>
             
             {lender.recentDeals && lender.recentDeals.length > 2 && (
-              <Button variant="link" className="mt-2 p-0">
+              <Button variant="link" className="mt-2 p-0" onClick={navigateToProfile}>
                 <History className="h-4 w-4 mr-1" />
                 View all {lender.recentDeals.length} deals
               </Button>
             )}
+            
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="w-full mt-6 font-mono text-xs"
+              onClick={navigateToProfile}
+            >
+              <ExternalLink className="h-4 w-4 mr-2" />
+              View Full Profile
+            </Button>
           </div>
         </div>
       </div>

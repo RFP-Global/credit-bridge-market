@@ -1,9 +1,9 @@
 
 import React from "react";
-import { MapPin, DollarSign, Calendar, Heart, MessageSquare, Share, Bookmark } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
+import { MapPin, Heart, Bookmark, Calendar, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { RecentDeal } from "@/types/lenders";
 
 interface LenderDealCardProps {
@@ -15,59 +15,74 @@ interface LenderDealCardProps {
   toggleSave: () => void;
 }
 
-const LenderDealCard: React.FC<LenderDealCardProps> = ({ 
-  deal, 
-  lenderId, 
-  likes, 
-  saved, 
-  toggleLike, 
-  toggleSave 
+const LenderDealCard: React.FC<LenderDealCardProps> = ({
+  deal,
+  lenderId,
+  likes,
+  saved,
+  toggleLike,
+  toggleSave
 }) => {
+  const navigate = useNavigate();
+  
+  const handleNavigateToLender = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/lender/${lenderId}`, { state: { from: '/lenders' } });
+  };
+  
   return (
-    <Card className="bg-background/50">
+    <Card key={deal.id} className="overflow-hidden border-primary/10 bg-background">
       <CardContent className="p-4">
-        <div className="flex justify-between">
+        <div className="flex justify-between items-start">
           <div>
-            <p className="font-medium">{deal.projectType}</p>
-            <div className="flex items-center mt-1 text-sm text-muted-foreground">
+            <h3 className="text-sm font-medium hover:text-primary cursor-pointer" onClick={handleNavigateToLender}>
+              {deal.projectType}
+            </h3>
+            <div className="flex items-center text-xs text-muted-foreground mt-1">
               <MapPin className="h-3 w-3 mr-1" />
               {deal.location}
-              <Separator orientation="vertical" className="mx-2 h-3" />
-              <DollarSign className="h-3 w-3 mr-1" />
-              {deal.amount}
-              <Separator orientation="vertical" className="mx-2 h-3" />
-              <Calendar className="h-3 w-3 mr-1" />
-              {new Date(deal.date).toLocaleDateString()}
             </div>
           </div>
-          <Badge variant="outline" className="bg-primary/5">
-            {deal.term}
-          </Badge>
-        </div>
-        <div className="flex items-center justify-between mt-4 pt-3 border-t border-primary/10">
-          <div className="flex items-center space-x-4">
-            <button 
-              className="flex items-center text-sm text-muted-foreground hover:text-foreground"
-              onClick={() => toggleLike(`${lenderId}-${deal.id}`)}
-            >
-              <Heart className="h-4 w-4 mr-1" />
-              {likes[`${lenderId}-${deal.id}`] || 0}
-            </button>
-            <button className="flex items-center text-sm text-muted-foreground hover:text-foreground">
-              <MessageSquare className="h-4 w-4 mr-1" />
-              0
-            </button>
-            <button className="flex items-center text-sm text-muted-foreground hover:text-foreground">
-              <Share className="h-4 w-4 mr-1" />
-              Share
-            </button>
+          <div>
+            <p className="text-sm font-mono font-semibold">{deal.amount}</p>
+            <p className="text-xs text-muted-foreground text-right">{deal.term}</p>
           </div>
-          <button 
-            className="text-sm text-muted-foreground hover:text-foreground"
-            onClick={toggleSave}
-          >
-            <Bookmark className={`h-4 w-4 ${saved ? "fill-current" : ""}`} />
-          </button>
+        </div>
+        
+        <div className="flex items-center justify-between mt-2 pt-2 border-t border-primary/5">
+          <div className="flex items-center text-xs text-muted-foreground">
+            <Calendar className="h-3 w-3 mr-1" />
+            {new Date(deal.date).toLocaleDateString()}
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-6 w-6 p-0"
+              onClick={() => toggleLike(deal.id.toString())}
+            >
+              <Heart className={`h-3 w-3 ${likes[deal.id] ? 'fill-red-500 text-red-500' : ''}`} />
+            </Button>
+            
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-6 w-6 p-0"
+              onClick={toggleSave}
+            >
+              <Bookmark className={`h-3 w-3 ${saved ? 'fill-yellow-500 text-yellow-500' : ''}`} />
+            </Button>
+            
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-6 w-6 p-0"
+              onClick={handleNavigateToLender}
+            >
+              <ArrowRight className="h-3 w-3" />
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
