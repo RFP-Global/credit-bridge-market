@@ -1,23 +1,12 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { 
-  BarChart, 
-  Bar, 
-  PieChart, 
-  Pie, 
-  LineChart, 
-  Line,
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend, 
-  Cell,
-  ResponsiveContainer
-} from "recharts";
 import { TimeFilterRow } from "@/components/intelligence/TimeFilterRow";
 import { IntelligenceCard } from "@/components/intelligence/IntelligenceCard";
+import LoanRequestChart from "./businessSize/LoanRequestChart";
+import DefaultDistributionChart from "./businessSize/DefaultDistributionChart";
+import LoanTermsChart from "./businessSize/LoanTermsChart";
+import ApprovalRejectionChart from "./businessSize/ApprovalRejectionChart";
 
 interface BusinessSizeAnalyticsProps {
   timeFilter: string;
@@ -39,27 +28,6 @@ const BusinessSizeAnalytics = ({
   colors
 }: BusinessSizeAnalyticsProps) => {
   const [expanded, setExpanded] = useState(true);
-
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }: any) => {
-    const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-  
-    return (
-      <text 
-        x={x} 
-        y={y} 
-        fill="#ffffff" 
-        textAnchor={x > cx ? 'start' : 'end'} 
-        dominantBaseline="central"
-        fontSize={12}
-        fontWeight="bold"
-      >
-        {`${(percent * 100).toFixed(0)}%`}
-      </text>
-    );
-  };
 
   if (!expanded) {
     return (
@@ -90,116 +58,19 @@ const BusinessSizeAnalytics = ({
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
           <IntelligenceCard title="Loan Request Patterns by Size" timeFilter={timeFilter}>
-            <ResponsiveContainer width="100%" height={220}>
-              <BarChart data={businessSizeData} margin={{ top: 5, right: 20, left: 5, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#444" vertical={false} />
-                <XAxis dataKey="name" stroke="#888" />
-                <YAxis stroke="#888" />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#111', border: '1px solid #333' }}
-                  itemStyle={{ color: '#fff' }}
-                  labelStyle={{ color: '#fff' }}
-                />
-                <Legend />
-                <Bar dataKey="workingCapital" name="Working Capital" fill={colors.workingCapital} />
-                <Bar dataKey="expansion" name="Expansion" fill={colors.expansion} />
-                <Bar dataKey="equipment" name="Equipment" fill={colors.equipment} />
-              </BarChart>
-            </ResponsiveContainer>
+            <LoanRequestChart data={businessSizeData} colors={colors} />
           </IntelligenceCard>
 
           <IntelligenceCard title="Loan Default Distribution By Business Size" timeFilter={timeFilter}>
-            <ResponsiveContainer width="100%" height={220}>
-              <PieChart>
-                <Pie
-                  data={businessSizeDefaultData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={renderCustomizedLabel}
-                  outerRadius={80}
-                  innerRadius={40}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {businessSizeDefaultData.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill={index === 0 ? colors.small : index === 1 ? colors.medium : colors.large} 
-                    />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#111', border: '1px solid #333' }}
-                  itemStyle={{ color: '#fff' }}
-                  labelStyle={{ color: '#fff' }}
-                />
-                <Legend
-                  layout="vertical"
-                  verticalAlign="middle"
-                  align="right"
-                  wrapperStyle={{ fontSize: '12px' }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+            <DefaultDistributionChart data={businessSizeDefaultData} colors={colors} />
           </IntelligenceCard>
 
           <IntelligenceCard title="Loan Terms by Business Size" timeFilter={timeFilter}>
-            <ResponsiveContainer width="100%" height={220}>
-              <LineChart data={businessSizeTermsData} margin={{ top: 5, right: 20, left: 5, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-                <XAxis dataKey="month" stroke="#888" />
-                <YAxis stroke="#888" domain={[0, 50]} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#111', border: '1px solid #333' }}
-                  itemStyle={{ color: '#fff' }}
-                  labelStyle={{ color: '#fff' }}
-                />
-                <Legend />
-                <Line 
-                  type="monotone" 
-                  dataKey="small" 
-                  name="Small Business" 
-                  stroke={colors.small} 
-                  activeDot={{ r: 8 }} 
-                  strokeWidth={2}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="medium" 
-                  name="Medium Business" 
-                  stroke={colors.medium} 
-                  activeDot={{ r: 8 }} 
-                  strokeWidth={2}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="large" 
-                  name="Large Business" 
-                  stroke={colors.large} 
-                  activeDot={{ r: 8 }} 
-                  strokeWidth={2}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+            <LoanTermsChart data={businessSizeTermsData} colors={colors} />
           </IntelligenceCard>
 
           <IntelligenceCard title="Loan Approval And Rejection Rates" timeFilter={timeFilter}>
-            <ResponsiveContainer width="100%" height={220}>
-              <BarChart data={loanApprovalData} margin={{ top: 5, right: 20, left: 5, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#444" vertical={false} />
-                <XAxis dataKey="category" stroke="#888" />
-                <YAxis stroke="#888" />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#111', border: '1px solid #333' }}
-                  itemStyle={{ color: '#fff' }}
-                  labelStyle={{ color: '#fff' }}
-                />
-                <Legend />
-                <Bar dataKey="approved" name="Approved" fill={colors.approved} />
-                <Bar dataKey="rejected" name="Rejected" fill={colors.rejected} />
-              </BarChart>
-            </ResponsiveContainer>
+            <ApprovalRejectionChart data={loanApprovalData} colors={colors} />
           </IntelligenceCard>
         </div>
       </div>
