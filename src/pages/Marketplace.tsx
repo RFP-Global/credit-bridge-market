@@ -31,15 +31,34 @@ const Marketplace = () => {
   
   // Determine if user is coming from lender dashboard based on the URL path or state
   const isLenderRole = location.pathname.includes('lender-dashboard') || 
-                      location.state?.from === 'lender-dashboard';
+                      (location.state?.from && location.state.from.includes('lender-dashboard'));
                       
-  // Determine the dashboard route based on user role
+  // Get the previous page from location state
+  const previousPage = location.state?.from;
+  
+  // Determine the dashboard route based on user role - as fallback only
   const dashboardRoute = isLenderRole ? '/lender-dashboard' : '/enterprise-dashboard';
+
+  // Determine the appropriate label for the back button
+  let backButtonLabel = "BACK";
+  if (previousPage) {
+    if (previousPage.includes('lender-dashboard')) {
+      backButtonLabel = "BACK TO LENDER DASHBOARD";
+    } else if (previousPage.includes('enterprise-dashboard')) {
+      backButtonLabel = "BACK TO ENTERPRISE DASHBOARD";
+    } else if (previousPage.includes('intelligence')) {
+      backButtonLabel = "BACK TO INTELLIGENCE";
+    } else if (previousPage.includes('underwriting')) {
+      backButtonLabel = "BACK TO UNDERWRITING";
+    } else {
+      backButtonLabel = "BACK";
+    }
+  }
 
   const handleBackNavigation = () => {
     // Check if we have a valid 'from' path in location state
-    if (location.state && location.state.from) {
-      navigate(location.state.from);
+    if (previousPage) {
+      navigate(previousPage);
     } else {
       // Default fallback
       navigate(dashboardRoute);
@@ -102,7 +121,7 @@ const Marketplace = () => {
                 onClick={handleBackNavigation}
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                BACK TO {isLenderRole ? "LENDER" : "ENTERPRISE"} DASHBOARD
+                {backButtonLabel}
               </Button>
             </div>
           </div>
