@@ -19,6 +19,34 @@ export const enterprises: Enterprise[] = [
     projectTypes: ["Office", "Retail", "Mixed-Use"],
     preferredFinancing: "Construction Loans, Mezzanine Debt",
     avgDealSize: "$15-30M",
+    financialRatios: {
+      debtServiceCoverageRatio: 1.8,
+      currentRatio: 2.5,
+      quickRatio: 1.9,
+      debtToEquityRatio: 0.65,
+      returnOnAssets: 0.12,
+      returnOnEquity: 0.18,
+      grossMargin: 0.35,
+      operatingMargin: 0.22,
+      netProfitMargin: 0.15
+    },
+    demographics: {
+      ceo: "Taylor Chen",
+      yearEstablished: 2008,
+      legalStructure: "Corporation",
+      publiclyTraded: false,
+      employeeGrowthRate: "15% YoY",
+      totalAssets: "$450M",
+      totalLiabilities: "$220M",
+      netWorth: "$230M"
+    },
+    socialMedia: {
+      website: "www.terraforge.com",
+      linkedin: "linkedin.com/company/terraforge",
+      twitter: "twitter.com/terraforge",
+      facebook: "facebook.com/terraforge",
+      instagram: "instagram.com/terraforge"
+    },
     recentProjects: [
       {
         id: 101,

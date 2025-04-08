@@ -17,6 +17,9 @@ export interface Enterprise {
   preferredFinancing?: string;
   avgDealSize?: string;
   recentProjects?: RecentProject[];
+  financialRatios?: FinancialRatios;
+  demographics?: CompanyDemographics;
+  socialMedia?: SocialMediaLinks;
 }
 
 export interface RecentProject {
@@ -26,4 +29,36 @@ export interface RecentProject {
   location: string;
   date: string;
   status: string;
+}
+
+export interface FinancialRatios {
+  debtServiceCoverageRatio: number;
+  currentRatio: number;
+  quickRatio: number;
+  debtToEquityRatio: number;
+  returnOnAssets: number;
+  returnOnEquity: number;
+  grossMargin: number;
+  operatingMargin: number;
+  netProfitMargin: number;
+}
+
+export interface CompanyDemographics {
+  ceo?: string;
+  yearEstablished: number;
+  legalStructure: string;
+  publiclyTraded: boolean;
+  stockSymbol?: string;
+  employeeGrowthRate?: string;
+  totalAssets?: string;
+  totalLiabilities?: string;
+  netWorth?: string;
+}
+
+export interface SocialMediaLinks {
+  website?: string;
+  linkedin?: string;
+  twitter?: string;
+  facebook?: string;
+  instagram?: string;
 }
