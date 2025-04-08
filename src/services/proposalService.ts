@@ -25,14 +25,17 @@ export const fetchProposalDetails = (id: string | undefined, selectedBidIds?: st
         principal: id === "RFP-2023-001" ? "$2.4M" : 
                   id === "RFP-2023-002" ? "$5.7M" : 
                   id === "RFP-2023-003" ? "$8.1M" : 
-                  "$0",
+                  "$1.5M",
       };
       
       // Enhanced mock data for bids with more details for comparison
       const mockBids: Bid[] = [
         {
           id: "BID-001",
-          amount: mockProposal.principal,
+          amount: id === "RFP-2023-001" ? "$2.35M" : 
+                  id === "RFP-2023-002" ? "$5.65M" : 
+                  id === "RFP-2023-003" ? "$8.05M" : 
+                  "$1.48M",
           interestRate: "5.75%",
           interestRateType: "Fixed",
           term: "60 months",
@@ -48,7 +51,10 @@ export const fetchProposalDetails = (id: string | undefined, selectedBidIds?: st
         },
         {
           id: "BID-002",
-          amount: mockProposal.principal,
+          amount: id === "RFP-2023-001" ? "$2.42M" : 
+                  id === "RFP-2023-002" ? "$5.72M" : 
+                  id === "RFP-2023-003" ? "$8.15M" : 
+                  "$1.52M",
           interestRate: "5.50%",
           interestRateType: "Floating",
           term: "48 months",
@@ -64,10 +70,10 @@ export const fetchProposalDetails = (id: string | undefined, selectedBidIds?: st
         },
         {
           id: "BID-003",
-          amount: id === "RFP-2023-001" ? "$2.2M" : 
-                 id === "RFP-2023-002" ? "$5.5M" : 
-                 id === "RFP-2023-003" ? "$7.8M" : 
-                 "$0",
+          amount: id === "RFP-2023-001" ? "$2.38M" : 
+                 id === "RFP-2023-002" ? "$5.68M" : 
+                 id === "RFP-2023-003" ? "$8.08M" : 
+                 "$1.49M",
           interestRate: "6.00%",
           interestRateType: "Fixed",
           term: "72 months",

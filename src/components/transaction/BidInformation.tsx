@@ -18,7 +18,7 @@ const BidInformation = ({ transactionDetails }: BidInformationProps) => {
             <BarChart className="h-4 w-4 text-cyan-400" />
             <div>
               <p className="text-xs text-gray-400">Opening Bid</p>
-              <p className="text-sm">{transactionDetails?.openingBid}</p>
+              <p className="text-sm">{transactionDetails?.openingBid || "$2.45M"}</p>
             </div>
           </div>
           
@@ -26,7 +26,7 @@ const BidInformation = ({ transactionDetails }: BidInformationProps) => {
             <BarChart className="h-4 w-4 text-cyan-400" />
             <div>
               <p className="text-xs text-gray-400">Closing Bid</p>
-              <p className="text-sm">{transactionDetails?.closingBid}</p>
+              <p className="text-sm">{transactionDetails?.closingBid || "$2.38M"}</p>
             </div>
           </div>
         </div>
@@ -36,7 +36,7 @@ const BidInformation = ({ transactionDetails }: BidInformationProps) => {
             <User className="h-4 w-4 text-cyan-400" />
             <div>
               <p className="text-xs text-gray-400">Bids Received</p>
-              <p className="text-sm">{transactionDetails?.bidsReceived}</p>
+              <p className="text-sm">{transactionDetails?.bidsReceived || "5"}</p>
             </div>
           </div>
           
@@ -44,7 +44,7 @@ const BidInformation = ({ transactionDetails }: BidInformationProps) => {
             <BuildingBank className="h-4 w-4 text-cyan-400" />
             <div>
               <p className="text-xs text-gray-400">Bank Type</p>
-              <p className="text-sm">{transactionDetails?.bankType}</p>
+              <p className="text-sm">{transactionDetails?.bankType || "Commercial Bank"}</p>
             </div>
           </div>
         </div>
@@ -54,7 +54,7 @@ const BidInformation = ({ transactionDetails }: BidInformationProps) => {
             <Clock className="h-4 w-4 text-cyan-400" />
             <div>
               <p className="text-xs text-gray-400">Time to Funding</p>
-              <p className="text-sm">{transactionDetails?.timeToFunding}</p>
+              <p className="text-sm">{transactionDetails?.timeToFunding || "7 days"}</p>
             </div>
           </div>
           
@@ -62,7 +62,7 @@ const BidInformation = ({ transactionDetails }: BidInformationProps) => {
             <FileCheck className="h-4 w-4 text-cyan-400" />
             <div>
               <p className="text-xs text-gray-400">Underwriting Score</p>
-              <p className="text-sm">{transactionDetails?.underwritingScore}/100</p>
+              <p className="text-sm">{transactionDetails?.underwritingScore || "78"}/100</p>
             </div>
           </div>
         </div>

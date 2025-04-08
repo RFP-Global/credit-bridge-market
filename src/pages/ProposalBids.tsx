@@ -11,34 +11,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
-
-interface Bid {
-  id: string;
-  amount: string;
-  interestRate: string;
-  term: string;
-  status: "Under Review" | "Approved" | "Rejected";
-  submittedDate: string;
-  additionalTerms: string;
-}
-
-interface WinningTerms {
-  amount: string;
-  interestRate: string;
-  term: string;
-  additionalTerms: string;
-}
-
-interface Proposal {
-  id: string;
-  name: string;
-  industry: string;
-  status: string;
-  principal: string;
-  bidDeadline: string;
-  description?: string;
-  winningTerms?: WinningTerms;
-}
+import { fetchProposalDetails } from "@/services/proposalService";
+import { Proposal, Bid } from "@/types/bids";
 
 const ProposalBids = () => {
   const { id } = useParams<{ id: string }>();
@@ -50,79 +24,19 @@ const ProposalBids = () => {
   const [selectedBids, setSelectedBids] = useState<string[]>([]);
   
   useEffect(() => {
-    const fetchProposalDetails = () => {
-      setTimeout(() => {
-        const mockProposal: Proposal = {
-          id: id || "",
-          name: id === "RFP-2023-001" ? "Riverside Development" : 
-                id === "RFP-2023-002" ? "Green Energy Initiative" : 
-                id === "RFP-2023-003" ? "Medical Center Expansion" : 
-                "Unknown Project",
-          industry: id === "RFP-2023-001" ? "Commercial Real Estate" : 
-                   id === "RFP-2023-002" ? "Renewable Energy" : 
-                   id === "RFP-2023-003" ? "Healthcare" : 
-                   "Other",
-          status: "OPEN",
-          principal: id === "RFP-2023-001" ? "$2.4M" : 
-                    id === "RFP-2023-002" ? "$5.7M" : 
-                    id === "RFP-2023-003" ? "$8.1M" : 
-                    "$0",
-          bidDeadline: id === "RFP-2023-001" ? "2023-12-31" : 
-                      id === "RFP-2023-002" ? "2023-12-15" : 
-                      id === "RFP-2023-003" ? "2024-01-15" : 
-                      "N/A",
-          description: "This project aims to create a sustainable and modern development that meets the highest environmental standards while delivering exceptional returns for investors.",
-          winningTerms: {
-            amount: id === "RFP-2023-001" ? "$2.4M" : 
-                   id === "RFP-2023-002" ? "$5.7M" : 
-                   id === "RFP-2023-003" ? "$8.1M" : 
-                   "$0",
-            interestRate: "5.50%",
-            term: "60 months",
-            additionalTerms: "No prepayment penalty after 24 months, includes optional line of credit"
-          }
-        };
-        
-        const mockBids: Bid[] = [
-          {
-            id: "BID-001",
-            amount: mockProposal.principal,
-            interestRate: "5.75%",
-            term: "60 months",
-            status: "Under Review",
-            submittedDate: "2023-11-15",
-            additionalTerms: "No prepayment penalty after 24 months"
-          },
-          {
-            id: "BID-002",
-            amount: mockProposal.principal,
-            interestRate: "5.50%",
-            term: "48 months",
-            status: "Under Review",
-            submittedDate: "2023-11-16",
-            additionalTerms: "Includes optional line of credit"
-          },
-          {
-            id: "BID-003",
-            amount: id === "RFP-2023-001" ? "$2.2M" : 
-                   id === "RFP-2023-002" ? "$5.5M" : 
-                   id === "RFP-2023-003" ? "$7.8M" : 
-                   "$0",
-            interestRate: "6.00%",
-            term: "72 months",
-            status: "Under Review",
-            submittedDate: "2023-11-18",
-            additionalTerms: "Fixed rate for first 36 months"
-          }
-        ];
-        
-        setProposal(mockProposal);
-        setBids(mockBids);
+    const getProposalDetails = async () => {
+      try {
+        const data = await fetchProposalDetails(id);
+        setProposal(data.proposal);
+        setBids(data.bids);
         setLoading(false);
-      }, 500);
+      } catch (error) {
+        console.error("Error fetching proposal details:", error);
+        setLoading(false);
+      }
     };
     
-    fetchProposalDetails();
+    getProposalDetails();
   }, [id]);
   
   const handleLogout = () => {
