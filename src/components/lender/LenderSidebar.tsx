@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { BarChart3, DollarSign, Brain, Archive, Users, FileSpreadsheet, Building } from "lucide-react";
+import { BarChart3, DollarSign, Brain, Archive, FileSpreadsheet, Building } from "lucide-react";
 import { Link } from "react-router-dom";
 import LenderAccountCard from "./LenderAccountCard";
 import SidebarNavButton from "@/components/layout/SidebarNavButton";
@@ -38,12 +38,6 @@ const LenderSidebar = () => {
           to="/transaction-archive"
           icon={Archive}
           label="Transaction Archive"
-          state={{ from: 'lender-dashboard' }}
-        />
-        <SidebarNavButton
-          to="/team"
-          icon={Users}
-          label="Banker Network"
           state={{ from: 'lender-dashboard' }}
         />
         <SidebarNavButton
