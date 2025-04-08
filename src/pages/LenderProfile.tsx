@@ -1,4 +1,5 @@
 
+import { useState, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,10 +7,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Building, ArrowLeft, Calendar, DollarSign, Globe, 
   Briefcase, Clock, BarChart, Tag, Bookmark, Award, 
-  CreditCard, Lightbulb, CheckCircle, MapPin
+  CreditCard, Lightbulb, CheckCircle, MapPin, Search
 } from "lucide-react";
 import { getLenderById } from "@/data/lendersData";
 import { toast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const LenderProfile = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,6 +27,8 @@ const LenderProfile = () => {
   };
   
   const lender = getLenderById(id || "");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [projectTypeFilter, setProjectTypeFilter] = useState("all");
 
   if (!lender) {
     return (
@@ -50,6 +56,35 @@ const LenderProfile = () => {
     toast({
       title: "Connection Request Sent",
       description: `Your request to connect with ${lender.code} has been submitted.`,
+    });
+  };
+
+  // Get unique project types for filter
+  const projectTypes = useMemo(() => {
+    if (!lender.recentDeals) return [];
+    return Array.from(new Set(lender.recentDeals.map(deal => deal.projectType)));
+  }, [lender.recentDeals]);
+
+  // Filter and search transactions
+  const filteredTransactions = useMemo(() => {
+    if (!lender.recentDeals) return [];
+    
+    return lender.recentDeals.filter(deal => {
+      const matchesSearch = searchTerm === "" || 
+        deal.projectType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        deal.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        deal.amount.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        deal.term.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchesFilter = projectTypeFilter === "all" || deal.projectType === projectTypeFilter;
+      
+      return matchesSearch && matchesFilter;
+    });
+  }, [lender.recentDeals, searchTerm, projectTypeFilter]);
+
+  const handleTransactionClick = (dealId: string) => {
+    navigate(`/transaction-details/${dealId}`, { 
+      state: { from: `/lender/${id}` } 
     });
   };
 
@@ -188,42 +223,72 @@ const LenderProfile = () => {
 
           <Card className="border-primary/20">
             <CardHeader>
-              <CardTitle className="text-lg font-mono">Recent Transactions</CardTitle>
-              <CardDescription>Sample deals completed by this lender</CardDescription>
+              <div className="flex justify-between items-center">
+                <div>
+                  <CardTitle className="text-lg font-mono">Transaction History</CardTitle>
+                  <CardDescription>Sample deals completed by this lender</CardDescription>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="relative">
+                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search transactions..."
+                      className="pl-8 h-9"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                  <Select value={projectTypeFilter} onValueChange={setProjectTypeFilter}>
+                    <SelectTrigger className="w-[180px] h-9">
+                      <SelectValue placeholder="Project Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Project Types</SelectItem>
+                      {projectTypes.map(type => (
+                        <SelectItem key={type} value={type}>{type}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {lender.recentDeals?.map((deal) => (
-                  <Card key={deal.id} className="bg-primary/5">
-                    <CardContent className="p-4">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                          <p className="text-xs text-muted-foreground">Project</p>
-                          <p className="font-mono text-sm">{deal.projectType}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">Amount</p>
-                          <p className="font-mono text-sm">{deal.amount}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">Term</p>
-                          <p className="font-mono text-sm">{deal.term}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">Location</p>
-                          <p className="font-mono text-sm flex items-center">
-                            <MapPin className="h-3 w-3 mr-1" /> {deal.location}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">Date Completed</p>
-                          <p className="font-mono text-sm">{new Date(deal.date).toLocaleDateString()}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Project Type</TableHead>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Term</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead>Date</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredTransactions.length > 0 ? (
+                    filteredTransactions.map((deal) => (
+                      <TableRow 
+                        key={deal.id}
+                        className="cursor-pointer hover:bg-primary/5"
+                        onClick={() => handleTransactionClick(deal.id.toString())}
+                      >
+                        <TableCell className="font-medium">{deal.projectType}</TableCell>
+                        <TableCell className="font-mono">{deal.amount}</TableCell>
+                        <TableCell>{deal.term}</TableCell>
+                        <TableCell className="flex items-center">
+                          <MapPin className="h-3 w-3 mr-1" /> {deal.location}
+                        </TableCell>
+                        <TableCell>{new Date(deal.date).toLocaleDateString()}</TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center py-6 text-muted-foreground">
+                        No transactions found matching your filters
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
             </CardContent>
             <CardFooter className="flex justify-center pt-2 pb-6">
               <p className="text-xs text-muted-foreground text-center max-w-md">

@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -37,10 +36,9 @@ import Financing from "./pages/Financing";
 import Team from "./pages/Team";
 import Underwriting from "./pages/Underwriting";
 import { useState } from "react";
+import TransactionDetailsView from "./pages/TransactionDetailsView";
 
 const App = () => {
-  // Create a new QueryClient instance inside the component using useState
-  // This ensures the QueryClient is properly initialized and maintained across renders
   const [queryClient] = useState(() => new QueryClient());
 
   return (
@@ -71,7 +69,7 @@ const App = () => {
             <Route path="/bid-comparison/:id" element={<BidComparison />} />
             <Route path="/create-proposal" element={<CreateProposal />} />
             <Route path="/transaction-archive" element={<TransactionArchive />} />
-            <Route path="/transaction/:id" element={<TransactionDetails />} />
+            <Route path="/transaction-details/:id" element={<TransactionDetailsView />} />
             <Route path="/facility-builder" element={<FacilityBuilder />} />
             <Route path="/facility-mechanics/:facilityId" element={<FacilityMechanics />} />
             <Route path="/facility-reference/:facilityId/:sectionType" element={<FacilityReferenceDetail />} />
