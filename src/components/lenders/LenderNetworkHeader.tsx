@@ -12,7 +12,8 @@ const LenderNetworkHeader = () => {
     if (location.state && location.state.from) {
       navigate(location.state.from);
     } else {
-      navigate(-1);
+      // If no specific previous page is stored, navigate to a safe fallback
+      navigate("/");
     }
   };
 
