@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -56,7 +55,7 @@ const EnterpriseSidebar = () => {
           state={{ from: 'enterprise-dashboard' }}
         />
         <SidebarNavButton
-          to="/lenders"
+          to="/enterprise-network"
           icon={Building}
           label="Lender Network"
           state={{ from: 'enterprise-dashboard' }}
