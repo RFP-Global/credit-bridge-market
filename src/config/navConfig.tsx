@@ -1,5 +1,5 @@
 
-import { Calendar, Home, Inbox, Terminal, Building, Book, BarChart3, DollarSign, Network } from 'lucide-react';
+import { Home, Inbox, Terminal, Building, Book, BarChart3, DollarSign } from 'lucide-react';
 import { ReactNode } from 'react';
 
 export interface NavMenuItem {
@@ -36,12 +36,6 @@ export const mainMenuItems: NavMenuItem[] = [
   {
     title: "FACILITY BUILDER",
     path: "/facility-builder",
-    icon: <Building className="h-4 w-4 mr-2" />,
-  },
-  {
-    title: "LENDER NETWORK",
-    path: "/lenders",
-    icon: <Building className="h-4 w-4 mr-2" />,
   },
 ];
 
@@ -50,3 +44,4 @@ export const getAccessButton = () => ({
   path: "/access",
   icon: <Terminal className="h-4 w-4 mr-2" />,
 });
+
