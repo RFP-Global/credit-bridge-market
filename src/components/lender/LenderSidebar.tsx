@@ -41,7 +41,7 @@ const LenderSidebar = () => {
           state={{ from: 'lender-dashboard' }}
         />
         <SidebarNavButton
-          to="/lenders"
+          to="/enterprise-network"
           icon={Users}
           label="Enterprise Community"
           state={{ from: 'lender-dashboard' }}
