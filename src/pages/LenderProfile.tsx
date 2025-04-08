@@ -1,6 +1,5 @@
 
-import { useParams, useNavigate } from "react-router-dom";
-import EnterpriseLayout from "@/components/layout/EnterpriseLayout";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,26 +14,35 @@ import { toast } from "@/hooks/use-toast";
 const LenderProfile = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Get the previous page from location state, default to lenders page if not available
+  const goBack = () => {
+    const previousPage = location.state?.from || "/lenders";
+    navigate(previousPage);
+  };
   
   const lender = getLenderById(id || "");
 
   if (!lender) {
     return (
-      <EnterpriseLayout>
-        <div className="flex flex-col items-center justify-center h-[50vh]">
-          <Building className="h-16 w-16 text-primary/20 mb-4" />
-          <h2 className="text-2xl font-mono mb-2">Lender Not Found</h2>
-          <p className="text-muted-foreground mb-6">
-            The lender profile you're looking for doesn't exist or has been removed.
-          </p>
-          <Button 
-            variant="outline" 
-            onClick={() => navigate("/lenders")}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Lenders
-          </Button>
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-12">
+          <div className="flex flex-col items-center justify-center h-[50vh]">
+            <Building className="h-16 w-16 text-primary/20 mb-4" />
+            <h2 className="text-2xl font-mono mb-2">Lender Not Found</h2>
+            <p className="text-muted-foreground mb-6">
+              The lender profile you're looking for doesn't exist or has been removed.
+            </p>
+            <Button 
+              variant="outline" 
+              onClick={goBack}
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" /> Back
+            </Button>
+          </div>
         </div>
-      </EnterpriseLayout>
+      </div>
     );
   }
 
@@ -46,17 +54,14 @@ const LenderProfile = () => {
   };
 
   return (
-    <EnterpriseLayout
-      title="Lender Profile"
-      description="Detailed information about this financial institution."
-    >
-      <div className="container mx-auto px-0 py-0">
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-12">
         <Button 
           variant="ghost" 
           className="mb-6" 
-          onClick={() => navigate("/lenders")}
+          onClick={goBack}
         >
-          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Lenders
+          <ArrowLeft className="mr-2 h-4 w-4" /> Back
         </Button>
 
         <div className="space-y-6">
@@ -267,7 +272,7 @@ const LenderProfile = () => {
           </Card>
         </div>
       </div>
-    </EnterpriseLayout>
+    </div>
   );
 };
 
