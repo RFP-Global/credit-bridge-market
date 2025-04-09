@@ -1,7 +1,7 @@
 
 @layer components {
   .glass-card {
-    @apply bg-background/80 backdrop-blur-md border border-border/50 shadow-lg;
+    @apply bg-background/80 backdrop-blur-md border border-border/50 shadow-md;
   }
   
   .hover-scale {
@@ -13,11 +13,11 @@
   }
 
   .terminal-card {
-    @apply border border-blue-900/50 bg-black/70 rounded-md p-4 shadow-[0_0_15px_rgba(0,100,200,0.15)] relative;
+    @apply border border-blue-900/40 bg-black/60 rounded-md p-4 shadow-[0_0_15px_rgba(0,80,160,0.1)] relative;
   }
 
   .terminal-header {
-    @apply absolute top-0 left-0 right-0 border-b border-blue-900/50 py-1 px-3 flex items-center;
+    @apply absolute top-0 left-0 right-0 border-b border-blue-900/40 py-1 px-3 flex items-center;
   }
 
   .terminal-dot {
@@ -45,7 +45,7 @@
   }
 
   .rfp-badge {
-    @apply inline-flex items-center px-3 py-1 rounded-sm bg-primary/10 text-primary text-xs font-mono uppercase tracking-wider border border-primary/30;
+    @apply inline-flex items-center px-3 py-1 rounded-sm bg-primary/10 text-primary text-xs font-mono uppercase tracking-wider border border-primary/20;
   }
 
   .data-row {
@@ -53,17 +53,29 @@
   }
   
   .data-item {
-    @apply px-4 py-1 border-r border-blue-900/30 flex-shrink-0;
+    @apply px-4 py-1 border-r border-blue-900/20 flex-shrink-0;
   }
 
   .market-ticker {
-    @apply bg-black/60 border-y border-blue-900/30 w-full;
+    @apply bg-black/50 border-y border-blue-900/20 w-full;
     position: relative;
     left: 0;
     right: 0;
   }
   
   .bid-button {
-    @apply bg-cyan-600 hover:bg-cyan-700 text-white font-semibold transition-colors duration-200;
+    @apply bg-cyan-800 hover:bg-cyan-700 text-cyan-50 font-semibold transition-colors duration-200;
+  }
+  
+  .matte-card {
+    @apply bg-card border border-border/30 shadow-none rounded-md;
+  }
+  
+  .matte-button {
+    @apply bg-secondary hover:bg-secondary/80 text-secondary-foreground transition-colors duration-200 shadow-none;
+  }
+  
+  .matte-input {
+    @apply bg-input border-input/50 focus:border-primary/50 focus:ring-1 focus:ring-primary/20;
   }
 }

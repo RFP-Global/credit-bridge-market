@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, EyeOff, AlertCircle } from "lucide-react";
+import { ArrowLeft, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -27,7 +27,7 @@ const EnterpriseNetworkHeader = () => {
           variant="ghost" 
           size="sm" 
           onClick={goBack} 
-          className="mr-2"
+          className="mr-2 hover:bg-secondary/50"
         >
           <ArrowLeft className="h-4 w-4 mr-1" /> Back
         </Button>
@@ -41,11 +41,11 @@ const EnterpriseNetworkHeader = () => {
         </p>
       </div>
       
-      <Alert className="mb-6 bg-primary/5 border-primary/20">
+      <Alert className="mb-6 bg-secondary/40 border-primary/10">
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>Enterprise Profiles are Anonymous</AlertTitle>
-        <AlertDescription className="flex items-center">
-          Enterprise identities are protected by default. Click the <EyeOff className="h-3 w-3 mx-1" /> icon to toggle profile visibility.
+        <AlertDescription>
+          Enterprise identities are protected at all times to maintain confidentiality.
         </AlertDescription>
       </Alert>
     </>
