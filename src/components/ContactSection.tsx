@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -52,12 +51,6 @@ const ContactSection = () => {
 
   return (
     <section className="py-20 relative overflow-hidden grid-bg" id="contact">
-      <div className="absolute inset-0 z-0">
-        <div className="radar-pulse bg-blue-500/10"></div>
-        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "1.5s" }}></div>
-        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "3s" }}></div>
-      </div>
-      
       <div className="scanline z-10"></div>
       
       <div className="container mx-auto px-6 relative z-10">

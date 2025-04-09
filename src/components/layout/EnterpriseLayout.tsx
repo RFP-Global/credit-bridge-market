@@ -1,4 +1,3 @@
-
 import { ReactNode } from "react";
 import EnterpriseSidebar from "./EnterpriseSidebar";
 import { Radar, Signal, Bell, Settings } from "lucide-react";
@@ -29,12 +28,6 @@ const EnterpriseLayout = ({
 
   return (
     <div className="min-h-screen bg-background text-foreground relative grid-bg">
-      <div className="absolute inset-0 z-0">
-        <div className="radar-pulse bg-blue-500/10"></div>
-        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "1s" }}></div>
-        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "2s" }}></div>
-      </div>
-      
       <div className="scanline z-10"></div>
       
       <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-primary/20">

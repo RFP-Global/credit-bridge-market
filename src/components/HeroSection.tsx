@@ -45,12 +45,6 @@ const HeroSection = () => {
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20 grid-bg">
       <FullscreenButton />
       
-      <div className="absolute inset-0 z-0">
-        <div className="radar-pulse bg-blue-500/10"></div>
-        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "1s" }}></div>
-        <div className="radar-pulse bg-blue-500/10" style={{ animationDelay: "2s" }}></div>
-      </div>
-      
       <div className="scanline z-10"></div>
       
       <div className="w-full absolute top-0 left-0 right-0 z-10">
