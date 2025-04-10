@@ -90,9 +90,9 @@ const Underwriting = () => {
             
             <Card className="bg-black/40 border-gray-800 mb-6 overflow-hidden">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-                <div className="bg-gradient-to-br from-gray-900 to-gray-950 p-6 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-gray-800/50">
+                <div className="bg-gradient-to-br from-gray-900 to-gray-950 p-4 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-gray-800/50">
                   <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Overall Risk Score</div>
-                  <div className={`text-5xl font-bold ${handleGetScoreColor(avgTotalScore)}`}>
+                  <div className={`text-3xl font-bold ${handleGetScoreColor(avgTotalScore)}`}>
                     {minTotalScore.toFixed(1)}-{maxTotalScore.toFixed(1)}
                   </div>
                   <CustomBadge 
@@ -101,14 +101,14 @@ const Underwriting = () => {
                       avgTotalScore >= 7 ? "secondary" :
                       avgTotalScore >= 5 ? "warning" : "destructive"
                     } 
-                    className="mt-3"
+                    className="mt-2"
                   >
                     {riskLevel.label}
                   </CustomBadge>
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Button variant="ghost" size="sm" className="mt-3 text-xs text-gray-400">
+                        <Button variant="ghost" size="sm" className="mt-2 text-xs text-gray-400">
                           <Info className="h-3 w-3 mr-1" /> Score Scale
                         </Button>
                       </TooltipTrigger>
