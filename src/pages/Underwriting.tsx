@@ -1,3 +1,5 @@
+
+import React, { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,7 +18,8 @@ import {
   updateGroupWeight, 
   updateCriterionScore, 
   updateCriterionRange,
-  updateActualMetricValue
+  updateActualMetricValue,
+  updateScoreRange
 } from "@/components/underwriting/utils/scoreUtils";
 import {
   getScoreColor,
@@ -29,6 +32,7 @@ import { Accordion } from "@/components/ui/accordion";
 import { CriteriaGroup } from "@/components/underwriting/CriteriaGroup";
 import { CustomBadge } from "@/components/ui/custom-badge";
 import { Separator } from "@/components/ui/separator";
+import { RangeScoreSlider } from "@/components/underwriting/components/RangeScoreSlider";
 
 const Underwriting = () => {
   const {
@@ -36,8 +40,14 @@ const Underwriting = () => {
     setTotalScore,
     scoreThresholds,
     criteriaGroups,
-    setCriteriaGroups
+    setCriteriaGroups,
+    scoreRange,
+    setScoreRange
   } = useUnderwritingState();
+
+  // Taking the first threshold (lowest risk) and last threshold (highest risk) for the range
+  const minScore = scoreThresholds[0].value;
+  const maxScore = scoreThresholds[scoreThresholds.length - 1].value;
 
   const handleUpdateCriterionWeight = (groupIndex: number, criterionIndex: number, newWeight: number) => {
     updateCriterionWeight(criteriaGroups, groupIndex, criterionIndex, newWeight, setCriteriaGroups, setTotalScore);
@@ -57,6 +67,10 @@ const Underwriting = () => {
   
   const handleUpdateActualMetricValue = (groupIndex: number, criterionIndex: number, value: number) => {
     updateActualMetricValue(criteriaGroups, groupIndex, criterionIndex, value, setCriteriaGroups, setTotalScore);
+  };
+
+  const handleUpdateScoreRange = (min: number, max: number) => {
+    updateScoreRange(min, max, setScoreRange);
   };
 
   const handleGetScoreColor = (score: number) => getScoreColor(score, scoreThresholds);
@@ -85,20 +99,41 @@ const Underwriting = () => {
             <Card className="bg-black/40 border-gray-800 mb-6 overflow-hidden">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
                 <div className="bg-gradient-to-br from-gray-900 to-gray-950 p-6 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-gray-800/50">
-                  <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Overall Risk Score</div>
-                  <div className={`text-5xl font-bold ${handleGetScoreColor(totalScore)}`}>
-                    {totalScore.toFixed(2)}
+                  <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Overall Risk Score Range</div>
+                  <div className="flex items-center gap-2">
+                    <div className={`text-4xl font-bold ${handleGetScoreColor(minScore)}`}>
+                      {minScore.toFixed(2)}
+                    </div>
+                    <span className="text-gray-500">-</span>
+                    <div className={`text-4xl font-bold ${handleGetScoreColor(maxScore)}`}>
+                      {maxScore.toFixed(2)}
+                    </div>
+                  </div>
+                  <div className="w-full h-2 bg-gray-800/60 rounded-full mt-3 overflow-hidden">
+                    <div 
+                      className={`h-full ${handleGetScoreBackground(totalScore)}`}
+                      style={{ width: `${(totalScore / maxScore) * 100}%` }}
+                    />
                   </div>
                   <CustomBadge 
                     variant={
-                      totalScore >= 4.5 ? "success" : 
-                      totalScore >= 3.5 ? "secondary" :
-                      totalScore >= 2.5 ? "warning" : "destructive"
+                      totalScore >= 9 ? "success" : 
+                      totalScore >= 7 ? "secondary" :
+                      totalScore >= 5 ? "warning" : "destructive"
                     } 
                     className="mt-3"
                   >
                     {riskLevel.label}
                   </CustomBadge>
+                  <RangeScoreSlider
+                    minValue={1}
+                    maxValue={10}
+                    initialMin={scoreRange.min}
+                    initialMax={scoreRange.max}
+                    step={0.1}
+                    onRangeChange={handleUpdateScoreRange}
+                    getScoreColor={handleGetScoreColor}
+                  />
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -109,10 +144,10 @@ const Underwriting = () => {
                       <TooltipContent side="bottom">
                         <p className="w-[240px] text-xs">
                           Risk Score Scale:<br />
-                          1-2.49: High Risk<br />
-                          2.5-3.49: Medium-High Risk<br />
-                          3.5-4.49: Moderate Risk<br />
-                          4.5-5: Low Risk
+                          1-4.99: High Risk<br />
+                          5-6.99: Medium-High Risk<br />
+                          7-8.99: Moderate Risk<br />
+                          9-10: Low Risk
                         </p>
                       </TooltipContent>
                     </Tooltip>
@@ -138,7 +173,7 @@ const Underwriting = () => {
                         <div className="w-full h-1.5 bg-gray-800/50 rounded-full overflow-hidden">
                           <div 
                             className={`h-full ${handleGetScoreBackground(group.score)}`}
-                            style={{ width: `${(group.score / 5) * 100}%` }}
+                            style={{ width: `${(group.score / 10) * 100}%` }}
                           />
                         </div>
                       </div>

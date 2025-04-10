@@ -7,6 +7,8 @@ export const useUnderwritingState = (): UseUnderwritingStateReturn => {
   const [totalScore, setTotalScore] = useState(4.45);
   const [scoreThresholds, setScoreThresholds] = useState(initialScoreThresholds);
   const [criteriaGroups, setCriteriaGroups] = useState(initialCriteriaGroups);
+  const [scoreRange, setScoreRange] = useState({ min: 4.2, max: 7.8 });
+  const [metricRanges, setMetricRanges] = useState<{ [key: string]: { min: number; max: number } }>({});
 
   return {
     totalScore,
@@ -14,6 +16,10 @@ export const useUnderwritingState = (): UseUnderwritingStateReturn => {
     scoreThresholds,
     setScoreThresholds,
     criteriaGroups,
-    setCriteriaGroups
+    setCriteriaGroups,
+    scoreRange,
+    setScoreRange,
+    metricRanges,
+    setMetricRanges
   };
 };

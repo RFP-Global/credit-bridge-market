@@ -1,36 +1,354 @@
-import { CriteriaGroup, ScoreThreshold } from "@/components/underwriting/types";
+import { ScoreThreshold, CriteriaGroup } from "@/components/underwriting/types";
 
 export const initialScoreThresholds: ScoreThreshold[] = [
-  { threshold: 4.5, color: "text-green-500" },
-  { threshold: 3.5, color: "text-blue-500" },
-  { threshold: 2.5, color: "text-yellow-500" },
-  { threshold: 1, color: "text-red-500" },
+  { value: 4.5, threshold: 4.5, color: "text-green-500", label: "Low Risk", background: "bg-green-500" },
+  { value: 3.5, threshold: 3.5, color: "text-blue-500", label: "Moderate Risk", background: "bg-blue-500" },
+  { value: 2.5, threshold: 2.5, color: "text-yellow-500", label: "Medium-High Risk", background: "bg-yellow-500" },
+  { value: 0, threshold: 0, color: "text-red-500", label: "High Risk", background: "bg-red-500" }
 ];
 
 export const initialCriteriaGroups: CriteriaGroup[] = [
   {
     name: "Financial Strength",
-    description: "Assessment of the company's financial stability and performance",
-    weight: 35,
-    score: 4.2,
+    description: "Measures the overall financial health of the borrower",
+    weight: 25,
+    score: 4.10,
     criteria: [
       {
-        name: "Debt/EBITDA",
-        description: "Ratio of debt to earnings before interest, taxes, depreciation and amortization",
-        value: "2.8x",
-        weight: 30,
-        score: 4.1,
-        min: 0,
-        max: 10,
-        step: 0.1,
-        preferredMin: 1.5,
-        preferredMax: 3.0,
-        unit: "x",
+        name: "EBITDA",
+        description: "Earnings Before Interest, Taxes, Depreciation, and Amortization",
+        value: "$4.5M",
+        weight: 40,
+        score: 4,
+        min: 1,
+        max: 5,
+        step: 1,
+        unit: "$M",
+        preferredMin: 3.5,
+        preferredMax: 10,
         actualMin: 0,
         actualMax: 10,
-        actualValue: 2.8,
+        actualValue: 4.5,
+        actualUnit: "$M",
+        scoreMapping: [
+          { min: 0, max: 1, score: 1 },
+          { min: 1, max: 2, score: 2 },
+          { min: 2, max: 3.5, score: 3 },
+          { min: 3.5, max: 7, score: 4 },
+          { min: 7, max: 50, score: 5 }
+        ]
+      },
+      {
+        name: "Debt/EBITDA",
+        description: "Ratio of total debt to EBITDA",
+        value: "3.6x",
+        weight: 25,
+        score: 4,
+        min: 1,
+        max: 5,
+        step: 1,
+        unit: "x",
+        preferredMin: 2.0,
+        preferredMax: 4.0,
+        actualMin: 0,
+        actualMax: 10,
+        actualValue: 3.6,
         actualUnit: "x",
-        useRangeSlider: true,
+        scoreMapping: [
+          { min: 0, max: 1.00, score: 5 },
+          { min: 1.01, max: 2.00, score: 4.5 },
+          { min: 2.01, max: 3.00, score: 4 },
+          { min: 3.01, max: 4.00, score: 3.5 },
+          { min: 4.01, max: 5.00, score: 3 },
+          { min: 5.01, max: 6.00, score: 2.5 },
+          { min: 6.01, max: 7.00, score: 2 },
+          { min: 7.01, max: 8.00, score: 1.5 },
+          { min: 8.01, max: 10.00, score: 1 },
+          { min: 10.01, max: 100, score: 0.5 }
+        ]
+      },
+      {
+        name: "Current Ratio",
+        description: "Current assets divided by current liabilities",
+        value: "1.8x",
+        weight: 20,
+        score: 4,
+        min: 1,
+        max: 5,
+        step: 1,
+        unit: "x",
+        preferredMin: 1.5,
+        preferredMax: 3.0,
+        actualMin: 0.5,
+        actualMax: 3,
+        actualValue: 1.8,
+        actualUnit: "x",
+        scoreMapping: [
+          { min: 0, max: 1, score: 1 },
+          { min: 1, max: 1.25, score: 2 },
+          { min: 1.25, max: 1.5, score: 3 },
+          { min: 1.5, max: 2, score: 4 },
+          { min: 2, max: 5, score: 5 }
+        ]
+      },
+      {
+        name: "Revenue Growth",
+        description: "Year-over-year revenue growth",
+        value: "10.5%",
+        weight: 15,
+        score: 5,
+        min: 1,
+        max: 5,
+        step: 1,
+        unit: "%",
+        preferredMin: 5,
+        preferredMax: 25,
+        actualMin: -10,
+        actualMax: 30,
+        actualValue: 10.5,
+        actualUnit: "%",
+        scoreMapping: [
+          { min: -100, max: 0, score: 1 },
+          { min: 0, max: 3, score: 2 },
+          { min: 3, max: 7, score: 3 },
+          { min: 7, max: 15, score: 4 },
+          { min: 15, max: 100, score: 5 }
+        ]
+      }
+    ]
+  },
+  {
+    name: "Business Stability",
+    description: "Evaluates the operational stability of the business",
+    weight: 20,
+    score: 3.4,
+    criteria: [
+      {
+        name: "Years in Business",
+        description: "Number of years since company founding",
+        value: "14 years",
+        weight: 35,
+        score: 4,
+        min: 1,
+        max: 5,
+        step: 1,
+        actualMin: 0,
+        actualMax: 30,
+        actualValue: 14,
+        actualUnit: " years",
+        scoreMapping: [
+          { min: 0, max: 2, score: 1 },
+          { min: 2, max: 5, score: 2 },
+          { min: 5, max: 10, score: 3 },
+          { min: 10, max: 15, score: 4 },
+          { min: 15, max: 100, score: 5 }
+        ]
+      },
+      {
+        name: "Revenue Concentration",
+        description: "Dependency on key customers",
+        value: "32%",
+        weight: 25,
+        score: 3,
+        min: 1,
+        max: 5,
+        step: 1,
+        actualMin: 0,
+        actualMax: 100,
+        actualValue: 32,
+        actualUnit: "%",
+        scoreMapping: [
+          { min: 0, max: 15, score: 5 },
+          { min: 15, max: 25, score: 4 },
+          { min: 25, max: 40, score: 3 },
+          { min: 40, max: 60, score: 2 },
+          { min: 60, max: 100, score: 1 }
+        ]
+      },
+      {
+        name: "Geographic Footprint",
+        description: "Regional diversity of operations",
+        value: "7 states",
+        weight: 40,
+        score: 3,
+        min: 1,
+        max: 5,
+        step: 1,
+        actualMin: 0,
+        actualMax: 20,
+        actualValue: 7,
+        actualUnit: " states",
+        scoreMapping: [
+          { min: 0, max: 1, score: 1 },
+          { min: 1, max: 3, score: 2 },
+          { min: 3, max: 7, score: 3 },
+          { min: 7, max: 12, score: 4 },
+          { min: 12, max: 50, score: 5 }
+        ]
+      }
+    ]
+  },
+  {
+    name: "Competitive Positioning",
+    description: "Evaluates market position relative to competitors",
+    weight: 15,
+    score: 4.35,
+    criteria: [
+      {
+        name: "Market Share",
+        description: "Percentage of total addressable market",
+        value: "7%",
+        weight: 30,
+        score: 4,
+        min: 1,
+        max: 5,
+        step: 1,
+        actualMin: 0,
+        actualMax: 25,
+        actualValue: 7,
+        actualUnit: "%",
+        scoreMapping: [
+          { min: 0, max: 1, score: 1 },
+          { min: 1, max: 3, score: 2 },
+          { min: 3, max: 5, score: 3 },
+          { min: 5, max: 10, score: 4 },
+          { min: 10, max: 100, score: 5 }
+        ]
+      },
+      {
+        name: "Differentiation Score",
+        description: "Uniqueness of product/service offering",
+        value: "High",
+        weight: 35,
+        score: 5,
+        min: 1,
+        max: 5,
+        step: 1,
+        actualMin: 1,
+        actualMax: 10,
+        actualValue: 8,
+        actualUnit: "",
+        scoreMapping: [
+          { min: 1, max: 3, score: 1 },
+          { min: 3, max: 5, score: 2 },
+          { min: 5, max: 6, score: 3 },
+          { min: 6, max: 8, score: 4 },
+          { min: 8, max: 10, score: 5 }
+        ]
+      },
+      {
+        name: "Barrier to Entry Score",
+        description: "Difficulty for new competitors to enter market",
+        value: "Medium-High",
+        weight: 35,
+        score: 4,
+        min: 1,
+        max: 5,
+        step: 1,
+        actualMin: 1,
+        actualMax: 10,
+        actualValue: 7,
+        actualUnit: "",
+        scoreMapping: [
+          { min: 1, max: 3, score: 1 },
+          { min: 3, max: 5, score: 2 },
+          { min: 5, max: 6, score: 3 },
+          { min: 6, max: 8, score: 4 },
+          { min: 8, max: 10, score: 5 }
+        ]
+      }
+    ]
+  },
+  {
+    name: "Management Strength",
+    description: "Assesses the experience and capability of leadership team",
+    weight: 15,
+    score: 4.8,
+    criteria: [
+      {
+        name: "Leadership Depth",
+        description: "Experience level of management team",
+        value: "Very High",
+        weight: 40,
+        score: 5,
+        min: 1,
+        max: 5,
+        step: 1,
+        actualMin: 1,
+        actualMax: 10,
+        actualValue: 9,
+        actualUnit: "",
+        scoreMapping: [
+          { min: 1, max: 3, score: 1 },
+          { min: 3, max: 5, score: 2 },
+          { min: 5, max: 6, score: 3 },
+          { min: 6, max: 8, score: 4 },
+          { min: 8, max: 10, score: 5 }
+        ]
+      },
+      {
+        name: "Ownership/Management Alignment",
+        description: "Alignment between ownership and management",
+        value: "High",
+        weight: 30,
+        score: 5,
+        min: 1,
+        max: 5,
+        step: 1,
+        actualMin: 1,
+        actualMax: 10,
+        actualValue: 8,
+        actualUnit: "",
+        scoreMapping: [
+          { min: 1, max: 3, score: 1 },
+          { min: 3, max: 5, score: 2 },
+          { min: 5, max: 6, score: 3 },
+          { min: 6, max: 8, score: 4 },
+          { min: 8, max: 10, score: 5 }
+        ]
+      },
+      {
+        name: "Succession Plan",
+        description: "Quality of transition planning",
+        value: "Moderate",
+        weight: 30,
+        score: 4,
+        min: 1,
+        max: 5,
+        step: 1,
+        actualMin: 1,
+        actualMax: 10,
+        actualValue: 7,
+        actualUnit: "",
+        scoreMapping: [
+          { min: 1, max: 3, score: 1 },
+          { min: 3, max: 5, score: 2 },
+          { min: 5, max: 6, score: 3 },
+          { min: 6, max: 8, score: 4 },
+          { min: 8, max: 10, score: 5 }
+        ]
+      }
+    ]
+  },
+  {
+    name: "Industry & Market Risk",
+    description: "Evaluates sector-specific risks and market dynamics",
+    weight: 25,
+    score: 3.6,
+    criteria: [
+      {
+        name: "Industry Volatility",
+        description: "Historical stability of the industry",
+        value: "Moderate",
+        weight: 30,
+        score: 3,
+        min: 1,
+        max: 5,
+        step: 1,
+        actualMin: 0,
+        actualMax: 10,
+        actualValue: 3,
+        actualUnit: "",
         scoreMapping: [
           { min: 0, max: 2, score: 5 },
           { min: 2, max: 4, score: 4 },
@@ -40,300 +358,137 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         ]
       },
       {
-        name: "Revenue Growth",
-        description: "Percentage increase in a company’s revenue during a specific period",
-        value: "15%",
-        weight: 25,
-        score: 3.8,
-        min: 0,
-        max: 50,
-        step: 0.5,
-        preferredMin: 10,
-        preferredMax: 25,
-        unit: "%",
-        actualMin: 0,
-        actualMax: 50,
-        actualValue: 15,
-        actualUnit: "%",
-        scoreMapping: [
-          { min: 0, max: 10, score: 1 },
-          { min: 10, max: 20, score: 3 },
-          { min: 20, max: 30, score: 4 },
-          { min: 30, max: 50, score: 5 }
-        ]
-      },
-      {
-        name: "Gross Margin",
-        description: "The percentage of revenue that exceeds the cost of goods sold (COGS)",
-        value: "60%",
-        weight: 20,
-        score: 4.5,
-        min: 20,
-        max: 80,
+        name: "Market Growth",
+        description: "Projected growth rate of target market",
+        value: "Growing/Predictable",
+        weight: 40,
+        score: 4,
+        min: 1,
+        max: 5,
         step: 1,
-        preferredMin: 50,
-        preferredMax: 70,
-        unit: "%",
-        actualMin: 20,
-        actualMax: 80,
-        actualValue: 60,
-        actualUnit: "%",
-        scoreMapping: [
-          { min: 20, max: 40, score: 1 },
-          { min: 40, max: 50, score: 3 },
-          { min: 50, max: 60, score: 4 },
-          { min: 60, max: 80, score: 5 }
-        ]
-      },
-      {
-        name: "Cash Flow",
-        description: "The net amount of cash and cash-equivalents moving into and out of a company",
-        value: "$2M",
-        weight: 25,
-        score: 4.0,
-        min: 0,
-        max: 10,
-        step: 0.1,
-        unit: "$M",
         actualMin: 0,
         actualMax: 10,
-        actualValue: 2,
-        actualUnit: "$M",
+        actualValue: 4,
+        actualUnit: "",
         scoreMapping: [
-          { min: 0, max: 1, score: 2 },
-          { min: 1, max: 3, score: 4 },
-          { min: 3, max: 10, score: 5 }
+          { min: 0, max: 2, score: 5 },
+          { min: 2, max: 4, score: 4 },
+          { min: 4, max: 6, score: 3 },
+          { min: 6, max: 8, score: 2 },
+          { min: 8, max: 10, score: 1 }
+        ]
+      },
+      {
+        name: "Regulatory Risk",
+        description: "Exposure to regulatory changes",
+        value: "Moderate-High",
+        weight: 30,
+        score: 3,
+        min: 1,
+        max: 5,
+        step: 1,
+        actualMin: 0,
+        actualMax: 10,
+        actualValue: 3,
+        actualUnit: "",
+        scoreMapping: [
+          { min: 0, max: 2, score: 5 },
+          { min: 2, max: 4, score: 4 },
+          { min: 4, max: 6, score: 3 },
+          { min: 6, max: 8, score: 2 },
+          { min: 8, max: 10, score: 1 }
         ]
       }
     ]
   },
   {
-    name: "Operational Efficiency",
-    description: "Evaluation of how well the company manages its resources",
-    weight: 25,
-    score: 3.5,
+    name: "Covenant Health",
+    description: "Compliance with existing loan covenants",
+    weight: 15,
+    score: 4.7,
     criteria: [
       {
-        name: "Inventory Turnover",
-        description: "How many times a company's inventory is sold and replaced over a period",
-        value: "5x",
-        weight: 35,
-        score: 3.2,
+        name: "Covenant Compliance",
+        description: "Historical compliance with financial covenants",
+        value: "High",
+        weight: 40,
+        score: 5,
         min: 1,
-        max: 10,
-        step: 0.1,
-        preferredMin: 3,
-        preferredMax: 7,
-        unit: "x",
-        actualMin: 1,
+        max: 5,
+        step: 1,
+        actualMin: 0,
         actualMax: 10,
         actualValue: 5,
-        actualUnit: "x",
+        actualUnit: "",
         scoreMapping: [
-          { min: 1, max: 3, score: 2 },
-          { min: 3, max: 5, score: 4 },
-          { min: 5, max: 7, score: 5 },
-          { min: 7, max: 10, score: 3 }
+          { min: 0, max: 2, score: 5 },
+          { min: 2, max: 4, score: 4 },
+          { min: 4, max: 6, score: 3 },
+          { min: 6, max: 8, score: 2 },
+          { min: 8, max: 10, score: 1 }
         ]
       },
       {
-        name: "Receivables Turnover",
-        description: "How efficiently a company collects its accounts receivable",
-        value: "12x",
-        weight: 30,
-        score: 3.7,
-        min: 5,
-        max: 20,
-        step: 0.5,
-        preferredMin: 8,
-        preferredMax: 15,
-        unit: "x",
-        actualMin: 5,
-        actualMax: 20,
-        actualValue: 12,
-        actualUnit: "x",
-        scoreMapping: [
-          { min: 5, max: 8, score: 2 },
-          { min: 8, max: 12, score: 4 },
-          { min: 12, max: 15, score: 5 },
-          { min: 15, max: 20, score: 3 }
-        ]
-      },
-      {
-        name: "Asset Turnover",
-        description: "How efficiently a company uses its assets to generate sales",
-        value: "1.5x",
-        weight: 35,
-        score: 3.6,
-        min: 0.5,
-        max: 3,
-        step: 0.1,
-        preferredMin: 1,
-        preferredMax: 2,
-        unit: "x",
-        actualMin: 0.5,
-        actualMax: 3,
-        actualValue: 1.5,
-        actualUnit: "x",
-        scoreMapping: [
-          { min: 0.5, max: 1, score: 2 },
-          { min: 1, max: 1.5, score: 4 },
-          { min: 1.5, max: 2, score: 5 },
-          { min: 2, max: 3, score: 3 }
-        ]
-      }
-    ]
-  },
-  {
-    name: "Market Position",
-    description: "Analysis of the company's standing within its industry",
-    weight: 20,
-    score: 4.0,
-    criteria: [
-      {
-        name: "Market Share",
-        description: "Percentage of total sales volume in a market captured by a brand, product, or company",
-        value: "20%",
-        weight: 40,
-        score: 4.2,
-        min: 0,
-        max: 50,
-        step: 0.5,
-        preferredMin: 10,
-        preferredMax: 30,
-        unit: "%",
-        actualMin: 0,
-        actualMax: 50,
-        actualValue: 20,
-        actualUnit: "%",
-        scoreMapping: [
-          { min: 0, max: 10, score: 1 },
-          { min: 10, max: 20, score: 4 },
-          { min: 20, max: 30, score: 5 },
-          { min: 30, max: 50, score: 3 }
-        ]
-      },
-      {
-        name: "Brand Recognition",
-        description: "Extent to which a brand is familiar to potential customers",
-        value: "High",
-        weight: 30,
-        score: 3.9,
+        name: "Primary Banking Relationship",
+        description: "Strength of primary banking relationship",
+        value: "Strong",
+        weight: 20,
+        score: 5,
         min: 1,
         max: 5,
         step: 1,
-        preferredMin: 3,
-        preferredMax: 5,
-        unit: "",
-        actualMin: 1,
-        actualMax: 5,
-        actualValue: 4,
+        actualMin: 0,
+        actualMax: 10,
+        actualValue: 5,
         actualUnit: "",
         scoreMapping: [
-          { min: 1, max: 2, score: 1 },
-          { min: 2, max: 3, score: 3 },
-          { min: 3, max: 4, score: 4 },
-          { min: 4, max: 5, score: 5 }
+          { min: 0, max: 2, score: 5 },
+          { min: 2, max: 4, score: 4 },
+          { min: 4, max: 6, score: 3 },
+          { min: 6, max: 8, score: 2 },
+          { min: 8, max: 10, score: 1 }
         ]
       },
       {
-        name: "Customer Loyalty",
-        description: "Tendency of clients or customers to repeatedly purchase goods or services from a company",
+        name: "Payment History",
+        description: "Historical payment performance",
+        value: "Excellent",
+        weight: 20,
+        score: 5,
+        min: 1,
+        max: 5,
+        step: 1,
+        actualMin: 0,
+        actualMax: 10,
+        actualValue: 5,
+        actualUnit: "",
+        scoreMapping: [
+          { min: 0, max: 2, score: 5 },
+          { min: 2, max: 4, score: 4 },
+          { min: 4, max: 6, score: 3 },
+          { min: 6, max: 8, score: 2 },
+          { min: 8, max: 10, score: 1 }
+        ]
+      },
+      {
+        name: "Covenant Flexibility",
+        description: "Flexibility within existing covenant structure",
         value: "Medium",
-        weight: 30,
-        score: 4.0,
+        weight: 20,
+        score: 4,
         min: 1,
         max: 5,
         step: 1,
-        preferredMin: 3,
-        preferredMax: 5,
-        unit: "",
-        actualMin: 1,
-        actualMax: 5,
-        actualValue: 3,
-        actualUnit: "",
-        scoreMapping: [
-          { min: 1, max: 2, score: 1 },
-          { min: 2, max: 3, score: 3 },
-          { min: 3, max: 4, score: 4 },
-          { min: 4, max: 5, score: 5 }
-        ]
-      }
-    ]
-  },
-  {
-    name: "Management Experience",
-    description: "Assessment of the leadership team's capabilities and track record",
-    weight: 20,
-    score: 3.8,
-    criteria: [
-      {
-        name: "Years in Industry",
-        description: "Total years of experience of the management team in the relevant industry",
-        value: "15 years",
-        weight: 40,
-        score: 3.5,
-        min: 0,
-        max: 30,
-        step: 1,
-        preferredMin: 10,
-        preferredMax: 20,
-        unit: "years",
         actualMin: 0,
-        actualMax: 30,
-        actualValue: 15,
-        actualUnit: "years",
-        scoreMapping: [
-          { min: 0, max: 5, score: 1 },
-          { min: 5, max: 10, score: 3 },
-          { min: 10, max: 20, score: 5 },
-          { min: 20, max: 30, score: 4 }
-        ]
-      },
-      {
-        name: "Prior Successes",
-        description: "Number of successful ventures or projects led by the management team",
-        value: "3",
-        weight: 30,
-        score: 4.2,
-        min: 0,
-        max: 5,
-        step: 1,
-        preferredMin: 2,
-        preferredMax: 4,
-        unit: "",
-        actualMin: 0,
-        actualMax: 5,
-        actualValue: 3,
-        actualUnit: "",
-        scoreMapping: [
-          { min: 0, max: 1, score: 1 },
-          { min: 1, max: 2, score: 3 },
-          { min: 2, max: 4, score: 5 },
-          { min: 4, max: 5, score: 4 }
-        ]
-      },
-      {
-        name: "Strategic Planning",
-        description: "Quality and foresight demonstrated in the company's strategic plans",
-        value: "Comprehensive",
-        weight: 30,
-        score: 3.7,
-        min: 1,
-        max: 5,
-        step: 1,
-        preferredMin: 3,
-        preferredMax: 5,
-        unit: "",
-        actualMin: 1,
-        actualMax: 5,
+        actualMax: 10,
         actualValue: 4,
         actualUnit: "",
         scoreMapping: [
-          { min: 1, max: 2, score: 1 },
-          { min: 2, max: 3, score: 3 },
-          { min: 3, max: 4, score: 4 },
-          { min: 4, max: 5, score: 5 }
+          { min: 0, max: 2, score: 5 },
+          { min: 2, max: 4, score: 4 },
+          { min: 4, max: 6, score: 3 },
+          { min: 6, max: 8, score: 2 },
+          { min: 8, max: 10, score: 1 }
         ]
       }
     ]
