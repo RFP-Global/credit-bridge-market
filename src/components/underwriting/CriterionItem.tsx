@@ -206,6 +206,7 @@ export const CriterionItem = ({
           onRangeUpdate={updateActualMetricRange ? 
             (min, max) => updateActualMetricRange(groupIndex, criterionIndex, min, max) : 
             undefined}
+          isDualSlider={criterion.name === "EBITDA"}
         />
       )}
 

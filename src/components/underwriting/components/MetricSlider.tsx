@@ -18,6 +18,7 @@ interface MetricSliderProps {
   getScoreColor: (score: number) => string;
   onValueUpdate: (value: number) => void;
   onRangeUpdate?: (min: number, max: number) => void;
+  isDualSlider?: boolean;
 }
 
 export const MetricSlider = ({
@@ -32,6 +33,7 @@ export const MetricSlider = ({
   getScoreColor,
   onValueUpdate,
   onRangeUpdate,
+  isDualSlider = false
 }: MetricSliderProps) => {
   const [inputValue, setInputValue] = useState(actualValue?.toString() || "");
   const [minInputValue, setMinInputValue] = useState(actualMinValue?.toString() || "");
@@ -96,7 +98,7 @@ export const MetricSlider = ({
     return null;
   }
 
-  const rangeMode = onRangeUpdate !== undefined;
+  const rangeMode = onRangeUpdate !== undefined || isDualSlider;
 
   return (
     <div className="space-y-2 mt-3">
