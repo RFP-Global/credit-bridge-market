@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp, Info, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -78,6 +77,8 @@ export const CriterionItem = ({
       const max = parseFloat(maxValue);
       if (!isNaN(min) && !isNaN(max) && min <= max) {
         updateCriterionRange(groupIndex, criterionIndex, min, max);
+        
+        calculateAndUpdateScores(min, max);
       }
     }
   };
@@ -88,7 +89,23 @@ export const CriterionItem = ({
       setMinValue(values[0].toString());
       setMaxValue(values[1].toString());
       updateCriterionRange(groupIndex, criterionIndex, values[0], values[1]);
+      
+      calculateAndUpdateScores(values[0], values[1]);
     }
+  };
+
+  const calculateAndUpdateScores = (min: number, max: number) => {
+    const totalRange = criterion.max - criterion.min;
+    const minNormalized = (min - criterion.min) / totalRange;
+    const maxNormalized = (max - criterion.min) / totalRange;
+    
+    const newMinScore = 1 + minNormalized * 9;
+    const newMaxScore = 1 + maxNormalized * 9;
+    
+    setMinScoreValue(newMinScore.toFixed(2));
+    setMaxScoreValue(newMaxScore.toFixed(2));
+    
+    updateCriterionScore(groupIndex, criterionIndex, newMinScore, newMaxScore);
   };
 
   const handleScoreRangeUpdate = () => {
