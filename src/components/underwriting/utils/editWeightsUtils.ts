@@ -36,3 +36,11 @@ export const validateEditWeights = (editAllValues: { [key: number]: string }): b
   
   return true;
 };
+
+/**
+ * Gets the default industry for the application
+ */
+export const getDefaultIndustry = (industries: string[]): string => {
+  return industries.length > 0 ? industries[0] : "";
+};
+

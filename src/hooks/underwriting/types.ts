@@ -10,4 +10,6 @@ export interface UseUnderwritingStateReturn {
   setScoreThresholds: React.Dispatch<React.SetStateAction<ScoreThreshold[]>>;
   criteriaGroups: CriteriaGroup[];
   setCriteriaGroups: React.Dispatch<React.SetStateAction<CriteriaGroup[]>>;
+  loadIndustryCriteria: (industry: string) => void;
+  saveIndustryCriteria: (industry: string, groups: CriteriaGroup[]) => void;
 }

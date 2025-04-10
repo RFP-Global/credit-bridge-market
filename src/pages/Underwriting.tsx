@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,8 +29,20 @@ import {
 import { CategoryWeights } from "@/components/underwriting/CategoryWeights";
 import { AlgorithmTab } from "@/components/underwriting/AlgorithmTab";
 import { CustomBadge } from "@/components/ui/custom-badge";
+import { IndustryTabs } from "@/components/underwriting/IndustryTabs";
+import { getDefaultIndustry } from "@/components/underwriting/utils/editWeightsUtils";
 
 const Underwriting = () => {
+  // Define available industries
+  const industries = [
+    "Manufacturing",
+    "Healthcare",
+    "Technology",
+    "Retail",
+    "Construction",
+    "Financial Services"
+  ];
+
   const {
     minTotalScore,
     maxTotalScore,
@@ -37,8 +50,26 @@ const Underwriting = () => {
     setMaxTotalScore,
     scoreThresholds,
     criteriaGroups,
-    setCriteriaGroups
+    setCriteriaGroups,
+    loadIndustryCriteria,
+    saveIndustryCriteria
   } = useUnderwritingState();
+
+  const [selectedIndustry, setSelectedIndustry] = useState(getDefaultIndustry(industries));
+
+  // When industry changes, load criteria for that industry
+  useEffect(() => {
+    if (selectedIndustry) {
+      loadIndustryCriteria(selectedIndustry);
+    }
+  }, [selectedIndustry, loadIndustryCriteria]);
+
+  const handleIndustryChange = (industry: string) => {
+    // Save current criteria before switching
+    saveIndustryCriteria(selectedIndustry, criteriaGroups);
+    // Update the selected industry
+    setSelectedIndustry(industry);
+  };
 
   const handleUpdateCriterionWeight = (groupIndex: number, criterionIndex: number, newWeight: number) => {
     updateCriterionWeight(criteriaGroups, groupIndex, criterionIndex, newWeight, setCriteriaGroups, setMinTotalScore, setMaxTotalScore);
@@ -88,6 +119,12 @@ const Underwriting = () => {
               </div>
             </div>
             
+            <IndustryTabs 
+              industries={industries}
+              selectedIndustry={selectedIndustry}
+              onSelectIndustry={handleIndustryChange}
+            />
+            
             <Card className="bg-black/40 border-gray-800 mb-6 overflow-hidden">
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-0">
                 <div className="bg-gradient-to-br from-gray-900 to-gray-950 p-3 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-gray-800/50 lg:col-span-1">
@@ -126,6 +163,9 @@ const Underwriting = () => {
                 </div>
                 
                 <div className="p-6 lg:col-span-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="text-sm font-medium">Industry: {selectedIndustry}</div>
+                  </div>
                   <CategoryWeights 
                     criteriaGroups={criteriaGroups}
                     updateGroupWeight={handleUpdateGroupWeight}
