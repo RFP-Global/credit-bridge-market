@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Info, HelpCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -49,6 +50,9 @@ export const CriterionItem = ({
   const [maxValue, setMaxValue] = useState(criterion.preferredMax?.toString() || "");
   const [minScore, setMinScore] = useState(criterion.minScore?.toString() || criterion.score.toString());
   const [maxScore, setMaxScore] = useState(criterion.maxScore?.toString() || criterion.score.toString());
+  
+  // Check if this is the EBITDA criterion in the Financial Strength section (group index 0, criterion index 0)
+  const isEbitdaCriterion = groupIndex === 0 && criterionIndex === 0 && criterion.name === "EBITDA";
   
   const handleRangeUpdate = () => {
     if (updateCriterionRange && minValue && maxValue) {
@@ -177,25 +181,56 @@ export const CriterionItem = ({
       </div>
 
       {(updateActualMetricValue || updateActualMetricRange) && (
-        <MetricSlider
-          actualValue={criterion.actualValue}
-          actualMinValue={criterion.actualMinValue}
-          actualMaxValue={criterion.actualMaxValue}
-          actualMin={criterion.actualMin}
-          actualMax={criterion.actualMax}
-          actualUnit={criterion.actualUnit}
-          name={criterion.name}
-          scoreMapping={criterion.scoreMapping}
-          getScoreColor={getScoreColor}
-          onValueUpdate={(value) => {
-            if (updateActualMetricValue) {
-              updateActualMetricValue(groupIndex, criterionIndex, value);
-            }
-          }}
-          onRangeUpdate={updateActualMetricRange ? 
-            (min, max) => updateActualMetricRange(groupIndex, criterionIndex, min, max) : 
-            undefined}
-        />
+        <>
+          {isEbitdaCriterion ? (
+            <div className="space-y-2 mt-3">
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>Actual {criterion.name} Range</span>
+                <span>
+                  {criterion.actualUnit}{criterion.actualMinValue || 0} - {criterion.actualUnit}{criterion.actualMaxValue || 1}
+                </span>
+              </div>
+              
+              <RangeScoreSlider
+                minValue={criterion.actualMin || 0}
+                maxValue={criterion.actualMax || 1}
+                initialMin={criterion.actualMinValue || criterion.actualValue || 0}
+                initialMax={criterion.actualMaxValue || criterion.actualValue || 1}
+                step={(criterion.actualMax || 1 - criterion.actualMin || 0) / 100}
+                onRangeChange={(min, max) => {
+                  if (updateActualMetricRange) {
+                    updateActualMetricRange(groupIndex, criterionIndex, min, max);
+                  }
+                }}
+                getScoreColor={() => "text-blue-400"}
+              />
+              
+              <div className="text-xs text-muted-foreground mt-2">
+                <span>Range: {criterion.actualMin} - {criterion.actualMax} {criterion.actualUnit || ''}</span>
+              </div>
+            </div>
+          ) : (
+            <MetricSlider
+              actualValue={criterion.actualValue}
+              actualMinValue={criterion.actualMinValue}
+              actualMaxValue={criterion.actualMaxValue}
+              actualMin={criterion.actualMin}
+              actualMax={criterion.actualMax}
+              actualUnit={criterion.actualUnit}
+              name={criterion.name}
+              scoreMapping={criterion.scoreMapping}
+              getScoreColor={getScoreColor}
+              onValueUpdate={(value) => {
+                if (updateActualMetricValue) {
+                  updateActualMetricValue(groupIndex, criterionIndex, value);
+                }
+              }}
+              onRangeUpdate={updateActualMetricRange ? 
+                (min, max) => updateActualMetricRange(groupIndex, criterionIndex, min, max) : 
+                undefined}
+            />
+          )}
+        </>
       )}
 
       <div className="mt-3 pt-3 border-t border-gray-800/30">
