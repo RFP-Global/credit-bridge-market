@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,8 @@ import {
   updateGroupWeight, 
   updateCriterionScore, 
   updateCriterionRange,
-  updateActualMetricValue
+  updateActualMetricValue,
+  updateScoreRange
 } from "@/components/underwriting/utils/scoreUtils";
 import {
   getScoreColor,
@@ -30,6 +32,7 @@ import { Accordion } from "@/components/ui/accordion";
 import { CriteriaGroup } from "@/components/underwriting/CriteriaGroup";
 import { CustomBadge } from "@/components/ui/custom-badge";
 import { Separator } from "@/components/ui/separator";
+import { RangeScoreSlider } from "@/components/underwriting/components/RangeScoreSlider";
 
 const Underwriting = () => {
   const {
@@ -37,7 +40,9 @@ const Underwriting = () => {
     setTotalScore,
     scoreThresholds,
     criteriaGroups,
-    setCriteriaGroups
+    setCriteriaGroups,
+    scoreRange,
+    setScoreRange
   } = useUnderwritingState();
 
   // Taking the first threshold (lowest risk) and last threshold (highest risk) for the range
@@ -62,6 +67,10 @@ const Underwriting = () => {
   
   const handleUpdateActualMetricValue = (groupIndex: number, criterionIndex: number, value: number) => {
     updateActualMetricValue(criteriaGroups, groupIndex, criterionIndex, value, setCriteriaGroups, setTotalScore);
+  };
+
+  const handleUpdateScoreRange = (min: number, max: number) => {
+    updateScoreRange(min, max, setScoreRange);
   };
 
   const handleGetScoreColor = (score: number) => getScoreColor(score, scoreThresholds);
@@ -116,6 +125,15 @@ const Underwriting = () => {
                   >
                     {riskLevel.label}
                   </CustomBadge>
+                  <RangeScoreSlider
+                    minValue={1}
+                    maxValue={10}
+                    initialMin={scoreRange.min}
+                    initialMax={scoreRange.max}
+                    step={0.1}
+                    onRangeChange={handleUpdateScoreRange}
+                    getScoreColor={handleGetScoreColor}
+                  />
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>

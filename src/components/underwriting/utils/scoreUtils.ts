@@ -199,6 +199,14 @@ export const updateActualMetricValue = (
   setCriteriaGroups(newGroups);
 };
 
+export const updateScoreRange = (
+  min: number,
+  max: number,
+  setScoreRange: React.Dispatch<React.SetStateAction<{ min: number; max: number }>>
+) => {
+  setScoreRange({ min, max });
+};
+
 export const recalculateScores = (
   groups: CriteriaGroup[], 
   setTotalScore: React.Dispatch<React.SetStateAction<number>>

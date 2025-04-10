@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Info, HelpCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,6 +18,7 @@ import { Criterion } from "./types";
 import { ScoreMappingTable } from "./components/ScoreMappingTable";
 import { MetricSlider } from "./components/MetricSlider";
 import { CriterionScore } from "./components/CriterionScore";
+import { RangeScoreSlider } from "./components/RangeScoreSlider";
 
 interface CriterionItemProps {
   criterion: Criterion;
@@ -156,39 +156,24 @@ export const CriterionItem = ({
         </div>
         
         <div className="space-y-2">
-          <div className="flex justify-between text-xs text-muted-foreground">
-            <span>Risk Score Range</span>
-            <span>Min: {minScore} - Max: {maxScore}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Input 
-              value={minScore}
-              onChange={(e) => setMinScore(e.target.value)}
-              className="h-7 text-xs"
-              type="number"
-              min="1"
-              max="10"
-              step="0.5"
+          {updateCriterionRange && (
+            <RangeScoreSlider
+              minValue={1}
+              maxValue={10}
+              initialMin={criterion.minScore || criterion.score}
+              initialMax={criterion.maxScore || criterion.score}
+              step={0.1}
+              onRangeChange={(min, max) => {
+                if (updateCriterionRange) {
+                  updateCriterionRange(groupIndex, criterionIndex, min, max);
+                }
+                // Update score to average of min and max
+                const averageScore = (min + max) / 2;
+                updateCriterionScore(groupIndex, criterionIndex, averageScore);
+              }}
+              getScoreColor={getScoreColor}
             />
-            <span className="text-xs text-muted-foreground">to</span>
-            <Input 
-              value={maxScore}
-              onChange={(e) => setMaxScore(e.target.value)}
-              className="h-7 text-xs"
-              type="number"
-              min="1"
-              max="10"
-              step="0.5"
-            />
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="h-7 text-xs whitespace-nowrap"
-              onClick={handleScoreRangeUpdate}
-            >
-              Set Range
-            </Button>
-          </div>
+          )}
         </div>
       </div>
 
