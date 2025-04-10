@@ -4,13 +4,16 @@ import { UseUnderwritingStateReturn } from "./types";
 import { initialScoreThresholds, initialCriteriaGroups } from "./initialData";
 
 export const useUnderwritingState = (): UseUnderwritingStateReturn => {
-  const [totalScore, setTotalScore] = useState(4.45);
+  const [minTotalScore, setMinTotalScore] = useState(3.75);
+  const [maxTotalScore, setMaxTotalScore] = useState(5.25);
   const [scoreThresholds, setScoreThresholds] = useState(initialScoreThresholds);
   const [criteriaGroups, setCriteriaGroups] = useState(initialCriteriaGroups);
 
   return {
-    totalScore,
-    setTotalScore,
+    minTotalScore,
+    maxTotalScore,
+    setMinTotalScore,
+    setMaxTotalScore,
     scoreThresholds,
     setScoreThresholds,
     criteriaGroups,

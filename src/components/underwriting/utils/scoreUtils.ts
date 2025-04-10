@@ -7,7 +7,8 @@ export const updateCriterionWeight = (
   criterionIndex: number, 
   newWeight: number,
   setCriteriaGroups: React.Dispatch<React.SetStateAction<CriteriaGroup[]>>,
-  setTotalScore: React.Dispatch<React.SetStateAction<number>>
+  setMinTotalScore: React.Dispatch<React.SetStateAction<number>>,
+  setMaxTotalScore: React.Dispatch<React.SetStateAction<number>>
 ) => {
   const newGroups = [...criteriaGroups];
   newGroups[groupIndex].criteria[criterionIndex].weight = newWeight;
@@ -44,7 +45,7 @@ export const updateCriterionWeight = (
     }
   }
   
-  recalculateScores(newGroups, setTotalScore);
+  recalculateScores(newGroups, setMinTotalScore, setMaxTotalScore);
   setCriteriaGroups(newGroups);
 };
 
@@ -53,7 +54,8 @@ export const updateGroupWeight = (
   groupIndex: number, 
   newWeight: number,
   setCriteriaGroups: React.Dispatch<React.SetStateAction<CriteriaGroup[]>>,
-  setTotalScore: React.Dispatch<React.SetStateAction<number>>
+  setMinTotalScore: React.Dispatch<React.SetStateAction<number>>,
+  setMaxTotalScore: React.Dispatch<React.SetStateAction<number>>
 ) => {
   const newGroups = [...criteriaGroups];
   newGroups[groupIndex].weight = newWeight;
@@ -89,7 +91,7 @@ export const updateGroupWeight = (
     }
   }
   
-  recalculateScores(newGroups, setTotalScore);
+  recalculateScores(newGroups, setMinTotalScore, setMaxTotalScore);
   setCriteriaGroups(newGroups);
 };
 
@@ -97,13 +99,16 @@ export const updateCriterionScore = (
   criteriaGroups: CriteriaGroup[],
   groupIndex: number, 
   criterionIndex: number, 
-  newScore: number,
+  newMinScore: number,
+  newMaxScore: number,
   setCriteriaGroups: React.Dispatch<React.SetStateAction<CriteriaGroup[]>>,
-  setTotalScore: React.Dispatch<React.SetStateAction<number>>
+  setMinTotalScore: React.Dispatch<React.SetStateAction<number>>,
+  setMaxTotalScore: React.Dispatch<React.SetStateAction<number>>
 ) => {
   const newGroups = [...criteriaGroups];
-  newGroups[groupIndex].criteria[criterionIndex].score = newScore;
-  recalculateScores(newGroups, setTotalScore);
+  newGroups[groupIndex].criteria[criterionIndex].minScore = newMinScore;
+  newGroups[groupIndex].criteria[criterionIndex].maxScore = newMaxScore;
+  recalculateScores(newGroups, setMinTotalScore, setMaxTotalScore);
   setCriteriaGroups(newGroups);
 };
 
@@ -114,7 +119,8 @@ export const updateCriterionRange = (
   min: number, 
   max: number,
   setCriteriaGroups: React.Dispatch<React.SetStateAction<CriteriaGroup[]>>,
-  setTotalScore: React.Dispatch<React.SetStateAction<number>>
+  setMinTotalScore: React.Dispatch<React.SetStateAction<number>>,
+  setMaxTotalScore: React.Dispatch<React.SetStateAction<number>>
 ) => {
   const newGroups = [...criteriaGroups];
   const criterion = newGroups[groupIndex].criteria[criterionIndex];
@@ -128,21 +134,23 @@ export const updateCriterionRange = (
   
   if (!isNaN(currentValue)) {
     if (currentValue >= min && currentValue <= max) {
-      criterion.score = 8 + (2 * (1 - (max - currentValue) / (max - min)));
-      if (criterion.score > 10) criterion.score = 10;
+      const baseScore = 8 + (2 * (1 - (max - currentValue) / (max - min)));
+      criterion.minScore = Math.max(1, baseScore - 1.5);
+      criterion.maxScore = Math.min(10, baseScore + 1.5);
     } else if (currentValue < min) {
       const distance = (min - currentValue) / min;
-      criterion.score = 6 - (distance * 4);
-      if (criterion.score < 1) criterion.score = 1;
+      const baseScore = 6 - (distance * 4);
+      criterion.minScore = Math.max(1, baseScore - 1.5);
+      criterion.maxScore = Math.min(10, baseScore + 1.5);
     } else {
       const distance = (currentValue - max) / max;
-      criterion.score = 6 - (distance * 4);
-      if (criterion.score < 1) criterion.score = 1;
+      const baseScore = 6 - (distance * 4);
+      criterion.minScore = Math.max(1, baseScore - 1.5);
+      criterion.maxScore = Math.min(10, baseScore + 1.5);
     }
-    criterion.score = parseFloat(criterion.score.toFixed(1));
   }
   
-  recalculateScores(newGroups, setTotalScore);
+  recalculateScores(newGroups, setMinTotalScore, setMaxTotalScore);
   setCriteriaGroups(newGroups);
 };
 
@@ -152,7 +160,8 @@ export const updateActualMetricValue = (
   criterionIndex: number, 
   newValue: number,
   setCriteriaGroups: React.Dispatch<React.SetStateAction<CriteriaGroup[]>>,
-  setTotalScore: React.Dispatch<React.SetStateAction<number>>
+  setMinTotalScore: React.Dispatch<React.SetStateAction<number>>,
+  setMaxTotalScore: React.Dispatch<React.SetStateAction<number>>
 ) => {
   const newGroups = [...criteriaGroups];
   const criterion = newGroups[groupIndex].criteria[criterionIndex];
@@ -174,13 +183,19 @@ export const updateActualMetricValue = (
     );
     
     if (matchingRange) {
-      criterion.score = matchingRange.score;
+      const baseScore = matchingRange.score;
+      criterion.minScore = Math.max(1, baseScore - 1);
+      criterion.maxScore = Math.min(10, baseScore + 1);
     } else if (newValue < criterion.scoreMapping[0].min) {
       // If value is below the lowest range
-      criterion.score = criterion.scoreMapping[0].score;
+      const baseScore = criterion.scoreMapping[0].score;
+      criterion.minScore = Math.max(1, baseScore - 1);
+      criterion.maxScore = Math.min(10, baseScore + 1);
     } else if (newValue > criterion.scoreMapping[criterion.scoreMapping.length - 1].max) {
       // If value is above the highest range
-      criterion.score = criterion.scoreMapping[criterion.scoreMapping.length - 1].score;
+      const baseScore = criterion.scoreMapping[criterion.scoreMapping.length - 1].score;
+      criterion.minScore = Math.max(1, baseScore - 1);
+      criterion.maxScore = Math.min(10, baseScore + 1);
     }
   } else if (criterion.actualMin !== undefined && criterion.actualMax !== undefined) {
     // Simple linear interpolation if no explicit mapping
@@ -189,37 +204,52 @@ export const updateActualMetricValue = (
                          criterion.name.toLowerCase().includes('risk') ? 
                          1 - percent : percent; // Invert for metrics where lower is better
     
-    criterion.score = 1 + idealPercent * 9; // Scale to 1-10
-    criterion.score = parseFloat(criterion.score.toFixed(1));
+    const baseScore = 1 + idealPercent * 9; // Scale to 1-10
+    criterion.minScore = Math.max(1, baseScore - 1.5);
+    criterion.maxScore = Math.min(10, baseScore + 1.5);
   }
   
-  recalculateScores(newGroups, setTotalScore);
+  recalculateScores(newGroups, setMinTotalScore, setMaxTotalScore);
   setCriteriaGroups(newGroups);
 };
 
 export const recalculateScores = (
   groups: CriteriaGroup[], 
-  setTotalScore: React.Dispatch<React.SetStateAction<number>>
+  setMinTotalScore: React.Dispatch<React.SetStateAction<number>>,
+  setMaxTotalScore: React.Dispatch<React.SetStateAction<number>>
 ) => {
   groups.forEach(group => {
     let weightSum = 0;
-    let scoreSum = 0;
+    let minScoreSum = 0;
+    let maxScoreSum = 0;
     
     group.criteria.forEach(criterion => {
-      scoreSum += criterion.score * criterion.weight;
+      minScoreSum += criterion.minScore * criterion.weight;
+      maxScoreSum += criterion.maxScore * criterion.weight;
       weightSum += criterion.weight;
     });
     
-    group.score = weightSum > 0 ? parseFloat((scoreSum / weightSum).toFixed(2)) : 0;
+    if (weightSum > 0) {
+      group.minScore = parseFloat((minScoreSum / weightSum).toFixed(2));
+      group.maxScore = parseFloat((maxScoreSum / weightSum).toFixed(2));
+    } else {
+      group.minScore = 0;
+      group.maxScore = 0;
+    }
   });
   
-  let totalWeightedScore = 0;
+  let totalMinWeightedScore = 0;
+  let totalMaxWeightedScore = 0;
   let totalWeight = 0;
   
   groups.forEach(group => {
-    totalWeightedScore += group.score * group.weight;
+    totalMinWeightedScore += group.minScore * group.weight;
+    totalMaxWeightedScore += group.maxScore * group.weight;
     totalWeight += group.weight;
   });
   
-  setTotalScore(parseFloat((totalWeightedScore / totalWeight).toFixed(2)));
+  if (totalWeight > 0) {
+    setMinTotalScore(parseFloat((totalMinWeightedScore / totalWeight).toFixed(2)));
+    setMaxTotalScore(parseFloat((totalMaxWeightedScore / totalWeight).toFixed(2)));
+  }
 };

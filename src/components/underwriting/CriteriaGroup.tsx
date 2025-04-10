@@ -25,7 +25,7 @@ interface CriteriaGroupProps {
   groupIndex: number;
   updateGroupWeight: (groupIndex: number, newWeight: number) => void;
   updateCriterionWeight: (groupIndex: number, criterionIndex: number, newWeight: number) => void;
-  updateCriterionScore: (groupIndex: number, criterionIndex: number, newScore: number) => void;
+  updateCriterionScore: (groupIndex: number, criterionIndex: number, minScore: number, maxScore: number) => void;
   updateCriterionRange?: (groupIndex: number, criterionIndex: number, min: number, max: number) => void;
   updateActualMetricValue?: (groupIndex: number, criterionIndex: number, value: number) => void;
   getScoreColor: (score: number) => string;
@@ -58,8 +58,8 @@ export const CriteriaGroup = ({
             </Badge>
           </div>
           <div className="flex items-center">
-            <span className={`font-bold mr-2 ${getScoreColor(group.score)}`}>
-              {group.score.toFixed(2)}
+            <span className={`font-bold mr-2 ${getScoreColor((group.minScore + group.maxScore) / 2)}`}>
+              {group.minScore.toFixed(1)}-{group.maxScore.toFixed(1)}
             </span>
             <ChevronDown className="h-4 w-4 transition-transform duration-200" />
           </div>

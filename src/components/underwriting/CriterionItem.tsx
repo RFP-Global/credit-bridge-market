@@ -22,7 +22,7 @@ interface CriterionItemProps {
   criterionIndex: number;
   groupIndex: number;
   updateCriterionWeight: (groupIndex: number, criterionIndex: number, newWeight: number) => void;
-  updateCriterionScore: (groupIndex: number, criterionIndex: number, newScore: number) => void;
+  updateCriterionScore: (groupIndex: number, criterionIndex: number, minScore: number, maxScore: number) => void;
   updateCriterionRange?: (groupIndex: number, criterionIndex: number, min: number, max: number) => void;
   updateActualMetricValue?: (groupIndex: number, criterionIndex: number, value: number) => void;
   getScoreColor: (score: number) => string;
@@ -43,6 +43,8 @@ export const CriterionItem = ({
   const [minValue, setMinValue] = useState(criterion.preferredMin?.toString() || "");
   const [maxValue, setMaxValue] = useState(criterion.preferredMax?.toString() || "");
   const [actualValue, setActualValue] = useState(criterion.actualValue?.toString() || "");
+  const [minScoreValue, setMinScoreValue] = useState(criterion.minScore.toString());
+  const [maxScoreValue, setMaxScoreValue] = useState(criterion.maxScore.toString());
 
   useEffect(() => {
     if (criterion.preferredMin !== undefined) {
@@ -62,6 +64,11 @@ export const CriterionItem = ({
     }
   }, [criterion.actualValue]);
 
+  useEffect(() => {
+    setMinScoreValue(criterion.minScore.toString());
+    setMaxScoreValue(criterion.maxScore.toString());
+  }, [criterion.minScore, criterion.maxScore]);
+
   const handleRangeUpdate = () => {
     if (updateCriterionRange && minValue && maxValue) {
       const min = parseFloat(minValue);
@@ -69,6 +76,14 @@ export const CriterionItem = ({
       if (!isNaN(min) && !isNaN(max) && min <= max) {
         updateCriterionRange(groupIndex, criterionIndex, min, max);
       }
+    }
+  };
+
+  const handleScoreRangeUpdate = () => {
+    const minScore = parseFloat(minScoreValue);
+    const maxScore = parseFloat(maxScoreValue);
+    if (!isNaN(minScore) && !isNaN(maxScore) && minScore <= maxScore) {
+      updateCriterionScore(groupIndex, criterionIndex, minScore, maxScore);
     }
   };
 
@@ -280,8 +295,8 @@ export const CriterionItem = ({
               </PopoverContent>
             </Popover>
           )}
-          <div className={`font-medium ${getScoreColor(criterion.score)}`}>
-            Score: {criterion.score}
+          <div className={`font-medium ${getScoreColor((criterion.minScore + criterion.maxScore) / 2)}`}>
+            Score: {criterion.minScore.toFixed(1)}-{criterion.maxScore.toFixed(1)}
           </div>
         </div>
       </div>
@@ -324,40 +339,35 @@ export const CriterionItem = ({
         
         <div className="space-y-2">
           <div className="flex justify-between text-xs text-muted-foreground">
-            <span>Risk Score</span>
-            <span>{criterion.score} / 10</span>
+            <span>Risk Score Range</span>
+            <span>{criterion.minScore.toFixed(1)}-{criterion.maxScore.toFixed(1)}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <Button 
-              variant="outline" 
-              size="icon" 
-              className="h-6 w-6"
-              onClick={() => updateCriterionScore(groupIndex, criterionIndex, Math.max(1, criterion.score - 1))}
-              disabled={criterion.score <= 1}
-            >
-              <ChevronDown className="h-3 w-3" />
-            </Button>
-            <div className="flex-1 flex">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
-                <button
-                  key={value}
-                  className={`h-6 flex-1 border-r last:border-r-0 border-gray-800 transition-colors ${
-                    criterion.score >= value 
-                      ? getScoreBackground(value)
-                      : 'bg-gray-800/30'
-                  }`}
-                  onClick={() => updateCriterionScore(groupIndex, criterionIndex, value)}
-                />
-              ))}
+          <div className="flex items-center gap-3">
+            <div className="flex flex-1 items-center gap-2">
+              <span className="text-xs text-muted-foreground">Min:</span>
+              <Input
+                value={minScoreValue}
+                onChange={(e) => setMinScoreValue(e.target.value)}
+                className="h-7 text-xs"
+                placeholder="Min score"
+              />
+            </div>
+            <div className="flex flex-1 items-center gap-2">
+              <span className="text-xs text-muted-foreground">Max:</span>
+              <Input
+                value={maxScoreValue}
+                onChange={(e) => setMaxScoreValue(e.target.value)}
+                className="h-7 text-xs"
+                placeholder="Max score"
+              />
             </div>
             <Button 
               variant="outline" 
-              size="icon"
-              className="h-6 w-6"
-              onClick={() => updateCriterionScore(groupIndex, criterionIndex, Math.min(10, criterion.score + 1))}
-              disabled={criterion.score >= 10}
+              size="sm" 
+              className="h-7 text-xs"
+              onClick={handleScoreRangeUpdate}
             >
-              <ChevronUp className="h-3 w-3" />
+              Set Range
             </Button>
           </div>
         </div>

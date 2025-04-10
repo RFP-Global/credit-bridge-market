@@ -31,14 +31,14 @@ export const RiskScoreBreakdown = ({
               <div className="flex-1">
                 <div className="flex justify-between items-center mb-1">
                   <div className="text-sm font-medium">{group.name}</div>
-                  <div className={`text-sm font-bold ${getScoreColor(group.score)}`}>
-                    {group.score.toFixed(2)}
+                  <div className={`text-sm font-bold ${getScoreColor((group.minScore + group.maxScore) / 2)}`}>
+                    {group.minScore.toFixed(2)}-{group.maxScore.toFixed(2)}
                   </div>
                 </div>
                 <div className="w-full h-2 bg-gray-800/50 rounded-full overflow-hidden">
                   <div 
-                    className={`h-full ${getScoreBackground(group.score)}`}
-                    style={{ width: `${(group.score / 5) * 100}%` }}
+                    className={`h-full ${getScoreBackground((group.minScore + group.maxScore) / 2)}`}
+                    style={{ width: `${((group.minScore + group.maxScore) / 2 / 5) * 100}%` }}
                   />
                 </div>
               </div>

@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/tooltip";
 import LenderHeader from "@/components/lender/LenderHeader";
 import LenderSidebar from "@/components/lender/LenderSidebar";
-import { useUnderwritingState } from "@/hooks/useUnderwritingState";
+import { useUnderwritingState } from "@/hooks/underwriting/useUnderwritingState";
 import { 
   updateCriterionWeight, 
   updateGroupWeight, 
@@ -33,37 +33,40 @@ import { Separator } from "@/components/ui/separator";
 
 const Underwriting = () => {
   const {
-    totalScore,
-    setTotalScore,
+    minTotalScore,
+    maxTotalScore,
+    setMinTotalScore,
+    setMaxTotalScore,
     scoreThresholds,
     criteriaGroups,
     setCriteriaGroups
   } = useUnderwritingState();
 
   const handleUpdateCriterionWeight = (groupIndex: number, criterionIndex: number, newWeight: number) => {
-    updateCriterionWeight(criteriaGroups, groupIndex, criterionIndex, newWeight, setCriteriaGroups, setTotalScore);
+    updateCriterionWeight(criteriaGroups, groupIndex, criterionIndex, newWeight, setCriteriaGroups, setMinTotalScore, setMaxTotalScore);
   };
 
   const handleUpdateGroupWeight = (groupIndex: number, newWeight: number) => {
-    updateGroupWeight(criteriaGroups, groupIndex, newWeight, setCriteriaGroups, setTotalScore);
+    updateGroupWeight(criteriaGroups, groupIndex, newWeight, setCriteriaGroups, setMinTotalScore, setMaxTotalScore);
   };
 
-  const handleUpdateCriterionScore = (groupIndex: number, criterionIndex: number, newScore: number) => {
-    updateCriterionScore(criteriaGroups, groupIndex, criterionIndex, newScore, setCriteriaGroups, setTotalScore);
+  const handleUpdateCriterionScore = (groupIndex: number, criterionIndex: number, minScore: number, maxScore: number) => {
+    updateCriterionScore(criteriaGroups, groupIndex, criterionIndex, minScore, maxScore, setCriteriaGroups, setMinTotalScore, setMaxTotalScore);
   };
 
   const handleUpdateCriterionRange = (groupIndex: number, criterionIndex: number, min: number, max: number) => {
-    updateCriterionRange(criteriaGroups, groupIndex, criterionIndex, min, max, setCriteriaGroups, setTotalScore);
+    updateCriterionRange(criteriaGroups, groupIndex, criterionIndex, min, max, setCriteriaGroups, setMinTotalScore, setMaxTotalScore);
   };
   
   const handleUpdateActualMetricValue = (groupIndex: number, criterionIndex: number, value: number) => {
-    updateActualMetricValue(criteriaGroups, groupIndex, criterionIndex, value, setCriteriaGroups, setTotalScore);
+    updateActualMetricValue(criteriaGroups, groupIndex, criterionIndex, value, setCriteriaGroups, setMinTotalScore, setMaxTotalScore);
   };
 
   const handleGetScoreColor = (score: number) => getScoreColor(score, scoreThresholds);
   const handleGetScoreBackground = (score: number) => getScoreBackground(score);
   
-  const riskLevel = getRiskLevel(totalScore);
+  const avgTotalScore = (minTotalScore + maxTotalScore) / 2;
+  const riskLevel = getRiskLevel(avgTotalScore);
   
   return (
     <div className="min-h-screen bg-black text-gray-200 relative grid-bg">
@@ -87,14 +90,14 @@ const Underwriting = () => {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
                 <div className="bg-gradient-to-br from-gray-900 to-gray-950 p-6 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-gray-800/50">
                   <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Overall Risk Score</div>
-                  <div className={`text-5xl font-bold ${handleGetScoreColor(totalScore)}`}>
-                    {totalScore.toFixed(2)}
+                  <div className={`text-5xl font-bold ${handleGetScoreColor(avgTotalScore)}`}>
+                    {minTotalScore.toFixed(2)}-{maxTotalScore.toFixed(2)}
                   </div>
                   <CustomBadge 
                     variant={
-                      totalScore >= 9 ? "success" : 
-                      totalScore >= 7 ? "secondary" :
-                      totalScore >= 5 ? "warning" : "destructive"
+                      avgTotalScore >= 9 ? "success" : 
+                      avgTotalScore >= 7 ? "secondary" :
+                      avgTotalScore >= 5 ? "warning" : "destructive"
                     } 
                     className="mt-3"
                   >
@@ -132,23 +135,23 @@ const Underwriting = () => {
                             </div>
                             <span className="text-sm font-medium">{group.name}</span>
                           </div>
-                          <div className={`text-sm font-bold ${handleGetScoreColor(group.score)}`}>
-                            {group.score.toFixed(2)}
+                          <div className={`text-sm font-bold ${handleGetScoreColor((group.minScore + group.maxScore) / 2)}`}>
+                            {group.minScore.toFixed(1)}-{group.maxScore.toFixed(1)}
                           </div>
                         </div>
                         <div className="w-full h-1.5 bg-gray-800/50 rounded-full overflow-hidden">
                           <div 
-                            className={`h-full ${handleGetScoreBackground(group.score)}`}
-                            style={{ width: `${(group.score / 10) * 100}%` }}
+                            className={`h-full ${handleGetScoreBackground((group.minScore + group.maxScore) / 2)}`}
+                            style={{ width: `${(((group.minScore + group.maxScore) / 2) / 10) * 100}%` }}
                           />
                         </div>
                       </div>
                     ))}
                   </div>
                   <div className="mt-4 pt-4 border-t border-gray-800/50 flex items-center justify-between">
-                    <span className="text-sm font-medium">Total Score</span>
-                    <div className={`text-lg font-bold ${handleGetScoreColor(totalScore)}`}>
-                      {totalScore.toFixed(2)}
+                    <span className="text-sm font-medium">Total Score Range</span>
+                    <div className={`text-lg font-bold ${handleGetScoreColor(avgTotalScore)}`}>
+                      {minTotalScore.toFixed(2)}-{maxTotalScore.toFixed(2)}
                     </div>
                   </div>
                 </div>

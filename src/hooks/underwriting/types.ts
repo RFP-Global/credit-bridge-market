@@ -2,8 +2,10 @@
 import { CriteriaGroup, ScoreThreshold } from "@/components/underwriting/types";
 
 export interface UseUnderwritingStateReturn {
-  totalScore: number;
-  setTotalScore: React.Dispatch<React.SetStateAction<number>>;
+  minTotalScore: number;
+  maxTotalScore: number;
+  setMinTotalScore: React.Dispatch<React.SetStateAction<number>>;
+  setMaxTotalScore: React.Dispatch<React.SetStateAction<number>>;
   scoreThresholds: ScoreThreshold[];
   setScoreThresholds: React.Dispatch<React.SetStateAction<ScoreThreshold[]>>;
   criteriaGroups: CriteriaGroup[];
