@@ -40,6 +40,10 @@ const Underwriting = () => {
     setCriteriaGroups
   } = useUnderwritingState();
 
+  // Taking the first threshold (lowest risk) and last threshold (highest risk) for the range
+  const minScore = scoreThresholds[scoreThresholds.length - 1].value;
+  const maxScore = 10; // Assuming 10 is the maximum possible score
+
   const handleUpdateCriterionWeight = (groupIndex: number, criterionIndex: number, newWeight: number) => {
     updateCriterionWeight(criteriaGroups, groupIndex, criterionIndex, newWeight, setCriteriaGroups, setTotalScore);
   };
@@ -86,9 +90,25 @@ const Underwriting = () => {
             <Card className="bg-black/40 border-gray-800 mb-6 overflow-hidden">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
                 <div className="bg-gradient-to-br from-gray-900 to-gray-950 p-6 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-gray-800/50">
-                  <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Overall Risk Score</div>
-                  <div className={`text-5xl font-bold ${handleGetScoreColor(totalScore)}`}>
-                    {totalScore.toFixed(2)}
+                  <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Overall Risk Score Range</div>
+                  <div className="flex items-center gap-2">
+                    <div className={`text-2xl font-bold ${handleGetScoreColor(minScore)}`}>
+                      {minScore.toFixed(2)}
+                    </div>
+                    <span className="text-gray-500">-</span>
+                    <div className={`text-4xl font-bold ${handleGetScoreColor(totalScore)}`}>
+                      {totalScore.toFixed(2)}
+                    </div>
+                    <span className="text-gray-500">-</span>
+                    <div className={`text-2xl font-bold ${handleGetScoreColor(maxScore)}`}>
+                      {maxScore.toFixed(2)}
+                    </div>
+                  </div>
+                  <div className="w-full h-2 bg-gray-800/60 rounded-full mt-3 overflow-hidden">
+                    <div 
+                      className={`h-full ${handleGetScoreBackground(totalScore)}`}
+                      style={{ width: `${(totalScore / maxScore) * 100}%` }}
+                    />
                   </div>
                   <CustomBadge 
                     variant={
