@@ -5,12 +5,26 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 interface CriterionScoreProps {
   score: number;
   onScoreUpdate: (score: number) => void;
+  isDebtEBITDA?: boolean;
+  actualMetricValue?: number;
+  actualMetricMin?: number;
+  actualMetricMax?: number;
 }
 
 export const CriterionScore = ({
   score,
   onScoreUpdate,
+  isDebtEBITDA = false,
+  actualMetricValue,
+  actualMetricMin,
+  actualMetricMax,
 }: CriterionScoreProps) => {
+  const handleScoreChange = (newScore: number) => {
+    // Ensure score is within 1-10 range
+    const clampedScore = Math.max(1, Math.min(10, newScore));
+    onScoreUpdate(clampedScore);
+  };
+
   return (
     <div className="space-y-2">
       <div className="flex justify-between text-xs text-muted-foreground">
@@ -22,7 +36,7 @@ export const CriterionScore = ({
           variant="outline" 
           size="icon" 
           className="h-6 w-6"
-          onClick={() => onScoreUpdate(Math.max(1, score - 1))}
+          onClick={() => handleScoreChange(Math.max(1, score - 1))}
           disabled={score <= 1}
         >
           <ChevronDown className="h-3 w-3" />
@@ -31,7 +45,7 @@ export const CriterionScore = ({
           variant="outline" 
           size="icon"
           className="h-6 w-6"
-          onClick={() => onScoreUpdate(Math.min(10, score + 1))}
+          onClick={() => handleScoreChange(Math.min(10, score + 1))}
           disabled={score >= 10}
         >
           <ChevronUp className="h-3 w-3" />

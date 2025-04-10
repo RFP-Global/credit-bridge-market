@@ -305,6 +305,20 @@ export const CriterionItem = ({
   // All non-weight metrics will use dual slider
   const shouldUseDualSlider = criterion.actualMin !== undefined && criterion.actualMax !== undefined;
 
+  // Handle direct score updates from CriterionScore component
+  const handleDirectScoreUpdate = (newScore: number) => {
+    setLastUpdated('score');
+    updateCriterionScore(groupIndex, criterionIndex, newScore);
+    
+    // Only update metric values for EBITDA if we have actual min and max defined
+    if (isDebtEBITDA && criterion.actualMin !== undefined && criterion.actualMax !== undefined && updateActualMetricValue) {
+      const metricValue = getMetricValueFromScore(newScore);
+      if (metricValue !== null) {
+        updateActualMetricValue(groupIndex, criterionIndex, parseFloat(metricValue.toFixed(2)));
+      }
+    }
+  };
+
   return (
     <div className="space-y-2 border-b border-gray-800/40 pb-4 last:border-0 last:pb-0">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
@@ -406,7 +420,11 @@ export const CriterionItem = ({
 
       <CriterionScore
         score={criterion.score}
-        onScoreUpdate={(newScore) => updateCriterionScore(groupIndex, criterionIndex, newScore)}
+        onScoreUpdate={handleDirectScoreUpdate}
+        isDebtEBITDA={isDebtEBITDA}
+        actualMetricValue={criterion.actualValue}
+        actualMetricMin={criterion.actualMin}
+        actualMetricMax={criterion.actualMax}
       />
 
       {(updateActualMetricValue || updateActualMetricRange) && (
@@ -421,7 +439,14 @@ export const CriterionItem = ({
           scoreMapping={scoreMapping}
           onValueUpdate={(value) => {
             if (updateActualMetricValue) {
+              setLastUpdated('metric');
               updateActualMetricValue(groupIndex, criterionIndex, value);
+              
+              // For EBITDA metrics, also update the score based on the metric value
+              if (isDebtEBITDA) {
+                const calculatedScore = getScoreFromMetricValue(value);
+                updateCriterionScore(groupIndex, criterionIndex, calculatedScore);
+              }
             }
           }}
           onRangeUpdate={updateActualMetricRange ? 
