@@ -19,7 +19,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         name: "DSCR Ratio",
         description: "Debt Service Coverage Ratio - measures ability to service debt",
         value: "1.8x",
-        weight: 40,
+        weight: 35,
         minScore: 4,
         maxScore: 4,
         min: 1,
@@ -49,7 +49,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         name: "Debt/EBITDA",
         description: "Ratio of total debt to EBITDA",
         value: "3.6x",
-        weight: 25,
+        weight: 20,
         minScore: 4,
         maxScore: 4,
         min: 1,
@@ -79,7 +79,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         name: "Current Ratio",
         description: "Current assets divided by current liabilities",
         value: "1.8x",
-        weight: 20,
+        weight: 15,
         minScore: 4,
         maxScore: 4,
         min: 1,
@@ -128,6 +128,36 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
           { min: 1.00, max: 1.49, score: 3, riskLevel: "Very Weak" },
           { min: 0.75, max: 0.99, score: 2, riskLevel: "High Risk" },
           { min: 0, max: 0.75, score: 1, riskLevel: "Severe Risk" }
+        ]
+      },
+      {
+        name: "Quick Ratio",
+        description: "Measures a company's ability to pay short-term obligations with its most liquid assets",
+        value: "10.5",
+        weight: 15,
+        minScore: 6,
+        maxScore: 6,
+        min: 1,
+        max: 10,
+        step: 1,
+        unit: "",
+        preferredMin: 8,
+        preferredMax: 16,
+        actualMin: 0,
+        actualMax: 20,
+        actualValue: 10.5,
+        actualUnit: "",
+        scoreMapping: [
+          { min: 18.00, max: 20.00, score: 10, riskLevel: "Exceptionally Liquid" },
+          { min: 16.00, max: 17.99, score: 9, riskLevel: "Extremely Liquid" },
+          { min: 14.00, max: 15.99, score: 8, riskLevel: "Very Liquid" },
+          { min: 12.00, max: 13.99, score: 7, riskLevel: "Highly Liquid" },
+          { min: 10.00, max: 11.99, score: 6, riskLevel: "Good Liquidity" },
+          { min: 8.00, max: 9.99, score: 5, riskLevel: "Moderate Liquidity" },
+          { min: 6.00, max: 7.99, score: 4, riskLevel: "Fair Liquidity" },
+          { min: 4.00, max: 5.99, score: 3, riskLevel: "Low Liquidity" },
+          { min: 2.00, max: 3.99, score: 2, riskLevel: "Very Low Liquidity" },
+          { min: 0, max: 1.99, score: 1, riskLevel: "Critical Liquidity" }
         ]
       }
     ]

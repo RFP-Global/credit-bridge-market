@@ -1,3 +1,4 @@
+
 import { ScoreThreshold } from "../types";
 
 export const getScoreColor = (score: number, scoreThresholds: ScoreThreshold[]) => {
@@ -89,7 +90,19 @@ export const financialRatiosScoreMapping = {
     { min: 0, max: 0.75, score: 1, level: "Severe Risk" },
   ],
   
-  
+  // Quick Ratio
+  QuickRatio: [
+    { min: 18.00, max: 20.00, score: 10, level: "Exceptionally Liquid" },
+    { min: 16.00, max: 17.99, score: 9, level: "Extremely Liquid" },
+    { min: 14.00, max: 15.99, score: 8, level: "Very Liquid" },
+    { min: 12.00, max: 13.99, score: 7, level: "Highly Liquid" },
+    { min: 10.00, max: 11.99, score: 6, level: "Good Liquidity" },
+    { min: 8.00, max: 9.99, score: 5, level: "Moderate Liquidity" },
+    { min: 6.00, max: 7.99, score: 4, level: "Fair Liquidity" },
+    { min: 4.00, max: 5.99, score: 3, level: "Low Liquidity" },
+    { min: 2.00, max: 3.99, score: 2, level: "Very Low Liquidity" },
+    { min: 0, max: 1.99, score: 1, level: "Critical Liquidity" },
+  ],
 };
 
 // Business stability score mapping
