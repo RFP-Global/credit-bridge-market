@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { CriteriaGroup } from "./types";
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 interface CategoryWeightsProps {
   criteriaGroups: CriteriaGroup[];
@@ -30,6 +31,14 @@ export const CategoryWeights = ({
     criteriaGroups.reduce((sum, group) => sum + group.weight, 0)
   );
 
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [editAllValues, setEditAllValues] = useState<{ [key: number]: string }>(
+    criteriaGroups.reduce((acc, group, index) => {
+      acc[index] = group.weight.toString();
+      return acc;
+    }, {} as { [key: number]: string })
+  );
+
   useEffect(() => {
     // Update total weight when criteriaGroups change
     const total = criteriaGroups.reduce((sum, group) => sum + group.weight, 0);
@@ -37,6 +46,14 @@ export const CategoryWeights = ({
     
     // Update input values when criteriaGroups change
     setInputValues(
+      criteriaGroups.reduce((acc, group, index) => {
+        acc[index] = group.weight.toString();
+        return acc;
+      }, {} as { [key: number]: string })
+    );
+    
+    // Update edit all values when criteriaGroups change
+    setEditAllValues(
       criteriaGroups.reduce((acc, group, index) => {
         acc[index] = group.weight.toString();
         return acc;
@@ -63,6 +80,12 @@ export const CategoryWeights = ({
         ...prev,
         [groupIndex]: criteriaGroups[groupIndex].weight.toString()
       }));
+      
+      if (isNaN(numValue)) {
+        toast.error("Please enter a valid number");
+      } else if (numValue < 5 || numValue > 50) {
+        toast.error("Weight must be between 5% and 50%");
+      }
     }
   };
 
@@ -72,17 +95,125 @@ export const CategoryWeights = ({
     }
   };
 
+  const handleEditAllChange = (groupIndex: number, value: string) => {
+    setEditAllValues((prev) => ({
+      ...prev,
+      [groupIndex]: value
+    }));
+  };
+
+  const calculateEditAllTotal = () => {
+    return Object.values(editAllValues).reduce((sum, value) => {
+      const numValue = parseInt(value, 10);
+      return sum + (isNaN(numValue) ? 0 : numValue);
+    }, 0);
+  };
+
+  const handleSaveAllWeights = () => {
+    const editAllTotal = calculateEditAllTotal();
+    
+    if (editAllTotal !== 100) {
+      toast.error("Total weights must sum to 100%");
+      return;
+    }
+    
+    // Check if all values are valid (between 5 and 50)
+    const hasInvalidValues = Object.values(editAllValues).some(value => {
+      const numValue = parseInt(value, 10);
+      return isNaN(numValue) || numValue < 5 || numValue > 50;
+    });
+    
+    if (hasInvalidValues) {
+      toast.error("All weights must be between 5% and 50%");
+      return;
+    }
+    
+    // Apply all changes one by one
+    Object.entries(editAllValues).forEach(([indexStr, valueStr]) => {
+      const groupIndex = parseInt(indexStr, 10);
+      const newWeight = parseInt(valueStr, 10);
+      updateGroupWeight(groupIndex, newWeight);
+    });
+    
+    setIsEditing(false);
+    toast.success("Category weights updated successfully");
+  };
+
+  const handleCancelEdit = () => {
+    setEditAllValues(
+      criteriaGroups.reduce((acc, group, index) => {
+        acc[index] = group.weight.toString();
+        return acc;
+      }, {} as { [key: number]: string })
+    );
+    setIsEditing(false);
+  };
+
   return (
     <div>
       <h3 className="text-sm font-medium text-gray-400 mb-4 flex items-center justify-between">
         <span>CATEGORY WEIGHTS</span>
-        <Badge 
-          variant={totalWeight === 100 ? "outline" : "destructive"} 
-          className="ml-2 font-mono"
-        >
-          {totalWeight}%
-        </Badge>
+        <div className="flex items-center gap-2">
+          <Badge 
+            variant={totalWeight === 100 ? "outline" : "destructive"} 
+            className="font-mono"
+          >
+            {totalWeight}%
+          </Badge>
+          {!isEditing ? (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-6 text-xs"
+              onClick={() => setIsEditing(true)}
+            >
+              Edit All
+            </Button>
+          ) : (
+            <div className="flex items-center gap-1">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="h-6 text-xs"
+                onClick={handleCancelEdit}
+              >
+                Cancel
+              </Button>
+              <Button 
+                variant={calculateEditAllTotal() === 100 ? "default" : "destructive"}
+                size="sm" 
+                className="h-6 text-xs"
+                onClick={handleSaveAllWeights}
+              >
+                Save ({calculateEditAllTotal()}%)
+              </Button>
+            </div>
+          )}
+        </div>
       </h3>
+      
+      {isEditing ? (
+        <div className="bg-gray-900/50 p-4 rounded-md mb-4 border border-gray-800">
+          <div className="mb-2 text-sm text-gray-400">Edit all category weights (total must equal 100%)</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {criteriaGroups.map((group, groupIndex) => (
+              <div key={group.name} className="flex items-center gap-3">
+                <div className="text-sm font-medium flex-grow">{group.name}</div>
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="text"
+                    value={editAllValues[groupIndex]}
+                    onChange={(e) => handleEditAllChange(groupIndex, e.target.value)}
+                    className="w-16 h-8 px-2 py-1 text-sm text-center"
+                  />
+                  <div className="text-xs text-muted-foreground">%</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {criteriaGroups.map((group, groupIndex) => (
           <div key={group.name} className="space-y-1">
