@@ -1,3 +1,4 @@
+
 import { CriteriaGroup } from "../types";
 
 export const updateCriterionWeight = (
@@ -101,10 +102,7 @@ export const updateCriterionScore = (
   setTotalScore: React.Dispatch<React.SetStateAction<number>>
 ) => {
   const newGroups = [...criteriaGroups];
-  const criterion = newGroups[groupIndex].criteria[criterionIndex];
-  
-  criterion.score = newScore;
-  
+  newGroups[groupIndex].criteria[criterionIndex].score = newScore;
   recalculateScores(newGroups, setTotalScore);
   setCriteriaGroups(newGroups);
 };
@@ -197,14 +195,6 @@ export const updateActualMetricValue = (
   
   recalculateScores(newGroups, setTotalScore);
   setCriteriaGroups(newGroups);
-};
-
-export const updateScoreRange = (
-  min: number,
-  max: number,
-  setScoreRange: React.Dispatch<React.SetStateAction<{ min: number; max: number }>>
-) => {
-  setScoreRange({ min, max });
 };
 
 export const recalculateScores = (

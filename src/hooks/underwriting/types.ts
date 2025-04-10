@@ -8,13 +8,4 @@ export interface UseUnderwritingStateReturn {
   setScoreThresholds: React.Dispatch<React.SetStateAction<ScoreThreshold[]>>;
   criteriaGroups: CriteriaGroup[];
   setCriteriaGroups: React.Dispatch<React.SetStateAction<CriteriaGroup[]>>;
-  scoreRange: {
-    min: number;
-    max: number;
-  };
-  setScoreRange: React.Dispatch<React.SetStateAction<{ min: number; max: number }>>;
-  metricRanges: {
-    [key: string]: { min: number; max: number };
-  };
-  setMetricRanges: React.Dispatch<React.SetStateAction<{ [key: string]: { min: number; max: number } }>>;
 }
