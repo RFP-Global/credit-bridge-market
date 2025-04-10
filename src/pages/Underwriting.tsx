@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -40,7 +39,6 @@ const Underwriting = () => {
     setCriteriaGroups
   } = useUnderwritingState();
 
-  // Create handler functions that use the utility functions
   const handleUpdateCriterionWeight = (groupIndex: number, criterionIndex: number, newWeight: number) => {
     updateCriterionWeight(criteriaGroups, groupIndex, criterionIndex, newWeight, setCriteriaGroups, setTotalScore);
   };
@@ -61,7 +59,6 @@ const Underwriting = () => {
     updateActualMetricValue(criteriaGroups, groupIndex, criterionIndex, value, setCriteriaGroups, setTotalScore);
   };
 
-  // Create wrapper functions for style utilities that use the state
   const handleGetScoreColor = (score: number) => getScoreColor(score, scoreThresholds);
   const handleGetScoreBackground = (score: number) => getScoreBackground(score);
   
@@ -85,78 +82,72 @@ const Underwriting = () => {
               </div>
             </div>
             
-            {/* Enhanced Score Card at the top */}
-            <Card className="bg-black/40 border-gray-800 mb-6">
-              <div className="p-6">
-                <div className="flex flex-col lg:flex-row gap-6">
-                  <div className="flex-1">
-                    <h2 className="text-lg font-mono mb-2">RISK PREFERENCE SCORE</h2>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Your current risk algorithm is configured to the following preference
-                    </p>
-                    
-                    {/* Component Score Breakdown */}
-                    <div className="space-y-3">
-                      {criteriaGroups.map((group) => (
-                        <div key={group.name} className="flex items-center justify-between">
+            <Card className="bg-black/40 border-gray-800 mb-6 overflow-hidden">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
+                <div className="bg-gradient-to-br from-gray-900 to-gray-950 p-6 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-gray-800/50">
+                  <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Overall Risk Score</div>
+                  <div className={`text-5xl font-bold ${handleGetScoreColor(totalScore)}`}>
+                    {totalScore.toFixed(2)}
+                  </div>
+                  <CustomBadge 
+                    variant={
+                      totalScore >= 4.5 ? "success" : 
+                      totalScore >= 3.5 ? "secondary" :
+                      totalScore >= 2.5 ? "warning" : "destructive"
+                    } 
+                    className="mt-3"
+                  >
+                    {riskLevel.label}
+                  </CustomBadge>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="sm" className="mt-3 text-xs text-gray-400">
+                          <Info className="h-3 w-3 mr-1" /> Score Scale
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom">
+                        <p className="w-[240px] text-xs">
+                          Risk Score Scale:<br />
+                          1-2.49: High Risk<br />
+                          2.5-3.49: Medium-High Risk<br />
+                          3.5-4.49: Moderate Risk<br />
+                          4.5-5: Low Risk
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+                
+                <div className="lg:col-span-2 p-6">
+                  <h3 className="text-sm font-medium text-gray-400 mb-4">CATEGORY SCORE BREAKDOWN</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {criteriaGroups.map((group) => (
+                      <div key={group.name} className="bg-black/30 rounded-md p-3 border border-gray-800/50">
+                        <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs">
+                            <div className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-primary/10 text-primary">
                               {group.weight}%
                             </div>
-                            <span className="text-sm">{group.name}</span>
+                            <span className="text-sm font-medium">{group.name}</span>
                           </div>
-                          <div className={`font-medium ${handleGetScoreColor(group.score)}`}>
+                          <div className={`text-sm font-bold ${handleGetScoreColor(group.score)}`}>
                             {group.score.toFixed(2)}
                           </div>
                         </div>
-                      ))}
-                      
-                      <Separator className="my-2 bg-gray-800/50" />
-                      
-                      <div className="flex items-center justify-between font-semibold">
-                        <span>Total Score</span>
-                        <div className={`${handleGetScoreColor(totalScore)}`}>
-                          {totalScore.toFixed(2)}
+                        <div className="w-full h-1.5 bg-gray-800/50 rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full ${handleGetScoreBackground(group.score)}`}
+                            style={{ width: `${(group.score / 5) * 100}%` }}
+                          />
                         </div>
                       </div>
-                    </div>
+                    ))}
                   </div>
-                  
-                  <div className="flex flex-col items-center justify-center border-l border-gray-800/50 pl-6">
-                    <div className="bg-black/60 border border-primary/20 rounded-md p-4 flex flex-col items-center min-w-[140px]">
-                      <div className="text-xs text-muted-foreground mb-2">OVERALL SCORE</div>
-                      <div className={`text-4xl font-bold ${handleGetScoreColor(totalScore)}`}>
-                        {totalScore.toFixed(2)}
-                      </div>
-                      <CustomBadge 
-                        variant={
-                          totalScore >= 4.5 ? "success" : 
-                          totalScore >= 3.5 ? "secondary" :
-                          totalScore >= 2.5 ? "warning" : "destructive"
-                        } 
-                        className="mt-2"
-                      >
-                        {riskLevel.label}
-                      </CustomBadge>
-                      
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button variant="ghost" size="sm" className="mt-2">
-                              <Info className="h-4 w-4 mr-1" /> Score Scale
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent side="bottom">
-                            <p className="w-[240px] text-xs">
-                              Risk Score Scale:<br />
-                              1-2.49: High Risk<br />
-                              2.5-3.49: Medium-High Risk<br />
-                              3.5-4.49: Moderate Risk<br />
-                              4.5-5: Low Risk
-                            </p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                  <div className="mt-4 pt-4 border-t border-gray-800/50 flex items-center justify-between">
+                    <span className="text-sm font-medium">Total Score</span>
+                    <div className={`text-lg font-bold ${handleGetScoreColor(totalScore)}`}>
+                      {totalScore.toFixed(2)}
                     </div>
                   </div>
                 </div>
