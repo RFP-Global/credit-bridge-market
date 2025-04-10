@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RangeSlider } from "@/components/ui/range-slider";
@@ -103,8 +104,10 @@ export const MetricSlider = ({
       <div className="flex justify-between text-xs text-muted-foreground">
         <span>Actual {name} {rangeMode ? "Range" : "Value"}</span>
         {rangeMode ? (
-          <span>
-            {getFormattedValue(rangeValues[0])} - {getFormattedValue(rangeValues[1])}
+          <span className="flex gap-2">
+            <span>{getFormattedValue(rangeValues[0])}</span>
+            <span>-</span>
+            <span>{getFormattedValue(rangeValues[1])}</span>
           </span>
         ) : (
           <span>{getFormattedValue(actualValue)}</span>
@@ -151,72 +154,72 @@ export const MetricSlider = ({
           </div>
         </div>
       ) : (
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            size="icon" 
-            className="h-6 w-6"
-            onClick={() => {
-              if (actualMin !== undefined) {
-                const step = actualMax && actualMin 
-                  ? (actualMax - actualMin) / 20 
-                  : 0.1;
-                const newValue = Math.max(actualMin, (actualValue || 0) - step);
-                onValueUpdate(parseFloat(newValue.toFixed(2)));
-              }
-            }}
-          >
-            <ChevronDown className="h-3 w-3" />
-          </Button>
-          <Slider
-            value={[actualValue || 0]}
-            min={actualMin}
-            max={actualMax}
-            step={(actualMax - actualMin) / 100}
-            className="flex-1"
-            onValueChange={(value) => {
-              onValueUpdate(parseFloat(value[0].toFixed(2)));
-            }}
-          />
-          <Button 
-            variant="outline" 
-            size="icon"
-            className="h-6 w-6"
-            onClick={() => {
-              if (actualMax !== undefined) {
-                const step = actualMax && actualMin 
-                  ? (actualMax - actualMin) / 20 
-                  : 0.1;
-                const newValue = Math.min(actualMax, (actualValue || 0) + step);
-                onValueUpdate(parseFloat(newValue.toFixed(2)));
-              }
-            }}
-          >
-            <ChevronUp className="h-3 w-3" />
-          </Button>
-        </div>
-      )}
-      
-      {!rangeMode && (
-        <div className="flex items-center gap-3 mt-2">
-          <div className="flex flex-1 items-center gap-2">
-            <span className="text-xs text-muted-foreground">Value:</span>
-            <Input
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              className="h-7 text-xs"
-              placeholder={`Value ${actualUnit || ''}`}
+        <>
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="h-6 w-6"
+              onClick={() => {
+                if (actualMin !== undefined) {
+                  const step = actualMax && actualMin 
+                    ? (actualMax - actualMin) / 20 
+                    : 0.1;
+                  const newValue = Math.max(actualMin, (actualValue || 0) - step);
+                  onValueUpdate(parseFloat(newValue.toFixed(2)));
+                }
+              }}
+            >
+              <ChevronDown className="h-3 w-3" />
+            </Button>
+            <Slider
+              value={[actualValue || 0]}
+              min={actualMin}
+              max={actualMax}
+              step={(actualMax - actualMin) / 100}
+              className="flex-1"
+              onValueChange={(value) => {
+                onValueUpdate(parseFloat(value[0].toFixed(2)));
+              }}
             />
+            <Button 
+              variant="outline" 
+              size="icon"
+              className="h-6 w-6"
+              onClick={() => {
+                if (actualMax !== undefined) {
+                  const step = actualMax && actualMin 
+                    ? (actualMax - actualMin) / 20 
+                    : 0.1;
+                  const newValue = Math.min(actualMax, (actualValue || 0) + step);
+                  onValueUpdate(parseFloat(newValue.toFixed(2)));
+                }
+              }}
+            >
+              <ChevronUp className="h-3 w-3" />
+            </Button>
           </div>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="h-7 text-xs"
-            onClick={handleValueUpdate}
-          >
-            Set Value
-          </Button>
-        </div>
+          
+          <div className="flex items-center gap-3 mt-2">
+            <div className="flex flex-1 items-center gap-2">
+              <span className="text-xs text-muted-foreground">Value:</span>
+              <Input
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                className="h-7 text-xs"
+                placeholder={`Value ${actualUnit || ''}`}
+              />
+            </div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-7 text-xs"
+              onClick={handleValueUpdate}
+            >
+              Set Value
+            </Button>
+          </div>
+        </>
       )}
       
       <div className="text-xs text-muted-foreground mt-2">
