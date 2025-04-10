@@ -71,8 +71,8 @@ export const CategoryWeights = ({
 
   const handleInputBlur = (groupIndex: number) => {
     const numValue = parseInt(inputValues[groupIndex], 10);
-    if (!isNaN(numValue) && numValue >= 5 && numValue <= 50) {
-      // Only update if value is valid
+    if (!isNaN(numValue) && numValue >= 1 && numValue <= 99) {
+      // Only update if value is valid - looser constraints than before (was 5-50)
       updateGroupWeight(groupIndex, numValue);
     } else {
       // Reset to current weight if invalid
@@ -83,8 +83,8 @@ export const CategoryWeights = ({
       
       if (isNaN(numValue)) {
         toast.error("Please enter a valid number");
-      } else if (numValue < 5 || numValue > 50) {
-        toast.error("Weight must be between 5% and 50%");
+      } else if (numValue < 1 || numValue > 99) {
+        toast.error("Weight must be between 1% and 99%");
       }
     }
   };
@@ -117,14 +117,14 @@ export const CategoryWeights = ({
       return;
     }
     
-    // Check if all values are valid (between 5 and 50)
+    // Check if all values are valid (no need for min/max bounds other than positive)
     const hasInvalidValues = Object.values(editAllValues).some(value => {
       const numValue = parseInt(value, 10);
-      return isNaN(numValue) || numValue < 5 || numValue > 50;
+      return isNaN(numValue) || numValue < 1;
     });
     
     if (hasInvalidValues) {
-      toast.error("All weights must be between 5% and 50%");
+      toast.error("All weights must be positive values");
       return;
     }
     
@@ -233,16 +233,16 @@ export const CategoryWeights = ({
                 variant="outline" 
                 size="icon" 
                 className="h-6 w-6"
-                onClick={() => updateGroupWeight(groupIndex, Math.max(5, group.weight - 5))}
-                disabled={group.weight <= 5}
+                onClick={() => updateGroupWeight(groupIndex, Math.max(1, group.weight - 1))}
+                disabled={group.weight <= 1}
               >
                 <ChevronDown className="h-3 w-3" />
               </Button>
               <Slider
                 value={[group.weight]}
-                min={5}
-                max={50}
-                step={5}
+                min={1}
+                max={99}
+                step={1}
                 className="flex-1"
                 onValueChange={(value) => updateGroupWeight(groupIndex, value[0])}
               />
@@ -253,15 +253,15 @@ export const CategoryWeights = ({
                 onBlur={() => handleInputBlur(groupIndex)}
                 onKeyDown={(e) => handleKeyDown(e, groupIndex)}
                 className="w-14 h-6 px-2 py-1 text-xs text-center"
-                min={5}
-                max={50}
+                min={1}
+                max={99}
               />
               <Button 
                 variant="outline" 
                 size="icon"
                 className="h-6 w-6"
-                onClick={() => updateGroupWeight(groupIndex, Math.min(50, group.weight + 5))}
-                disabled={group.weight >= 50}
+                onClick={() => updateGroupWeight(groupIndex, Math.min(99, group.weight + 1))}
+                disabled={group.weight >= 99}
               >
                 <ChevronUp className="h-3 w-3" />
               </Button>

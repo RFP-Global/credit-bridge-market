@@ -41,6 +41,9 @@ export const updateCriterionWeight = (
 /**
  * Updates the weight of a criteria group and redistributes remaining weights among other groups.
  * Ensures the total weight always equals exactly 100%.
+ * 
+ * This version allows for more flexible weight distribution with fewer restrictions,
+ * allowing weights between 1% and 99%.
  */
 export const updateGroupWeight = (
   criteriaGroups: CriteriaGroup[],
@@ -50,19 +53,19 @@ export const updateGroupWeight = (
   setMinTotalScore: React.Dispatch<React.SetStateAction<number>>,
   setMaxTotalScore: React.Dispatch<React.SetStateAction<number>>
 ) => {
-  // Ensure weight is within valid range
-  newWeight = Math.max(5, Math.min(50, newWeight));
+  // Ensure weight is at least 1%
+  newWeight = Math.max(1, Math.min(99, newWeight));
   
   const newGroups = [...criteriaGroups];
   const oldWeight = newGroups[groupIndex].weight;
   newGroups[groupIndex].weight = newWeight;
   
-  // Get all other groups with weights > 5 that we can adjust
+  // Get all other groups that we can adjust
   const adjustableGroups = newGroups.map((g, idx) => ({ 
     idx, 
     weight: g.weight,
     isTarget: idx === groupIndex
-  })).filter(g => !g.isTarget && g.weight > 5);
+  })).filter(g => !g.isTarget && g.weight > 0);
   
   // If no adjustable groups, we need to revert the change
   if (adjustableGroups.length === 0) {
@@ -83,14 +86,14 @@ export const updateGroupWeight = (
       if (idx === adjustableGroups.length - 1) {
         // Last group gets any remaining difference to ensure total is exactly 100%
         const newAdjustedWeight = newGroups[g.idx].weight + remainingDifference;
-        // Ensure it's at least 5%
-        if (newAdjustedWeight >= 5) {
+        // Ensure it's at least 1%
+        if (newAdjustedWeight >= 1) {
           newGroups[g.idx].weight = newAdjustedWeight;
           remainingDifference = 0;
         } else {
           // If it would go below minimum, only adjust partially
-          const possibleAdjustment = newGroups[g.idx].weight - 5;
-          newGroups[g.idx].weight = 5;
+          const possibleAdjustment = newGroups[g.idx].weight - 1;
+          newGroups[g.idx].weight = 1;
           remainingDifference -= possibleAdjustment;
         }
       } else {
@@ -99,14 +102,14 @@ export const updateGroupWeight = (
         const weightAdjustment = Math.round(weightDifference * proportion);
         const newAdjustedWeight = newGroups[g.idx].weight + weightAdjustment;
         
-        // Ensure it's at least 5%
-        if (newAdjustedWeight >= 5) {
+        // Ensure it's at least 1%
+        if (newAdjustedWeight >= 1) {
           newGroups[g.idx].weight = newAdjustedWeight;
           remainingDifference -= weightAdjustment;
         } else {
           // If it would go below minimum, only adjust partially
-          const possibleAdjustment = newGroups[g.idx].weight - 5;
-          newGroups[g.idx].weight = 5;
+          const possibleAdjustment = newGroups[g.idx].weight - 1;
+          newGroups[g.idx].weight = 1;
           remainingDifference -= possibleAdjustment;
         }
       }
