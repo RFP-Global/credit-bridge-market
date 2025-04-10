@@ -1,4 +1,4 @@
-
+import React from 'react';
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -41,8 +41,8 @@ const Underwriting = () => {
   } = useUnderwritingState();
 
   // Taking the first threshold (lowest risk) and last threshold (highest risk) for the range
-  const minScore = scoreThresholds[scoreThresholds.length - 1].value;
-  const maxScore = 10; // Assuming 10 is the maximum possible score
+  const minScore = scoreThresholds[0].value;
+  const maxScore = scoreThresholds[scoreThresholds.length - 1].value;
 
   const handleUpdateCriterionWeight = (groupIndex: number, criterionIndex: number, newWeight: number) => {
     updateCriterionWeight(criteriaGroups, groupIndex, criterionIndex, newWeight, setCriteriaGroups, setTotalScore);
@@ -92,15 +92,11 @@ const Underwriting = () => {
                 <div className="bg-gradient-to-br from-gray-900 to-gray-950 p-6 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-gray-800/50">
                   <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Overall Risk Score Range</div>
                   <div className="flex items-center gap-2">
-                    <div className={`text-2xl font-bold ${handleGetScoreColor(minScore)}`}>
+                    <div className={`text-4xl font-bold ${handleGetScoreColor(minScore)}`}>
                       {minScore.toFixed(2)}
                     </div>
                     <span className="text-gray-500">-</span>
-                    <div className={`text-4xl font-bold ${handleGetScoreColor(totalScore)}`}>
-                      {totalScore.toFixed(2)}
-                    </div>
-                    <span className="text-gray-500">-</span>
-                    <div className={`text-2xl font-bold ${handleGetScoreColor(maxScore)}`}>
+                    <div className={`text-4xl font-bold ${handleGetScoreColor(maxScore)}`}>
                       {maxScore.toFixed(2)}
                     </div>
                   </div>
