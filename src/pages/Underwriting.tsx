@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -91,9 +92,9 @@ const Underwriting = () => {
                   </div>
                   <CustomBadge 
                     variant={
-                      totalScore >= 4.5 ? "success" : 
-                      totalScore >= 3.5 ? "secondary" :
-                      totalScore >= 2.5 ? "warning" : "destructive"
+                      totalScore >= 9 ? "success" : 
+                      totalScore >= 7 ? "secondary" :
+                      totalScore >= 5 ? "warning" : "destructive"
                     } 
                     className="mt-3"
                   >
@@ -109,10 +110,10 @@ const Underwriting = () => {
                       <TooltipContent side="bottom">
                         <p className="w-[240px] text-xs">
                           Risk Score Scale:<br />
-                          1-2.49: High Risk<br />
-                          2.5-3.49: Medium-High Risk<br />
-                          3.5-4.49: Moderate Risk<br />
-                          4.5-5: Low Risk
+                          1-4.99: High Risk<br />
+                          5-6.99: Medium-High Risk<br />
+                          7-8.99: Moderate Risk<br />
+                          9-10: Low Risk
                         </p>
                       </TooltipContent>
                     </Tooltip>
@@ -138,7 +139,7 @@ const Underwriting = () => {
                         <div className="w-full h-1.5 bg-gray-800/50 rounded-full overflow-hidden">
                           <div 
                             className={`h-full ${handleGetScoreBackground(group.score)}`}
-                            style={{ width: `${(group.score / 5) * 100}%` }}
+                            style={{ width: `${(group.score / 10) * 100}%` }}
                           />
                         </div>
                       </div>

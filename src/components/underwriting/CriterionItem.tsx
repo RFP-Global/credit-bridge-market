@@ -325,20 +325,20 @@ export const CriterionItem = ({
         <div className="space-y-2">
           <div className="flex justify-between text-xs text-muted-foreground">
             <span>Risk Score</span>
-            <span>{criterion.score} / 5</span>
+            <span>{criterion.score} / 10</span>
           </div>
           <div className="flex items-center gap-2">
             <Button 
               variant="outline" 
               size="icon" 
               className="h-6 w-6"
-              onClick={() => updateCriterionScore(groupIndex, criterionIndex, Math.max(1, criterion.score - 0.5))}
+              onClick={() => updateCriterionScore(groupIndex, criterionIndex, Math.max(1, criterion.score - 1))}
               disabled={criterion.score <= 1}
             >
               <ChevronDown className="h-3 w-3" />
             </Button>
             <div className="flex-1 flex">
-              {[1, 2, 3, 4, 5].map((value) => (
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
                 <button
                   key={value}
                   className={`h-6 flex-1 border-r last:border-r-0 border-gray-800 transition-colors ${
@@ -354,8 +354,8 @@ export const CriterionItem = ({
               variant="outline" 
               size="icon"
               className="h-6 w-6"
-              onClick={() => updateCriterionScore(groupIndex, criterionIndex, Math.min(5, criterion.score + 0.5))}
-              disabled={criterion.score >= 5}
+              onClick={() => updateCriterionScore(groupIndex, criterionIndex, Math.min(10, criterion.score + 1))}
+              disabled={criterion.score >= 10}
             >
               <ChevronUp className="h-3 w-3" />
             </Button>

@@ -128,15 +128,15 @@ export const updateCriterionRange = (
   
   if (!isNaN(currentValue)) {
     if (currentValue >= min && currentValue <= max) {
-      criterion.score = 4 + (1 - (max - currentValue) / (max - min));
-      if (criterion.score > 5) criterion.score = 5;
+      criterion.score = 8 + (2 * (1 - (max - currentValue) / (max - min)));
+      if (criterion.score > 10) criterion.score = 10;
     } else if (currentValue < min) {
       const distance = (min - currentValue) / min;
-      criterion.score = 3 - (distance * 2);
+      criterion.score = 6 - (distance * 4);
       if (criterion.score < 1) criterion.score = 1;
     } else {
       const distance = (currentValue - max) / max;
-      criterion.score = 3 - (distance * 2);
+      criterion.score = 6 - (distance * 4);
       if (criterion.score < 1) criterion.score = 1;
     }
     criterion.score = parseFloat(criterion.score.toFixed(1));
@@ -189,7 +189,7 @@ export const updateActualMetricValue = (
                          criterion.name.toLowerCase().includes('risk') ? 
                          1 - percent : percent; // Invert for metrics where lower is better
     
-    criterion.score = 1 + idealPercent * 4; // Scale to 1-5
+    criterion.score = 1 + idealPercent * 9; // Scale to 1-10
     criterion.score = parseFloat(criterion.score.toFixed(1));
   }
   
