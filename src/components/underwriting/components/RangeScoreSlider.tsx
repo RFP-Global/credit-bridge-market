@@ -12,9 +12,7 @@ interface RangeScoreSliderProps {
   initialMax: number;
   step?: number;
   onRangeChange: (min: number, max: number) => void;
-  getScoreColor: (score: number) => string;
   scoreMapping?: ScoreRange[];
-  inverseRelationship?: boolean;
 }
 
 export const RangeScoreSlider = ({
@@ -24,9 +22,7 @@ export const RangeScoreSlider = ({
   initialMax,
   step = 0.1,
   onRangeChange,
-  getScoreColor,
-  scoreMapping,
-  inverseRelationship = false
+  scoreMapping
 }: RangeScoreSliderProps) => {
   const [range, setRange] = useState<[number, number]>([initialMin, initialMax]);
   const [minInput, setMinInput] = useState(initialMin.toString());
@@ -79,13 +75,9 @@ export const RangeScoreSlider = ({
       <div className="flex justify-between text-xs text-muted-foreground">
         <span>Risk Score Range</span>
         <span className="flex gap-2">
-          <span className={getScoreColor(range[0])}>
-            {range[0].toFixed(1)}
-          </span>
+          <span className="text-gray-700">{range[0].toFixed(1)}</span>
           <span>-</span>
-          <span className={getScoreColor(range[1])}>
-            {range[1].toFixed(1)}
-          </span>
+          <span className="text-gray-700">{range[1].toFixed(1)}</span>
         </span>
       </div>
       
@@ -131,11 +123,12 @@ export const RangeScoreSlider = ({
       {scoreMapping && (
         <div className="mt-1 text-xs">
           <div className="flex justify-between">
-            <span className={getScoreColor(range[0])}>{getRiskLevel(range[0])}</span>
-            <span className={getScoreColor(range[1])}>{getRiskLevel(range[1])}</span>
+            <span className="text-gray-700">{getRiskLevel(range[0])}</span>
+            <span className="text-gray-700">{getRiskLevel(range[1])}</span>
           </div>
         </div>
       )}
     </div>
   );
 };
+

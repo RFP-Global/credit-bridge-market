@@ -1,4 +1,3 @@
-
 import { RangeSlider } from "@/components/ui/range-slider";
 import { useState, useEffect } from "react";
 import { ScoreRange } from "../types";
@@ -15,7 +14,6 @@ interface MetricSliderProps {
   actualUnit?: string;
   name: string;
   scoreMapping?: ScoreRange[];
-  getScoreColor: (score: number) => string;
   onValueUpdate: (value: number) => void;
   onRangeUpdate?: (min: number, max: number) => void;
   isDualSlider?: boolean;
@@ -31,7 +29,6 @@ export const MetricSlider = ({
   actualUnit,
   name,
   scoreMapping,
-  getScoreColor,
   onValueUpdate,
   onRangeUpdate,
   isDualSlider = false,
@@ -46,7 +43,6 @@ export const MetricSlider = ({
      actualMaxValue || actualValue || (actualMax || 1)]
   );
 
-  // Update input values when props change
   useEffect(() => {
     if (actualValue !== undefined) {
       setInputValue(actualValue.toString());
@@ -93,7 +89,6 @@ export const MetricSlider = ({
         : `${value}${actualUnit || ""}`;
   };
 
-  // Get risk level description for a metric value based on scoreMapping
   const getRiskLevel = (value: number): string => {
     if (!scoreMapping) return "";
     
@@ -161,14 +156,10 @@ export const MetricSlider = ({
           {scoreMapping && (
             <div className="mt-1 text-xs">
               <div className="flex justify-between">
-                <span className={getScoreColor(inverseRelationship 
-                  ? 11 - Math.ceil(rangeValues[0]) 
-                  : Math.ceil(rangeValues[0]))}>
+                <span className="text-gray-700">
                   {getRiskLevel(rangeValues[0])}
                 </span>
-                <span className={getScoreColor(inverseRelationship 
-                  ? 11 - Math.ceil(rangeValues[1]) 
-                  : Math.ceil(rangeValues[1]))}>
+                <span className="text-gray-700">
                   {getRiskLevel(rangeValues[1])}
                 </span>
               </div>
