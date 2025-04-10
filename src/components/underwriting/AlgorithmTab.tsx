@@ -3,7 +3,6 @@ import { Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Accordion } from "@/components/ui/accordion";
 import { CategoryWeights } from "./CategoryWeights";
-import { RiskScoreBreakdown } from "./RiskScoreBreakdown";
 import { CriteriaGroup } from "./CriteriaGroup";
 import { CriteriaGroup as CriteriaGroupType } from "./types";
 
@@ -35,11 +34,6 @@ export const AlgorithmTab = ({
           criteriaGroups={criteriaGroups}
           updateGroupWeight={updateGroupWeight}
           getScoreColor={getScoreColor}
-        />
-        <RiskScoreBreakdown 
-          criteriaGroups={criteriaGroups}
-          getScoreColor={getScoreColor}
-          getScoreBackground={getScoreBackground}
         />
       </div>
       
