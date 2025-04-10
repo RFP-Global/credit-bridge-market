@@ -31,6 +31,7 @@ export interface Criterion {
   actualValue?: number;
   actualUnit?: string;
   scoreMapping?: ScoreRange[];
+  useRangeSlider?: boolean; // Added this property
 }
 
 export interface ScoreRange {

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp, Info, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,6 +15,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Criterion, ScoreRange } from "./types";
+import { RangeSlider } from "./RangeSlider";
 
 interface CriterionItemProps {
   criterion: Criterion;
@@ -43,16 +43,22 @@ export const CriterionItem = ({
   const [minValue, setMinValue] = useState(criterion.preferredMin?.toString() || "");
   const [maxValue, setMaxValue] = useState(criterion.preferredMax?.toString() || "");
   const [actualValue, setActualValue] = useState(criterion.actualValue?.toString() || "");
+  const [rangeValues, setRangeValues] = useState<[number, number]>([
+    criterion.preferredMin || criterion.min,
+    criterion.preferredMax || criterion.max
+  ]);
 
   useEffect(() => {
     if (criterion.preferredMin !== undefined) {
       setMinValue(criterion.preferredMin.toString());
+      setRangeValues(prev => [criterion.preferredMin as number, prev[1]]);
     }
   }, [criterion.preferredMin]);
 
   useEffect(() => {
     if (criterion.preferredMax !== undefined) {
       setMaxValue(criterion.preferredMax.toString());
+      setRangeValues(prev => [prev[0], criterion.preferredMax as number]);
     }
   }, [criterion.preferredMax]);
 
@@ -69,6 +75,13 @@ export const CriterionItem = ({
       if (!isNaN(min) && !isNaN(max) && min <= max) {
         updateCriterionRange(groupIndex, criterionIndex, min, max);
       }
+    }
+  };
+
+  const handleRangeSliderChange = (values: [number, number]) => {
+    setRangeValues(values);
+    if (updateCriterionRange) {
+      updateCriterionRange(groupIndex, criterionIndex, values[0], values[1]);
     }
   };
 
@@ -242,6 +255,8 @@ export const CriterionItem = ({
     );
   };
 
+  const isEBITDA = criterion.name.includes("EBITDA") || criterion.name.includes("Debt/EBITDA");
+
   return (
     <div className="space-y-2 border-b border-gray-800/40 pb-4 last:border-0 last:pb-0">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
@@ -367,35 +382,50 @@ export const CriterionItem = ({
 
       <div className="mt-3 pt-3 border-t border-gray-800/30">
         <div className="text-xs font-medium mb-2">Preferred Range {criterion.unit ? `(${criterion.unit})` : ''}</div>
-        <div className="flex items-center gap-3">
-          <div className="flex flex-1 items-center gap-2">
-            <span className="text-xs text-muted-foreground">Min:</span>
-            <Input
-              value={minValue}
-              onChange={(e) => setMinValue(e.target.value)}
+        
+        {isEBITDA ? (
+          <RangeSlider 
+            minValue={criterion.min}
+            maxValue={criterion.max}
+            currentValue={rangeValues}
+            unit={criterion.unit}
+            scoreMapping={criterion.scoreMapping}
+            onChange={handleRangeSliderChange}
+            getScoreColor={getScoreColor}
+            getScoreBackground={getScoreBackground}
+          />
+        ) : (
+          <div className="flex items-center gap-3">
+            <div className="flex flex-1 items-center gap-2">
+              <span className="text-xs text-muted-foreground">Min:</span>
+              <Input
+                value={minValue}
+                onChange={(e) => setMinValue(e.target.value)}
+                className="h-7 text-xs"
+                placeholder={`Min ${criterion.unit || ''}`}
+              />
+            </div>
+            <div className="flex flex-1 items-center gap-2">
+              <span className="text-xs text-muted-foreground">Max:</span>
+              <Input
+                value={maxValue}
+                onChange={(e) => setMaxValue(e.target.value)}
+                className="h-7 text-xs"
+                placeholder={`Max ${criterion.unit || ''}`}
+              />
+            </div>
+            <Button 
+              variant="outline" 
+              size="sm" 
               className="h-7 text-xs"
-              placeholder={`Min ${criterion.unit || ''}`}
-            />
+              onClick={handleRangeUpdate}
+            >
+              Set Range
+            </Button>
           </div>
-          <div className="flex flex-1 items-center gap-2">
-            <span className="text-xs text-muted-foreground">Max:</span>
-            <Input
-              value={maxValue}
-              onChange={(e) => setMaxValue(e.target.value)}
-              className="h-7 text-xs"
-              placeholder={`Max ${criterion.unit || ''}`}
-            />
-          </div>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="h-7 text-xs"
-            onClick={handleRangeUpdate}
-          >
-            Set Range
-          </Button>
-        </div>
-        {criterion.preferredMin !== undefined && criterion.preferredMax !== undefined && (
+        )}
+        
+        {criterion.preferredMin !== undefined && criterion.preferredMax !== undefined && !isEBITDA && (
           <div className="mt-2 text-xs text-blue-400">
             Current preferred range: {criterion.preferredMin} - {criterion.preferredMax} {criterion.unit || ''}
           </div>
