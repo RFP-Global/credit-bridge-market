@@ -27,12 +27,8 @@ import {
   getRiskLevel
 } from "@/components/underwriting/utils/styleUtils";
 import { CategoryWeights } from "@/components/underwriting/CategoryWeights";
-import { RiskScoreBreakdown } from "@/components/underwriting/RiskScoreBreakdown";
-import { Accordion } from "@/components/ui/accordion";
-import { CriteriaGroup } from "@/components/underwriting/CriteriaGroup";
-import { CustomBadge } from "@/components/ui/custom-badge";
-import { Separator } from "@/components/ui/separator";
 import { AlgorithmTab } from "@/components/underwriting/AlgorithmTab";
+import { CustomBadge } from "@/components/ui/custom-badge";
 
 const Underwriting = () => {
   const {
@@ -129,14 +125,6 @@ const Underwriting = () => {
                     </Tooltip>
                   </TooltipProvider>
                 </div>
-                
-                <div className="lg:col-span-2 p-6">
-                  <CategoryWeights 
-                    criteriaGroups={criteriaGroups}
-                    updateGroupWeight={handleUpdateGroupWeight}
-                    getScoreColor={handleGetScoreColor}
-                  />
-                </div>
               </div>
             </Card>
             
@@ -159,3 +147,4 @@ const Underwriting = () => {
 };
 
 export default Underwriting;
+
