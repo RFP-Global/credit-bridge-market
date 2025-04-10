@@ -1,13 +1,11 @@
 
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Input } from "@/components/ui/input";
-import { CriteriaGroup } from "./types";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { CriteriaGroup } from "./types";
+import { CategoryWeightsHeader } from "./CategoryWeightsHeader";
+import { CategoryWeightEditForm } from "./CategoryWeightEditForm";
+import { CategoryWeightItem } from "./CategoryWeightItem";
+import { calculateEditAllTotal, validateEditWeights } from "./utils/editWeightsUtils";
 
 interface CategoryWeightsProps {
   criteriaGroups: CriteriaGroup[];
@@ -72,7 +70,7 @@ export const CategoryWeights = ({
   const handleInputBlur = (groupIndex: number) => {
     const numValue = parseInt(inputValues[groupIndex], 10);
     if (!isNaN(numValue) && numValue >= 1 && numValue <= 99) {
-      // Only update if value is valid - looser constraints than before (was 5-50)
+      // Only update if value is valid
       updateGroupWeight(groupIndex, numValue);
     } else {
       // Reset to current weight if invalid
@@ -102,29 +100,8 @@ export const CategoryWeights = ({
     }));
   };
 
-  const calculateEditAllTotal = () => {
-    return Object.values(editAllValues).reduce((sum, value) => {
-      const numValue = parseInt(value, 10);
-      return sum + (isNaN(numValue) ? 0 : numValue);
-    }, 0);
-  };
-
   const handleSaveAllWeights = () => {
-    const editAllTotal = calculateEditAllTotal();
-    
-    if (editAllTotal !== 100) {
-      toast.error("Total weights must sum to 100%");
-      return;
-    }
-    
-    // Check if all values are valid (no need for min/max bounds other than positive)
-    const hasInvalidValues = Object.values(editAllValues).some(value => {
-      const numValue = parseInt(value, 10);
-      return isNaN(numValue) || numValue < 1;
-    });
-    
-    if (hasInvalidValues) {
-      toast.error("All weights must be positive values");
+    if (!validateEditWeights(editAllValues)) {
       return;
     }
     
@@ -149,125 +126,42 @@ export const CategoryWeights = ({
     setIsEditing(false);
   };
 
+  const editAllTotal = calculateEditAllTotal(editAllValues);
+
   return (
     <div>
-      <h3 className="text-sm font-medium text-gray-400 mb-4 flex items-center justify-between">
-        <span>CATEGORY WEIGHTS</span>
-        <div className="flex items-center gap-2">
-          <Badge 
-            variant={totalWeight === 100 ? "outline" : "destructive"} 
-            className="font-mono"
-          >
-            {totalWeight}%
-          </Badge>
-          {!isEditing ? (
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="h-6 text-xs"
-              onClick={() => setIsEditing(true)}
-            >
-              Edit All
-            </Button>
-          ) : (
-            <div className="flex items-center gap-1">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="h-6 text-xs"
-                onClick={handleCancelEdit}
-              >
-                Cancel
-              </Button>
-              <Button 
-                variant={calculateEditAllTotal() === 100 ? "default" : "destructive"}
-                size="sm" 
-                className="h-6 text-xs"
-                onClick={handleSaveAllWeights}
-              >
-                Save ({calculateEditAllTotal()}%)
-              </Button>
-            </div>
-          )}
-        </div>
-      </h3>
+      <CategoryWeightsHeader 
+        totalWeight={totalWeight}
+        isEditing={isEditing}
+        setIsEditing={setIsEditing}
+        handleCancelEdit={handleCancelEdit}
+        handleSaveAllWeights={handleSaveAllWeights}
+        editAllTotal={editAllTotal}
+      />
       
       {isEditing ? (
-        <div className="bg-gray-900/50 p-4 rounded-md mb-4 border border-gray-800">
-          <div className="mb-2 text-sm text-gray-400">Edit all category weights (total must equal 100%)</div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {criteriaGroups.map((group, groupIndex) => (
-              <div key={group.name} className="flex items-center gap-3">
-                <div className="text-sm font-medium flex-grow">{group.name}</div>
-                <div className="flex items-center gap-2">
-                  <Input
-                    type="text"
-                    value={editAllValues[groupIndex]}
-                    onChange={(e) => handleEditAllChange(groupIndex, e.target.value)}
-                    className="w-16 h-8 px-2 py-1 text-sm text-center"
-                  />
-                  <div className="text-xs text-muted-foreground">%</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <CategoryWeightEditForm 
+          criteriaGroups={criteriaGroups}
+          editAllValues={editAllValues}
+          handleEditAllChange={handleEditAllChange}
+          handleSaveAllWeights={handleSaveAllWeights}
+          handleCancelEdit={handleCancelEdit}
+        />
       ) : null}
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {criteriaGroups.map((group, groupIndex) => (
-          <div key={group.name} className="space-y-1">
-            <div className="flex justify-between items-center">
-              <div className="text-sm font-medium">{group.name}</div>
-              <div className="flex items-center gap-2">
-                <div className={`text-sm font-medium ${getScoreColor((group.minScore + group.maxScore) / 2)}`}>
-                  {group.minScore !== undefined && group.maxScore !== undefined ? 
-                    `${group.minScore.toFixed(1)}-${group.maxScore.toFixed(1)}` : 
-                    "N/A"}
-                </div>
-                <div className="text-xs text-muted-foreground">{group.weight}%</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button 
-                variant="outline" 
-                size="icon" 
-                className="h-6 w-6"
-                onClick={() => updateGroupWeight(groupIndex, Math.max(1, group.weight - 1))}
-                disabled={group.weight <= 1}
-              >
-                <ChevronDown className="h-3 w-3" />
-              </Button>
-              <Slider
-                value={[group.weight]}
-                min={1}
-                max={99}
-                step={1}
-                className="flex-1"
-                onValueChange={(value) => updateGroupWeight(groupIndex, value[0])}
-              />
-              <Input
-                type="text"
-                value={inputValues[groupIndex]}
-                onChange={(e) => handleInputChange(groupIndex, e.target.value)}
-                onBlur={() => handleInputBlur(groupIndex)}
-                onKeyDown={(e) => handleKeyDown(e, groupIndex)}
-                className="w-14 h-6 px-2 py-1 text-xs text-center"
-                min={1}
-                max={99}
-              />
-              <Button 
-                variant="outline" 
-                size="icon"
-                className="h-6 w-6"
-                onClick={() => updateGroupWeight(groupIndex, Math.min(99, group.weight + 1))}
-                disabled={group.weight >= 99}
-              >
-                <ChevronUp className="h-3 w-3" />
-              </Button>
-            </div>
-            <Progress value={group.weight} className="h-1.5" />
-          </div>
+          <CategoryWeightItem
+            key={group.name}
+            group={group}
+            groupIndex={groupIndex}
+            inputValue={inputValues[groupIndex]}
+            handleInputChange={handleInputChange}
+            handleInputBlur={handleInputBlur}
+            handleKeyDown={handleKeyDown}
+            updateGroupWeight={updateGroupWeight}
+            getScoreColor={getScoreColor}
+          />
         ))}
       </div>
       <div className="mt-4 pt-4 border-t border-gray-800/50 flex items-center justify-between">
