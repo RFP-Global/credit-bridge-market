@@ -74,6 +74,10 @@ export const CriterionItem = ({
     }
   };
 
+  // Determine if this criterion should use a dual slider
+  // All non-weight metrics will use dual slider
+  const shouldUseDualSlider = criterion.actualMin !== undefined && criterion.actualMax !== undefined;
+
   return (
     <div className="space-y-2 border-b border-gray-800/40 pb-4 last:border-0 last:pb-0">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
@@ -206,7 +210,7 @@ export const CriterionItem = ({
           onRangeUpdate={updateActualMetricRange ? 
             (min, max) => updateActualMetricRange(groupIndex, criterionIndex, min, max) : 
             undefined}
-          isDualSlider={criterion.name === "EBITDA"}
+          isDualSlider={shouldUseDualSlider}
         />
       )}
 
