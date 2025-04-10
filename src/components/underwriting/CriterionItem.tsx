@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Info, HelpCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -54,6 +54,19 @@ export const CriterionItem = ({
   // Check if this is the EBITDA criterion in the Financial Strength section (group index 0, criterion index 0)
   const isEbitdaCriterion = groupIndex === 0 && criterionIndex === 0 && criterion.name === "EBITDA";
   
+  // Track the risk score range for EBITDA
+  const [ebitdaRiskScoreRange, setEbitdaRiskScoreRange] = useState<[number, number]>([
+    criterion.minScore || 1,
+    criterion.maxScore || 10
+  ]);
+  
+  useEffect(() => {
+    if (isEbitdaCriterion) {
+      setMinScore(ebitdaRiskScoreRange[0].toString());
+      setMaxScore(ebitdaRiskScoreRange[1].toString());
+    }
+  }, [ebitdaRiskScoreRange, isEbitdaCriterion]);
+
   const handleRangeUpdate = () => {
     if (updateCriterionRange && minValue && maxValue) {
       const min = parseFloat(minValue);
@@ -73,6 +86,15 @@ export const CriterionItem = ({
         updateCriterionScore(groupIndex, criterionIndex, averageScore);
       }
     }
+  };
+  
+  // Handler for updating the risk score range when EBITDA range changes
+  const handleEbitdaRiskScoreRangeUpdate = (min: number, max: number) => {
+    setEbitdaRiskScoreRange([min, max]);
+    
+    // Update the criterion score to the average of min and max
+    const averageScore = (min + max) / 2;
+    updateCriterionScore(groupIndex, criterionIndex, averageScore);
   };
 
   return (
@@ -160,7 +182,17 @@ export const CriterionItem = ({
         </div>
         
         <div className="space-y-2">
-          {updateCriterionRange && (
+          {isEbitdaCriterion ? (
+            <RangeScoreSlider
+              minValue={1}
+              maxValue={10}
+              initialMin={ebitdaRiskScoreRange[0]}
+              initialMax={ebitdaRiskScoreRange[1]}
+              step={0.1}
+              onRangeChange={handleEbitdaRiskScoreRangeUpdate}
+              getScoreColor={getScoreColor}
+            />
+          ) : updateCriterionRange && (
             <RangeScoreSlider
               minValue={1}
               maxValue={10}
@@ -183,32 +215,27 @@ export const CriterionItem = ({
       {(updateActualMetricValue || updateActualMetricRange) && (
         <>
           {isEbitdaCriterion ? (
-            <div className="space-y-2 mt-3">
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>Actual {criterion.name} Range</span>
-                <span>
-                  {criterion.actualUnit}{criterion.actualMinValue || 0} - {criterion.actualUnit}{criterion.actualMaxValue || 1}
-                </span>
-              </div>
-              
-              <RangeScoreSlider
-                minValue={criterion.actualMin || 0}
-                maxValue={criterion.actualMax || 1}
-                initialMin={criterion.actualMinValue || criterion.actualValue || 0}
-                initialMax={criterion.actualMaxValue || criterion.actualValue || 1}
-                step={(criterion.actualMax || 1 - criterion.actualMin || 0) / 100}
-                onRangeChange={(min, max) => {
-                  if (updateActualMetricRange) {
-                    updateActualMetricRange(groupIndex, criterionIndex, min, max);
-                  }
-                }}
-                getScoreColor={() => "text-blue-400"}
-              />
-              
-              <div className="text-xs text-muted-foreground mt-2">
-                <span>Range: {criterion.actualMin} - {criterion.actualMax} {criterion.actualUnit || ''}</span>
-              </div>
-            </div>
+            <MetricSlider
+              actualValue={criterion.actualValue}
+              actualMinValue={criterion.actualMinValue}
+              actualMaxValue={criterion.actualMaxValue}
+              actualMin={criterion.actualMin}
+              actualMax={criterion.actualMax}
+              actualUnit={criterion.actualUnit}
+              name={criterion.name}
+              scoreMapping={criterion.scoreMapping}
+              getScoreColor={getScoreColor}
+              onValueUpdate={(value) => {
+                if (updateActualMetricValue) {
+                  updateActualMetricValue(groupIndex, criterionIndex, value);
+                }
+              }}
+              onRangeUpdate={updateActualMetricRange ? 
+                (min, max) => updateActualMetricRange(groupIndex, criterionIndex, min, max) : 
+                undefined}
+              onRiskScoreRangeUpdate={handleEbitdaRiskScoreRangeUpdate}
+              isEbitda={true}
+            />
           ) : (
             <MetricSlider
               actualValue={criterion.actualValue}

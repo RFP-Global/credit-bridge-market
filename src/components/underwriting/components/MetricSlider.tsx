@@ -16,6 +16,8 @@ interface MetricSliderProps {
   getScoreColor: (score: number) => string;
   onValueUpdate: (value: number) => void;
   onRangeUpdate?: (min: number, max: number) => void;
+  onRiskScoreRangeUpdate?: (min: number, max: number) => void;
+  isEbitda?: boolean;
 }
 
 export const MetricSlider = ({
@@ -30,6 +32,8 @@ export const MetricSlider = ({
   getScoreColor,
   onValueUpdate,
   onRangeUpdate,
+  onRiskScoreRangeUpdate,
+  isEbitda = false,
 }: MetricSliderProps) => {
   // If actualMin or actualMax is undefined, don't render anything
   if (actualMin === undefined || actualMax === undefined) {
@@ -50,6 +54,8 @@ export const MetricSlider = ({
           actualUnit={actualUnit}
           name={name}
           onRangeUpdate={onRangeUpdate}
+          onRiskScoreRangeUpdate={onRiskScoreRangeUpdate}
+          isEbitda={isEbitda}
         />
       ) : (
         <ValueSlider
