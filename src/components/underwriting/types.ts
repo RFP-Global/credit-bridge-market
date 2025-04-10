@@ -1,4 +1,3 @@
-
 export interface ScoreRange {
   min: number;
   max: number;
@@ -18,6 +17,8 @@ export interface Criterion {
   preferredMin?: number;
   preferredMax?: number;
   actualValue?: number;
+  actualMinValue?: number;
+  actualMaxValue?: number;
   actualMin?: number;
   actualMax?: number;
   actualUnit?: string;

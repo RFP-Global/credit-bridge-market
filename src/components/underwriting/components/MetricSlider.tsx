@@ -1,7 +1,7 @@
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RangeSlider } from "@/components/ui/range-slider";
+import { Slider } from "@/components/ui/slider";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ScoreRange } from "../types";
@@ -37,7 +37,6 @@ export const MetricSlider = ({
   const [minInputValue, setMinInputValue] = useState(actualMinValue?.toString() || "");
   const [maxInputValue, setMaxInputValue] = useState(actualMaxValue?.toString() || "");
   
-  // Set initial range values from props
   const [rangeValues, setRangeValues] = useState<[number, number]>(
     [actualMinValue || actualValue || (actualMin || 0), 
      actualMaxValue || actualValue || (actualMax || 1)]
@@ -113,7 +112,6 @@ export const MetricSlider = ({
       </div>
       
       {rangeMode ? (
-        // Range slider for range mode
         <div>
           <RangeSlider
             value={rangeValues}
@@ -153,7 +151,6 @@ export const MetricSlider = ({
           </div>
         </div>
       ) : (
-        // Single slider for value mode (legacy support)
         <div className="flex items-center gap-2">
           <Button 
             variant="outline" 
