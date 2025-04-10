@@ -1,4 +1,4 @@
-
+import React from 'react';
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -92,7 +92,7 @@ const Underwriting = () => {
                 <div className="bg-gradient-to-br from-gray-900 to-gray-950 p-6 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-gray-800/50">
                   <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Overall Risk Score</div>
                   <div className={`text-5xl font-bold ${handleGetScoreColor(avgTotalScore)}`}>
-                    {minTotalScore.toFixed(2)}-{maxTotalScore.toFixed(2)}
+                    {minTotalScore.toFixed(1)}-{maxTotalScore.toFixed(1)}
                   </div>
                   <CustomBadge 
                     variant={
@@ -152,7 +152,7 @@ const Underwriting = () => {
                   <div className="mt-4 pt-4 border-t border-gray-800/50 flex items-center justify-between">
                     <span className="text-sm font-medium">Total Score Range</span>
                     <div className={`text-lg font-bold ${handleGetScoreColor(avgTotalScore)}`}>
-                      {minTotalScore.toFixed(2)}-{maxTotalScore.toFixed(2)}
+                      {minTotalScore.toFixed(1)}-{maxTotalScore.toFixed(1)}
                     </div>
                   </div>
                 </div>

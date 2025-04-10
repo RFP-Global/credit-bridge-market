@@ -38,7 +38,7 @@ export const RiskScoreBreakdown = ({
                     <div className="text-sm font-medium">{group.name}</div>
                     <div className={`text-sm font-bold ${getScoreColor(avgScore)}`}>
                       {group.minScore !== undefined && group.maxScore !== undefined
-                        ? `${group.minScore.toFixed(2)}-${group.maxScore.toFixed(2)}`
+                        ? `${group.minScore.toFixed(1)}-${group.maxScore.toFixed(1)}`
                         : "N/A"}
                     </div>
                   </div>
