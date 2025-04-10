@@ -406,8 +406,6 @@ export const CriterionItem = ({
 
       <CriterionScore
         score={criterion.score}
-        getScoreColor={getScoreColor}
-        getScoreBackground={getScoreBackground}
         onScoreUpdate={(newScore) => updateCriterionScore(groupIndex, criterionIndex, newScore)}
       />
 
