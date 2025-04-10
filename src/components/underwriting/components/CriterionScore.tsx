@@ -4,15 +4,11 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface CriterionScoreProps {
   score: number;
-  getScoreColor: (score: number) => string;
-  getScoreBackground: (score: number) => string;
   onScoreUpdate: (score: number) => void;
 }
 
 export const CriterionScore = ({
   score,
-  getScoreColor,
-  getScoreBackground,
   onScoreUpdate,
 }: CriterionScoreProps) => {
   return (
@@ -37,7 +33,7 @@ export const CriterionScore = ({
               key={value}
               className={`h-6 flex-1 border-r last:border-r-0 border-gray-800 transition-colors ${
                 score >= value 
-                  ? getScoreBackground(value)
+                  ? 'bg-gray-600/50'
                   : 'bg-gray-800/30'
               }`}
               onClick={() => onScoreUpdate(value)}
