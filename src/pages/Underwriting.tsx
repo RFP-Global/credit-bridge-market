@@ -29,6 +29,7 @@ import { RiskScoreBreakdown } from "@/components/underwriting/RiskScoreBreakdown
 import { Accordion } from "@/components/ui/accordion";
 import { CriteriaGroup } from "@/components/underwriting/CriteriaGroup";
 import { CustomBadge } from "@/components/ui/custom-badge";
+import { Separator } from "@/components/ui/separator";
 
 const Underwriting = () => {
   const {
@@ -84,21 +85,47 @@ const Underwriting = () => {
               </div>
             </div>
             
-            {/* Score Card at the top */}
+            {/* Enhanced Score Card at the top */}
             <Card className="bg-black/40 border-gray-800 mb-6">
               <div className="p-6">
-                <div className="flex flex-col md:flex-row items-center justify-between">
-                  <div>
+                <div className="flex flex-col lg:flex-row gap-6">
+                  <div className="flex-1">
                     <h2 className="text-lg font-mono mb-2">RISK PREFERENCE SCORE</h2>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground mb-4">
                       Your current risk algorithm is configured to the following preference
                     </p>
+                    
+                    {/* Component Score Breakdown */}
+                    <div className="space-y-3">
+                      {criteriaGroups.map((group) => (
+                        <div key={group.name} className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs">
+                              {group.weight}%
+                            </div>
+                            <span className="text-sm">{group.name}</span>
+                          </div>
+                          <div className={`font-medium ${handleGetScoreColor(group.score)}`}>
+                            {group.score.toFixed(2)}
+                          </div>
+                        </div>
+                      ))}
+                      
+                      <Separator className="my-2 bg-gray-800/50" />
+                      
+                      <div className="flex items-center justify-between font-semibold">
+                        <span>Total Score</span>
+                        <div className={`${handleGetScoreColor(totalScore)}`}>
+                          {totalScore.toFixed(2)}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   
-                  <div className="flex items-center gap-4 mt-4 md:mt-0">
-                    <div className="bg-black/60 border border-primary/20 rounded-md p-4 flex flex-col items-center min-w-[120px]">
+                  <div className="flex flex-col items-center justify-center border-l border-gray-800/50 pl-6">
+                    <div className="bg-black/60 border border-primary/20 rounded-md p-4 flex flex-col items-center min-w-[140px]">
                       <div className="text-xs text-muted-foreground mb-2">OVERALL SCORE</div>
-                      <div className={`text-3xl font-bold ${handleGetScoreColor(totalScore)}`}>
+                      <div className={`text-4xl font-bold ${handleGetScoreColor(totalScore)}`}>
                         {totalScore.toFixed(2)}
                       </div>
                       <CustomBadge 
@@ -111,26 +138,26 @@ const Underwriting = () => {
                       >
                         {riskLevel.label}
                       </CustomBadge>
+                      
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="ghost" size="sm" className="mt-2">
+                              <Info className="h-4 w-4 mr-1" /> Score Scale
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent side="bottom">
+                            <p className="w-[240px] text-xs">
+                              Risk Score Scale:<br />
+                              1-2.49: High Risk<br />
+                              2.5-3.49: Medium-High Risk<br />
+                              3.5-4.49: Moderate Risk<br />
+                              4.5-5: Low Risk
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
-                    
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button variant="outline" size="icon">
-                            <Info className="h-4 w-4" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent side="bottom">
-                          <p className="w-[240px] text-xs">
-                            Risk Score Scale:<br />
-                            1-2.49: High Risk<br />
-                            2.5-3.49: Medium-High Risk<br />
-                            3.5-4.49: Moderate Risk<br />
-                            4.5-5: Low Risk
-                          </p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
                   </div>
                 </div>
               </div>
