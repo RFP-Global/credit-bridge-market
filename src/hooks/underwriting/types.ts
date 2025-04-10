@@ -1,18 +1,11 @@
 
 import { CriteriaGroup, ScoreThreshold } from "@/components/underwriting/types";
 
-export interface UnderwritingState {
-  activeTab: string;
+export interface UseUnderwritingStateReturn {
   totalScore: number;
+  setTotalScore: React.Dispatch<React.SetStateAction<number>>;
   scoreThresholds: ScoreThreshold[];
+  setScoreThresholds: React.Dispatch<React.SetStateAction<ScoreThreshold[]>>;
   criteriaGroups: CriteriaGroup[];
+  setCriteriaGroups: React.Dispatch<React.SetStateAction<CriteriaGroup[]>>;
 }
-
-export interface UnderwritingStateActions {
-  setActiveTab: (tab: string) => void;
-  setTotalScore: (score: number) => void;
-  setScoreThresholds: (thresholds: ScoreThreshold[]) => void;
-  setCriteriaGroups: (groups: CriteriaGroup[]) => void;
-}
-
-export type UseUnderwritingStateReturn = UnderwritingState & UnderwritingStateActions;

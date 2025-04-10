@@ -1,9 +1,8 @@
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Info, FileSpreadsheet, Settings } from "lucide-react";
+import { Info, FileSpreadsheet, Settings, Save } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -12,9 +11,6 @@ import {
 } from "@/components/ui/tooltip";
 import LenderHeader from "@/components/lender/LenderHeader";
 import LenderSidebar from "@/components/lender/LenderSidebar";
-import { AlgorithmTab } from "@/components/underwriting/AlgorithmTab";
-import { AlgorithmSettings } from "@/components/underwriting/AlgorithmSettings";
-import { UnderwritingPreferences } from "@/components/underwriting/UnderwritingPreferences";
 import { useUnderwritingState } from "@/hooks/useUnderwritingState";
 import { 
   updateCriterionWeight, 
@@ -28,11 +24,13 @@ import {
   getScoreBackground,
   getRiskLevel
 } from "@/components/underwriting/utils/styleUtils";
+import { CategoryWeights } from "@/components/underwriting/CategoryWeights";
+import { RiskScoreBreakdown } from "@/components/underwriting/RiskScoreBreakdown";
+import { Accordion } from "@/components/ui/accordion";
+import { CriteriaGroup } from "@/components/underwriting/CriteriaGroup";
 
 const Underwriting = () => {
   const {
-    activeTab,
-    setActiveTab,
     totalScore,
     setTotalScore,
     scoreThresholds,
@@ -112,42 +110,44 @@ const Underwriting = () => {
               </div>
             </div>
             
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <TabsList className="bg-background/50 mb-4">
-                <TabsTrigger value="preferences" className="font-mono text-xs flex items-center">
-                  <FileSpreadsheet className="h-3.5 w-3.5 mr-2" />
-                  UNDERWRITING PREFERENCES
-                </TabsTrigger>
-                <TabsTrigger value="algorithm" className="font-mono text-xs flex items-center">
-                  <Settings className="h-3.5 w-3.5 mr-2" />
-                  RISK ALGORITHM
-                </TabsTrigger>
-                <TabsTrigger value="settings" className="font-mono text-xs">
-                  ALGORITHM SETTINGS
-                </TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="preferences" className="space-y-6">
-                <UnderwritingPreferences />
-              </TabsContent>
-              
-              <TabsContent value="algorithm" className="space-y-6">
-                <AlgorithmTab 
+            <div className="space-y-6">
+              <div className="flex flex-col md:flex-row items-start gap-6 mb-6">
+                <CategoryWeights 
                   criteriaGroups={criteriaGroups}
                   updateGroupWeight={handleUpdateGroupWeight}
-                  updateCriterionWeight={handleUpdateCriterionWeight}
-                  updateCriterionScore={handleUpdateCriterionScore}
-                  updateCriterionRange={handleUpdateCriterionRange}
-                  updateActualMetricValue={handleUpdateActualMetricValue}
+                  getScoreColor={handleGetScoreColor}
+                />
+                <RiskScoreBreakdown 
+                  criteriaGroups={criteriaGroups}
                   getScoreColor={handleGetScoreColor}
                   getScoreBackground={handleGetScoreBackground}
                 />
-              </TabsContent>
+              </div>
               
-              <TabsContent value="settings">
-                <AlgorithmSettings />
-              </TabsContent>
-            </Tabs>
+              <Accordion type="single" collapsible className="w-full space-y-4">
+                {criteriaGroups.map((group, groupIndex) => (
+                  <CriteriaGroup
+                    key={group.name}
+                    group={group}
+                    groupIndex={groupIndex}
+                    updateGroupWeight={handleUpdateGroupWeight}
+                    updateCriterionWeight={handleUpdateCriterionWeight}
+                    updateCriterionScore={handleUpdateCriterionScore}
+                    updateCriterionRange={handleUpdateCriterionRange}
+                    updateActualMetricValue={handleUpdateActualMetricValue}
+                    getScoreColor={handleGetScoreColor}
+                    getScoreBackground={handleGetScoreBackground}
+                  />
+                ))}
+              </Accordion>
+              
+              <div className="flex justify-end mt-8">
+                <Button className="bg-blue-600 hover:bg-blue-700">
+                  <Save className="mr-2 h-4 w-4" />
+                  Save Algorithm Configuration
+                </Button>
+              </div>
+            </div>
           </main>
         </div>
       </div>
