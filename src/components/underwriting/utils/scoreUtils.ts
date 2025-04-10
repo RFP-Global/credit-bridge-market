@@ -1,4 +1,3 @@
-
 import { CriteriaGroup } from "../types";
 
 export const updateCriterionWeight = (
@@ -167,20 +166,10 @@ export const updateActualMetricValue = (
       criterion.score = matchingRange.score;
     } else if (newValue < criterion.scoreMapping[0].min) {
       // If value is below the lowest range
-      if (criterion.name === "Debt/EBITDA") {
-        // For Debt/EBITDA, lower values are better
-        criterion.score = criterion.scoreMapping[0].score;
-      } else {
-        criterion.score = criterion.scoreMapping[0].score;
-      }
+      criterion.score = criterion.scoreMapping[0].score;
     } else if (newValue > criterion.scoreMapping[criterion.scoreMapping.length - 1].max) {
       // If value is above the highest range
-      if (criterion.name === "Debt/EBITDA") {
-        // For Debt/EBITDA, higher values are worse
-        criterion.score = criterion.scoreMapping[criterion.scoreMapping.length - 1].score;
-      } else {
-        criterion.score = criterion.scoreMapping[criterion.scoreMapping.length - 1].score;
-      }
+      criterion.score = criterion.scoreMapping[criterion.scoreMapping.length - 1].score;
     }
   } else if (criterion.actualMin !== undefined && criterion.actualMax !== undefined) {
     // Simple linear interpolation if no explicit mapping

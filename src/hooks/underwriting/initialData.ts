@@ -43,7 +43,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         description: "Ratio of total debt to EBITDA",
         value: "3.6x",
         weight: 25,
-        score: 3,
+        score: 4,
         min: 1,
         max: 5,
         step: 1,
