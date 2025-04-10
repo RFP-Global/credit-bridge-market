@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp, Info, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -103,6 +102,10 @@ export const CriterionItem = ({
       : `${criterion.actualValue}${criterion.actualUnit || ""}`;
     return formatted;
   };
+
+  const avgScore = criterion.minScore !== undefined && criterion.maxScore !== undefined 
+    ? (criterion.minScore + criterion.maxScore) / 2 
+    : 0;
 
   const renderScoreMappingTable = (scoreMapping: ScoreRange[]) => {
     return (
@@ -291,11 +294,11 @@ export const CriterionItem = ({
               </PopoverTrigger>
               <PopoverContent side="left" className="w-auto max-w-[300px] p-3 bg-gray-950 border border-gray-800">
                 <div className="text-xs font-semibold mb-2 text-gray-300">Score Mapping for {criterion.name}</div>
-                {renderScoreMappingTable(criterion.scoreMapping)}
+                {criterion.scoreMapping && renderScoreMappingTable(criterion.scoreMapping)}
               </PopoverContent>
             </Popover>
           )}
-          <div className={`font-medium ${getScoreColor((criterion.minScore + criterion.maxScore) / 2)}`}>
+          <div className={`font-medium ${getScoreColor(avgScore)}`}>
             Score: {criterion.minScore.toFixed(1)}-{criterion.maxScore.toFixed(1)}
           </div>
         </div>
@@ -373,7 +376,7 @@ export const CriterionItem = ({
         </div>
       </div>
 
-      {renderActualMetricSlider()}
+      {renderActualMetricSlider && renderActualMetricSlider()}
 
       <div className="mt-3 pt-3 border-t border-gray-800/30">
         <div className="text-xs font-medium mb-2">Preferred Range {criterion.unit ? `(${criterion.unit})` : ''}</div>

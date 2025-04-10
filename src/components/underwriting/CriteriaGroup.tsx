@@ -43,6 +43,10 @@ export const CriteriaGroup = ({
   getScoreColor,
   getScoreBackground,
 }: CriteriaGroupProps) => {
+  const avgScore = group.minScore !== undefined && group.maxScore !== undefined 
+    ? (group.minScore + group.maxScore) / 2 
+    : 0;
+    
   return (
     <AccordionItem 
       key={group.name} 
@@ -58,8 +62,10 @@ export const CriteriaGroup = ({
             </Badge>
           </div>
           <div className="flex items-center">
-            <span className={`font-bold mr-2 ${getScoreColor((group.minScore + group.maxScore) / 2)}`}>
-              {group.minScore.toFixed(1)}-{group.maxScore.toFixed(1)}
+            <span className={`font-bold mr-2 ${getScoreColor(avgScore)}`}>
+              {group.minScore !== undefined && group.maxScore !== undefined
+                ? `${group.minScore.toFixed(1)}-${group.maxScore.toFixed(1)}`
+                : "N/A"}
             </span>
             <ChevronDown className="h-4 w-4 transition-transform duration-200" />
           </div>

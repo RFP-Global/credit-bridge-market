@@ -36,7 +36,9 @@ export const CategoryWeights = ({
               <div className="text-sm font-medium">{group.name}</div>
               <div className="flex items-center gap-2">
                 <div className={`text-sm font-medium ${getScoreColor((group.minScore + group.maxScore) / 2)}`}>
-                  {group.minScore.toFixed(1)}-{group.maxScore.toFixed(1)}
+                  {group.minScore !== undefined && group.maxScore !== undefined ? 
+                    `${group.minScore.toFixed(1)}-${group.maxScore.toFixed(1)}` : 
+                    "N/A"}
                 </div>
                 <div className="text-xs text-muted-foreground">{group.weight}%</div>
               </div>
