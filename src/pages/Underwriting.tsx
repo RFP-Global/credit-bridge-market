@@ -28,6 +28,7 @@ import { CategoryWeights } from "@/components/underwriting/CategoryWeights";
 import { RiskScoreBreakdown } from "@/components/underwriting/RiskScoreBreakdown";
 import { Accordion } from "@/components/ui/accordion";
 import { CriteriaGroup } from "@/components/underwriting/CriteriaGroup";
+import { CustomBadge } from "@/components/ui/custom-badge";
 
 const Underwriting = () => {
   const {
@@ -63,6 +64,8 @@ const Underwriting = () => {
   const handleGetScoreColor = (score: number) => getScoreColor(score, scoreThresholds);
   const handleGetScoreBackground = (score: number) => getScoreBackground(score);
   
+  const riskLevel = getRiskLevel(totalScore);
+  
   return (
     <div className="min-h-screen bg-black text-gray-200 relative grid-bg">
       <LenderHeader />
@@ -79,36 +82,59 @@ const Underwriting = () => {
                   Customize borrower metric ranges and scoring criteria for your lending preferences
                 </p>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="bg-black/40 border border-primary/20 rounded-md p-3 flex flex-col items-center">
-                  <div className="text-xs text-muted-foreground mb-1">RISK PREFERENCE</div>
-                  <div className={`text-2xl font-bold ${handleGetScoreColor(totalScore)}`}>
-                    {totalScore.toFixed(2)}
-                  </div>
-                  <Badge variant="outline" className={`mt-1 text-xs ${getRiskLevel(totalScore).color}`}>
-                    {getRiskLevel(totalScore).label}
-                  </Badge>
-                </div>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon">
-                        <Info className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom">
-                      <p className="w-[200px] text-xs">
-                        Risk Score Scale:<br />
-                        1-2.49: High Risk<br />
-                        2.5-3.49: Medium-High Risk<br />
-                        3.5-4.49: Moderate Risk<br />
-                        4.5-5: Low Risk
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
             </div>
+            
+            {/* Score Card at the top */}
+            <Card className="bg-black/40 border-gray-800 mb-6">
+              <div className="p-6">
+                <div className="flex flex-col md:flex-row items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-mono mb-2">RISK PREFERENCE SCORE</h2>
+                    <p className="text-sm text-muted-foreground">
+                      Your current risk algorithm is configured to the following preference
+                    </p>
+                  </div>
+                  
+                  <div className="flex items-center gap-4 mt-4 md:mt-0">
+                    <div className="bg-black/60 border border-primary/20 rounded-md p-4 flex flex-col items-center min-w-[120px]">
+                      <div className="text-xs text-muted-foreground mb-2">OVERALL SCORE</div>
+                      <div className={`text-3xl font-bold ${handleGetScoreColor(totalScore)}`}>
+                        {totalScore.toFixed(2)}
+                      </div>
+                      <CustomBadge 
+                        variant={
+                          totalScore >= 4.5 ? "success" : 
+                          totalScore >= 3.5 ? "secondary" :
+                          totalScore >= 2.5 ? "warning" : "destructive"
+                        } 
+                        className="mt-2"
+                      >
+                        {riskLevel.label}
+                      </CustomBadge>
+                    </div>
+                    
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant="outline" size="icon">
+                            <Info className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom">
+                          <p className="w-[240px] text-xs">
+                            Risk Score Scale:<br />
+                            1-2.49: High Risk<br />
+                            2.5-3.49: Medium-High Risk<br />
+                            3.5-4.49: Moderate Risk<br />
+                            4.5-5: Low Risk
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                </div>
+              </div>
+            </Card>
             
             <div className="space-y-6">
               <div className="flex flex-col md:flex-row items-start gap-6 mb-6">
