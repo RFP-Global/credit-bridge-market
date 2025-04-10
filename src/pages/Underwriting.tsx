@@ -91,7 +91,7 @@ const Underwriting = () => {
             <Card className="bg-black/40 border-gray-800 mb-6 overflow-hidden">
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-0">
                 <div className="bg-gradient-to-br from-gray-900 to-gray-950 p-3 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-gray-800/50 lg:col-span-1">
-                  <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Overall Risk Score</div>
+                  <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Target Enterprise Score Range</div>
                   <div className={`text-xl font-bold ${handleGetScoreColor(avgTotalScore)}`}>
                     {minTotalScore.toFixed(1)}-{maxTotalScore.toFixed(1)}
                   </div>
