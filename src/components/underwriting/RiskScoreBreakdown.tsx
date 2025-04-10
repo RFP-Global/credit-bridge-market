@@ -38,7 +38,7 @@ export const RiskScoreBreakdown = ({
                 <div className="w-full h-2 bg-gray-800/50 rounded-full overflow-hidden">
                   <div 
                     className={`h-full ${getScoreBackground(group.score)}`}
-                    style={{ width: `${(group.score / 5) * 100}%` }}
+                    style={{ width: `${(group.score / 10) * 100}%` }}
                   />
                 </div>
               </div>

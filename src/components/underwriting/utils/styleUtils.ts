@@ -1,4 +1,3 @@
-
 import { ScoreThreshold } from "../types";
 
 export const getScoreColor = (score: number, scoreThresholds: ScoreThreshold[]) => {
@@ -24,7 +23,6 @@ export const getRiskLevel = (score: number) => {
   return { label: "High Risk", color: "bg-red-500/20 text-red-500 border-red-500/20" };
 };
 
-// Compatibility score styling
 export const getCompatibilityScore = (score: number) => {
   if (score >= 80) return { label: "Strong Match", color: "bg-green-500/20 text-green-500 border-green-500/20" };
   if (score >= 60) return { label: "Good Match", color: "bg-blue-500/20 text-blue-500 border-blue-500/20" };
@@ -32,9 +30,7 @@ export const getCompatibilityScore = (score: number) => {
   return { label: "Poor Match", color: "bg-red-500/20 text-red-500 border-red-500/20" };
 };
 
-// Financial ratio score mapping
 export const financialRatiosScoreMapping = {
-  // DSCR (Debt Service Coverage Ratio)
   DSCR: [
     { min: 3.00, max: Number.MAX_VALUE, score: 10, level: "Exceptional" },
     { min: 2.50, max: 2.99, score: 9, level: "Very Strong" },
@@ -48,7 +44,6 @@ export const financialRatiosScoreMapping = {
     { min: 0, max: 0.75, score: 1, level: "Severe Risk" },
   ],
   
-  // Debt/EBITDA
   DebtToEBITDA: [
     { min: 0, max: 1.00, score: 10, level: "Minimal Leverage" },
     { min: 1.01, max: 2.00, score: 9, level: "Low Leverage" },
@@ -62,7 +57,6 @@ export const financialRatiosScoreMapping = {
     { min: 10.01, max: Number.MAX_VALUE, score: 1, level: "Unsustainable" },
   ],
   
-  // Current Ratio
   CurrentRatio: [
     { min: 3.00, max: Number.MAX_VALUE, score: 10, level: "Highly Liquid" },
     { min: 2.50, max: 2.99, score: 9, level: "Very Strong" },
@@ -76,7 +70,6 @@ export const financialRatiosScoreMapping = {
     { min: 0, max: 0.75, score: 1, level: "Critical" },
   ],
   
-  // Interest Coverage
   InterestCoverage: [
     { min: 8.00, max: Number.MAX_VALUE, score: 10, level: "Outstanding" },
     { min: 6.00, max: 7.99, score: 9, level: "Very Strong" },
@@ -90,7 +83,6 @@ export const financialRatiosScoreMapping = {
     { min: 0, max: 0.75, score: 1, level: "Severe Risk" },
   ],
   
-  // Revenue (in millions)
   Revenue: [
     { min: 500.00, max: Number.MAX_VALUE, score: 10, level: "Highly Stable" },
     { min: 250.00, max: 500.00, score: 9, level: "Strong" },
@@ -105,9 +97,7 @@ export const financialRatiosScoreMapping = {
   ]
 };
 
-// Business stability score mapping
 export const businessStabilityScoreMapping = {
-  // Years in Operation
   YearsInOperation: [
     { min: 15.00, max: Number.MAX_VALUE, score: 10 },
     { min: 10.00, max: 15.00, score: 9 },
@@ -121,7 +111,6 @@ export const businessStabilityScoreMapping = {
     { min: 0, max: 0.25, score: 1 },
   ],
   
-  // Revenue from Top Customer(s) %
   CustomerConcentration: [
     { min: 0, max: 10, score: 10 },
     { min: 10, max: 15, score: 9 },
@@ -135,7 +124,6 @@ export const businessStabilityScoreMapping = {
     { min: 75, max: 100, score: 1 },
   ],
   
-  // Competitor Count
   CompetitorCount: [
     { min: 0, max: 2, score: 10 },
     { min: 3, max: 5, score: 8 },
@@ -144,7 +132,6 @@ export const businessStabilityScoreMapping = {
     { min: 21, max: Number.MAX_VALUE, score: 2 },
   ],
   
-  // Customer Retention Rate %
   CustomerRetention: [
     { min: 80, max: 100, score: 10 },
     { min: 60, max: 79, score: 8 },
@@ -154,9 +141,7 @@ export const businessStabilityScoreMapping = {
   ],
 };
 
-// Collateral strength score mapping
 export const collateralStrengthScoreMapping = {
-  // Collateral Type
   CollateralType: {
     "Cash or Marketable Securities": 10,
     "Investment Grade Bonds": 9,
@@ -169,7 +154,6 @@ export const collateralStrengthScoreMapping = {
     "No Collateral": 1,
   },
   
-  // LTV (Loan to Value)
   LTV: [
     { min: 0, max: 30, score: 10 },
     { min: 30, max: 40, score: 9 },
@@ -183,7 +167,6 @@ export const collateralStrengthScoreMapping = {
     { min: 90, max: 100, score: 1 },
   ],
   
-  // Collateral Type (Loan Priority)
   CollateralPriority: {
     "Senior Secured (1st Lien)": 10,
     "1st Lien but Shared Collateral": 9,
@@ -198,9 +181,7 @@ export const collateralStrengthScoreMapping = {
   },
 };
 
-// Banking & Relationship score mapping
 export const bankingRelationshipScoreMapping = {
-  // Primary Banking Stability
   PrimaryBankingStability: {
     "10+ Years": 10,
     "7-9 Years": 8,
@@ -209,7 +190,6 @@ export const bankingRelationshipScoreMapping = {
     "< 1 Year": 2,
   },
   
-  // Level of Differentiation
   LevelOfDifferentiation: {
     "Highly Unique (Patented/IP Protected, No Close Substitutes)": 10,
     "Moderately Unique (Some Competitors, But Strong Differentiation)": 8,
@@ -218,7 +198,6 @@ export const bankingRelationshipScoreMapping = {
     "Commodity Product (No Differentiation, Easily Replicated)": 2,
   },
   
-  // Active Relationships
   ActiveRelationships: {
     "1-2": 10,
     "3": 8,
@@ -227,7 +206,6 @@ export const bankingRelationshipScoreMapping = {
     "8+": 2,
   },
   
-  // # Missed Payments / Defaults
   MissedPaymentsDefaults: {
     "No Missed Payments": 10,
     "1-2 Late Payments": 8,
@@ -236,7 +214,6 @@ export const bankingRelationshipScoreMapping = {
     "Default History": 2,
   },
   
-  // Covenant Violations/Loan Mods
   CovenantViolations: {
     "No Violations / Modifications": 10,
     "1 Minor Waiver": 8,
@@ -245,7 +222,6 @@ export const bankingRelationshipScoreMapping = {
     "Major Restructuring": 2,
   },
   
-  // Banking Product Breadth
   BankingProductBreadth: {
     "3+ Banking Services": 10,
     "2 Services": 8,
