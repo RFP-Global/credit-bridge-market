@@ -50,6 +50,9 @@ export const CriterionItem = ({
   const [maxValue, setMaxValue] = useState(criterion.preferredMax?.toString() || "");
   const [minScore, setMinScore] = useState(criterion.minScore?.toString() || criterion.score.toString());
   const [maxScore, setMaxScore] = useState(criterion.maxScore?.toString() || criterion.score.toString());
+  
+  // Check if this is the EBITDA criterion in the Financial Strength section (group index 0, criterion index 0)
+  const isEbitdaCriterion = groupIndex === 0 && criterionIndex === 0 && criterion.name === "EBITDA";
 
   const handleRangeUpdate = () => {
     if (updateCriterionRange && minValue && maxValue) {
@@ -180,12 +183,15 @@ export const CriterionItem = ({
         </div>
       </div>
 
-      <CriterionScore
-        score={criterion.score}
-        getScoreColor={getScoreColor}
-        getScoreBackground={getScoreBackground}
-        onScoreUpdate={(newScore) => updateCriterionScore(groupIndex, criterionIndex, newScore)}
-      />
+      {/* Skip rendering the CriterionScore for EBITDA criterion only */}
+      {!isEbitdaCriterion && (
+        <CriterionScore
+          score={criterion.score}
+          getScoreColor={getScoreColor}
+          getScoreBackground={getScoreBackground}
+          onScoreUpdate={(newScore) => updateCriterionScore(groupIndex, criterionIndex, newScore)}
+        />
+      )}
 
       {(updateActualMetricValue || updateActualMetricRange) && (
         <MetricSlider
@@ -248,3 +254,4 @@ export const CriterionItem = ({
     </div>
   );
 };
+
