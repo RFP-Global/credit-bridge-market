@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { ChevronDown, ChevronUp, Info } from "lucide-react";
+import { ChevronDown, ChevronUp, Info, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Criterion, ScoreRange } from "./types";
 
 interface CriterionItemProps {
@@ -82,6 +87,37 @@ export const CriterionItem = ({
       ? `${criterion.actualUnit}${criterion.actualValue}` 
       : `${criterion.actualValue}${criterion.actualUnit || ""}`;
     return formatted;
+  };
+
+  const renderScoreMappingTable = (scoreMapping: ScoreRange[]) => {
+    return (
+      <div className="w-full">
+        <table className="w-full text-xs border-collapse">
+          <thead>
+            <tr className="bg-gray-900/60">
+              <th className="py-1.5 px-2 text-left border-b border-gray-700">Range</th>
+              <th className="py-1.5 px-2 text-left border-b border-gray-700">Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {scoreMapping.map((range, idx) => (
+              <tr key={`mapping-row-${idx}`} className="border-b border-gray-800/40 last:border-0">
+                <td className="py-1.5 px-2">
+                  {idx === 0 ? 
+                    `≤ ${range.max}${criterion.actualUnit || ''}` : 
+                    idx === scoreMapping.length - 1 ? 
+                    `> ${range.min}${criterion.actualUnit || ''}` : 
+                    `${range.min} - ${range.max}${criterion.actualUnit || ''}`}
+                </td>
+                <td className={`py-1.5 px-2 ${getScoreColor(range.score)}`}>
+                  {range.score}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
   };
 
   const formatScoreMapping = (scoreMapping: ScoreRange[]) => {
@@ -231,6 +267,19 @@ export const CriterionItem = ({
           <div className="text-xs text-muted-foreground">
             Weight: {criterion.weight}%
           </div>
+          {criterion.scoreMapping && (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-primary">
+                  <HelpCircle className="h-4 w-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent side="left" className="w-auto max-w-[300px] p-3 bg-gray-950 border border-gray-800">
+                <div className="text-xs font-semibold mb-2 text-gray-300">Score Mapping for {criterion.name}</div>
+                {renderScoreMappingTable(criterion.scoreMapping)}
+              </PopoverContent>
+            </Popover>
+          )}
           <div className={`font-medium ${getScoreColor(criterion.score)}`}>
             Score: {criterion.score}
           </div>
