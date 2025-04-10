@@ -1,3 +1,4 @@
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,7 +20,8 @@ import {
   updateCriterionWeight, 
   updateGroupWeight, 
   updateCriterionScore, 
-  updateCriterionRange 
+  updateCriterionRange,
+  updateActualMetricValue
 } from "@/components/underwriting/utils/scoreUtils";
 import {
   getScoreColor,
@@ -53,6 +55,10 @@ const Underwriting = () => {
 
   const handleUpdateCriterionRange = (groupIndex: number, criterionIndex: number, min: number, max: number) => {
     updateCriterionRange(criteriaGroups, groupIndex, criterionIndex, min, max, setCriteriaGroups, setTotalScore);
+  };
+  
+  const handleUpdateActualMetricValue = (groupIndex: number, criterionIndex: number, value: number) => {
+    updateActualMetricValue(criteriaGroups, groupIndex, criterionIndex, value, setCriteriaGroups, setTotalScore);
   };
 
   // Create wrapper functions for style utilities that use the state

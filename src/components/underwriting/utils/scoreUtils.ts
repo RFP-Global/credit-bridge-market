@@ -143,6 +143,48 @@ export const updateCriterionRange = (
   setCriteriaGroups(newGroups);
 };
 
+export const updateActualMetricValue = (
+  criteriaGroups: CriteriaGroup[],
+  groupIndex: number, 
+  criterionIndex: number, 
+  newValue: number,
+  setCriteriaGroups: React.Dispatch<React.SetStateAction<CriteriaGroup[]>>,
+  setTotalScore: React.Dispatch<React.SetStateAction<number>>
+) => {
+  const newGroups = [...criteriaGroups];
+  const criterion = newGroups[groupIndex].criteria[criterionIndex];
+  
+  criterion.actualValue = newValue;
+  
+  // Calculate score based on actual value and score mapping
+  if (criterion.scoreMapping) {
+    // Find the appropriate score range
+    const matchingRange = criterion.scoreMapping.find(
+      range => newValue >= range.min && newValue <= range.max
+    );
+    
+    if (matchingRange) {
+      criterion.score = matchingRange.score;
+    } else if (newValue < criterion.scoreMapping[0].min) {
+      criterion.score = criterion.scoreMapping[0].score;
+    } else if (newValue > criterion.scoreMapping[criterion.scoreMapping.length - 1].max) {
+      criterion.score = criterion.scoreMapping[criterion.scoreMapping.length - 1].score;
+    }
+  } else if (criterion.actualMin !== undefined && criterion.actualMax !== undefined) {
+    // Simple linear interpolation if no explicit mapping
+    const percent = (newValue - criterion.actualMin) / (criterion.actualMax - criterion.actualMin);
+    const idealPercent = criterion.name.toLowerCase().includes('debt') || 
+                         criterion.name.toLowerCase().includes('risk') ? 
+                         1 - percent : percent; // Invert for metrics where lower is better
+    
+    criterion.score = 1 + idealPercent * 4; // Scale to 1-5
+    criterion.score = parseFloat(criterion.score.toFixed(1));
+  }
+  
+  recalculateScores(newGroups, setTotalScore);
+  setCriteriaGroups(newGroups);
+};
+
 export const recalculateScores = (
   groups: CriteriaGroup[], 
   setTotalScore: React.Dispatch<React.SetStateAction<number>>

@@ -27,6 +27,7 @@ interface CriteriaGroupProps {
   updateCriterionWeight: (groupIndex: number, criterionIndex: number, newWeight: number) => void;
   updateCriterionScore: (groupIndex: number, criterionIndex: number, newScore: number) => void;
   updateCriterionRange?: (groupIndex: number, criterionIndex: number, min: number, max: number) => void;
+  updateActualMetricValue?: (groupIndex: number, criterionIndex: number, value: number) => void;
   getScoreColor: (score: number) => string;
   getScoreBackground: (score: number) => string;
 }
@@ -38,6 +39,7 @@ export const CriteriaGroup = ({
   updateCriterionWeight,
   updateCriterionScore,
   updateCriterionRange,
+  updateActualMetricValue,
   getScoreColor,
   getScoreBackground,
 }: CriteriaGroupProps) => {
@@ -77,6 +79,7 @@ export const CriteriaGroup = ({
               updateCriterionWeight={updateCriterionWeight}
               updateCriterionScore={updateCriterionScore}
               updateCriterionRange={updateCriterionRange}
+              updateActualMetricValue={updateActualMetricValue}
               getScoreColor={getScoreColor}
               getScoreBackground={getScoreBackground}
             />

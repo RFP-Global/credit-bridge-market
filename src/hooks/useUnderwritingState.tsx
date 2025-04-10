@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { CriteriaGroup, ScoreThreshold } from "@/components/underwriting/types";
+import { CriteriaGroup, ScoreThreshold, ScoreRange } from "@/components/underwriting/types";
 
 export const useUnderwritingState = () => {
   const [activeTab, setActiveTab] = useState<string>("preferences");
@@ -31,7 +30,18 @@ export const useUnderwritingState = () => {
           step: 1,
           unit: "$M",
           preferredMin: 3.5,
-          preferredMax: 10
+          preferredMax: 10,
+          actualMin: 0,
+          actualMax: 10,
+          actualValue: 4.5,
+          actualUnit: "$M",
+          scoreMapping: [
+            { min: 0, max: 1, score: 1 },
+            { min: 1, max: 2, score: 2 },
+            { min: 2, max: 3.5, score: 3 },
+            { min: 3.5, max: 7, score: 4 },
+            { min: 7, max: 50, score: 5 }
+          ]
         },
         {
           name: "Debt/EBITDA",
@@ -44,7 +54,18 @@ export const useUnderwritingState = () => {
           step: 1,
           unit: "x",
           preferredMin: 2.0,
-          preferredMax: 4.0
+          preferredMax: 4.0,
+          actualMin: 0,
+          actualMax: 10,
+          actualValue: 3.6,
+          actualUnit: "x",
+          scoreMapping: [
+            { min: 0, max: 2, score: 5 },
+            { min: 2, max: 3, score: 4 },
+            { min: 3, max: 4, score: 3 },
+            { min: 4, max: 5, score: 2 },
+            { min: 5, max: 15, score: 1 }
+          ]
         },
         {
           name: "Current Ratio",
@@ -57,12 +78,23 @@ export const useUnderwritingState = () => {
           step: 1,
           unit: "x",
           preferredMin: 1.5,
-          preferredMax: 3.0
+          preferredMax: 3.0,
+          actualMin: 0.5,
+          actualMax: 3,
+          actualValue: 1.8,
+          actualUnit: "x",
+          scoreMapping: [
+            { min: 0, max: 1, score: 1 },
+            { min: 1, max: 1.25, score: 2 },
+            { min: 1.25, max: 1.5, score: 3 },
+            { min: 1.5, max: 2, score: 4 },
+            { min: 2, max: 5, score: 5 }
+          ]
         },
         {
           name: "Revenue Growth",
           description: "Year-over-year revenue growth",
-          value: "$10.5M",
+          value: "10.5%",
           weight: 15,
           score: 5,
           min: 1,
@@ -70,7 +102,18 @@ export const useUnderwritingState = () => {
           step: 1,
           unit: "%",
           preferredMin: 5,
-          preferredMax: 25
+          preferredMax: 25,
+          actualMin: -10,
+          actualMax: 30,
+          actualValue: 10.5,
+          actualUnit: "%",
+          scoreMapping: [
+            { min: -100, max: 0, score: 1 },
+            { min: 0, max: 3, score: 2 },
+            { min: 3, max: 7, score: 3 },
+            { min: 7, max: 15, score: 4 },
+            { min: 15, max: 100, score: 5 }
+          ]
         }
       ]
     },
@@ -88,7 +131,18 @@ export const useUnderwritingState = () => {
           score: 4,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          actualMin: 0,
+          actualMax: 30,
+          actualValue: 14,
+          actualUnit: " years",
+          scoreMapping: [
+            { min: 0, max: 2, score: 1 },
+            { min: 2, max: 5, score: 2 },
+            { min: 5, max: 10, score: 3 },
+            { min: 10, max: 15, score: 4 },
+            { min: 15, max: 100, score: 5 }
+          ]
         },
         {
           name: "Revenue Concentration",
@@ -98,7 +152,18 @@ export const useUnderwritingState = () => {
           score: 3,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          actualMin: 0,
+          actualMax: 100,
+          actualValue: 32,
+          actualUnit: "%",
+          scoreMapping: [
+            { min: 0, max: 15, score: 5 },
+            { min: 15, max: 25, score: 4 },
+            { min: 25, max: 40, score: 3 },
+            { min: 40, max: 60, score: 2 },
+            { min: 60, max: 100, score: 1 }
+          ]
         },
         {
           name: "Geographic Footprint",
@@ -108,7 +173,18 @@ export const useUnderwritingState = () => {
           score: 3,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          actualMin: 0,
+          actualMax: 20,
+          actualValue: 7,
+          actualUnit: " states",
+          scoreMapping: [
+            { min: 0, max: 1, score: 1 },
+            { min: 1, max: 3, score: 2 },
+            { min: 3, max: 7, score: 3 },
+            { min: 7, max: 12, score: 4 },
+            { min: 12, max: 50, score: 5 }
+          ]
         }
       ]
     },
@@ -126,7 +202,18 @@ export const useUnderwritingState = () => {
           score: 4,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          actualMin: 0,
+          actualMax: 25,
+          actualValue: 7,
+          actualUnit: "%",
+          scoreMapping: [
+            { min: 0, max: 1, score: 1 },
+            { min: 1, max: 3, score: 2 },
+            { min: 3, max: 5, score: 3 },
+            { min: 5, max: 10, score: 4 },
+            { min: 10, max: 100, score: 5 }
+          ]
         },
         {
           name: "Differentiation Score",
@@ -136,7 +223,18 @@ export const useUnderwritingState = () => {
           score: 5,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          actualMin: 1,
+          actualMax: 10,
+          actualValue: 8,
+          actualUnit: "",
+          scoreMapping: [
+            { min: 1, max: 3, score: 1 },
+            { min: 3, max: 5, score: 2 },
+            { min: 5, max: 6, score: 3 },
+            { min: 6, max: 8, score: 4 },
+            { min: 8, max: 10, score: 5 }
+          ]
         },
         {
           name: "Barrier to Entry Score",
@@ -146,7 +244,18 @@ export const useUnderwritingState = () => {
           score: 4,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          actualMin: 1,
+          actualMax: 10,
+          actualValue: 7,
+          actualUnit: "",
+          scoreMapping: [
+            { min: 1, max: 3, score: 1 },
+            { min: 3, max: 5, score: 2 },
+            { min: 5, max: 6, score: 3 },
+            { min: 6, max: 8, score: 4 },
+            { min: 8, max: 10, score: 5 }
+          ]
         }
       ]
     },
@@ -164,7 +273,18 @@ export const useUnderwritingState = () => {
           score: 5,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          actualMin: 1,
+          actualMax: 10,
+          actualValue: 9,
+          actualUnit: "",
+          scoreMapping: [
+            { min: 1, max: 3, score: 1 },
+            { min: 3, max: 5, score: 2 },
+            { min: 5, max: 6, score: 3 },
+            { min: 6, max: 8, score: 4 },
+            { min: 8, max: 10, score: 5 }
+          ]
         },
         {
           name: "Ownership/Management Alignment",
@@ -174,7 +294,18 @@ export const useUnderwritingState = () => {
           score: 5,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          actualMin: 1,
+          actualMax: 10,
+          actualValue: 8,
+          actualUnit: "",
+          scoreMapping: [
+            { min: 1, max: 3, score: 1 },
+            { min: 3, max: 5, score: 2 },
+            { min: 5, max: 6, score: 3 },
+            { min: 6, max: 8, score: 4 },
+            { min: 8, max: 10, score: 5 }
+          ]
         },
         {
           name: "Succession Plan",
@@ -184,7 +315,18 @@ export const useUnderwritingState = () => {
           score: 4,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          actualMin: 1,
+          actualMax: 10,
+          actualValue: 7,
+          actualUnit: "",
+          scoreMapping: [
+            { min: 1, max: 3, score: 1 },
+            { min: 3, max: 5, score: 2 },
+            { min: 5, max: 6, score: 3 },
+            { min: 6, max: 8, score: 4 },
+            { min: 8, max: 10, score: 5 }
+          ]
         }
       ]
     },
@@ -202,7 +344,18 @@ export const useUnderwritingState = () => {
           score: 3,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          actualMin: 0,
+          actualMax: 10,
+          actualValue: 3,
+          actualUnit: "",
+          scoreMapping: [
+            { min: 0, max: 2, score: 5 },
+            { min: 2, max: 4, score: 4 },
+            { min: 4, max: 6, score: 3 },
+            { min: 6, max: 8, score: 2 },
+            { min: 8, max: 10, score: 1 }
+          ]
         },
         {
           name: "Market Growth",
@@ -212,7 +365,18 @@ export const useUnderwritingState = () => {
           score: 4,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          actualMin: 0,
+          actualMax: 10,
+          actualValue: 4,
+          actualUnit: "",
+          scoreMapping: [
+            { min: 0, max: 2, score: 5 },
+            { min: 2, max: 4, score: 4 },
+            { min: 4, max: 6, score: 3 },
+            { min: 6, max: 8, score: 2 },
+            { min: 8, max: 10, score: 1 }
+          ]
         },
         {
           name: "Regulatory Risk",
@@ -222,7 +386,18 @@ export const useUnderwritingState = () => {
           score: 3,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          actualMin: 0,
+          actualMax: 10,
+          actualValue: 3,
+          actualUnit: "",
+          scoreMapping: [
+            { min: 0, max: 2, score: 5 },
+            { min: 2, max: 4, score: 4 },
+            { min: 4, max: 6, score: 3 },
+            { min: 6, max: 8, score: 2 },
+            { min: 8, max: 10, score: 1 }
+          ]
         }
       ]
     },
@@ -240,7 +415,18 @@ export const useUnderwritingState = () => {
           score: 5,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          actualMin: 0,
+          actualMax: 10,
+          actualValue: 5,
+          actualUnit: "",
+          scoreMapping: [
+            { min: 0, max: 2, score: 5 },
+            { min: 2, max: 4, score: 4 },
+            { min: 4, max: 6, score: 3 },
+            { min: 6, max: 8, score: 2 },
+            { min: 8, max: 10, score: 1 }
+          ]
         },
         {
           name: "Primary Banking Relationship",
@@ -250,7 +436,18 @@ export const useUnderwritingState = () => {
           score: 5,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          actualMin: 0,
+          actualMax: 10,
+          actualValue: 5,
+          actualUnit: "",
+          scoreMapping: [
+            { min: 0, max: 2, score: 5 },
+            { min: 2, max: 4, score: 4 },
+            { min: 4, max: 6, score: 3 },
+            { min: 6, max: 8, score: 2 },
+            { min: 8, max: 10, score: 1 }
+          ]
         },
         {
           name: "Payment History",
@@ -260,7 +457,18 @@ export const useUnderwritingState = () => {
           score: 5,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          actualMin: 0,
+          actualMax: 10,
+          actualValue: 5,
+          actualUnit: "",
+          scoreMapping: [
+            { min: 0, max: 2, score: 5 },
+            { min: 2, max: 4, score: 4 },
+            { min: 4, max: 6, score: 3 },
+            { min: 6, max: 8, score: 2 },
+            { min: 8, max: 10, score: 1 }
+          ]
         },
         {
           name: "Covenant Flexibility",
@@ -270,7 +478,18 @@ export const useUnderwritingState = () => {
           score: 4,
           min: 1,
           max: 5,
-          step: 1
+          step: 1,
+          actualMin: 0,
+          actualMax: 10,
+          actualValue: 4,
+          actualUnit: "",
+          scoreMapping: [
+            { min: 0, max: 2, score: 5 },
+            { min: 2, max: 4, score: 4 },
+            { min: 4, max: 6, score: 3 },
+            { min: 6, max: 8, score: 2 },
+            { min: 8, max: 10, score: 1 }
+          ]
         }
       ]
     }

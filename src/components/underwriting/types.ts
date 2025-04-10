@@ -26,6 +26,17 @@ export interface Criterion {
   preferredMin?: number;
   preferredMax?: number;
   unit?: string;
+  actualMin?: number;
+  actualMax?: number;
+  actualValue?: number;
+  actualUnit?: string;
+  scoreMapping?: ScoreRange[];
+}
+
+export interface ScoreRange {
+  min: number;
+  max: number;
+  score: number;
 }
 
 export interface CriteriaGroup {
