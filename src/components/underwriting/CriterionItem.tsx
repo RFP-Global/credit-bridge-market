@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -37,6 +38,18 @@ export const CriterionItem = ({
   const [minValue, setMinValue] = useState(criterion.preferredMin?.toString() || "");
   const [maxValue, setMaxValue] = useState(criterion.preferredMax?.toString() || "");
   const [actualValue, setActualValue] = useState(criterion.actualValue?.toString() || "");
+
+  useEffect(() => {
+    if (criterion.preferredMin !== undefined) {
+      setMinValue(criterion.preferredMin.toString());
+    }
+  }, [criterion.preferredMin]);
+
+  useEffect(() => {
+    if (criterion.preferredMax !== undefined) {
+      setMaxValue(criterion.preferredMax.toString());
+    }
+  }, [criterion.preferredMax]);
 
   useEffect(() => {
     if (criterion.actualValue !== undefined) {
@@ -79,19 +92,19 @@ export const CriterionItem = ({
           <div className="font-semibold">Score</div>
           <div></div>
           {scoreMapping.map((range, idx) => (
-            <>
-              <div key={`range-${idx}`}>
+            <React.Fragment key={`mapping-${idx}`}>
+              <div>
                 {idx === 0 ? 
                   `≤ ${range.max}${criterion.actualUnit}` : 
                   idx === scoreMapping.length - 1 ? 
                   `> ${range.min}${criterion.actualUnit}` : 
                   `${range.min}-${range.max}${criterion.actualUnit}`}
               </div>
-              <div key={`score-${idx}`} className={getScoreColor(range.score)}>
+              <div className={getScoreColor(range.score)}>
                 {range.score}
               </div>
-              <div key={`empty-${idx}`}></div>
-            </>
+              <div></div>
+            </React.Fragment>
           ))}
         </div>
       );
@@ -270,7 +283,7 @@ export const CriterionItem = ({
               variant="outline" 
               size="icon" 
               className="h-6 w-6"
-              onClick={() => updateCriterionScore(groupIndex, criterionIndex, Math.max(1, criterion.score - 1))}
+              onClick={() => updateCriterionScore(groupIndex, criterionIndex, Math.max(1, criterion.score - 0.5))}
               disabled={criterion.score <= 1}
             >
               <ChevronDown className="h-3 w-3" />
@@ -292,7 +305,7 @@ export const CriterionItem = ({
               variant="outline" 
               size="icon"
               className="h-6 w-6"
-              onClick={() => updateCriterionScore(groupIndex, criterionIndex, Math.min(5, criterion.score + 1))}
+              onClick={() => updateCriterionScore(groupIndex, criterionIndex, Math.min(5, criterion.score + 0.5))}
               disabled={criterion.score >= 5}
             >
               <ChevronUp className="h-3 w-3" />

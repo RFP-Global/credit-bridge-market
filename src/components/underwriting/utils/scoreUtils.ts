@@ -1,3 +1,4 @@
+
 import { CriteriaGroup } from "../types";
 
 export const updateCriterionWeight = (
@@ -121,7 +122,10 @@ export const updateCriterionRange = (
   criterion.preferredMin = min;
   criterion.preferredMax = max;
   
-  const currentValue = parseFloat(criterion.value.replace(/[^0-9.-]+/g, ""));
+  // Only update score if it's based on a numeric value
+  const currentValue = criterion.actualValue || 
+                      (criterion.value ? parseFloat(criterion.value.replace(/[^0-9.-]+/g, "")) : NaN);
+  
   if (!isNaN(currentValue)) {
     if (currentValue >= min && currentValue <= max) {
       criterion.score = 4 + (1 - (max - currentValue) / (max - min));
@@ -154,6 +158,13 @@ export const updateActualMetricValue = (
   const criterion = newGroups[groupIndex].criteria[criterionIndex];
   
   criterion.actualValue = newValue;
+  
+  // Update the displayed value string
+  if (criterion.actualUnit) {
+    criterion.value = criterion.actualUnit === "$" || criterion.actualUnit === "$M" 
+      ? `${criterion.actualUnit}${newValue}` 
+      : `${newValue}${criterion.actualUnit}`;
+  }
   
   // Calculate score based on actual value and score mapping
   if (criterion.scoreMapping) {

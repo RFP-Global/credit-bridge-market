@@ -63,6 +63,7 @@ const Underwriting = () => {
 
   // Create wrapper functions for style utilities that use the state
   const handleGetScoreColor = (score: number) => getScoreColor(score, scoreThresholds);
+  const handleGetScoreBackground = (score: number) => getScoreBackground(score);
   
   return (
     <div className="min-h-screen bg-black text-gray-200 relative grid-bg">
@@ -137,8 +138,9 @@ const Underwriting = () => {
                   updateCriterionWeight={handleUpdateCriterionWeight}
                   updateCriterionScore={handleUpdateCriterionScore}
                   updateCriterionRange={handleUpdateCriterionRange}
+                  updateActualMetricValue={handleUpdateActualMetricValue}
                   getScoreColor={handleGetScoreColor}
-                  getScoreBackground={getScoreBackground}
+                  getScoreBackground={handleGetScoreBackground}
                 />
               </TabsContent>
               
