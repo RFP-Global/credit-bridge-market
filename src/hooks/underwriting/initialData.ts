@@ -1,9 +1,9 @@
 import { ScoreThreshold, CriteriaGroup } from "@/components/underwriting/types";
 
 export const initialScoreThresholds: ScoreThreshold[] = [
-  { threshold: 4.5, color: "text-green-500" },
-  { threshold: 3.5, color: "text-blue-500" },
-  { threshold: 2.5, color: "text-yellow-500" },
+  { threshold: 9, color: "text-green-500" },
+  { threshold: 7, color: "text-blue-500" },
+  { threshold: 5, color: "text-yellow-500" },
   { threshold: 0, color: "text-red-500" }
 ];
 
@@ -63,16 +63,16 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualValue: 3.6,
         actualUnit: "x",
         scoreMapping: [
-          { min: 0, max: 1.00, score: 5 },
-          { min: 1.01, max: 2.00, score: 4.5 },
-          { min: 2.01, max: 3.00, score: 4 },
-          { min: 3.01, max: 4.00, score: 3.5 },
-          { min: 4.01, max: 5.00, score: 3 },
-          { min: 5.01, max: 6.00, score: 2.5 },
-          { min: 6.01, max: 7.00, score: 2 },
-          { min: 7.01, max: 8.00, score: 1.5 },
-          { min: 8.01, max: 10.00, score: 1 },
-          { min: 10.01, max: 100, score: 0.5 }
+          { min: 0, max: 1.00, score: 10, riskLevel: "Minimal Leverage" },
+          { min: 1.01, max: 2.00, score: 9, riskLevel: "Low Leverage" },
+          { min: 2.01, max: 3.00, score: 8, riskLevel: "Very Manageable" },
+          { min: 3.01, max: 4.00, score: 7, riskLevel: "Moderate Risk" },
+          { min: 4.01, max: 5.00, score: 6, riskLevel: "Slightly Elevated Risk" },
+          { min: 5.01, max: 6.00, score: 5, riskLevel: "Cautionary" },
+          { min: 6.01, max: 7.00, score: 4, riskLevel: "High Risk" },
+          { min: 7.01, max: 8.00, score: 3, riskLevel: "Very High Risk" },
+          { min: 8.01, max: 10.00, score: 2, riskLevel: "Distressed Leverage" },
+          { min: 10.01, max: 100, score: 1, riskLevel: "Unsustainable" }
         ]
       },
       {
@@ -93,11 +93,16 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualValue: 1.8,
         actualUnit: "x",
         scoreMapping: [
-          { min: 0, max: 1, score: 1 },
-          { min: 1, max: 1.25, score: 2 },
-          { min: 1.25, max: 1.5, score: 3 },
-          { min: 1.5, max: 2, score: 4 },
-          { min: 2, max: 5, score: 5 }
+          { min: 3.00, max: 5.00, score: 10, riskLevel: "Highly Liquid" },
+          { min: 2.50, max: 2.99, score: 9, riskLevel: "Very Strong" },
+          { min: 2.00, max: 2.49, score: 8, riskLevel: "Strong" },
+          { min: 1.75, max: 1.99, score: 7, riskLevel: "Good" },
+          { min: 1.50, max: 1.74, score: 6, riskLevel: "Moderate" },
+          { min: 1.25, max: 1.49, score: 5, riskLevel: "Acceptable" },
+          { min: 1.10, max: 1.24, score: 4, riskLevel: "Weak" },
+          { min: 1.00, max: 1.09, score: 3, riskLevel: "Poor" },
+          { min: 0.75, max: 0.99, score: 2, riskLevel: "Very Poor" },
+          { min: 0, max: 0.75, score: 1, riskLevel: "Critical" }
         ]
       },
       {
@@ -184,11 +189,16 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualValue: 14,
         actualUnit: " years",
         scoreMapping: [
-          { min: 0, max: 2, score: 1 },
-          { min: 2, max: 5, score: 2 },
-          { min: 5, max: 10, score: 3 },
-          { min: 10, max: 15, score: 4 },
-          { min: 15, max: 100, score: 5 }
+          { min: 15.00, max: 30.00, score: 10, riskLevel: "Exceptional" },
+          { min: 10.00, max: 14.99, score: 9, riskLevel: "Very Strong" },
+          { min: 7.00, max: 9.99, score: 8, riskLevel: "Strong" },
+          { min: 5.00, max: 6.99, score: 7, riskLevel: "Good" },
+          { min: 3.00, max: 4.99, score: 6, riskLevel: "Moderate" },
+          { min: 2.00, max: 2.99, score: 5, riskLevel: "Acceptable" },
+          { min: 1.00, max: 1.99, score: 4, riskLevel: "Weak" },
+          { min: 0.50, max: 0.99, score: 3, riskLevel: "Very Weak" },
+          { min: 0.25, max: 0.49, score: 2, riskLevel: "High Risk" },
+          { min: 0, max: 0.24, score: 1, riskLevel: "Severe Risk" }
         ]
       },
       {
@@ -206,11 +216,16 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualValue: 32,
         actualUnit: "%",
         scoreMapping: [
-          { min: 0, max: 15, score: 5 },
-          { min: 15, max: 25, score: 4 },
-          { min: 25, max: 40, score: 3 },
-          { min: 40, max: 60, score: 2 },
-          { min: 60, max: 100, score: 1 }
+          { min: 0, max: 10, score: 10, riskLevel: "Highly Diversified" },
+          { min: 10, max: 15, score: 9, riskLevel: "Very Diversified" },
+          { min: 15, max: 20, score: 8, riskLevel: "Well Diversified" },
+          { min: 20, max: 25, score: 7, riskLevel: "Good Diversification" },
+          { min: 25, max: 30, score: 6, riskLevel: "Moderate Diversification" },
+          { min: 30, max: 40, score: 5, riskLevel: "Acceptable Diversification" },
+          { min: 40, max: 50, score: 4, riskLevel: "Limited Diversification" },
+          { min: 50, max: 60, score: 3, riskLevel: "Poor Diversification" },
+          { min: 60, max: 75, score: 2, riskLevel: "Very Concentrated" },
+          { min: 75, max: 100, score: 1, riskLevel: "Extremely Concentrated" }
         ]
       },
       {
@@ -228,11 +243,16 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualValue: 7,
         actualUnit: " states",
         scoreMapping: [
-          { min: 0, max: 1, score: 1 },
-          { min: 1, max: 3, score: 2 },
-          { min: 3, max: 7, score: 3 },
-          { min: 7, max: 12, score: 4 },
-          { min: 12, max: 50, score: 5 }
+          { min: 12, max: 50, score: 10, riskLevel: "National/International" },
+          { min: 10, max: 11.99, score: 9, riskLevel: "Multi-Regional" },
+          { min: 8, max: 9.99, score: 8, riskLevel: "Broad Regional" },
+          { min: 7, max: 7.99, score: 7, riskLevel: "Regional" },
+          { min: 5, max: 6.99, score: 6, riskLevel: "Limited Regional" },
+          { min: 3, max: 4.99, score: 5, riskLevel: "Multi-State" },
+          { min: 2, max: 2.99, score: 4, riskLevel: "Dual-State" },
+          { min: 1, max: 1.99, score: 3, riskLevel: "Single State" },
+          { min: 0.5, max: 0.99, score: 2, riskLevel: "Metropolitan Area" },
+          { min: 0, max: 0.49, score: 1, riskLevel: "Local Only" }
         ]
       }
     ]
