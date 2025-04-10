@@ -143,44 +143,9 @@ export const CriterionItem = ({
     );
   };
 
-  const formatScoreMapping = (scoreMapping: ScoreRange[]) => {
-    if (criterion.name === "Debt/EBITDA") {
-      return (
-        <div className="grid grid-cols-3 gap-1 mt-1 text-xs">
-          <div className="font-semibold">Range</div>
-          <div className="font-semibold">Score</div>
-          <div></div>
-          {scoreMapping.map((range, idx) => (
-            <React.Fragment key={`mapping-${idx}`}>
-              <div>
-                {idx === 0 ? 
-                  `≤ ${range.max}${criterion.actualUnit || ''}` : 
-                  idx === scoreMapping.length - 1 ? 
-                  `> ${range.min}${criterion.actualUnit || ''}` : 
-                  `${range.min}-${range.max}${criterion.actualUnit || ''}`}
-              </div>
-              <div className={getScoreColor(range.score)}>
-                {range.score}
-              </div>
-              <div></div>
-            </React.Fragment>
-          ))}
-        </div>
-      );
-    }
-
-    return (
-      <div className="text-xs text-blue-400 mt-1">
-        Score mapping: 
-        {scoreMapping.map((range, idx) => (
-          <span key={idx} className="ml-1">
-            {range.min}-{range.max}: {range.score}{idx < scoreMapping.length - 1 ? "," : ""}
-          </span>
-        ))}
-      </div>
-    );
-  };
-
+  // Simplified the score mapping display by removing it from the main UI
+  // It will now only be visible in the popover triggered by the info button
+  
   const renderActualMetricSlider = () => {
     if (criterion.actualMin === undefined || criterion.actualMax === undefined || criterion.actualValue === undefined) {
       return null;
@@ -260,7 +225,7 @@ export const CriterionItem = ({
         <div className="text-xs text-muted-foreground mt-2">
           <span>Range: {criterion.actualMin} - {criterion.actualMax} {criterion.actualUnit || ''}</span>
         </div>
-        {criterion.scoreMapping && formatScoreMapping(criterion.scoreMapping)}
+        {/* Score mapping is now only shown in the info popover */}
       </div>
     );
   };
