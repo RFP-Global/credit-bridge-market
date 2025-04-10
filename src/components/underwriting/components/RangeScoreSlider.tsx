@@ -27,26 +27,38 @@ export const RangeScoreSlider = ({
   isDebtEBITDA = false
 }: RangeScoreSliderProps) => {
   const [range, setRange] = useState<[number, number]>([initialMin, initialMax]);
-  const [minInput, setMinInput] = useState(initialMin.toString());
-  const [maxInput, setMaxInput] = useState(initialMax.toString());
-
+  const [minInput, setMinInput] = useState(initialMin.toFixed(1));
+  const [maxInput, setMaxInput] = useState(initialMax.toFixed(1));
+  const [isSliderChanging, setIsSliderChanging] = useState(false);
+  
+  // Update inputs on range change
   useEffect(() => {
-    setMinInput(range[0].toFixed(1));
-    setMaxInput(range[1].toFixed(1));
-  }, [range]);
+    if (!isSliderChanging) {
+      setMinInput(range[0].toFixed(1));
+      setMaxInput(range[1].toFixed(1));
+    }
+  }, [range, isSliderChanging]);
 
   // Update range if initialMin or initialMax change from parent
   useEffect(() => {
     if (initialMin !== range[0] || initialMax !== range[1]) {
       setRange([initialMin, initialMax]);
+      setMinInput(initialMin.toFixed(1));
+      setMaxInput(initialMax.toFixed(1));
     }
   }, [initialMin, initialMax]);
 
   const handleSliderChange = (value: number[]) => {
     if (value.length === 2) {
-      const newRange: [number, number] = [value[0], value[1]];
-      setRange(newRange);
-      onRangeChange(newRange[0], newRange[1]);
+      const minValue = parseFloat(value[0].toFixed(1));
+      const maxValue = parseFloat(value[1].toFixed(1));
+      
+      // Ensure min doesn't exceed max
+      if (minValue <= maxValue) {
+        const newRange: [number, number] = [minValue, maxValue];
+        setRange(newRange);
+        onRangeChange(newRange[0], newRange[1]);
+      }
     }
   };
 
@@ -72,6 +84,14 @@ export const RangeScoreSlider = ({
     return mapping?.description || "";
   };
 
+  const handleSliderChangeStart = () => {
+    setIsSliderChanging(true);
+  };
+
+  const handleSliderChangeEnd = () => {
+    setIsSliderChanging(false);
+  };
+
   return (
     <div className="space-y-3">
       <div className="flex justify-between text-xs text-muted-foreground">
@@ -89,6 +109,7 @@ export const RangeScoreSlider = ({
         max={maxValue}
         step={step}
         onValueChange={handleSliderChange}
+        onValueCommit={handleSliderChangeEnd}
         className={`my-4 ${isDebtEBITDA ? "bg-blue-950/30" : ""}`}
         colorClass={isDebtEBITDA ? "bg-blue-600" : undefined}
       />

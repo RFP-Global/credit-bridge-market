@@ -40,6 +40,7 @@ export const MetricSlider = ({
   const [inputValue, setInputValue] = useState(actualValue?.toString() || "");
   const [minInputValue, setMinInputValue] = useState(actualMinValue?.toString() || "");
   const [maxInputValue, setMaxInputValue] = useState(actualMaxValue?.toString() || "");
+  const [isSliderChanging, setIsSliderChanging] = useState(false);
   
   const [rangeValues, setRangeValues] = useState<[number, number]>(
     [actualMinValue || actualValue || (actualMin || 0), 
@@ -50,19 +51,19 @@ export const MetricSlider = ({
     if (actualValue !== undefined) {
       setInputValue(actualValue.toString());
     }
-    if (actualMinValue !== undefined) {
+    if (actualMinValue !== undefined && !isSliderChanging) {
       setMinInputValue(actualMinValue.toString());
       if (rangeValues[0] !== actualMinValue) {
         setRangeValues(prev => [actualMinValue, prev[1]]);
       }
     }
-    if (actualMaxValue !== undefined) {
+    if (actualMaxValue !== undefined && !isSliderChanging) {
       setMaxInputValue(actualMaxValue.toString());
       if (rangeValues[1] !== actualMaxValue) {
         setRangeValues(prev => [prev[0], actualMaxValue]);
       }
     }
-  }, [actualValue, actualMinValue, actualMaxValue]);
+  }, [actualValue, actualMinValue, actualMaxValue, isSliderChanging]);
 
   const handleValueUpdate = () => {
     if (inputValue) {
@@ -106,13 +107,21 @@ export const MetricSlider = ({
 
   const handleRangeSliderChange = (values: number[]) => {
     if (values.length === 2) {
-      setRangeValues([values[0], values[1]]);
-      setMinInputValue(values[0].toFixed(2));
-      setMaxInputValue(values[1].toFixed(2));
+      setIsSliderChanging(true);
+      
+      const minValue = parseFloat(values[0].toFixed(2));
+      const maxValue = parseFloat(values[1].toFixed(2));
+      
+      setRangeValues([minValue, maxValue]);
+      setMinInputValue(minValue.toFixed(2));
+      setMaxInputValue(maxValue.toFixed(2));
       
       if (onRangeUpdate) {
-        onRangeUpdate(values[0], values[1]);
+        onRangeUpdate(minValue, maxValue);
       }
+      
+      // Reset slider changing status after a short delay
+      setTimeout(() => setIsSliderChanging(false), 50);
     }
   };
 

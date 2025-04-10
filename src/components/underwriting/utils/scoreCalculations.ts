@@ -49,8 +49,9 @@ export const getMetricValueFromScore = (
     );
     
     if (matchingRange) {
+      // Use the midpoint of the range as the representative value
       const min = matchingRange.min !== null ? matchingRange.min : (actualMin || 0);
-      const max = matchingRange.max !== null ? matchingRange.max : (actualMax || 0);
+      const max = matchingRange.max !== null ? matchingRange.max : (actualMax || 10);
       return (min + max) / 2;
     }
   }
@@ -69,10 +70,18 @@ export const calculateScoreFromMetricSingle = (
   }
   
   if (shouldInvert) {
-    const normalizedValue = (actualMax - value) / (actualMax - actualMin);
+    // For metrics where lower is better (like debt)
+    // Protect against division by zero
+    if (actualMax === actualMin) return 5;
+    
+    const normalizedValue = Math.max(0, Math.min(1, (actualMax - value) / (actualMax - actualMin)));
     return Math.max(1, Math.min(10, 1 + normalizedValue * 9));
   } else {
-    const normalizedValue = (value - actualMin) / (actualMax - actualMin);
+    // For metrics where higher is better
+    // Protect against division by zero
+    if (actualMax === actualMin) return 5;
+    
+    const normalizedValue = Math.max(0, Math.min(1, (value - actualMin) / (actualMax - actualMin)));
     return Math.max(1, Math.min(10, 1 + normalizedValue * 9));
   }
 };
@@ -82,17 +91,20 @@ export const calculateMetricFromScoreSingle = (
   actualMin?: number,
   actualMax?: number,
   shouldInvert = false
-): number => {
+): number | null => {
   if (actualMin === undefined || actualMax === undefined) {
-    return 0;
+    return null;
   }
   
   const range = actualMax - actualMin;
-  const normalizedScore = (score - 1) / 9;
+  // Normalize the score to a 0-1 range
+  const normalizedScore = Math.max(0, Math.min(1, (score - 1) / 9));
   
   if (shouldInvert) {
+    // For metrics where lower is better
     return actualMax - (normalizedScore * range);
   } else {
+    // For metrics where higher is better
     return actualMin + (normalizedScore * range);
   }
 };
@@ -108,29 +120,39 @@ export const calculateScoreFromMetricRange = (
   if (scoreMapping) {
     const minScore = getScoreFromMetricValue(minValue, scoreMapping, actualMin, actualMax, shouldInvert);
     const maxScore = getScoreFromMetricValue(maxValue, scoreMapping, actualMin, actualMax, shouldInvert);
-    return { minScore, maxScore };
+    
+    // Ensure proper order of scores based on relationship
+    if (shouldInvert) {
+      return { 
+        minScore: Math.min(minScore, maxScore),
+        maxScore: Math.max(minScore, maxScore)
+      };
+    } else {
+      return { 
+        minScore: Math.min(minScore, maxScore), 
+        maxScore: Math.max(minScore, maxScore) 
+      };
+    }
   }
   
   if (actualMin !== undefined && actualMax !== undefined) {
     if (shouldInvert) {
-      const maxScore = 10;
-      const minScore = 1;
-      const minPercent = (actualMax - minValue) / (actualMax - actualMin);
-      const maxPercent = (actualMax - maxValue) / (actualMax - actualMin);
+      // For metrics where lower is better
+      const normalizedMin = Math.max(0, Math.min(1, (actualMax - maxValue) / (actualMax - actualMin)));
+      const normalizedMax = Math.max(0, Math.min(1, (actualMax - minValue) / (actualMax - actualMin)));
       
       return {
-        minScore: minScore + (maxScore - minScore) * maxPercent,
-        maxScore: minScore + (maxScore - minScore) * minPercent
+        minScore: Math.max(1, Math.min(10, 1 + Math.min(normalizedMin, normalizedMax) * 9)),
+        maxScore: Math.max(1, Math.min(10, 1 + Math.max(normalizedMin, normalizedMax) * 9))
       };
     } else {
-      const maxScore = 10;
-      const minScore = 1;
-      const minPercent = (minValue - actualMin) / (actualMax - actualMin);
-      const maxPercent = (maxValue - actualMin) / (actualMax - actualMin);
+      // For metrics where higher is better
+      const normalizedMin = Math.max(0, Math.min(1, (minValue - actualMin) / (actualMax - actualMin)));
+      const normalizedMax = Math.max(0, Math.min(1, (maxValue - actualMin) / (actualMax - actualMin)));
       
       return {
-        minScore: minScore + (maxScore - minScore) * minPercent,
-        maxScore: minScore + (maxScore - minScore) * maxPercent
+        minScore: Math.max(1, Math.min(10, 1 + Math.min(normalizedMin, normalizedMax) * 9)),
+        maxScore: Math.max(1, Math.min(10, 1 + Math.max(normalizedMin, normalizedMax) * 9))
       };
     }
   }
@@ -146,33 +168,47 @@ export const calculateMetricFromScoreRange = (
   actualMax?: number,
   shouldInvert = false
 ) => {
+  if (minScore > maxScore) {
+    // Swap if min is greater than max
+    [minScore, maxScore] = [maxScore, minScore];
+  }
+  
   if (scoreMapping) {
+    // For each score, find the corresponding metric value
     const minValue = getMetricValueFromScore(minScore, scoreMapping, actualMin, actualMax, shouldInvert);
     const maxValue = getMetricValueFromScore(maxScore, scoreMapping, actualMin, actualMax, shouldInvert);
     
     if (minValue !== null && maxValue !== null) {
+      // For metrics that have an inverse relationship, swap the values
+      if (shouldInvert && minValue < maxValue) {
+        return { minValue: maxValue, maxValue: minValue };
+      }
+      if (!shouldInvert && minValue > maxValue) {
+        return { minValue: maxValue, maxValue: minValue };
+      }
+      
       return { minValue, maxValue };
     }
   }
   
   if (actualMin !== undefined && actualMax !== undefined) {
+    const range = actualMax - actualMin;
+    
+    // Normalize scores to 0-1 range
+    const minPercent = Math.max(0, Math.min(1, (minScore - 1) / 9));
+    const maxPercent = Math.max(0, Math.min(1, (maxScore - 1) / 9));
+    
     if (shouldInvert) {
-      const range = actualMax - actualMin;
-      const minPercent = (10 - minScore) / 9;
-      const maxPercent = (10 - maxScore) / 9;
-      
+      // For metrics where lower is better (higher value = lower score)
       return {
-        maxValue: actualMax - (range * minPercent),
-        minValue: actualMax - (range * maxPercent)
+        maxValue: actualMax - (minPercent * range),
+        minValue: actualMax - (maxPercent * range)
       };
     } else {
-      const range = actualMax - actualMin;
-      const minPercent = (minScore - 1) / 9;
-      const maxPercent = (maxScore - 1) / 9;
-      
+      // For metrics where higher is better (higher value = higher score)
       return {
-        minValue: actualMin + (range * minPercent),
-        maxValue: actualMin + (range * maxPercent)
+        minValue: actualMin + (minPercent * range),
+        maxValue: actualMin + (maxPercent * range)
       };
     }
   }

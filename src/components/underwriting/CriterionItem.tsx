@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Criterion, ScoreRange } from "./types";
 import { CriterionHeader } from "./components/CriterionHeader";
 import { CriterionWeightControls } from "./components/CriterionWeightControls";
@@ -43,6 +43,7 @@ export const CriterionItem = ({
   getScoreBackground,
 }: CriterionItemProps) => {
   const [lastUpdated, setLastUpdated] = useState<'metric' | 'score' | null>(null);
+  const [ignoreUpdates, setIgnoreUpdates] = useState(false);
 
   const isDebtEBITDA = isDebtEBITDACriterion(criterion.name);
   const shouldInvert = shouldUseInverseRelationship(criterion.name);
@@ -54,10 +55,13 @@ export const CriterionItem = ({
 
   // Handle score range slider changes
   const handleScoreRangeChange = (minScore: number, maxScore: number) => {
+    if (ignoreUpdates) return;
+    
     setLastUpdated('score');
+    setIgnoreUpdates(true);
     
     const averageScore = (minScore + maxScore) / 2;
-    updateCriterionScore(groupIndex, criterionIndex, averageScore);
+    updateCriterionScore(groupIndex, criterionIndex, parseFloat(averageScore.toFixed(1)));
     
     if (criterion.actualMin !== undefined && criterion.actualMax !== undefined && updateActualMetricRange) {
       const metricValues = calculateMetricFromScoreRange(
@@ -75,11 +79,16 @@ export const CriterionItem = ({
         updateActualMetricRange(groupIndex, criterionIndex, minValue, maxValue);
       }
     }
+    
+    setTimeout(() => setIgnoreUpdates(false), 50);
   };
 
   // Handle metric range slider changes  
   const handleMetricRangeChange = (minValue: number, maxValue: number) => {
+    if (ignoreUpdates) return;
+    
     setLastUpdated('metric');
+    setIgnoreUpdates(true);
     
     if (updateActualMetricRange) {
       updateActualMetricRange(groupIndex, criterionIndex, minValue, maxValue);
@@ -98,6 +107,8 @@ export const CriterionItem = ({
       const averageScore = (scores.minScore + scores.maxScore) / 2;
       updateCriterionScore(groupIndex, criterionIndex, parseFloat(averageScore.toFixed(1)));
     }
+    
+    setTimeout(() => setIgnoreUpdates(false), 50);
   };
 
   // All non-weight metrics will use dual slider
@@ -105,7 +116,11 @@ export const CriterionItem = ({
 
   // Handle direct score updates from CriterionScore component
   const handleDirectScoreUpdate = (newScore: number) => {
+    if (ignoreUpdates) return;
+    
     setLastUpdated('score');
+    setIgnoreUpdates(true);
+    
     updateCriterionScore(groupIndex, criterionIndex, newScore);
     
     // Only update metric values for EBITDA if we have actual min and max defined
@@ -122,6 +137,8 @@ export const CriterionItem = ({
         updateActualMetricValue(groupIndex, criterionIndex, parseFloat(metricValue.toFixed(2)));
       }
     }
+    
+    setTimeout(() => setIgnoreUpdates(false), 50);
   };
 
   // Handle criterion range update
@@ -130,6 +147,17 @@ export const CriterionItem = ({
       updateCriterionRange(groupIndex, criterionIndex, min, max);
     }
   };
+
+  // Used for debugging
+  useEffect(() => {
+    // For EBITDA criteria, we'll log to help debug
+    if (isDebtEBITDA && criterion.actualMinValue !== undefined && criterion.actualMaxValue !== undefined) {
+      console.log(
+        `EBITDA Sync State: Values [${criterion.actualMinValue.toFixed(2)}, ${criterion.actualMaxValue.toFixed(2)}], ` +
+        `Scores [${criterion.minScore?.toFixed(1) || '?'}, ${criterion.maxScore?.toFixed(1) || '?'}]`
+      );
+    }
+  }, [criterion.actualMinValue, criterion.actualMaxValue, criterion.minScore, criterion.maxScore, isDebtEBITDA]);
 
   return (
     <div className="space-y-2 border-b border-gray-800/40 pb-4 last:border-0 last:pb-0">
