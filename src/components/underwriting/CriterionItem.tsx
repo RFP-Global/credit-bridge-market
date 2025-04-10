@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Info, HelpCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -51,6 +51,9 @@ export const CriterionItem = ({
   const [minScore, setMinScore] = useState(criterion.minScore?.toString() || criterion.score.toString());
   const [maxScore, setMaxScore] = useState(criterion.maxScore?.toString() || criterion.score.toString());
 
+  // Add state to track the most recent slider that was updated
+  const [lastUpdated, setLastUpdated] = useState<'metric' | 'score' | null>(null);
+
   const handleRangeUpdate = () => {
     if (updateCriterionRange && minValue && maxValue) {
       const min = parseFloat(minValue);
@@ -71,6 +74,131 @@ export const CriterionItem = ({
         updateCriterionScore(groupIndex, criterionIndex, averageScore);
         // In a real implementation, we'd store both min and max separately
       }
+    }
+  };
+
+  // Calculate score from metric value
+  const calculateScoreFromMetric = (minValue: number, maxValue: number) => {
+    // If we have a scoreMapping, use that for direct mapping
+    if (criterion.scoreMapping) {
+      // This is simplified - in reality you'd want to map the min/max to appropriate scores
+      // based on the mapping ranges
+      return;
+    }
+    
+    // Check if the criterion should be inverted (lower value = higher score)
+    const shouldInvert = criterion.name.toLowerCase().includes('debt') || 
+                          criterion.name.toLowerCase().includes('risk');
+    
+    if (criterion.actualMin !== undefined && criterion.actualMax !== undefined) {
+      if (shouldInvert) {
+        // For metrics where lower is better (e.g., debt ratios)
+        // High metric value = low score, Low metric value = high score
+        const maxScore = 10;
+        const minScore = 1;
+        // Calculate percentage between min and max
+        const minPercent = (criterion.actualMax - minValue) / (criterion.actualMax - criterion.actualMin);
+        const maxPercent = (criterion.actualMax - maxValue) / (criterion.actualMax - criterion.actualMin);
+        
+        return {
+          minScore: minScore + (maxScore - minScore) * minPercent,
+          maxScore: minScore + (maxScore - minScore) * maxPercent
+        };
+      } else {
+        // For metrics where higher is better
+        // High metric value = high score, Low metric value = low score
+        const maxScore = 10;
+        const minScore = 1;
+        // Calculate percentage between min and max
+        const minPercent = (minValue - criterion.actualMin) / (criterion.actualMax - criterion.actualMin);
+        const maxPercent = (maxValue - criterion.actualMin) / (criterion.actualMax - criterion.actualMin);
+        
+        return {
+          minScore: minScore + (maxScore - minScore) * minPercent,
+          maxScore: minScore + (maxScore - minScore) * maxPercent
+        };
+      }
+    }
+    
+    return { minScore: 1, maxScore: 10 };
+  };
+
+  // Calculate metric values from score
+  const calculateMetricFromScore = (minScore: number, maxScore: number) => {
+    // If we have a scoreMapping, use that for direct mapping
+    if (criterion.scoreMapping) {
+      // This is simplified - would need to map scores to values based on mapping
+      return;
+    }
+    
+    // Check if the criterion should be inverted (lower value = higher score)
+    const shouldInvert = criterion.name.toLowerCase().includes('debt') || 
+                          criterion.name.toLowerCase().includes('risk');
+    
+    if (criterion.actualMin !== undefined && criterion.actualMax !== undefined) {
+      if (shouldInvert) {
+        // For metrics where lower is better
+        // High score = low metric value, Low score = high metric value
+        const range = criterion.actualMax - criterion.actualMin;
+        const minPercent = (10 - minScore) / 9; // Convert score 1-10 to percentage
+        const maxPercent = (10 - maxScore) / 9;
+        
+        return {
+          minValue: criterion.actualMax - (range * minPercent),
+          maxValue: criterion.actualMax - (range * maxPercent)
+        };
+      } else {
+        // For metrics where higher is better
+        // High score = high metric value, Low score = low metric value
+        const range = criterion.actualMax - criterion.actualMin;
+        const minPercent = (minScore - 1) / 9; // Convert score 1-10 to percentage
+        const maxPercent = (maxScore - 1) / 9;
+        
+        return {
+          minValue: criterion.actualMin + (range * minPercent),
+          maxValue: criterion.actualMin + (range * maxPercent)
+        };
+      }
+    }
+    
+    return { minValue: 0, maxValue: 0 };
+  };
+
+  // Handle updates from risk score slider
+  const handleScoreRangeChange = (minScore: number, maxScore: number) => {
+    setLastUpdated('score');
+    
+    // Update risk score
+    const averageScore = (minScore + maxScore) / 2;
+    updateCriterionScore(groupIndex, criterionIndex, averageScore);
+    
+    // Only update metric values if we have actual min and max defined
+    if (criterion.actualMin !== undefined && criterion.actualMax !== undefined && updateActualMetricRange) {
+      const metricValues = calculateMetricFromScore(minScore, maxScore);
+      if (metricValues) {
+        // Round to 2 decimal places for better UX
+        const minValue = parseFloat(metricValues.minValue.toFixed(2));
+        const maxValue = parseFloat(metricValues.maxValue.toFixed(2));
+        updateActualMetricRange(groupIndex, criterionIndex, minValue, maxValue);
+      }
+    }
+  };
+
+  // Handle updates from metric slider
+  const handleMetricRangeChange = (minValue: number, maxValue: number) => {
+    setLastUpdated('metric');
+    
+    // Update the actual metric values
+    if (updateActualMetricRange) {
+      updateActualMetricRange(groupIndex, criterionIndex, minValue, maxValue);
+    }
+    
+    // Calculate and update the corresponding score
+    const scores = calculateScoreFromMetric(minValue, maxValue);
+    if (scores) {
+      // Use the average score for display
+      const averageScore = (scores.minScore + scores.maxScore) / 2;
+      updateCriterionScore(groupIndex, criterionIndex, parseFloat(averageScore.toFixed(1)));
     }
   };
 
@@ -170,14 +298,7 @@ export const CriterionItem = ({
               initialMin={criterion.minScore || criterion.score}
               initialMax={criterion.maxScore || criterion.score}
               step={0.1}
-              onRangeChange={(min, max) => {
-                if (updateCriterionRange) {
-                  updateCriterionRange(groupIndex, criterionIndex, min, max);
-                }
-                // Update score to average of min and max
-                const averageScore = (min + max) / 2;
-                updateCriterionScore(groupIndex, criterionIndex, averageScore);
-              }}
+              onRangeChange={handleScoreRangeChange}
               getScoreColor={getScoreColor}
             />
           )}
@@ -208,7 +329,7 @@ export const CriterionItem = ({
             }
           }}
           onRangeUpdate={updateActualMetricRange ? 
-            (min, max) => updateActualMetricRange(groupIndex, criterionIndex, min, max) : 
+            (min, max) => handleMetricRangeChange(min, max) : 
             undefined}
           isDualSlider={shouldUseDualSlider}
         />

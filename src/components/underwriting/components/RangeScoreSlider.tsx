@@ -32,6 +32,13 @@ export const RangeScoreSlider = ({
     setMaxInput(range[1].toFixed(1));
   }, [range]);
 
+  // Update range if initialMin or initialMax change from parent
+  useEffect(() => {
+    if (initialMin !== range[0] || initialMax !== range[1]) {
+      setRange([initialMin, initialMax]);
+    }
+  }, [initialMin, initialMax]);
+
   const handleSliderChange = (value: number[]) => {
     if (value.length === 2) {
       const newRange: [number, number] = [value[0], value[1]];

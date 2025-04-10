@@ -1,3 +1,4 @@
+
 import { CriteriaGroup } from "../types";
 
 export const updateCriterionWeight = (
@@ -105,6 +106,36 @@ export const updateCriterionScore = (
   
   criterion.score = newScore;
   
+  // If this is an actual metric with min/max, update the actual values to reflect the score
+  if (criterion.actualMin !== undefined && criterion.actualMax !== undefined && 
+      criterion.actualMinValue === undefined && criterion.actualMaxValue === undefined) {
+    
+    // Check if score should be inverted (higher value = lower score)
+    const shouldInvert = criterion.name.toLowerCase().includes('debt') || 
+                         criterion.name.toLowerCase().includes('risk');
+    
+    // Calculate the appropriate actual value based on the score
+    const percentage = (newScore - 1) / 9; // convert score 1-10 to 0-1 percentage
+    let actualValue;
+    
+    if (shouldInvert) {
+      // For metrics where lower is better (e.g., debt ratios)
+      actualValue = criterion.actualMax - (percentage * (criterion.actualMax - criterion.actualMin));
+    } else {
+      // For metrics where higher is better
+      actualValue = criterion.actualMin + (percentage * (criterion.actualMax - criterion.actualMin));
+    }
+    
+    criterion.actualValue = parseFloat(actualValue.toFixed(2));
+    
+    // Update the displayed value string
+    if (criterion.actualUnit) {
+      criterion.value = criterion.actualUnit === "$" || criterion.actualUnit === "$M" 
+        ? `${criterion.actualUnit}${criterion.actualValue}` 
+        : `${criterion.actualValue}${criterion.actualUnit}`;
+    }
+  }
+  
   recalculateScores(newGroups, setTotalScore);
   setCriteriaGroups(newGroups);
 };
@@ -185,14 +216,101 @@ export const updateActualMetricValue = (
       criterion.score = criterion.scoreMapping[criterion.scoreMapping.length - 1].score;
     }
   } else if (criterion.actualMin !== undefined && criterion.actualMax !== undefined) {
-    // Simple linear interpolation if no explicit mapping
-    const percent = (newValue - criterion.actualMin) / (criterion.actualMax - criterion.actualMin);
-    const idealPercent = criterion.name.toLowerCase().includes('debt') || 
-                         criterion.name.toLowerCase().includes('risk') ? 
-                         1 - percent : percent; // Invert for metrics where lower is better
+    // Check if this metric should be inverted (lower is better)
+    const shouldInvert = criterion.name.toLowerCase().includes('debt') || 
+                         criterion.name.toLowerCase().includes('risk');
     
-    criterion.score = 1 + idealPercent * 9; // Scale to 1-10
+    if (shouldInvert) {
+      // For metrics where lower is better (e.g., debt ratios)
+      // Low value = high score, High value = low score
+      const normalizedValue = (criterion.actualMax - newValue) / (criterion.actualMax - criterion.actualMin);
+      criterion.score = 1 + normalizedValue * 9; // Scale to 1-10
+    } else {
+      // For metrics where higher is better
+      // High value = high score, Low value = low score
+      const normalizedValue = (newValue - criterion.actualMin) / (criterion.actualMax - criterion.actualMin);
+      criterion.score = 1 + normalizedValue * 9; // Scale to 1-10
+    }
+    
     criterion.score = parseFloat(criterion.score.toFixed(1));
+  }
+  
+  recalculateScores(newGroups, setTotalScore);
+  setCriteriaGroups(newGroups);
+};
+
+export const updateActualMetricRange = (
+  criteriaGroups: CriteriaGroup[],
+  groupIndex: number, 
+  criterionIndex: number, 
+  min: number, 
+  max: number,
+  setCriteriaGroups: React.Dispatch<React.SetStateAction<CriteriaGroup[]>>,
+  setTotalScore: React.Dispatch<React.SetStateAction<number>>
+) => {
+  const newGroups = [...criteriaGroups];
+  const criterion = newGroups[groupIndex].criteria[criterionIndex];
+  
+  criterion.actualMinValue = min;
+  criterion.actualMaxValue = max;
+  
+  // Update the displayed value string to show the range
+  if (criterion.actualUnit) {
+    const formattedMin = criterion.actualUnit === "$" || criterion.actualUnit === "$M" 
+      ? `${criterion.actualUnit}${min}` 
+      : `${min}${criterion.actualUnit}`;
+    
+    const formattedMax = criterion.actualUnit === "$" || criterion.actualUnit === "$M" 
+      ? `${criterion.actualUnit}${max}` 
+      : `${max}${criterion.actualUnit}`;
+    
+    criterion.value = `${formattedMin} - ${formattedMax}`;
+  }
+  
+  // Calculate score based on the middle point of the range
+  const averageValue = (min + max) / 2;
+  
+  // Check if this metric should be inverted (lower is better)
+  const shouldInvert = criterion.name.toLowerCase().includes('debt') || 
+                       criterion.name.toLowerCase().includes('risk');
+  
+  if (criterion.scoreMapping) {
+    // Find the appropriate score range for the average value
+    const matchingRange = criterion.scoreMapping.find(
+      range => averageValue >= range.min && averageValue <= range.max
+    );
+    
+    if (matchingRange) {
+      criterion.score = matchingRange.score;
+    } else if (averageValue < criterion.scoreMapping[0].min) {
+      criterion.score = criterion.scoreMapping[0].score;
+    } else if (averageValue > criterion.scoreMapping[criterion.scoreMapping.length - 1].max) {
+      criterion.score = criterion.scoreMapping[criterion.scoreMapping.length - 1].score;
+    }
+  } else if (criterion.actualMin !== undefined && criterion.actualMax !== undefined) {
+    if (shouldInvert) {
+      // For metrics where lower is better
+      const normalizedValue = (criterion.actualMax - averageValue) / (criterion.actualMax - criterion.actualMin);
+      criterion.score = 1 + normalizedValue * 9; // Scale to 1-10
+    } else {
+      // For metrics where higher is better
+      const normalizedValue = (averageValue - criterion.actualMin) / (criterion.actualMax - criterion.actualMin);
+      criterion.score = 1 + normalizedValue * 9; // Scale to 1-10
+    }
+    
+    criterion.score = parseFloat(criterion.score.toFixed(1));
+    
+    // Also update minScore and maxScore if applicable
+    if (shouldInvert) {
+      criterion.minScore = 1 + ((criterion.actualMax - max) / (criterion.actualMax - criterion.actualMin)) * 9;
+      criterion.maxScore = 1 + ((criterion.actualMax - min) / (criterion.actualMax - criterion.actualMin)) * 9;
+    } else {
+      criterion.minScore = 1 + ((min - criterion.actualMin) / (criterion.actualMax - criterion.actualMin)) * 9;
+      criterion.maxScore = 1 + ((max - criterion.actualMin) / (criterion.actualMax - criterion.actualMin)) * 9;
+    }
+    
+    criterion.minScore = parseFloat(criterion.minScore.toFixed(1));
+    criterion.maxScore = parseFloat(criterion.maxScore.toFixed(1));
   }
   
   recalculateScores(newGroups, setTotalScore);

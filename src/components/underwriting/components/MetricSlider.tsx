@@ -44,15 +44,22 @@ export const MetricSlider = ({
      actualMaxValue || actualValue || (actualMax || 1)]
   );
 
+  // Update input values when props change
   useEffect(() => {
     if (actualValue !== undefined) {
       setInputValue(actualValue.toString());
     }
     if (actualMinValue !== undefined) {
       setMinInputValue(actualMinValue.toString());
+      if (rangeValues[0] !== actualMinValue) {
+        setRangeValues(prev => [actualMinValue, prev[1]]);
+      }
     }
     if (actualMaxValue !== undefined) {
       setMaxInputValue(actualMaxValue.toString());
+      if (rangeValues[1] !== actualMaxValue) {
+        setRangeValues(prev => [prev[0], actualMaxValue]);
+      }
     }
   }, [actualValue, actualMinValue, actualMaxValue]);
 
