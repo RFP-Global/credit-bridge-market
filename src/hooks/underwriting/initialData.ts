@@ -1,10 +1,10 @@
 import { ScoreThreshold, CriteriaGroup } from "@/components/underwriting/types";
 
 export const initialScoreThresholds: ScoreThreshold[] = [
-  { threshold: 4.5, color: "text-green-500" },
-  { threshold: 3.5, color: "text-blue-500" },
-  { threshold: 2.5, color: "text-yellow-500" },
-  { threshold: 0, color: "text-red-500" }
+  { value: 4.5, threshold: 4.5, color: "text-green-500", label: "Low Risk", background: "bg-green-500" },
+  { value: 3.5, threshold: 3.5, color: "text-blue-500", label: "Moderate Risk", background: "bg-blue-500" },
+  { value: 2.5, threshold: 2.5, color: "text-yellow-500", label: "Medium-High Risk", background: "bg-yellow-500" },
+  { value: 0, threshold: 0, color: "text-red-500", label: "High Risk", background: "bg-red-500" }
 ];
 
 export const initialCriteriaGroups: CriteriaGroup[] = [

@@ -21,6 +21,10 @@ export interface Criterion {
   actualMin?: number;
   actualMax?: number;
   actualUnit?: string;
+  // Adding min, max, and step for the initialData
+  min?: number;
+  max?: number;
+  step?: number;
 }
 
 export interface CriteriaGroup {
@@ -36,6 +40,7 @@ export interface ScoreThreshold {
   label: string;
   color: string;
   background: string;
+  threshold?: number; // Adding the threshold property that's used in the code
 }
 
 export interface UnderwritingMetric {

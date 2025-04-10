@@ -1,8 +1,9 @@
+
 import { ScoreThreshold } from "../types";
 
 export const getScoreColor = (score: number, scoreThresholds: ScoreThreshold[]) => {
   for (const threshold of scoreThresholds) {
-    if (score >= threshold.threshold) {
+    if (score >= (threshold.threshold || threshold.value)) {
       return threshold.color;
     }
   }
