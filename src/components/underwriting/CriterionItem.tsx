@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp, Info, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -77,7 +78,7 @@ export const CriterionItem = ({
       const max = parseFloat(maxValue);
       if (!isNaN(min) && !isNaN(max) && min <= max) {
         updateCriterionRange(groupIndex, criterionIndex, min, max);
-        
+        setRangeValues([min, max]);
         calculateAndUpdateScores(min, max);
       }
     }
@@ -113,7 +114,43 @@ export const CriterionItem = ({
     const maxScore = parseFloat(maxScoreValue);
     if (!isNaN(minScore) && !isNaN(maxScore) && minScore <= maxScore) {
       updateCriterionScore(groupIndex, criterionIndex, minScore, maxScore);
+      
+      // Calculate corresponding preferred range values based on the score values
+      const totalRange = criterion.max - criterion.min;
+      const minNormalized = (minScore - 1) / 9;
+      const maxNormalized = (maxScore - 1) / 9;
+      
+      const newMin = criterion.min + (minNormalized * totalRange);
+      const newMax = criterion.min + (maxNormalized * totalRange);
+      
+      // Update the range values
+      setMinValue(newMin.toFixed(2));
+      setMaxValue(newMax.toFixed(2));
+      setRangeValues([newMin, newMax]);
+      
+      // Update the criterion range if the function is available
+      if (updateCriterionRange) {
+        updateCriterionRange(groupIndex, criterionIndex, newMin, newMax);
+      }
     }
+  };
+
+  // Handle direct input changes for min and max values (preferred range)
+  const handleMinValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMinValue(e.target.value);
+  };
+
+  const handleMaxValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMaxValue(e.target.value);
+  };
+
+  // Handle direct input changes for min and max score values
+  const handleMinScoreValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMinScoreValue(e.target.value);
+  };
+
+  const handleMaxScoreValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMaxScoreValue(e.target.value);
   };
 
   const avgScore = criterion.minScore !== undefined && criterion.maxScore !== undefined 
@@ -241,7 +278,7 @@ export const CriterionItem = ({
               <span className="text-xs text-muted-foreground">Min:</span>
               <Input
                 value={minScoreValue}
-                onChange={(e) => setMinScoreValue(e.target.value)}
+                onChange={handleMinScoreValueChange}
                 className="h-7 text-xs"
                 placeholder="Min score"
               />
@@ -250,7 +287,7 @@ export const CriterionItem = ({
               <span className="text-xs text-muted-foreground">Max:</span>
               <Input
                 value={maxScoreValue}
-                onChange={(e) => setMaxScoreValue(e.target.value)}
+                onChange={handleMaxScoreValueChange}
                 className="h-7 text-xs"
                 placeholder="Max score"
               />
@@ -290,7 +327,7 @@ export const CriterionItem = ({
             <span className="text-xs text-muted-foreground">Min:</span>
             <Input
               value={minValue}
-              onChange={(e) => setMinValue(e.target.value)}
+              onChange={handleMinValueChange}
               className="h-7 text-xs"
               placeholder={`Min ${criterion.unit || ''}`}
             />
@@ -299,7 +336,7 @@ export const CriterionItem = ({
             <span className="text-xs text-muted-foreground">Max:</span>
             <Input
               value={maxValue}
-              onChange={(e) => setMaxValue(e.target.value)}
+              onChange={handleMaxValueChange}
               className="h-7 text-xs"
               placeholder={`Max ${criterion.unit || ''}`}
             />
