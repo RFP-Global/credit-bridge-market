@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Info, HelpCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -51,9 +50,6 @@ export const CriterionItem = ({
   const [minScore, setMinScore] = useState(criterion.minScore?.toString() || criterion.score.toString());
   const [maxScore, setMaxScore] = useState(criterion.maxScore?.toString() || criterion.score.toString());
   
-  // Check if this is the EBITDA criterion in the Financial Strength section (group index 0, criterion index 0)
-  const isEbitdaCriterion = groupIndex === 0 && criterionIndex === 0 && criterion.name === "EBITDA";
-
   const handleRangeUpdate = () => {
     if (updateCriterionRange && minValue && maxValue) {
       const min = parseFloat(minValue);
@@ -69,10 +65,8 @@ export const CriterionItem = ({
       const min = parseFloat(minScore);
       const max = parseFloat(maxScore);
       if (!isNaN(min) && !isNaN(max) && min <= max && min >= 1 && max <= 10) {
-        // For now, using the average as the displayed score
         const averageScore = (min + max) / 2;
         updateCriterionScore(groupIndex, criterionIndex, averageScore);
-        // In a real implementation, we'd store both min and max separately
       }
     }
   };
@@ -173,7 +167,6 @@ export const CriterionItem = ({
                 if (updateCriterionRange) {
                   updateCriterionRange(groupIndex, criterionIndex, min, max);
                 }
-                // Update score to average of min and max
                 const averageScore = (min + max) / 2;
                 updateCriterionScore(groupIndex, criterionIndex, averageScore);
               }}
@@ -182,16 +175,6 @@ export const CriterionItem = ({
           )}
         </div>
       </div>
-
-      {/* Skip rendering the CriterionScore for EBITDA criterion only */}
-      {!isEbitdaCriterion && (
-        <CriterionScore
-          score={criterion.score}
-          getScoreColor={getScoreColor}
-          getScoreBackground={getScoreBackground}
-          onScoreUpdate={(newScore) => updateCriterionScore(groupIndex, criterionIndex, newScore)}
-        />
-      )}
 
       {(updateActualMetricValue || updateActualMetricRange) && (
         <MetricSlider
@@ -254,4 +237,3 @@ export const CriterionItem = ({
     </div>
   );
 };
-
