@@ -1,6 +1,5 @@
-
 import React, { useState } from "react";
-import { Info, HelpCircle } from "lucide-react";
+import { Info, HelpCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
