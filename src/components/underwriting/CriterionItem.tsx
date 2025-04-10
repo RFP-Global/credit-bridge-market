@@ -45,16 +45,22 @@ export const CriterionItem = ({
   const [actualValue, setActualValue] = useState(criterion.actualValue !== undefined ? criterion.actualValue.toString() : "");
   const [minScoreValue, setMinScoreValue] = useState(criterion.minScore !== undefined ? criterion.minScore.toString() : "0");
   const [maxScoreValue, setMaxScoreValue] = useState(criterion.maxScore !== undefined ? criterion.maxScore.toString() : "0");
+  const [rangeValues, setRangeValues] = useState<number[]>([
+    criterion.preferredMin !== undefined ? criterion.preferredMin : criterion.min || 0,
+    criterion.preferredMax !== undefined ? criterion.preferredMax : criterion.max || 100
+  ]);
 
   useEffect(() => {
     if (criterion.preferredMin !== undefined) {
       setMinValue(criterion.preferredMin.toString());
+      setRangeValues(prev => [criterion.preferredMin!, prev[1]]);
     }
   }, [criterion.preferredMin]);
 
   useEffect(() => {
     if (criterion.preferredMax !== undefined) {
       setMaxValue(criterion.preferredMax.toString());
+      setRangeValues(prev => [prev[0], criterion.preferredMax!]);
     }
   }, [criterion.preferredMax]);
 
@@ -80,6 +86,15 @@ export const CriterionItem = ({
       if (!isNaN(min) && !isNaN(max) && min <= max) {
         updateCriterionRange(groupIndex, criterionIndex, min, max);
       }
+    }
+  };
+
+  const handleRangeSliderUpdate = (values: number[]) => {
+    if (values.length === 2 && updateCriterionRange) {
+      setRangeValues(values);
+      setMinValue(values[0].toString());
+      setMaxValue(values[1].toString());
+      updateCriterionRange(groupIndex, criterionIndex, values[0], values[1]);
     }
   };
 
@@ -350,6 +365,22 @@ export const CriterionItem = ({
 
       <div className="mt-3 pt-3 border-t border-gray-800/30">
         <div className="text-xs font-medium mb-2">Preferred Range {criterion.unit ? `(${criterion.unit})` : ''}</div>
+        
+        <div className="mb-3">
+          <Slider
+            value={rangeValues}
+            min={criterion.min || 0}
+            max={criterion.max || 100}
+            step={(criterion.max - criterion.min) / 100}
+            className="my-4"
+            onValueChange={handleRangeSliderUpdate}
+          />
+          <div className="flex justify-between text-xs text-muted-foreground">
+            <span>{criterion.min}{criterion.unit || ''}</span>
+            <span>{criterion.max}{criterion.unit || ''}</span>
+          </div>
+        </div>
+        
         <div className="flex items-center gap-3">
           <div className="flex flex-1 items-center gap-2">
             <span className="text-xs text-muted-foreground">Min:</span>
