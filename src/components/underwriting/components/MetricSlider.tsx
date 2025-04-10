@@ -1,11 +1,10 @@
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { RangeSlider } from "@/components/ui/range-slider";
-import { Slider } from "@/components/ui/slider";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ScoreRange } from "../types";
+import { MetricRangeInputs } from "./MetricRangeInputs";
+import { MetricValueInput } from "./MetricValueInput";
+import { MetricSingleSlider } from "./MetricSingleSlider";
 
 interface MetricSliderProps {
   actualValue?: number;
@@ -124,101 +123,30 @@ export const MetricSlider = ({
             className="my-4"
             onValueChange={handleRangeSliderChange}
           />
-          <div className="flex items-center gap-3 mt-2">
-            <div className="flex flex-1 items-center gap-2">
-              <span className="text-xs text-muted-foreground">Min:</span>
-              <Input
-                value={minInputValue}
-                onChange={(e) => setMinInputValue(e.target.value)}
-                className="h-7 text-xs"
-                placeholder={`Min ${actualUnit || ''}`}
-              />
-            </div>
-            <div className="flex flex-1 items-center gap-2">
-              <span className="text-xs text-muted-foreground">Max:</span>
-              <Input
-                value={maxInputValue}
-                onChange={(e) => setMaxInputValue(e.target.value)}
-                className="h-7 text-xs"
-                placeholder={`Max ${actualUnit || ''}`}
-              />
-            </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="h-7 text-xs"
-              onClick={handleRangeUpdate}
-            >
-              Set Range
-            </Button>
-          </div>
+          <MetricRangeInputs 
+            minInputValue={minInputValue}
+            maxInputValue={maxInputValue}
+            actualUnit={actualUnit}
+            onMinChange={setMinInputValue}
+            onMaxChange={setMaxInputValue}
+            onRangeUpdate={handleRangeUpdate}
+          />
         </div>
       ) : (
         <>
-          <div className="flex items-center gap-2">
-            <Button 
-              variant="outline" 
-              size="icon" 
-              className="h-6 w-6"
-              onClick={() => {
-                if (actualMin !== undefined) {
-                  const step = actualMax && actualMin 
-                    ? (actualMax - actualMin) / 20 
-                    : 0.1;
-                  const newValue = Math.max(actualMin, (actualValue || 0) - step);
-                  onValueUpdate(parseFloat(newValue.toFixed(2)));
-                }
-              }}
-            >
-              <ChevronDown className="h-3 w-3" />
-            </Button>
-            <Slider
-              value={[actualValue || 0]}
-              min={actualMin}
-              max={actualMax}
-              step={(actualMax - actualMin) / 100}
-              className="flex-1"
-              onValueChange={(value) => {
-                onValueUpdate(parseFloat(value[0].toFixed(2)));
-              }}
-            />
-            <Button 
-              variant="outline" 
-              size="icon"
-              className="h-6 w-6"
-              onClick={() => {
-                if (actualMax !== undefined) {
-                  const step = actualMax && actualMin 
-                    ? (actualMax - actualMin) / 20 
-                    : 0.1;
-                  const newValue = Math.min(actualMax, (actualValue || 0) + step);
-                  onValueUpdate(parseFloat(newValue.toFixed(2)));
-                }
-              }}
-            >
-              <ChevronUp className="h-3 w-3" />
-            </Button>
-          </div>
+          <MetricSingleSlider 
+            actualValue={actualValue || 0}
+            actualMin={actualMin}
+            actualMax={actualMax}
+            onValueUpdate={onValueUpdate}
+          />
           
-          <div className="flex items-center gap-3 mt-2">
-            <div className="flex flex-1 items-center gap-2">
-              <span className="text-xs text-muted-foreground">Value:</span>
-              <Input
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                className="h-7 text-xs"
-                placeholder={`Value ${actualUnit || ''}`}
-              />
-            </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="h-7 text-xs"
-              onClick={handleValueUpdate}
-            >
-              Set Value
-            </Button>
-          </div>
+          <MetricValueInput 
+            inputValue={inputValue}
+            actualUnit={actualUnit}
+            onValueChange={setInputValue}
+            onValueUpdate={handleValueUpdate}
+          />
         </>
       )}
       
