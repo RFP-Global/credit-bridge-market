@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { CriteriaGroup } from "./CriteriaGroup";
 import { CriteriaGroup as CriteriaGroupType } from "./types";
 
@@ -29,10 +29,6 @@ export const AlgorithmTab: React.FC<AlgorithmTabProps> = ({
 }) => {
   return (
     <Tabs defaultValue="categories" className="space-y-6">
-      <TabsList className="bg-black/40 border-gray-800">
-        <TabsTrigger value="categories" className="data-[state=active]:bg-gray-800/50">Categories</TabsTrigger>
-      </TabsList>
-      
       <TabsContent value="categories" className="space-y-6">
         {criteriaGroups.map((group, groupIndex) => (
           <CriteriaGroup 
