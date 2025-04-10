@@ -90,10 +90,6 @@ export const UnderwritingPreferences = () => {
     setCategories(updatedCategories);
   };
 
-  const getScoreColorClass = (score: number) => {
-    return 'text-gray-500'; // Neutral color instead of colored scales
-  };
-
   const updateMetricScore = (categoryIndex: number, metricIndex: number, newScore: number) => {
     const updatedCategories = [...categories];
     const category = updatedCategories[categoryIndex];
@@ -110,6 +106,13 @@ export const UnderwritingPreferences = () => {
     category.totalScore = parseFloat((totalWeightedScore / totalWeighting).toFixed(2));
     
     setCategories(updatedCategories);
+  };
+
+  const getScoreColorClass = (score: number) => {
+    if (score >= 8) return 'text-green-500';
+    if (score >= 6) return 'text-blue-500';
+    if (score >= 4) return 'text-yellow-500';
+    return 'text-red-500';
   };
 
   const openCategoryDetails = (category: UnderwritingCategory) => {
@@ -284,7 +287,7 @@ export const UnderwritingPreferences = () => {
                           <div className="text-xs text-muted-foreground">
                             Weight: {metric.weighting}%
                           </div>
-                          <div className="font-medium text-gray-500">
+                          <div className={`font-medium ${getScoreColorClass(metric.score)}`}>
                             Score: {metric.score}
                           </div>
                         </div>
@@ -333,7 +336,9 @@ export const UnderwritingPreferences = () => {
                               key={value}
                               className={`h-1.5 flex-1 rounded-full transition-colors ${
                                 metric.score >= value 
-                                  ? 'bg-gray-600/50'
+                                  ? value >= 8 ? 'bg-green-500' : 
+                                    value >= 6 ? 'bg-blue-500' : 
+                                    value >= 4 ? 'bg-yellow-500' : 'bg-red-500'
                                   : 'bg-gray-800/30'
                               }`}
                               onClick={() => updateMetricScore(index, metricIndex, value)}
@@ -341,6 +346,22 @@ export const UnderwritingPreferences = () => {
                           ))}
                         </div>
                       </div>
+                      
+                      {metric.value && (
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Current value: {metric.value}
+                        </div>
+                      )}
+                      {metric.formula && (
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Formula: {metric.formula}
+                        </div>
+                      )}
+                      {metric.description && (
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Description: {metric.description}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

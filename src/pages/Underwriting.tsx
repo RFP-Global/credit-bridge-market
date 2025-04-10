@@ -1,8 +1,13 @@
-
-import React from 'react';
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Save } from "lucide-react";
+import { Info, FileSpreadsheet, Settings, Save } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import LenderHeader from "@/components/lender/LenderHeader";
 import LenderSidebar from "@/components/lender/LenderSidebar";
 import { useUnderwritingState } from "@/hooks/useUnderwritingState";
@@ -11,19 +16,19 @@ import {
   updateGroupWeight, 
   updateCriterionScore, 
   updateCriterionRange,
-  updateActualMetricValue,
-  updateScoreRange
+  updateActualMetricValue
 } from "@/components/underwriting/utils/scoreUtils";
 import {
   getScoreColor,
   getScoreBackground,
   getRiskLevel
 } from "@/components/underwriting/utils/styleUtils";
-import { Accordion } from "@/components/ui/accordion";
-import { ScoreOverviewCard } from "@/components/underwriting/components/ScoreOverviewCard";
 import { CategoryWeights } from "@/components/underwriting/CategoryWeights";
 import { RiskScoreBreakdown } from "@/components/underwriting/RiskScoreBreakdown";
+import { Accordion } from "@/components/ui/accordion";
 import { CriteriaGroup } from "@/components/underwriting/CriteriaGroup";
+import { CustomBadge } from "@/components/ui/custom-badge";
+import { Separator } from "@/components/ui/separator";
 
 const Underwriting = () => {
   const {
@@ -31,9 +36,7 @@ const Underwriting = () => {
     setTotalScore,
     scoreThresholds,
     criteriaGroups,
-    setCriteriaGroups,
-    scoreRange,
-    setScoreRange
+    setCriteriaGroups
   } = useUnderwritingState();
 
   const handleUpdateCriterionWeight = (groupIndex: number, criterionIndex: number, newWeight: number) => {
@@ -54,10 +57,6 @@ const Underwriting = () => {
   
   const handleUpdateActualMetricValue = (groupIndex: number, criterionIndex: number, value: number) => {
     updateActualMetricValue(criteriaGroups, groupIndex, criterionIndex, value, setCriteriaGroups, setTotalScore);
-  };
-
-  const handleUpdateScoreRange = (min: number, max: number) => {
-    updateScoreRange(min, max, setScoreRange);
   };
 
   const handleGetScoreColor = (score: number) => getScoreColor(score, scoreThresholds);
@@ -83,16 +82,77 @@ const Underwriting = () => {
               </div>
             </div>
             
-            <ScoreOverviewCard 
-              totalScore={totalScore}
-              scoreThresholds={scoreThresholds}
-              criteriaGroups={criteriaGroups}
-              scoreRange={scoreRange}
-              riskLevel={riskLevel}
-              handleGetScoreColor={handleGetScoreColor}
-              handleGetScoreBackground={handleGetScoreBackground}
-              handleUpdateScoreRange={handleUpdateScoreRange}
-            />
+            <Card className="bg-black/40 border-gray-800 mb-6 overflow-hidden">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
+                <div className="bg-gradient-to-br from-gray-900 to-gray-950 p-6 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-gray-800/50">
+                  <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Overall Risk Score</div>
+                  <div className={`text-5xl font-bold ${handleGetScoreColor(totalScore)}`}>
+                    {totalScore.toFixed(2)}
+                  </div>
+                  <CustomBadge 
+                    variant={
+                      totalScore >= 4.5 ? "success" : 
+                      totalScore >= 3.5 ? "secondary" :
+                      totalScore >= 2.5 ? "warning" : "destructive"
+                    } 
+                    className="mt-3"
+                  >
+                    {riskLevel.label}
+                  </CustomBadge>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="sm" className="mt-3 text-xs text-gray-400">
+                          <Info className="h-3 w-3 mr-1" /> Score Scale
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom">
+                        <p className="w-[240px] text-xs">
+                          Risk Score Scale:<br />
+                          1-2.49: High Risk<br />
+                          2.5-3.49: Medium-High Risk<br />
+                          3.5-4.49: Moderate Risk<br />
+                          4.5-5: Low Risk
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+                
+                <div className="lg:col-span-2 p-6">
+                  <h3 className="text-sm font-medium text-gray-400 mb-4">CATEGORY SCORE BREAKDOWN</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {criteriaGroups.map((group) => (
+                      <div key={group.name} className="bg-black/30 rounded-md p-3 border border-gray-800/50">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <div className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-primary/10 text-primary">
+                              {group.weight}%
+                            </div>
+                            <span className="text-sm font-medium">{group.name}</span>
+                          </div>
+                          <div className={`text-sm font-bold ${handleGetScoreColor(group.score)}`}>
+                            {group.score.toFixed(2)}
+                          </div>
+                        </div>
+                        <div className="w-full h-1.5 bg-gray-800/50 rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full ${handleGetScoreBackground(group.score)}`}
+                            style={{ width: `${(group.score / 5) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-4 pt-4 border-t border-gray-800/50 flex items-center justify-between">
+                    <span className="text-sm font-medium">Total Score</span>
+                    <div className={`text-lg font-bold ${handleGetScoreColor(totalScore)}`}>
+                      {totalScore.toFixed(2)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
             
             <div className="space-y-6">
               <div className="flex flex-col md:flex-row items-start gap-6 mb-6">

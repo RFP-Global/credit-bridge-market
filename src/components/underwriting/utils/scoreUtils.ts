@@ -1,45 +1,5 @@
 
-import { CriteriaGroup, ScoreRange } from "../types";
-
-// Debt/EBITDA scoring mapping
-const debtEBITDAScoreMapping: ScoreRange[] = [
-  { min: null, max: 1.0, score: 10, description: "Minimal Leverage" },
-  { min: 1.01, max: 2.0, score: 9, description: "Low Leverage" },
-  { min: 2.01, max: 3.0, score: 8, description: "Very Manageable" },
-  { min: 3.01, max: 4.0, score: 7, description: "Moderate Risk" },
-  { min: 4.01, max: 5.0, score: 6, description: "Slightly Elevated Risk" },
-  { min: 5.01, max: 6.0, score: 5, description: "Cautionary" },
-  { min: 6.01, max: 7.0, score: 4, description: "High Risk" },
-  { min: 7.01, max: 8.0, score: 3, description: "Very High Risk" },
-  { min: 8.01, max: 10.0, score: 2, description: "Distressed Leverage" },
-  { min: 10.01, max: null, score: 1, description: "Unsustainable" }
-];
-
-// Helper function to determine if a criterion should use inverse relationship
-const shouldUseInverseRelationship = (criterionName: string): boolean => {
-  return criterionName.toLowerCase().includes('debt') || 
-         criterionName.toLowerCase().includes('risk');
-};
-
-// Helper function to check if criterion is Debt/EBITDA
-const isDebtEBITDACriterion = (criterionName: string): boolean => {
-  return criterionName.toLowerCase().includes('debt/ebitda') || 
-         (criterionName.toLowerCase().includes('debt') && 
-          criterionName.toLowerCase().includes('ebitda'));
-};
-
-// Get score mapping for a criterion
-const getScoreMappingForCriterion = (criterionName: string, existingMapping?: ScoreRange[]): ScoreRange[] | undefined => {
-  if (existingMapping) {
-    return existingMapping;
-  }
-  
-  if (isDebtEBITDACriterion(criterionName)) {
-    return debtEBITDAScoreMapping;
-  }
-  
-  return undefined;
-};
+import { CriteriaGroup } from "../types";
 
 export const updateCriterionWeight = (
   criteriaGroups: CriteriaGroup[],
@@ -142,56 +102,7 @@ export const updateCriterionScore = (
   setTotalScore: React.Dispatch<React.SetStateAction<number>>
 ) => {
   const newGroups = [...criteriaGroups];
-  const criterion = newGroups[groupIndex].criteria[criterionIndex];
-  
-  criterion.score = newScore;
-  
-  // If this is an actual metric with min/max, update the actual values to reflect the score
-  if (criterion.actualMin !== undefined && criterion.actualMax !== undefined && 
-      criterion.actualMinValue === undefined && criterion.actualMaxValue === undefined) {
-    
-    // Check if score should be inverted (higher value = lower score)
-    const shouldInvert = shouldUseInverseRelationship(criterion.name);
-    
-    // Get appropriate score mapping
-    const scoreMapping = getScoreMappingForCriterion(criterion.name, criterion.scoreMapping);
-    
-    if (scoreMapping) {
-      // Find the mapping entry closest to our score
-      const matchingRange = scoreMapping.find(range => 
-        newScore >= range.score - 0.5 && newScore < range.score + 0.5
-      );
-      
-      if (matchingRange) {
-        // Use the midpoint of the range as our value
-        const min = matchingRange.min !== null ? matchingRange.min : criterion.actualMin;
-        const max = matchingRange.max !== null ? matchingRange.max : criterion.actualMax;
-        criterion.actualValue = (min + max) / 2;
-      }
-    } else {
-      // Calculate the appropriate actual value based on the score
-      const percentage = (newScore - 1) / 9; // convert score 1-10 to 0-1 percentage
-      let actualValue;
-      
-      if (shouldInvert) {
-        // For metrics where lower is better (e.g., debt ratios)
-        actualValue = criterion.actualMax - (percentage * (criterion.actualMax - criterion.actualMin));
-      } else {
-        // For metrics where higher is better
-        actualValue = criterion.actualMin + (percentage * (criterion.actualMax - criterion.actualMin));
-      }
-      
-      criterion.actualValue = parseFloat(actualValue.toFixed(2));
-    }
-    
-    // Update the displayed value string
-    if (criterion.actualUnit) {
-      criterion.value = criterion.actualUnit === "$" || criterion.actualUnit === "$M" 
-        ? `${criterion.actualUnit}${criterion.actualValue}` 
-        : `${criterion.actualValue}${criterion.actualUnit}`;
-    }
-  }
-  
+  newGroups[groupIndex].criteria[criterionIndex].score = newScore;
   recalculateScores(newGroups, setTotalScore);
   setCriteriaGroups(newGroups);
 };
@@ -217,15 +128,15 @@ export const updateCriterionRange = (
   
   if (!isNaN(currentValue)) {
     if (currentValue >= min && currentValue <= max) {
-      criterion.score = 8 + (2 * (1 - (max - currentValue) / (max - min)));
-      if (criterion.score > 10) criterion.score = 10;
+      criterion.score = 4 + (1 - (max - currentValue) / (max - min));
+      if (criterion.score > 5) criterion.score = 5;
     } else if (currentValue < min) {
       const distance = (min - currentValue) / min;
-      criterion.score = 6 - (distance * 4);
+      criterion.score = 3 - (distance * 2);
       if (criterion.score < 1) criterion.score = 1;
     } else {
       const distance = (currentValue - max) / max;
-      criterion.score = 6 - (distance * 4);
+      criterion.score = 3 - (distance * 2);
       if (criterion.score < 1) criterion.score = 1;
     }
     criterion.score = parseFloat(criterion.score.toFixed(1));
@@ -255,157 +166,35 @@ export const updateActualMetricValue = (
       : `${newValue}${criterion.actualUnit}`;
   }
   
-  // Get appropriate score mapping
-  const scoreMapping = getScoreMappingForCriterion(criterion.name, criterion.scoreMapping);
-  
   // Calculate score based on actual value and score mapping
-  if (scoreMapping) {
+  if (criterion.scoreMapping) {
     // Find the appropriate score range
-    const matchingRange = scoreMapping.find(
-      range => (newValue >= (range.min || 0) && newValue <= (range.max || Infinity)) ||
-              (range.min === null && newValue <= (range.max || Infinity)) ||
-              (range.max === null && newValue >= (range.min || 0))
+    const matchingRange = criterion.scoreMapping.find(
+      range => newValue >= range.min && newValue <= range.max
     );
     
     if (matchingRange) {
       criterion.score = matchingRange.score;
-    } else if (scoreMapping[0].min === null || newValue < (scoreMapping[0].min || 0)) {
+    } else if (newValue < criterion.scoreMapping[0].min) {
       // If value is below the lowest range
-      criterion.score = scoreMapping[0].score;
-    } else if (scoreMapping[scoreMapping.length - 1].max === null || 
-               newValue > (scoreMapping[scoreMapping.length - 1].max || 0)) {
+      criterion.score = criterion.scoreMapping[0].score;
+    } else if (newValue > criterion.scoreMapping[criterion.scoreMapping.length - 1].max) {
       // If value is above the highest range
-      criterion.score = scoreMapping[scoreMapping.length - 1].score;
+      criterion.score = criterion.scoreMapping[criterion.scoreMapping.length - 1].score;
     }
   } else if (criterion.actualMin !== undefined && criterion.actualMax !== undefined) {
-    // Check if this metric should be inverted (lower is better)
-    const shouldInvert = shouldUseInverseRelationship(criterion.name);
+    // Simple linear interpolation if no explicit mapping
+    const percent = (newValue - criterion.actualMin) / (criterion.actualMax - criterion.actualMin);
+    const idealPercent = criterion.name.toLowerCase().includes('debt') || 
+                         criterion.name.toLowerCase().includes('risk') ? 
+                         1 - percent : percent; // Invert for metrics where lower is better
     
-    if (shouldInvert) {
-      // For metrics where lower is better (e.g., debt ratios)
-      // Low value = high score, High value = low score
-      const normalizedValue = (criterion.actualMax - newValue) / (criterion.actualMax - criterion.actualMin);
-      criterion.score = 1 + normalizedValue * 9; // Scale to 1-10
-    } else {
-      // For metrics where higher is better
-      // High value = high score, Low value = low score
-      const normalizedValue = (newValue - criterion.actualMin) / (criterion.actualMax - criterion.actualMin);
-      criterion.score = 1 + normalizedValue * 9; // Scale to 1-10
-    }
-    
+    criterion.score = 1 + idealPercent * 4; // Scale to 1-5
     criterion.score = parseFloat(criterion.score.toFixed(1));
   }
   
   recalculateScores(newGroups, setTotalScore);
   setCriteriaGroups(newGroups);
-};
-
-export const updateActualMetricRange = (
-  criteriaGroups: CriteriaGroup[],
-  groupIndex: number, 
-  criterionIndex: number, 
-  min: number, 
-  max: number,
-  setCriteriaGroups: React.Dispatch<React.SetStateAction<CriteriaGroup[]>>,
-  setTotalScore: React.Dispatch<React.SetStateAction<number>>
-) => {
-  const newGroups = [...criteriaGroups];
-  const criterion = newGroups[groupIndex].criteria[criterionIndex];
-  
-  criterion.actualMinValue = min;
-  criterion.actualMaxValue = max;
-  
-  // Update the displayed value string to show the range
-  if (criterion.actualUnit) {
-    const formattedMin = criterion.actualUnit === "$" || criterion.actualUnit === "$M" 
-      ? `${criterion.actualUnit}${min}` 
-      : `${min}${criterion.actualUnit}`;
-    
-    const formattedMax = criterion.actualUnit === "$" || criterion.actualUnit === "$M" 
-      ? `${criterion.actualUnit}${max}` 
-      : `${max}${criterion.actualUnit}`;
-    
-    criterion.value = `${formattedMin} - ${formattedMax}`;
-  }
-  
-  // Calculate score based on the middle point of the range
-  const averageValue = (min + max) / 2;
-  
-  // Get appropriate score mapping
-  const scoreMapping = getScoreMappingForCriterion(criterion.name, criterion.scoreMapping);
-  
-  // Check if this metric should be inverted (lower is better)
-  const shouldInvert = shouldUseInverseRelationship(criterion.name);
-  
-  if (scoreMapping) {
-    // Find the appropriate score range for the average value
-    const matchingRange = scoreMapping.find(
-      range => (averageValue >= (range.min || 0) && averageValue <= (range.max || Infinity)) ||
-              (range.min === null && averageValue <= (range.max || Infinity)) ||
-              (range.max === null && averageValue >= (range.min || 0))
-    );
-    
-    if (matchingRange) {
-      criterion.score = matchingRange.score;
-    } else if (scoreMapping[0].min === null || averageValue < (scoreMapping[0].min || 0)) {
-      criterion.score = scoreMapping[0].score;
-    } else if (scoreMapping[scoreMapping.length - 1].max === null || 
-              averageValue > (scoreMapping[scoreMapping.length - 1].max || 0)) {
-      criterion.score = scoreMapping[scoreMapping.length - 1].score;
-    }
-    
-    // Also set min/max scores based on endpoints
-    const minMatchingRange = scoreMapping.find(
-      range => (min >= (range.min || 0) && min <= (range.max || Infinity)) ||
-              (range.min === null && min <= (range.max || Infinity)) ||
-              (range.max === null && min >= (range.min || 0))
-    );
-    
-    const maxMatchingRange = scoreMapping.find(
-      range => (max >= (range.min || 0) && max <= (range.max || Infinity)) ||
-              (range.min === null && max <= (range.max || Infinity)) ||
-              (range.max === null && max >= (range.min || 0))
-    );
-    
-    criterion.minScore = minMatchingRange ? minMatchingRange.score : scoreMapping[0].score;
-    criterion.maxScore = maxMatchingRange ? maxMatchingRange.score : scoreMapping[scoreMapping.length - 1].score;
-    
-  } else if (criterion.actualMin !== undefined && criterion.actualMax !== undefined) {
-    if (shouldInvert) {
-      // For metrics where lower is better
-      const normalizedValue = (criterion.actualMax - averageValue) / (criterion.actualMax - criterion.actualMin);
-      criterion.score = 1 + normalizedValue * 9; // Scale to 1-10
-    } else {
-      // For metrics where higher is better
-      const normalizedValue = (averageValue - criterion.actualMin) / (criterion.actualMax - criterion.actualMin);
-      criterion.score = 1 + normalizedValue * 9; // Scale to 1-10
-    }
-    
-    criterion.score = parseFloat(criterion.score.toFixed(1));
-    
-    // Also update minScore and maxScore if applicable
-    if (shouldInvert) {
-      criterion.minScore = 1 + ((criterion.actualMax - max) / (criterion.actualMax - criterion.actualMin)) * 9;
-      criterion.maxScore = 1 + ((criterion.actualMax - min) / (criterion.actualMax - criterion.actualMin)) * 9;
-    } else {
-      criterion.minScore = 1 + ((min - criterion.actualMin) / (criterion.actualMax - criterion.actualMin)) * 9;
-      criterion.maxScore = 1 + ((max - criterion.actualMin) / (criterion.actualMax - criterion.actualMin)) * 9;
-    }
-    
-    criterion.minScore = parseFloat(criterion.minScore.toFixed(1));
-    criterion.maxScore = parseFloat(criterion.maxScore.toFixed(1));
-  }
-  
-  recalculateScores(newGroups, setTotalScore);
-  setCriteriaGroups(newGroups);
-};
-
-export const updateScoreRange = (
-  min: number,
-  max: number,
-  setScoreRange: React.Dispatch<React.SetStateAction<{ min: number; max: number }>>
-) => {
-  setScoreRange({ min, max });
 };
 
 export const recalculateScores = (
