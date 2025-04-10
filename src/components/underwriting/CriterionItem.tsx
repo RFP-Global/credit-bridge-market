@@ -120,7 +120,7 @@ export const CriterionItem = ({
     }
     
     // Fallback calculation if no match found in score mapping
-    return calculateScoreFromMetric(value);
+    return calculateScoreFromMetricSingle(value);
   };
 
   // Find appropriate metric value from a score using scoreMapping
@@ -139,11 +139,11 @@ export const CriterionItem = ({
     }
     
     // Fallback calculation if no match found in score mapping
-    return calculateMetricFromScore(score);
+    return calculateMetricFromScoreSingle(score);
   };
 
   // Calculate score from metric value
-  const calculateScoreFromMetric = (value: number): number => {
+  const calculateScoreFromMetricSingle = (value: number): number => {
     if (criterion.actualMin === undefined || criterion.actualMax === undefined) {
       return criterion.score;
     }
@@ -162,7 +162,7 @@ export const CriterionItem = ({
   };
 
   // Calculate metric value from score
-  const calculateMetricFromScore = (score: number): number => {
+  const calculateMetricFromScoreSingle = (score: number): number => {
     if (criterion.actualMin === undefined || criterion.actualMax === undefined) {
       return criterion.actualValue || 0;
     }
@@ -181,8 +181,8 @@ export const CriterionItem = ({
     }
   };
 
-  // Calculate score from metric value
-  const calculateScoreFromMetric = (minValue: number, maxValue: number) => {
+  // Calculate score range from metric range
+  const calculateScoreFromMetricRange = (minValue: number, maxValue: number) => {
     // If we have a scoreMapping, use that for direct mapping
     if (scoreMapping) {
       const minScore = getScoreFromMetricValue(minValue);
@@ -223,8 +223,8 @@ export const CriterionItem = ({
     return { minScore: 1, maxScore: 10 };
   };
 
-  // Calculate metric values from score
-  const calculateMetricFromScore = (minScore: number, maxScore: number) => {
+  // Calculate metric range from score range
+  const calculateMetricFromScoreRange = (minScore: number, maxScore: number) => {
     // If we have a scoreMapping, use that for direct mapping
     if (scoreMapping) {
       const minValue = getMetricValueFromScore(minScore);
@@ -274,7 +274,7 @@ export const CriterionItem = ({
     
     // Only update metric values if we have actual min and max defined
     if (criterion.actualMin !== undefined && criterion.actualMax !== undefined && updateActualMetricRange) {
-      const metricValues = calculateMetricFromScore(minScore, maxScore);
+      const metricValues = calculateMetricFromScoreRange(minScore, maxScore);
       if (metricValues) {
         // Round to 2 decimal places for better UX
         const minValue = parseFloat(metricValues.minValue.toFixed(2));
@@ -294,7 +294,7 @@ export const CriterionItem = ({
     }
     
     // Calculate and update the corresponding score
-    const scores = calculateScoreFromMetric(minValue, maxValue);
+    const scores = calculateScoreFromMetricRange(minValue, maxValue);
     if (scores) {
       // Use the average score for display
       const averageScore = (scores.minScore + scores.maxScore) / 2;

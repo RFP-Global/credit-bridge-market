@@ -98,12 +98,12 @@ export const MetricSlider = ({
     if (!scoreMapping) return "";
     
     const mapping = scoreMapping.find(range => 
-      (value >= range.min && value <= range.max) ||
-      (range.min === null && value <= range.max) ||
-      (range.max === null && value >= range.min)
+      (value >= (range.min || 0) && value <= (range.max || Infinity)) ||
+      (range.min === null && value <= (range.max || Infinity)) ||
+      (range.max === null && value >= (range.min || 0))
     );
     
-    return mapping ? mapping.description || "" : "";
+    return mapping?.description || "";
   };
 
   const handleRangeSliderChange = (values: number[]) => {

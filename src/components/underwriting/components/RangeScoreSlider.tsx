@@ -71,7 +71,7 @@ export const RangeScoreSlider = ({
       score >= range.score - 0.5 && score < range.score + 0.5
     );
     
-    return mapping ? mapping.description || "" : "";
+    return mapping?.description || "";
   };
 
   return (
