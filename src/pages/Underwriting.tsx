@@ -125,6 +125,14 @@ const Underwriting = () => {
                     </Tooltip>
                   </TooltipProvider>
                 </div>
+                
+                <div className="lg:col-span-2 p-6">
+                  <CategoryWeights 
+                    criteriaGroups={criteriaGroups}
+                    updateGroupWeight={handleUpdateGroupWeight}
+                    getScoreColor={handleGetScoreColor}
+                  />
+                </div>
               </div>
             </Card>
             
@@ -147,4 +155,3 @@ const Underwriting = () => {
 };
 
 export default Underwriting;
-
