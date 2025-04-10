@@ -18,7 +18,7 @@ export const CriterionScore = ({
   return (
     <div className="space-y-2">
       <div className="flex justify-between text-xs text-muted-foreground">
-        <span>Risk Score</span>
+        <span>Risk Score (Current Value)</span>
         <span>{score} / 10</span>
       </div>
       <div className="flex items-center gap-2">

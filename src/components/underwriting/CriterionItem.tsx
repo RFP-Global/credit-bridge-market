@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Info, HelpCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -44,6 +45,8 @@ export const CriterionItem = ({
 }: CriterionItemProps) => {
   const [minValue, setMinValue] = useState(criterion.preferredMin?.toString() || "");
   const [maxValue, setMaxValue] = useState(criterion.preferredMax?.toString() || "");
+  const [minScore, setMinScore] = useState(criterion.minScore?.toString() || criterion.score.toString());
+  const [maxScore, setMaxScore] = useState(criterion.maxScore?.toString() || criterion.score.toString());
 
   const handleRangeUpdate = () => {
     if (updateCriterionRange && minValue && maxValue) {
@@ -51,6 +54,19 @@ export const CriterionItem = ({
       const max = parseFloat(maxValue);
       if (!isNaN(min) && !isNaN(max) && min <= max) {
         updateCriterionRange(groupIndex, criterionIndex, min, max);
+      }
+    }
+  };
+
+  const handleScoreRangeUpdate = () => {
+    if (updateCriterionScore) {
+      const min = parseFloat(minScore);
+      const max = parseFloat(maxScore);
+      if (!isNaN(min) && !isNaN(max) && min <= max && min >= 1 && max <= 10) {
+        // For now, using the average as the displayed score
+        const averageScore = (min + max) / 2;
+        updateCriterionScore(groupIndex, criterionIndex, averageScore);
+        // In a real implementation, we'd store both min and max separately
       }
     }
   };
@@ -139,13 +155,49 @@ export const CriterionItem = ({
           </div>
         </div>
         
-        <CriterionScore
-          score={criterion.score}
-          getScoreColor={getScoreColor}
-          getScoreBackground={getScoreBackground}
-          onScoreUpdate={(newScore) => updateCriterionScore(groupIndex, criterionIndex, newScore)}
-        />
+        <div className="space-y-2">
+          <div className="flex justify-between text-xs text-muted-foreground">
+            <span>Risk Score Range</span>
+            <span>Min: {minScore} - Max: {maxScore}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Input 
+              value={minScore}
+              onChange={(e) => setMinScore(e.target.value)}
+              className="h-7 text-xs"
+              type="number"
+              min="1"
+              max="10"
+              step="0.5"
+            />
+            <span className="text-xs text-muted-foreground">to</span>
+            <Input 
+              value={maxScore}
+              onChange={(e) => setMaxScore(e.target.value)}
+              className="h-7 text-xs"
+              type="number"
+              min="1"
+              max="10"
+              step="0.5"
+            />
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-7 text-xs whitespace-nowrap"
+              onClick={handleScoreRangeUpdate}
+            >
+              Set Range
+            </Button>
+          </div>
+        </div>
       </div>
+
+      <CriterionScore
+        score={criterion.score}
+        getScoreColor={getScoreColor}
+        getScoreBackground={getScoreBackground}
+        onScoreUpdate={(newScore) => updateCriterionScore(groupIndex, criterionIndex, newScore)}
+      />
 
       {updateActualMetricValue && (
         <MetricSlider
