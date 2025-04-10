@@ -102,8 +102,9 @@ export const CriterionItem = ({
     const minNormalized = (min - criterion.min) / totalRange;
     const maxNormalized = (max - criterion.min) / totalRange;
     
-    const newMinScore = Number((1 + minNormalized * 9).toFixed(2));
-    const newMaxScore = Number((1 + maxNormalized * 9).toFixed(2));
+    // Ensure scores are between 1 and 10
+    const newMinScore = Math.max(1, Math.min(10, Number((1 + minNormalized * 9).toFixed(2))));
+    const newMaxScore = Math.max(1, Math.min(10, Number((1 + maxNormalized * 9).toFixed(2))));
     
     setMinScoreValue(newMinScore.toFixed(2));
     setMaxScoreValue(newMaxScore.toFixed(2));
@@ -115,11 +116,15 @@ export const CriterionItem = ({
     const minScore = parseFloat(minScoreValue);
     const maxScore = parseFloat(maxScoreValue);
     if (!isNaN(minScore) && !isNaN(maxScore) && minScore <= maxScore) {
-      updateCriterionScore(groupIndex, criterionIndex, minScore, maxScore);
+      // Ensure scores are between 1 and 10
+      const cappedMinScore = Math.max(1, Math.min(10, minScore));
+      const cappedMaxScore = Math.max(1, Math.min(10, maxScore));
+      
+      updateCriterionScore(groupIndex, criterionIndex, cappedMinScore, cappedMaxScore);
       
       const totalRange = criterion.max - criterion.min;
-      const minNormalized = (minScore - 1) / 9;
-      const maxNormalized = (maxScore - 1) / 9;
+      const minNormalized = (cappedMinScore - 1) / 9;
+      const maxNormalized = (cappedMaxScore - 1) / 9;
       
       const newMin = criterion.min + (minNormalized * totalRange);
       const newMax = criterion.min + (maxNormalized * totalRange);

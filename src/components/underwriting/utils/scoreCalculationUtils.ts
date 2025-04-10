@@ -26,7 +26,8 @@ export const recalculateScores = (
     
     if (weightSum > 0) {
       group.minScore = parseFloat((minScoreSum / weightSum).toFixed(2));
-      group.maxScore = parseFloat((maxScoreSum / weightSum).toFixed(2));
+      // Ensure maxScore never exceeds 10
+      group.maxScore = parseFloat(Math.min(10, (maxScoreSum / weightSum)).toFixed(2));
     } else {
       group.minScore = 0;
       group.maxScore = 0;
@@ -46,7 +47,8 @@ export const recalculateScores = (
   
   if (totalWeight > 0) {
     setMinTotalScore(parseFloat((totalMinWeightedScore / totalWeight).toFixed(2)));
-    setMaxTotalScore(parseFloat((totalMaxWeightedScore / totalWeight).toFixed(2)));
+    // Ensure maxTotalScore never exceeds 10
+    setMaxTotalScore(parseFloat(Math.min(10, (totalMaxWeightedScore / totalWeight)).toFixed(2)));
   }
 };
 
@@ -64,8 +66,9 @@ export const updateCriterionScore = (
   setMaxTotalScore: React.Dispatch<React.SetStateAction<number>>
 ) => {
   const newGroups = [...criteriaGroups];
-  newGroups[groupIndex].criteria[criterionIndex].minScore = newMinScore;
-  newGroups[groupIndex].criteria[criterionIndex].maxScore = newMaxScore;
+  // Ensure newMinScore is at least 1 and newMaxScore doesn't exceed 10
+  newGroups[groupIndex].criteria[criterionIndex].minScore = Math.max(1, newMinScore);
+  newGroups[groupIndex].criteria[criterionIndex].maxScore = Math.min(10, newMaxScore);
   recalculateScores(newGroups, setMinTotalScore, setMaxTotalScore);
   setCriteriaGroups(newGroups);
 };
