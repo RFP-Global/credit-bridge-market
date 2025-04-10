@@ -15,7 +15,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Criterion } from "./types";
+import { Criterion, ScoreRange } from "./types";
 import { ScoreMappingTable } from "./components/ScoreMappingTable";
 import { MetricSlider } from "./components/MetricSlider";
 import { CriterionScore } from "./components/CriterionScore";
@@ -33,6 +33,20 @@ interface CriterionItemProps {
   getScoreColor: (score: number) => string;
   getScoreBackground: (score: number) => string;
 }
+
+// Add Debt/EBITDA specific mapping
+const debtEBITDAScoreMapping: ScoreRange[] = [
+  { min: null, max: 1.0, score: 10, description: "Minimal Leverage" },
+  { min: 1.01, max: 2.0, score: 9, description: "Low Leverage" },
+  { min: 2.01, max: 3.0, score: 8, description: "Very Manageable" },
+  { min: 3.01, max: 4.0, score: 7, description: "Moderate Risk" },
+  { min: 4.01, max: 5.0, score: 6, description: "Slightly Elevated Risk" },
+  { min: 5.01, max: 6.0, score: 5, description: "Cautionary" },
+  { min: 6.01, max: 7.0, score: 4, description: "High Risk" },
+  { min: 7.01, max: 8.0, score: 3, description: "Very High Risk" },
+  { min: 8.01, max: 10.0, score: 2, description: "Distressed Leverage" },
+  { min: 10.01, max: null, score: 1, description: "Unsustainable" }
+];
 
 export const CriterionItem = ({
   criterion,
@@ -53,6 +67,20 @@ export const CriterionItem = ({
 
   // Add state to track the most recent slider that was updated
   const [lastUpdated, setLastUpdated] = useState<'metric' | 'score' | null>(null);
+
+  // Determine if this is a Debt/EBITDA criterion
+  const isDebtEBITDA = criterion.name.toLowerCase().includes('debt/ebitda') || 
+                      (criterion.name.toLowerCase().includes('debt') && 
+                       criterion.name.toLowerCase().includes('ebitda'));
+
+  // Apply custom score mapping based on criterion type
+  const scoreMapping = isDebtEBITDA 
+    ? debtEBITDAScoreMapping 
+    : criterion.scoreMapping;
+
+  // Determine if criterion requires inverse relationship (higher value = lower score)
+  const shouldInvert = criterion.name.toLowerCase().includes('debt') || 
+                       criterion.name.toLowerCase().includes('risk');
 
   const handleRangeUpdate = () => {
     if (updateCriterionRange && minValue && maxValue) {
@@ -77,18 +105,90 @@ export const CriterionItem = ({
     }
   };
 
+  // Find appropriate score from a metric value using scoreMapping
+  const getScoreFromMetricValue = (value: number): number => {
+    if (scoreMapping) {
+      const matchingRange = scoreMapping.find(range => 
+        (value >= (range.min || 0) && value <= (range.max || 100)) ||
+        (range.min === null && value <= (range.max || 100)) ||
+        (range.max === null && value >= (range.min || 0))
+      );
+      
+      if (matchingRange) {
+        return matchingRange.score;
+      }
+    }
+    
+    // Fallback calculation if no match found in score mapping
+    return calculateScoreFromMetric(value);
+  };
+
+  // Find appropriate metric value from a score using scoreMapping
+  const getMetricValueFromScore = (score: number): number | null => {
+    if (scoreMapping) {
+      const matchingRange = scoreMapping.find(range => 
+        score >= range.score - 0.5 && score < range.score + 0.5
+      );
+      
+      if (matchingRange) {
+        // Use the midpoint of the range as the representative value
+        const min = matchingRange.min !== null ? matchingRange.min : (criterion.actualMin || 0);
+        const max = matchingRange.max !== null ? matchingRange.max : (criterion.actualMax || 0);
+        return (min + max) / 2;
+      }
+    }
+    
+    // Fallback calculation if no match found in score mapping
+    return calculateMetricFromScore(score);
+  };
+
+  // Calculate score from metric value
+  const calculateScoreFromMetric = (value: number): number => {
+    if (criterion.actualMin === undefined || criterion.actualMax === undefined) {
+      return criterion.score;
+    }
+    
+    if (shouldInvert) {
+      // For metrics where lower is better (e.g., debt ratios)
+      // High metric value = low score, Low metric value = high score
+      const normalizedValue = (criterion.actualMax - value) / (criterion.actualMax - criterion.actualMin);
+      return Math.max(1, Math.min(10, 1 + normalizedValue * 9));
+    } else {
+      // For metrics where higher is better
+      // High metric value = high score, Low metric value = low score
+      const normalizedValue = (value - criterion.actualMin) / (criterion.actualMax - criterion.actualMin);
+      return Math.max(1, Math.min(10, 1 + normalizedValue * 9));
+    }
+  };
+
+  // Calculate metric value from score
+  const calculateMetricFromScore = (score: number): number => {
+    if (criterion.actualMin === undefined || criterion.actualMax === undefined) {
+      return criterion.actualValue || 0;
+    }
+    
+    const range = criterion.actualMax - criterion.actualMin;
+    const normalizedScore = (score - 1) / 9; // Convert score 1-10 to percentage
+    
+    if (shouldInvert) {
+      // For metrics where lower is better
+      // High score = low metric value, Low score = high metric value
+      return criterion.actualMax - (normalizedScore * range);
+    } else {
+      // For metrics where higher is better
+      // High score = high metric value, Low score = low metric value
+      return criterion.actualMin + (normalizedScore * range);
+    }
+  };
+
   // Calculate score from metric value
   const calculateScoreFromMetric = (minValue: number, maxValue: number) => {
     // If we have a scoreMapping, use that for direct mapping
-    if (criterion.scoreMapping) {
-      // This is simplified - in reality you'd want to map the min/max to appropriate scores
-      // based on the mapping ranges
-      return;
+    if (scoreMapping) {
+      const minScore = getScoreFromMetricValue(minValue);
+      const maxScore = getScoreFromMetricValue(maxValue);
+      return { minScore, maxScore };
     }
-    
-    // Check if the criterion should be inverted (lower value = higher score)
-    const shouldInvert = criterion.name.toLowerCase().includes('debt') || 
-                          criterion.name.toLowerCase().includes('risk');
     
     if (criterion.actualMin !== undefined && criterion.actualMax !== undefined) {
       if (shouldInvert) {
@@ -101,8 +201,8 @@ export const CriterionItem = ({
         const maxPercent = (criterion.actualMax - maxValue) / (criterion.actualMax - criterion.actualMin);
         
         return {
-          minScore: minScore + (maxScore - minScore) * minPercent,
-          maxScore: minScore + (maxScore - minScore) * maxPercent
+          minScore: minScore + (maxScore - minScore) * maxPercent,
+          maxScore: minScore + (maxScore - minScore) * minPercent
         };
       } else {
         // For metrics where higher is better
@@ -126,14 +226,14 @@ export const CriterionItem = ({
   // Calculate metric values from score
   const calculateMetricFromScore = (minScore: number, maxScore: number) => {
     // If we have a scoreMapping, use that for direct mapping
-    if (criterion.scoreMapping) {
-      // This is simplified - would need to map scores to values based on mapping
-      return;
+    if (scoreMapping) {
+      const minValue = getMetricValueFromScore(minScore);
+      const maxValue = getMetricValueFromScore(maxScore);
+      
+      if (minValue !== null && maxValue !== null) {
+        return { minValue, maxValue };
+      }
     }
-    
-    // Check if the criterion should be inverted (lower value = higher score)
-    const shouldInvert = criterion.name.toLowerCase().includes('debt') || 
-                          criterion.name.toLowerCase().includes('risk');
     
     if (criterion.actualMin !== undefined && criterion.actualMax !== undefined) {
       if (shouldInvert) {
@@ -144,8 +244,8 @@ export const CriterionItem = ({
         const maxPercent = (10 - maxScore) / 9;
         
         return {
-          minValue: criterion.actualMax - (range * minPercent),
-          maxValue: criterion.actualMax - (range * maxPercent)
+          maxValue: criterion.actualMax - (range * minPercent),
+          minValue: criterion.actualMax - (range * maxPercent)
         };
       } else {
         // For metrics where higher is better
@@ -168,7 +268,7 @@ export const CriterionItem = ({
   const handleScoreRangeChange = (minScore: number, maxScore: number) => {
     setLastUpdated('score');
     
-    // Update risk score
+    // Update risk score display
     const averageScore = (minScore + maxScore) / 2;
     updateCriterionScore(groupIndex, criterionIndex, averageScore);
     
@@ -231,7 +331,7 @@ export const CriterionItem = ({
           <div className="text-xs text-muted-foreground">
             Weight: {criterion.weight}%
           </div>
-          {criterion.scoreMapping && (
+          {scoreMapping && (
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-primary">
@@ -241,7 +341,7 @@ export const CriterionItem = ({
               <PopoverContent side="left" className="w-auto max-w-[300px] p-3 bg-gray-950 border border-gray-800">
                 <div className="text-xs font-semibold mb-2 text-gray-300">Score Mapping for {criterion.name}</div>
                 <ScoreMappingTable 
-                  scoreMapping={criterion.scoreMapping}
+                  scoreMapping={scoreMapping}
                   getScoreColor={getScoreColor}
                   actualUnit={criterion.actualUnit}
                 />
@@ -300,6 +400,8 @@ export const CriterionItem = ({
               step={0.1}
               onRangeChange={handleScoreRangeChange}
               getScoreColor={getScoreColor}
+              scoreMapping={scoreMapping}
+              inverseRelationship={shouldInvert}
             />
           )}
         </div>
@@ -321,7 +423,7 @@ export const CriterionItem = ({
           actualMax={criterion.actualMax}
           actualUnit={criterion.actualUnit}
           name={criterion.name}
-          scoreMapping={criterion.scoreMapping}
+          scoreMapping={scoreMapping}
           getScoreColor={getScoreColor}
           onValueUpdate={(value) => {
             if (updateActualMetricValue) {
@@ -332,6 +434,7 @@ export const CriterionItem = ({
             (min, max) => handleMetricRangeChange(min, max) : 
             undefined}
           isDualSlider={shouldUseDualSlider}
+          inverseRelationship={shouldInvert}
         />
       )}
 

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { RangeSlider } from "@/components/ui/range-slider";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ScoreRange } from "../types";
 
 interface RangeScoreSliderProps {
   minValue: number;
@@ -12,6 +13,8 @@ interface RangeScoreSliderProps {
   step?: number;
   onRangeChange: (min: number, max: number) => void;
   getScoreColor: (score: number) => string;
+  scoreMapping?: ScoreRange[];
+  inverseRelationship?: boolean;
 }
 
 export const RangeScoreSlider = ({
@@ -21,7 +24,9 @@ export const RangeScoreSlider = ({
   initialMax,
   step = 0.1,
   onRangeChange,
-  getScoreColor
+  getScoreColor,
+  scoreMapping,
+  inverseRelationship = false
 }: RangeScoreSliderProps) => {
   const [range, setRange] = useState<[number, number]>([initialMin, initialMax]);
   const [minInput, setMinInput] = useState(initialMin.toString());
@@ -56,6 +61,17 @@ export const RangeScoreSlider = ({
       setRange(newRange);
       onRangeChange(min, max);
     }
+  };
+
+  // Get description for the score if mapping exists
+  const getRiskLevel = (score: number): string => {
+    if (!scoreMapping) return "";
+    
+    const mapping = scoreMapping.find(range => 
+      score >= range.score - 0.5 && score < range.score + 0.5
+    );
+    
+    return mapping ? mapping.description || "" : "";
   };
 
   return (
@@ -111,6 +127,15 @@ export const RangeScoreSlider = ({
           Apply
         </Button>
       </div>
+      
+      {scoreMapping && (
+        <div className="mt-1 text-xs">
+          <div className="flex justify-between">
+            <span className={getScoreColor(range[0])}>{getRiskLevel(range[0])}</span>
+            <span className={getScoreColor(range[1])}>{getRiskLevel(range[1])}</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

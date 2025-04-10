@@ -19,6 +19,7 @@ interface MetricSliderProps {
   onValueUpdate: (value: number) => void;
   onRangeUpdate?: (min: number, max: number) => void;
   isDualSlider?: boolean;
+  inverseRelationship?: boolean;
 }
 
 export const MetricSlider = ({
@@ -33,7 +34,8 @@ export const MetricSlider = ({
   getScoreColor,
   onValueUpdate,
   onRangeUpdate,
-  isDualSlider = false
+  isDualSlider = false,
+  inverseRelationship = false
 }: MetricSliderProps) => {
   const [inputValue, setInputValue] = useState(actualValue?.toString() || "");
   const [minInputValue, setMinInputValue] = useState(actualMinValue?.toString() || "");
@@ -86,7 +88,22 @@ export const MetricSlider = ({
     if (value === undefined) return "";
     return actualUnit === "$" || actualUnit === "$M" 
       ? `${actualUnit}${value}` 
-      : `${value}${actualUnit || ""}`;
+      : name.toLowerCase().includes('ratio') || name.toLowerCase().includes('debt/ebitda')
+        ? `${value}${actualUnit === 'x' ? actualUnit : actualUnit || ''}`
+        : `${value}${actualUnit || ""}`;
+  };
+
+  // Get risk level description for a metric value based on scoreMapping
+  const getRiskLevel = (value: number): string => {
+    if (!scoreMapping) return "";
+    
+    const mapping = scoreMapping.find(range => 
+      (value >= range.min && value <= range.max) ||
+      (range.min === null && value <= range.max) ||
+      (range.max === null && value >= range.min)
+    );
+    
+    return mapping ? mapping.description || "" : "";
   };
 
   const handleRangeSliderChange = (values: number[]) => {
@@ -140,6 +157,23 @@ export const MetricSlider = ({
             onMaxChange={setMaxInputValue}
             onRangeUpdate={handleRangeUpdate}
           />
+          
+          {scoreMapping && (
+            <div className="mt-1 text-xs">
+              <div className="flex justify-between">
+                <span className={getScoreColor(inverseRelationship 
+                  ? 11 - Math.ceil(rangeValues[0]) 
+                  : Math.ceil(rangeValues[0]))}>
+                  {getRiskLevel(rangeValues[0])}
+                </span>
+                <span className={getScoreColor(inverseRelationship 
+                  ? 11 - Math.ceil(rangeValues[1]) 
+                  : Math.ceil(rangeValues[1]))}>
+                  {getRiskLevel(rangeValues[1])}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <>
