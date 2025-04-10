@@ -14,7 +14,7 @@ export const CriterionScore = ({
   return (
     <div className="space-y-2">
       <div className="flex justify-between text-xs text-muted-foreground">
-        <span>Risk Score (Current Value)</span>
+        <span>Risk Score</span>
         <span>{score} / 10</span>
       </div>
       <div className="flex items-center gap-2">
@@ -27,19 +27,6 @@ export const CriterionScore = ({
         >
           <ChevronDown className="h-3 w-3" />
         </Button>
-        <div className="flex-1 flex">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
-            <button
-              key={value}
-              className={`h-6 flex-1 border-r last:border-r-0 border-gray-800 transition-colors ${
-                score >= value 
-                  ? 'bg-gray-600/50'
-                  : 'bg-gray-800/30'
-              }`}
-              onClick={() => onScoreUpdate(value)}
-            />
-          ))}
-        </div>
         <Button 
           variant="outline" 
           size="icon"
