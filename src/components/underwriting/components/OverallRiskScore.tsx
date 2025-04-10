@@ -68,7 +68,6 @@ export const OverallRiskScore = ({
         initialMax={scoreRange.max}
         step={0.1}
         onRangeChange={handleUpdateScoreRange}
-        getScoreColor={handleGetScoreColor}
       />
       <TooltipProvider>
         <Tooltip>

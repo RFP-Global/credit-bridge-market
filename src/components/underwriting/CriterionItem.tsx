@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Info, HelpCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -399,9 +398,7 @@ export const CriterionItem = ({
               initialMax={criterion.maxScore || criterion.score}
               step={0.1}
               onRangeChange={handleScoreRangeChange}
-              getScoreColor={getScoreColor}
               scoreMapping={scoreMapping}
-              inverseRelationship={shouldInvert}
             />
           )}
         </div>
@@ -424,7 +421,6 @@ export const CriterionItem = ({
           actualUnit={criterion.actualUnit}
           name={criterion.name}
           scoreMapping={scoreMapping}
-          getScoreColor={getScoreColor}
           onValueUpdate={(value) => {
             if (updateActualMetricValue) {
               updateActualMetricValue(groupIndex, criterionIndex, value);
