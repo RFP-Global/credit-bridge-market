@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp, Info, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -39,11 +40,11 @@ export const CriterionItem = ({
   getScoreColor,
   getScoreBackground,
 }: CriterionItemProps) => {
-  const [minValue, setMinValue] = useState(criterion.preferredMin?.toString() || "");
-  const [maxValue, setMaxValue] = useState(criterion.preferredMax?.toString() || "");
-  const [actualValue, setActualValue] = useState(criterion.actualValue?.toString() || "");
-  const [minScoreValue, setMinScoreValue] = useState(criterion.minScore.toString());
-  const [maxScoreValue, setMaxScoreValue] = useState(criterion.maxScore.toString());
+  const [minValue, setMinValue] = useState(criterion.preferredMin !== undefined ? criterion.preferredMin.toString() : "");
+  const [maxValue, setMaxValue] = useState(criterion.preferredMax !== undefined ? criterion.preferredMax.toString() : "");
+  const [actualValue, setActualValue] = useState(criterion.actualValue !== undefined ? criterion.actualValue.toString() : "");
+  const [minScoreValue, setMinScoreValue] = useState(criterion.minScore !== undefined ? criterion.minScore.toString() : "0");
+  const [maxScoreValue, setMaxScoreValue] = useState(criterion.maxScore !== undefined ? criterion.maxScore.toString() : "0");
 
   useEffect(() => {
     if (criterion.preferredMin !== undefined) {
@@ -64,8 +65,12 @@ export const CriterionItem = ({
   }, [criterion.actualValue]);
 
   useEffect(() => {
-    setMinScoreValue(criterion.minScore.toString());
-    setMaxScoreValue(criterion.maxScore.toString());
+    if (criterion.minScore !== undefined) {
+      setMinScoreValue(criterion.minScore.toString());
+    }
+    if (criterion.maxScore !== undefined) {
+      setMaxScoreValue(criterion.maxScore.toString());
+    }
   }, [criterion.minScore, criterion.maxScore]);
 
   const handleRangeUpdate = () => {
@@ -149,10 +154,10 @@ export const CriterionItem = ({
             <React.Fragment key={`mapping-${idx}`}>
               <div>
                 {idx === 0 ? 
-                  `≤ ${range.max}${criterion.actualUnit}` : 
+                  `≤ ${range.max}${criterion.actualUnit || ''}` : 
                   idx === scoreMapping.length - 1 ? 
-                  `> ${range.min}${criterion.actualUnit}` : 
-                  `${range.min}-${range.max}${criterion.actualUnit}`}
+                  `> ${range.min}${criterion.actualUnit || ''}` : 
+                  `${range.min}-${range.max}${criterion.actualUnit || ''}`}
               </div>
               <div className={getScoreColor(range.score)}>
                 {range.score}
@@ -299,7 +304,7 @@ export const CriterionItem = ({
             </Popover>
           )}
           <div className={`font-medium ${getScoreColor(avgScore)}`}>
-            Score: {criterion.minScore.toFixed(1)}-{criterion.maxScore.toFixed(1)}
+            Score: {criterion.minScore !== undefined ? criterion.minScore.toFixed(1) : "0.0"}-{criterion.maxScore !== undefined ? criterion.maxScore.toFixed(1) : "0.0"}
           </div>
         </div>
       </div>
@@ -343,7 +348,7 @@ export const CriterionItem = ({
         <div className="space-y-2">
           <div className="flex justify-between text-xs text-muted-foreground">
             <span>Risk Score Range</span>
-            <span>{criterion.minScore.toFixed(1)}-{criterion.maxScore.toFixed(1)}</span>
+            <span>{criterion.minScore !== undefined ? criterion.minScore.toFixed(1) : "0.0"}-{criterion.maxScore !== undefined ? criterion.maxScore.toFixed(1) : "0.0"}</span>
           </div>
           <div className="flex items-center gap-3">
             <div className="flex flex-1 items-center gap-2">
