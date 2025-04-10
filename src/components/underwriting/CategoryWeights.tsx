@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { CriteriaGroup } from "./types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface CategoryWeightsProps {
   criteriaGroups: CriteriaGroup[];
@@ -25,6 +25,24 @@ export const CategoryWeights = ({
       return acc;
     }, {} as { [key: number]: string })
   );
+  
+  const [totalWeight, setTotalWeight] = useState<number>(
+    criteriaGroups.reduce((sum, group) => sum + group.weight, 0)
+  );
+
+  useEffect(() => {
+    // Update total weight when criteriaGroups change
+    const total = criteriaGroups.reduce((sum, group) => sum + group.weight, 0);
+    setTotalWeight(total);
+    
+    // Update input values when criteriaGroups change
+    setInputValues(
+      criteriaGroups.reduce((acc, group, index) => {
+        acc[index] = group.weight.toString();
+        return acc;
+      }, {} as { [key: number]: string })
+    );
+  }, [criteriaGroups]);
 
   const handleInputChange = (groupIndex: number, value: string) => {
     // Update the input field value
@@ -58,7 +76,12 @@ export const CategoryWeights = ({
     <div>
       <h3 className="text-sm font-medium text-gray-400 mb-4 flex items-center justify-between">
         <span>CATEGORY WEIGHTS</span>
-        <Badge variant="outline" className="ml-2 font-mono">100%</Badge>
+        <Badge 
+          variant={totalWeight === 100 ? "outline" : "destructive"} 
+          className="ml-2 font-mono"
+        >
+          {totalWeight}%
+        </Badge>
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {criteriaGroups.map((group, groupIndex) => (
