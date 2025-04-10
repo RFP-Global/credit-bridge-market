@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -5,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { UnderwritingCategoryCard } from "./UnderwritingCategoryCard";
-import { UnderwritingCategory } from "./types";
+import { UnderwritingCategory, UnderwritingMetric } from "./types";
 import { getScoreColor } from "./utils/styleUtils";
 import CategoryDetailsModal from "../proposals/details/CategoryDetailsModal";
 
@@ -16,64 +17,72 @@ export const UnderwritingPreferences = () => {
     {
       name: "Financial Strength",
       metrics: [
-        { name: "EBITDA", score: 7, weighting: 40, description: "Earnings Before Interest, Taxes, Depreciation, and Amortization" },
-        { name: "Debt/EBITDA", score: 5, weighting: 25, description: "Ratio of total debt to EBITDA" },
-        { name: "Current Ratio", score: 6, weighting: 20, description: "Current assets divided by current liabilities" },
-        { name: "Revenue Growth", score: 8, weighting: 15, description: "Year-over-year revenue growth" }
+        { name: "EBITDA", value: "7", minScore: 7, maxScore: 8, weighting: 40, description: "Earnings Before Interest, Taxes, Depreciation, and Amortization" },
+        { name: "Debt/EBITDA", value: "5", minScore: 4.5, maxScore: 5.5, weighting: 25, description: "Ratio of total debt to EBITDA" },
+        { name: "Current Ratio", value: "6", minScore: 5.5, maxScore: 6.5, weighting: 20, description: "Current assets divided by current liabilities" },
+        { name: "Revenue Growth", value: "8", minScore: 7.5, maxScore: 8.5, weighting: 15, description: "Year-over-year revenue growth" }
       ],
-      totalScore: 6.45
+      minTotalScore: 6.0,
+      maxTotalScore: 7.0
     },
     {
       name: "Business Stability",
       metrics: [
-        { name: "Years in Business", score: 7, weighting: 40 },
-        { name: "Revenue Concentration", score: 3, weighting: 30 },
-        { name: "Competitive Positioning", score: 7, weighting: 30 }
+        { name: "Years in Business", value: "7", minScore: 6.5, maxScore: 7.5, weighting: 40 },
+        { name: "Revenue Concentration", value: "3", minScore: 2.5, maxScore: 3.5, weighting: 30 },
+        { name: "Competitive Positioning", value: "7", minScore: 6.5, maxScore: 7.5, weighting: 30 }
       ],
-      totalScore: 5.65
+      minTotalScore: 5.2,
+      maxTotalScore: 6.1
     },
     {
       name: "Competitive Positioning",
       metrics: [
-        { name: "Competitor Count Score", score: 6, weighting: 25 },
-        { name: "Differentiation Score", score: 8, weighting: 25 },
-        { name: "Customer Retention Score", score: 4, weighting: 25 },
-        { name: "Barriers to Entry Score", score: 8, weighting: 25 }
+        { name: "Competitor Count Score", value: "6", minScore: 5.5, maxScore: 6.5, weighting: 25 },
+        { name: "Differentiation Score", value: "8", minScore: 7.5, maxScore: 8.5, weighting: 25 },
+        { name: "Customer Retention Score", value: "4", minScore: 3.5, maxScore: 4.5, weighting: 25 },
+        { name: "Barriers to Entry Score", value: "8", minScore: 7.5, maxScore: 8.5, weighting: 25 }
       ],
-      totalScore: 6.50
+      minTotalScore: 6.0,
+      maxTotalScore: 7.0
     },
     {
       name: "Collateral Strength",
       metrics: [
-        { name: "Loan-to-Value Ratio", value: "66.67%", score: 6, weighting: 50 },
-        { name: "Collateral Type", value: "Accounts Receivable (High Credit Quality)", score: 8, weighting: 30 },
-        { name: "Loan Repayment Priority & Security", value: "Unsecured Debt", score: 3, weighting: 20 }
+        { name: "Loan-to-Value Ratio", value: "66.67%", minScore: 5.5, maxScore: 6.5, weighting: 50 },
+        { name: "Collateral Type", value: "Accounts Receivable (High Credit Quality)", minScore: 7.5, maxScore: 8.5, weighting: 30 },
+        { name: "Loan Repayment Priority & Security", value: "Unsecured Debt", minScore: 2.5, maxScore: 3.5, weighting: 20 }
       ],
-      totalScore: 6.00
+      minTotalScore: 5.5,
+      maxTotalScore: 6.5
     },
     {
       name: "Industry & Market Risk",
       metrics: [
-        { name: "Industry Stability", formula: "Revenue Volatility Score", score: 7, weighting: 40 },
-        { name: "Market Demand", formula: "Demand Predictability Score", score: 6, weighting: 40 },
-        { name: "Regulator Risk", formula: "Regulatory Stability Score", score: 5, weighting: 20 }
+        { name: "Industry Stability", formula: "Revenue Volatility Score", minScore: 6.5, maxScore: 7.5, weighting: 40 },
+        { name: "Market Demand", formula: "Demand Predictability Score", minScore: 5.5, maxScore: 6.5, weighting: 40 },
+        { name: "Regulator Risk", formula: "Regulatory Stability Score", minScore: 4.5, maxScore: 5.5, weighting: 20 }
       ],
-      totalScore: 6.20
+      minTotalScore: 5.7,
+      maxTotalScore: 6.7
     },
     {
       name: "Banking & Relationship",
       metrics: [
-        { name: "Primary Banking Stability", score: 6, weighting: 30 },
-        { name: "# of Active Banking Relationships", score: 8, weighting: 20 },
-        { name: "# of Missed Payments / Defaults", score: 2, weighting: 20 },
-        { name: "Covenant Violations / Loan Modifications", score: 8, weighting: 20 },
-        { name: "Banking Product Breadth", score: 8, weighting: 10 }
+        { name: "Primary Banking Stability", value: "6", minScore: 5.5, maxScore: 6.5, weighting: 30 },
+        { name: "# of Active Banking Relationships", value: "8", minScore: 7.5, maxScore: 8.5, weighting: 20 },
+        { name: "# of Missed Payments / Defaults", value: "2", minScore: 1.5, maxScore: 2.5, weighting: 20 },
+        { name: "Covenant Violations / Loan Modifications", value: "8", minScore: 7.5, maxScore: 8.5, weighting: 20 },
+        { name: "Banking Product Breadth", value: "8", minScore: 7.5, maxScore: 8.5, weighting: 10 }
       ],
-      totalScore: 6.2
+      minTotalScore: 5.7,
+      maxTotalScore: 6.7
     }
   ]);
 
-  const overallScore = categories.reduce((sum, category) => sum + category.totalScore, 0) / categories.length;
+  const overallMinScore = categories.reduce((sum, category) => sum + category.minTotalScore, 0) / categories.length;
+  const overallMaxScore = categories.reduce((sum, category) => sum + category.maxTotalScore, 0) / categories.length;
+  const overallScore = (overallMinScore + overallMaxScore) / 2;
 
   const getRiskLevel = (score: number) => {
     if (score >= 7) return { level: "Low Risk", color: "bg-green-500/20 text-green-500 border-green-500/20" };
@@ -86,7 +95,13 @@ export const UnderwritingPreferences = () => {
 
   const updateCategoryScore = (categoryIndex: number, newScore: number) => {
     const updatedCategories = [...categories];
-    updatedCategories[categoryIndex].totalScore = parseFloat(newScore.toFixed(2));
+    // Since we now have min and max scores, let's adjust both with the same difference
+    const currentAvg = (updatedCategories[categoryIndex].minTotalScore + updatedCategories[categoryIndex].maxTotalScore) / 2;
+    const diff = newScore - currentAvg;
+    
+    updatedCategories[categoryIndex].minTotalScore = parseFloat((updatedCategories[categoryIndex].minTotalScore + diff).toFixed(2));
+    updatedCategories[categoryIndex].maxTotalScore = parseFloat((updatedCategories[categoryIndex].maxTotalScore + diff).toFixed(2));
+    
     setCategories(updatedCategories);
   };
 
@@ -94,16 +109,29 @@ export const UnderwritingPreferences = () => {
     const updatedCategories = [...categories];
     const category = updatedCategories[categoryIndex];
     
-    category.metrics[metricIndex].score = newScore;
+    // Since we now have min and max scores, let's set them around the new score
+    const metric = category.metrics[metricIndex];
+    const oldAvg = (metric.minScore + metric.maxScore) / 2;
+    const diff = newScore - oldAvg;
     
-    const totalWeightedScore = category.metrics.reduce(
-      (sum, metric) => sum + (metric.score * metric.weighting), 0
+    metric.minScore = Math.max(1, metric.minScore + diff);
+    metric.maxScore = Math.min(10, metric.maxScore + diff);
+    
+    // Recalculate the category total score
+    const totalWeightedMinScore = category.metrics.reduce(
+      (sum, metric) => sum + (metric.minScore * metric.weighting), 0
     );
+    
+    const totalWeightedMaxScore = category.metrics.reduce(
+      (sum, metric) => sum + (metric.maxScore * metric.weighting), 0
+    );
+    
     const totalWeighting = category.metrics.reduce(
       (sum, metric) => sum + metric.weighting, 0
     );
     
-    category.totalScore = parseFloat((totalWeightedScore / totalWeighting).toFixed(2));
+    category.minTotalScore = parseFloat((totalWeightedMinScore / totalWeighting).toFixed(2));
+    category.maxTotalScore = parseFloat((totalWeightedMaxScore / totalWeighting).toFixed(2));
     
     setCategories(updatedCategories);
   };
@@ -135,7 +163,9 @@ export const UnderwritingPreferences = () => {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="font-medium">Overall Risk Score:</div>
-                  <div className="text-2xl font-bold text-blue-500">{overallScore.toFixed(2)}</div>
+                  <div className="text-2xl font-bold text-blue-500">
+                    {overallMinScore.toFixed(2)}-{overallMaxScore.toFixed(2)}
+                  </div>
                   <Badge variant="outline" className={`${riskLevel.color}`}>
                     {riskLevel.level}
                   </Badge>
@@ -155,8 +185,8 @@ export const UnderwritingPreferences = () => {
                       {category.name.toUpperCase()}
                     </div>
                     <div className="flex justify-between items-center">
-                      <div className={`text-xl font-bold ${getScoreColorClass(category.totalScore)}`}>
-                        {category.totalScore.toFixed(2)}
+                      <div className={`text-xl font-bold ${getScoreColorClass((category.minTotalScore + category.maxTotalScore) / 2)}`}>
+                        {category.minTotalScore.toFixed(2)}-{category.maxTotalScore.toFixed(2)}
                       </div>
                       <Button 
                         variant="ghost" 
@@ -164,7 +194,8 @@ export const UnderwritingPreferences = () => {
                         className="h-6 w-6 p-0"
                         onClick={(e) => {
                           e.stopPropagation();
-                          const newScore = Math.max(1, Math.min(10, category.totalScore - 0.5));
+                          const avgScore = (category.minTotalScore + category.maxTotalScore) / 2;
+                          const newScore = Math.max(1, Math.min(10, avgScore - 0.5));
                           updateCategoryScore(index, newScore);
                         }}
                       >
@@ -176,7 +207,8 @@ export const UnderwritingPreferences = () => {
                         className="h-6 w-6 p-0"
                         onClick={(e) => {
                           e.stopPropagation();
-                          const newScore = Math.max(1, Math.min(10, category.totalScore + 0.5));
+                          const avgScore = (category.minTotalScore + category.maxTotalScore) / 2;
+                          const newScore = Math.max(1, Math.min(10, avgScore + 0.5));
                           updateCategoryScore(index, newScore);
                         }}
                       >
@@ -248,14 +280,14 @@ export const UnderwritingPreferences = () => {
               <CardContent className="pt-4">
                 <div className="flex items-center justify-between mb-2">
                   <div className="font-medium">Adjust Category Score</div>
-                  <div className={`font-bold ${getScoreColorClass(category.totalScore)}`}>
-                    {category.totalScore.toFixed(2)} / 10
+                  <div className={`font-bold ${getScoreColorClass((category.minTotalScore + category.maxTotalScore) / 2)}`}>
+                    {category.minTotalScore.toFixed(2)}-{category.maxTotalScore.toFixed(2)} / 10
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs">1</span>
                   <Slider
-                    value={[category.totalScore]}
+                    value={[(category.minTotalScore + category.maxTotalScore) / 2]}
                     min={1}
                     max={10}
                     step={0.1}
@@ -287,8 +319,8 @@ export const UnderwritingPreferences = () => {
                           <div className="text-xs text-muted-foreground">
                             Weight: {metric.weighting}%
                           </div>
-                          <div className={`font-medium ${getScoreColorClass(metric.score)}`}>
-                            Score: {metric.score}
+                          <div className={`font-medium ${getScoreColorClass((metric.minScore + metric.maxScore) / 2)}`}>
+                            Score: {metric.minScore.toFixed(1)}-{metric.maxScore.toFixed(1)}
                           </div>
                         </div>
                       </div>
@@ -296,7 +328,7 @@ export const UnderwritingPreferences = () => {
                       <div className="space-y-1">
                         <div className="flex justify-between text-xs text-muted-foreground">
                           <span>Metric Score</span>
-                          <span>{metric.score} / 10</span>
+                          <span>{metric.minScore.toFixed(1)}-{metric.maxScore.toFixed(1)} / 10</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <Button 
@@ -304,14 +336,15 @@ export const UnderwritingPreferences = () => {
                             size="sm" 
                             className="h-6 w-6 p-0"
                             onClick={() => {
-                              const newScore = Math.max(1, metric.score - 1);
+                              const avgScore = (metric.minScore + metric.maxScore) / 2;
+                              const newScore = Math.max(1, avgScore - 1);
                               updateMetricScore(index, metricIndex, newScore);
                             }}
                           >
                             -
                           </Button>
                           <Slider
-                            value={[metric.score]}
+                            value={[(metric.minScore + metric.maxScore) / 2]}
                             min={1}
                             max={10}
                             step={1}
@@ -323,7 +356,8 @@ export const UnderwritingPreferences = () => {
                             size="sm"
                             className="h-6 w-6 p-0"
                             onClick={() => {
-                              const newScore = Math.min(10, metric.score + 1);
+                              const avgScore = (metric.minScore + metric.maxScore) / 2;
+                              const newScore = Math.min(10, avgScore + 1);
                               updateMetricScore(index, metricIndex, newScore);
                             }}
                           >
@@ -335,7 +369,7 @@ export const UnderwritingPreferences = () => {
                             <button
                               key={value}
                               className={`h-1.5 flex-1 rounded-full transition-colors ${
-                                metric.score >= value 
+                                (metric.minScore + metric.maxScore) / 2 >= value 
                                   ? value >= 8 ? 'bg-green-500' : 
                                     value >= 6 ? 'bg-blue-500' : 
                                     value >= 4 ? 'bg-yellow-500' : 'bg-red-500'
@@ -378,10 +412,10 @@ export const UnderwritingPreferences = () => {
           open={detailsModalOpen}
           onOpenChange={setDetailsModalOpen}
           categoryName={selectedCategory.name}
-          categoryScore={selectedCategory.totalScore}
+          categoryScore={(selectedCategory.minTotalScore + selectedCategory.maxTotalScore) / 2}
           components={selectedCategory.metrics.map(metric => ({
             name: metric.name,
-            score: metric.score,
+            score: (metric.minScore + metric.maxScore) / 2,
             description: metric.description
           }))}
         />

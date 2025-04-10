@@ -42,8 +42,8 @@ export const UnderwritingCategoryCard = ({ category }: UnderwritingCategoryCardP
                     <td className="text-center px-4 py-2">{metric.formula}</td>
                   )}
                   <td className="text-center px-4 py-2">
-                    <span className={`font-medium ${getScoreColorClass(metric.score)}`}>
-                      {metric.score}
+                    <span className={`font-medium ${getScoreColorClass((metric.minScore + metric.maxScore) / 2)}`}>
+                      {metric.minScore.toFixed(1)}-{metric.maxScore.toFixed(1)}
                     </span>
                   </td>
                   <td className="text-center px-4 py-2 text-blue-400">
@@ -56,8 +56,8 @@ export const UnderwritingCategoryCard = ({ category }: UnderwritingCategoryCardP
                 {hasValueColumn && <td></td>}
                 {hasFormulaColumn && <td></td>}
                 <td className="text-center font-semibold px-4 py-2">
-                  <span className={`${getScoreColorClass(category.totalScore)}`}>
-                    {category.totalScore.toFixed(2)}
+                  <span className={`${getScoreColorClass((category.minTotalScore + category.maxTotalScore) / 2)}`}>
+                    {category.minTotalScore.toFixed(2)}-{category.maxTotalScore.toFixed(2)}
                   </span>
                 </td>
                 <td className="text-center font-semibold px-4 py-2 text-blue-400">100%</td>

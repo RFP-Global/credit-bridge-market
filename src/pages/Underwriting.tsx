@@ -30,6 +30,7 @@ import { Accordion } from "@/components/ui/accordion";
 import { CriteriaGroup } from "@/components/underwriting/CriteriaGroup";
 import { CustomBadge } from "@/components/ui/custom-badge";
 import { Separator } from "@/components/ui/separator";
+import { AlgorithmTab } from "@/components/underwriting/AlgorithmTab";
 
 const Underwriting = () => {
   const {
@@ -136,7 +137,7 @@ const Underwriting = () => {
                             <span className="text-sm font-medium">{group.name}</span>
                           </div>
                           <div className={`text-sm font-bold ${handleGetScoreColor((group.minScore + group.maxScore) / 2)}`}>
-                            {group.minScore.toFixed(1)}-{group.maxScore.toFixed(1)}
+                            {group.minScore?.toFixed(1) || "0.0"}-{group.maxScore?.toFixed(1) || "0.0"}
                           </div>
                         </div>
                         <div className="w-full h-1.5 bg-gray-800/50 rounded-full overflow-hidden">
@@ -158,44 +159,16 @@ const Underwriting = () => {
               </div>
             </Card>
             
-            <div className="space-y-6">
-              <div className="flex flex-col md:flex-row items-start gap-6 mb-6">
-                <CategoryWeights 
-                  criteriaGroups={criteriaGroups}
-                  updateGroupWeight={handleUpdateGroupWeight}
-                  getScoreColor={handleGetScoreColor}
-                />
-                <RiskScoreBreakdown 
-                  criteriaGroups={criteriaGroups}
-                  getScoreColor={handleGetScoreColor}
-                  getScoreBackground={handleGetScoreBackground}
-                />
-              </div>
-              
-              <Accordion type="single" collapsible className="w-full space-y-4">
-                {criteriaGroups.map((group, groupIndex) => (
-                  <CriteriaGroup
-                    key={group.name}
-                    group={group}
-                    groupIndex={groupIndex}
-                    updateGroupWeight={handleUpdateGroupWeight}
-                    updateCriterionWeight={handleUpdateCriterionWeight}
-                    updateCriterionScore={handleUpdateCriterionScore}
-                    updateCriterionRange={handleUpdateCriterionRange}
-                    updateActualMetricValue={handleUpdateActualMetricValue}
-                    getScoreColor={handleGetScoreColor}
-                    getScoreBackground={handleGetScoreBackground}
-                  />
-                ))}
-              </Accordion>
-              
-              <div className="flex justify-end mt-8">
-                <Button className="bg-blue-600 hover:bg-blue-700">
-                  <Save className="mr-2 h-4 w-4" />
-                  Save Algorithm Configuration
-                </Button>
-              </div>
-            </div>
+            <AlgorithmTab 
+              criteriaGroups={criteriaGroups}
+              updateGroupWeight={handleUpdateGroupWeight}
+              updateCriterionWeight={handleUpdateCriterionWeight}
+              updateCriterionScore={handleUpdateCriterionScore}
+              updateCriterionRange={handleUpdateCriterionRange}
+              updateActualMetricValue={handleUpdateActualMetricValue}
+              getScoreColor={handleGetScoreColor}
+              getScoreBackground={handleGetScoreBackground}
+            />
           </main>
         </div>
       </div>
