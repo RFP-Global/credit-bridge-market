@@ -1,3 +1,4 @@
+
 import { RangeSlider } from "@/components/ui/range-slider";
 import { useState, useEffect } from "react";
 import { ScoreRange } from "../types";
@@ -18,6 +19,7 @@ interface MetricSliderProps {
   onRangeUpdate?: (min: number, max: number) => void;
   isDualSlider?: boolean;
   inverseRelationship?: boolean;
+  isDebtEBITDA?: boolean;
 }
 
 export const MetricSlider = ({
@@ -32,7 +34,8 @@ export const MetricSlider = ({
   onValueUpdate,
   onRangeUpdate,
   isDualSlider = false,
-  inverseRelationship = false
+  inverseRelationship = false,
+  isDebtEBITDA = false
 }: MetricSliderProps) => {
   const [inputValue, setInputValue] = useState(actualValue?.toString() || "");
   const [minInputValue, setMinInputValue] = useState(actualMinValue?.toString() || "");
@@ -141,8 +144,9 @@ export const MetricSlider = ({
             min={actualMin}
             max={actualMax}
             step={(actualMax - actualMin) / 100}
-            className="my-4"
+            className={`my-4 ${isDebtEBITDA ? "bg-blue-950/30" : ""}`}
             onValueChange={handleRangeSliderChange}
+            colorClass={isDebtEBITDA ? "bg-blue-600" : undefined}
           />
           <MetricRangeInputs 
             minInputValue={minInputValue}

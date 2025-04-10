@@ -33,7 +33,6 @@ interface CriterionItemProps {
   getScoreBackground: (score: number) => string;
 }
 
-// Add Debt/EBITDA specific mapping
 const debtEBITDAScoreMapping: ScoreRange[] = [
   { min: null, max: 1.0, score: 10, description: "Minimal Leverage" },
   { min: 1.01, max: 2.0, score: 9, description: "Low Leverage" },
@@ -64,20 +63,16 @@ export const CriterionItem = ({
   const [minScore, setMinScore] = useState(criterion.minScore?.toString() || criterion.score.toString());
   const [maxScore, setMaxScore] = useState(criterion.maxScore?.toString() || criterion.score.toString());
 
-  // Add state to track the most recent slider that was updated
   const [lastUpdated, setLastUpdated] = useState<'metric' | 'score' | null>(null);
 
-  // Determine if this is a Debt/EBITDA criterion
   const isDebtEBITDA = criterion.name.toLowerCase().includes('debt/ebitda') || 
                       (criterion.name.toLowerCase().includes('debt') && 
                        criterion.name.toLowerCase().includes('ebitda'));
 
-  // Apply custom score mapping based on criterion type
   const scoreMapping = isDebtEBITDA 
     ? debtEBITDAScoreMapping 
     : criterion.scoreMapping;
 
-  // Determine if criterion requires inverse relationship (higher value = lower score)
   const shouldInvert = criterion.name.toLowerCase().includes('debt') || 
                        criterion.name.toLowerCase().includes('risk');
 
@@ -96,15 +91,12 @@ export const CriterionItem = ({
       const min = parseFloat(minScore);
       const max = parseFloat(maxScore);
       if (!isNaN(min) && !isNaN(max) && min <= max && min >= 1 && max <= 10) {
-        // For now, using the average as the displayed score
         const averageScore = (min + max) / 2;
         updateCriterionScore(groupIndex, criterionIndex, averageScore);
-        // In a real implementation, we'd store both min and max separately
       }
     }
   };
 
-  // Find appropriate score from a metric value using scoreMapping
   const getScoreFromMetricValue = (value: number): number => {
     if (scoreMapping) {
       const matchingRange = scoreMapping.find(range => 
@@ -118,11 +110,9 @@ export const CriterionItem = ({
       }
     }
     
-    // Fallback calculation if no match found in score mapping
     return calculateScoreFromMetricSingle(value);
   };
 
-  // Find appropriate metric value from a score using scoreMapping
   const getMetricValueFromScore = (score: number): number | null => {
     if (scoreMapping) {
       const matchingRange = scoreMapping.find(range => 
@@ -130,59 +120,45 @@ export const CriterionItem = ({
       );
       
       if (matchingRange) {
-        // Use the midpoint of the range as the representative value
         const min = matchingRange.min !== null ? matchingRange.min : (criterion.actualMin || 0);
         const max = matchingRange.max !== null ? matchingRange.max : (criterion.actualMax || 0);
         return (min + max) / 2;
       }
     }
     
-    // Fallback calculation if no match found in score mapping
     return calculateMetricFromScoreSingle(score);
   };
 
-  // Calculate score from metric value
   const calculateScoreFromMetricSingle = (value: number): number => {
     if (criterion.actualMin === undefined || criterion.actualMax === undefined) {
       return criterion.score;
     }
     
     if (shouldInvert) {
-      // For metrics where lower is better (e.g., debt ratios)
-      // High metric value = low score, Low metric value = high score
       const normalizedValue = (criterion.actualMax - value) / (criterion.actualMax - criterion.actualMin);
       return Math.max(1, Math.min(10, 1 + normalizedValue * 9));
     } else {
-      // For metrics where higher is better
-      // High metric value = high score, Low metric value = low score
       const normalizedValue = (value - criterion.actualMin) / (criterion.actualMax - criterion.actualMin);
       return Math.max(1, Math.min(10, 1 + normalizedValue * 9));
     }
   };
 
-  // Calculate metric value from score
   const calculateMetricFromScoreSingle = (score: number): number => {
     if (criterion.actualMin === undefined || criterion.actualMax === undefined) {
       return criterion.actualValue || 0;
     }
     
     const range = criterion.actualMax - criterion.actualMin;
-    const normalizedScore = (score - 1) / 9; // Convert score 1-10 to percentage
+    const normalizedScore = (score - 1) / 9;
     
     if (shouldInvert) {
-      // For metrics where lower is better
-      // High score = low metric value, Low score = high metric value
       return criterion.actualMax - (normalizedScore * range);
     } else {
-      // For metrics where higher is better
-      // High score = high metric value, Low score = low metric value
       return criterion.actualMin + (normalizedScore * range);
     }
   };
 
-  // Calculate score range from metric range
   const calculateScoreFromMetricRange = (minValue: number, maxValue: number) => {
-    // If we have a scoreMapping, use that for direct mapping
     if (scoreMapping) {
       const minScore = getScoreFromMetricValue(minValue);
       const maxScore = getScoreFromMetricValue(maxValue);
@@ -191,11 +167,8 @@ export const CriterionItem = ({
     
     if (criterion.actualMin !== undefined && criterion.actualMax !== undefined) {
       if (shouldInvert) {
-        // For metrics where lower is better (e.g., debt ratios)
-        // High metric value = low score, Low metric value = high score
         const maxScore = 10;
         const minScore = 1;
-        // Calculate percentage between min and max
         const minPercent = (criterion.actualMax - minValue) / (criterion.actualMax - criterion.actualMin);
         const maxPercent = (criterion.actualMax - maxValue) / (criterion.actualMax - criterion.actualMin);
         
@@ -204,11 +177,8 @@ export const CriterionItem = ({
           maxScore: minScore + (maxScore - minScore) * minPercent
         };
       } else {
-        // For metrics where higher is better
-        // High metric value = high score, Low metric value = low score
         const maxScore = 10;
         const minScore = 1;
-        // Calculate percentage between min and max
         const minPercent = (minValue - criterion.actualMin) / (criterion.actualMax - criterion.actualMin);
         const maxPercent = (maxValue - criterion.actualMin) / (criterion.actualMax - criterion.actualMin);
         
@@ -222,9 +192,7 @@ export const CriterionItem = ({
     return { minScore: 1, maxScore: 10 };
   };
 
-  // Calculate metric range from score range
   const calculateMetricFromScoreRange = (minScore: number, maxScore: number) => {
-    // If we have a scoreMapping, use that for direct mapping
     if (scoreMapping) {
       const minValue = getMetricValueFromScore(minScore);
       const maxValue = getMetricValueFromScore(maxScore);
@@ -236,10 +204,8 @@ export const CriterionItem = ({
     
     if (criterion.actualMin !== undefined && criterion.actualMax !== undefined) {
       if (shouldInvert) {
-        // For metrics where lower is better
-        // High score = low metric value, Low score = high metric value
         const range = criterion.actualMax - criterion.actualMin;
-        const minPercent = (10 - minScore) / 9; // Convert score 1-10 to percentage
+        const minPercent = (10 - minScore) / 9;
         const maxPercent = (10 - maxScore) / 9;
         
         return {
@@ -247,10 +213,8 @@ export const CriterionItem = ({
           minValue: criterion.actualMax - (range * maxPercent)
         };
       } else {
-        // For metrics where higher is better
-        // High score = high metric value, Low score = low metric value
         const range = criterion.actualMax - criterion.actualMin;
-        const minPercent = (minScore - 1) / 9; // Convert score 1-10 to percentage
+        const minPercent = (minScore - 1) / 9;
         const maxPercent = (maxScore - 1) / 9;
         
         return {
@@ -263,19 +227,15 @@ export const CriterionItem = ({
     return { minValue: 0, maxValue: 0 };
   };
 
-  // Handle updates from risk score slider
   const handleScoreRangeChange = (minScore: number, maxScore: number) => {
     setLastUpdated('score');
     
-    // Update risk score display
     const averageScore = (minScore + maxScore) / 2;
     updateCriterionScore(groupIndex, criterionIndex, averageScore);
     
-    // Only update metric values if we have actual min and max defined
     if (criterion.actualMin !== undefined && criterion.actualMax !== undefined && updateActualMetricRange) {
       const metricValues = calculateMetricFromScoreRange(minScore, maxScore);
       if (metricValues) {
-        // Round to 2 decimal places for better UX
         const minValue = parseFloat(metricValues.minValue.toFixed(2));
         const maxValue = parseFloat(metricValues.maxValue.toFixed(2));
         updateActualMetricRange(groupIndex, criterionIndex, minValue, maxValue);
@@ -283,34 +243,26 @@ export const CriterionItem = ({
     }
   };
 
-  // Handle updates from metric slider
   const handleMetricRangeChange = (minValue: number, maxValue: number) => {
     setLastUpdated('metric');
     
-    // Update the actual metric values
     if (updateActualMetricRange) {
       updateActualMetricRange(groupIndex, criterionIndex, minValue, maxValue);
     }
     
-    // Calculate and update the corresponding score
     const scores = calculateScoreFromMetricRange(minValue, maxValue);
     if (scores) {
-      // Use the average score for display
       const averageScore = (scores.minScore + scores.maxScore) / 2;
       updateCriterionScore(groupIndex, criterionIndex, parseFloat(averageScore.toFixed(1)));
     }
   };
 
-  // Determine if this criterion should use a dual slider
-  // All non-weight metrics will use dual slider
   const shouldUseDualSlider = criterion.actualMin !== undefined && criterion.actualMax !== undefined;
 
-  // Handle direct score updates from CriterionScore component
   const handleDirectScoreUpdate = (newScore: number) => {
     setLastUpdated('score');
     updateCriterionScore(groupIndex, criterionIndex, newScore);
     
-    // Only update metric values for EBITDA if we have actual min and max defined
     if (isDebtEBITDA && criterion.actualMin !== undefined && criterion.actualMax !== undefined && updateActualMetricValue) {
       const metricValue = getMetricValueFromScore(newScore);
       if (metricValue !== null) {
@@ -404,7 +356,17 @@ export const CriterionItem = ({
         </div>
         
         <div className="space-y-2">
-          {updateCriterionRange && (
+          {isDebtEBITDA && updateCriterionRange ? (
+            <RangeScoreSlider
+              minValue={1}
+              maxValue={10}
+              initialMin={criterion.minScore || criterion.score}
+              initialMax={criterion.maxScore || criterion.score}
+              step={0.1}
+              onRangeChange={handleScoreRangeChange}
+              scoreMapping={scoreMapping}
+            />
+          ) : updateCriterionRange && (
             <RangeScoreSlider
               minValue={1}
               maxValue={10}
@@ -442,18 +404,31 @@ export const CriterionItem = ({
               setLastUpdated('metric');
               updateActualMetricValue(groupIndex, criterionIndex, value);
               
-              // For EBITDA metrics, also update the score based on the metric value
               if (isDebtEBITDA) {
                 const calculatedScore = getScoreFromMetricValue(value);
                 updateCriterionScore(groupIndex, criterionIndex, calculatedScore);
               }
             }
           }}
-          onRangeUpdate={updateActualMetricRange ? 
-            (min, max) => handleMetricRangeChange(min, max) : 
-            undefined}
+          onRangeUpdate={(min, max) => {
+            if (updateActualMetricRange) {
+              handleMetricRangeChange(min, max);
+              
+              if (isDebtEBITDA) {
+                const scores = calculateScoreFromMetricRange(min, max);
+                if (scores && scores.minScore !== undefined && scores.maxScore !== undefined) {
+                  const averageScore = (scores.minScore + scores.maxScore) / 2;
+                  updateCriterionScore(groupIndex, criterionIndex, parseFloat(averageScore.toFixed(1)));
+                  
+                  criterion.minScore = scores.minScore;
+                  criterion.maxScore = scores.maxScore;
+                }
+              }
+            }
+          }}
           isDualSlider={shouldUseDualSlider}
           inverseRelationship={shouldInvert}
+          isDebtEBITDA={isDebtEBITDA}
         />
       )}
 

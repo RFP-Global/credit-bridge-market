@@ -13,6 +13,7 @@ interface RangeScoreSliderProps {
   step?: number;
   onRangeChange: (min: number, max: number) => void;
   scoreMapping?: ScoreRange[];
+  isDebtEBITDA?: boolean;
 }
 
 export const RangeScoreSlider = ({
@@ -22,7 +23,8 @@ export const RangeScoreSlider = ({
   initialMax,
   step = 0.1,
   onRangeChange,
-  scoreMapping
+  scoreMapping,
+  isDebtEBITDA = false
 }: RangeScoreSliderProps) => {
   const [range, setRange] = useState<[number, number]>([initialMin, initialMax]);
   const [minInput, setMinInput] = useState(initialMin.toString());
@@ -87,7 +89,8 @@ export const RangeScoreSlider = ({
         max={maxValue}
         step={step}
         onValueChange={handleSliderChange}
-        className="my-4"
+        className={`my-4 ${isDebtEBITDA ? "bg-blue-950/30" : ""}`}
+        colorClass={isDebtEBITDA ? "bg-blue-600" : undefined}
       />
       
       <div className="flex items-center gap-2">
@@ -131,4 +134,3 @@ export const RangeScoreSlider = ({
     </div>
   );
 };
-
