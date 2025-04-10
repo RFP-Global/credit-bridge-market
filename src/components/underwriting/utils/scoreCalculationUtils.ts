@@ -15,7 +15,10 @@ export const recalculateScores = (
     let minScoreSum = 0;
     let maxScoreSum = 0;
     
-    group.criteria.forEach(criterion => {
+    // Only include enabled criteria
+    const enabledCriteria = group.criteria.filter(criterion => criterion.enabled);
+    
+    enabledCriteria.forEach(criterion => {
       minScoreSum += criterion.minScore * criterion.weight;
       maxScoreSum += criterion.maxScore * criterion.weight;
       weightSum += criterion.weight;

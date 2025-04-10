@@ -1,3 +1,4 @@
+
 export interface UnderwritingMetric {
   name: string;
   value?: string | number;
@@ -33,6 +34,7 @@ export interface Criterion {
   actualValue?: number;
   actualUnit?: string;
   scoreMapping?: ScoreRange[];
+  enabled: boolean;
 }
 
 export interface ScoreRange {

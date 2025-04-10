@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +18,8 @@ import {
   updateGroupWeight, 
   updateCriterionScore, 
   updateCriterionRange,
-  updateActualMetricValue
+  updateActualMetricValue,
+  toggleCriterionEnabled
 } from "@/components/underwriting/utils/scoreUtils";
 import {
   getScoreColor,
@@ -61,6 +63,10 @@ const Underwriting = () => {
   
   const handleUpdateActualMetricValue = (groupIndex: number, criterionIndex: number, value: number) => {
     updateActualMetricValue(criteriaGroups, groupIndex, criterionIndex, value, setCriteriaGroups, setMinTotalScore, setMaxTotalScore);
+  };
+  
+  const handleToggleCriterionEnabled = (groupIndex: number, criterionIndex: number, enabled: boolean) => {
+    toggleCriterionEnabled(criteriaGroups, groupIndex, criterionIndex, enabled, setCriteriaGroups, setMinTotalScore, setMaxTotalScore);
   };
 
   const handleGetScoreColor = (score: number) => getScoreColor(score, scoreThresholds);
@@ -166,6 +172,7 @@ const Underwriting = () => {
               updateCriterionScore={handleUpdateCriterionScore}
               updateCriterionRange={handleUpdateCriterionRange}
               updateActualMetricValue={handleUpdateActualMetricValue}
+              toggleCriterionEnabled={handleToggleCriterionEnabled}
               getScoreColor={handleGetScoreColor}
               getScoreBackground={handleGetScoreBackground}
             />

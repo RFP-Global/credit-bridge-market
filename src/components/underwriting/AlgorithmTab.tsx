@@ -1,9 +1,8 @@
 
-import { Save } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Accordion } from "@/components/ui/accordion";
-import { CategoryWeights } from "./CategoryWeights";
+import React from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CriteriaGroup } from "./CriteriaGroup";
+import { CategoryWeights } from "./CategoryWeights";
 import { CriteriaGroup as CriteriaGroupType } from "./types";
 
 interface AlgorithmTabProps {
@@ -13,53 +12,53 @@ interface AlgorithmTabProps {
   updateCriterionScore: (groupIndex: number, criterionIndex: number, minScore: number, maxScore: number) => void;
   updateCriterionRange?: (groupIndex: number, criterionIndex: number, min: number, max: number) => void;
   updateActualMetricValue?: (groupIndex: number, criterionIndex: number, value: number) => void;
+  toggleCriterionEnabled?: (groupIndex: number, criterionIndex: number, enabled: boolean) => void;
   getScoreColor: (score: number) => string;
   getScoreBackground: (score: number) => string;
 }
 
-export const AlgorithmTab = ({
+export const AlgorithmTab: React.FC<AlgorithmTabProps> = ({
   criteriaGroups,
   updateGroupWeight,
   updateCriterionWeight,
   updateCriterionScore,
   updateCriterionRange,
   updateActualMetricValue,
+  toggleCriterionEnabled,
   getScoreColor,
-  getScoreBackground,
-}: AlgorithmTabProps) => {
+  getScoreBackground
+}) => {
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row items-start gap-6 mb-6">
+    <Tabs defaultValue="categories" className="space-y-6">
+      <TabsList className="bg-black/40 border-gray-800">
+        <TabsTrigger value="categories" className="data-[state=active]:bg-gray-800/50">Categories</TabsTrigger>
+        <TabsTrigger value="weights" className="data-[state=active]:bg-gray-800/50">Weightings</TabsTrigger>
+      </TabsList>
+      
+      <TabsContent value="categories" className="space-y-6">
+        {criteriaGroups.map((group, groupIndex) => (
+          <CriteriaGroup 
+            key={groupIndex}
+            group={group}
+            groupIndex={groupIndex}
+            updateCriterionWeight={updateCriterionWeight}
+            updateCriterionScore={updateCriterionScore}
+            updateCriterionRange={updateCriterionRange}
+            updateActualMetricValue={updateActualMetricValue}
+            toggleCriterionEnabled={toggleCriterionEnabled}
+            getScoreColor={getScoreColor}
+            getScoreBackground={getScoreBackground}
+          />
+        ))}
+      </TabsContent>
+      
+      <TabsContent value="weights">
         <CategoryWeights 
           criteriaGroups={criteriaGroups}
           updateGroupWeight={updateGroupWeight}
           getScoreColor={getScoreColor}
         />
-      </div>
-      
-      <Accordion type="single" collapsible className="w-full space-y-4">
-        {criteriaGroups.map((group, groupIndex) => (
-          <CriteriaGroup
-            key={group.name}
-            group={group}
-            groupIndex={groupIndex}
-            updateGroupWeight={updateGroupWeight}
-            updateCriterionWeight={updateCriterionWeight}
-            updateCriterionScore={updateCriterionScore}
-            updateCriterionRange={updateCriterionRange}
-            updateActualMetricValue={updateActualMetricValue}
-            getScoreColor={getScoreColor}
-            getScoreBackground={getScoreBackground}
-          />
-        ))}
-      </Accordion>
-      
-      <div className="flex justify-end mt-8">
-        <Button className="bg-blue-600 hover:bg-blue-700">
-          <Save className="mr-2 h-4 w-4" />
-          Save Algorithm Configuration
-        </Button>
-      </div>
-    </div>
+      </TabsContent>
+    </Tabs>
   );
 };

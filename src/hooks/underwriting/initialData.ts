@@ -32,6 +32,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 5,
         actualValue: 1.8,
         actualUnit: "x",
+        enabled: true,
         scoreMapping: [
           { min: 3.00, max: 100, score: 10, riskLevel: "Exceptional" },
           { min: 2.50, max: 2.99, score: 9, riskLevel: "Very Strong" },
@@ -62,6 +63,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 10,
         actualValue: 3.6,
         actualUnit: "x",
+        enabled: true,
         scoreMapping: [
           { min: 0, max: 1.00, score: 10, riskLevel: "Minimal Leverage" },
           { min: 1.01, max: 2.00, score: 9, riskLevel: "Low Leverage" },
@@ -92,6 +94,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 3,
         actualValue: 1.8,
         actualUnit: "x",
+        enabled: true,
         scoreMapping: [
           { min: 3.00, max: 5.00, score: 10, riskLevel: "Highly Liquid" },
           { min: 2.50, max: 2.99, score: 9, riskLevel: "Very Strong" },
@@ -122,6 +125,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 10,
         actualValue: 4.2,
         actualUnit: "x",
+        enabled: true,
         scoreMapping: [
           { min: 8.00, max: 100, score: 10, riskLevel: "Outstanding" },
           { min: 6.00, max: 7.99, score: 9, riskLevel: "Very Strong" },
@@ -152,6 +156,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 20,
         actualValue: 10.5,
         actualUnit: "",
+        enabled: true,
         scoreMapping: [
           { min: 18.00, max: 20.00, score: 10, riskLevel: "Exceptionally Liquid" },
           { min: 16.00, max: 17.99, score: 9, riskLevel: "Extremely Liquid" },
@@ -188,6 +193,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 30,
         actualValue: 14,
         actualUnit: " years",
+        enabled: true,
         scoreMapping: [
           { min: 15.00, max: 30.00, score: 10, riskLevel: "Exceptional" },
           { min: 10.00, max: 14.99, score: 9, riskLevel: "Very Strong" },
@@ -215,6 +221,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 100,
         actualValue: 32,
         actualUnit: "%",
+        enabled: true,
         scoreMapping: [
           { min: 0, max: 10, score: 10, riskLevel: "Highly Diversified" },
           { min: 10, max: 15, score: 9, riskLevel: "Very Diversified" },
@@ -242,6 +249,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 20,
         actualValue: 7,
         actualUnit: " states",
+        enabled: true,
         scoreMapping: [
           { min: 12, max: 50, score: 10, riskLevel: "National/International" },
           { min: 10, max: 11.99, score: 9, riskLevel: "Multi-Regional" },
@@ -278,6 +286,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 25,
         actualValue: 7,
         actualUnit: "%",
+        enabled: true,
         scoreMapping: [
           { min: 0, max: 1, score: 1 },
           { min: 1, max: 3, score: 2 },
@@ -300,6 +309,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 10,
         actualValue: 8,
         actualUnit: "",
+        enabled: true,
         scoreMapping: [
           { min: 1, max: 3, score: 1 },
           { min: 3, max: 5, score: 2 },
@@ -322,6 +332,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 10,
         actualValue: 7,
         actualUnit: "",
+        enabled: true,
         scoreMapping: [
           { min: 1, max: 3, score: 1 },
           { min: 3, max: 5, score: 2 },
@@ -353,6 +364,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 10,
         actualValue: 9,
         actualUnit: "",
+        enabled: true,
         scoreMapping: [
           { min: 1, max: 3, score: 1 },
           { min: 3, max: 5, score: 2 },
@@ -375,6 +387,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 10,
         actualValue: 8,
         actualUnit: "",
+        enabled: true,
         scoreMapping: [
           { min: 1, max: 3, score: 1 },
           { min: 3, max: 5, score: 2 },
@@ -397,6 +410,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 10,
         actualValue: 7,
         actualUnit: "",
+        enabled: true,
         scoreMapping: [
           { min: 1, max: 3, score: 1 },
           { min: 3, max: 5, score: 2 },
@@ -428,6 +442,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 10,
         actualValue: 3,
         actualUnit: "",
+        enabled: true,
         scoreMapping: [
           { min: 0, max: 2, score: 5 },
           { min: 2, max: 4, score: 4 },
@@ -450,6 +465,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 10,
         actualValue: 4,
         actualUnit: "",
+        enabled: true,
         scoreMapping: [
           { min: 0, max: 2, score: 5 },
           { min: 2, max: 4, score: 4 },
@@ -472,6 +488,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 10,
         actualValue: 3,
         actualUnit: "",
+        enabled: true,
         scoreMapping: [
           { min: 0, max: 2, score: 5 },
           { min: 2, max: 4, score: 4 },
@@ -503,6 +520,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 10,
         actualValue: 5,
         actualUnit: "",
+        enabled: true,
         scoreMapping: [
           { min: 0, max: 2, score: 5 },
           { min: 2, max: 4, score: 4 },
@@ -525,6 +543,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 10,
         actualValue: 5,
         actualUnit: "",
+        enabled: true,
         scoreMapping: [
           { min: 0, max: 2, score: 5 },
           { min: 2, max: 4, score: 4 },
@@ -547,6 +566,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 10,
         actualValue: 5,
         actualUnit: "",
+        enabled: true,
         scoreMapping: [
           { min: 0, max: 2, score: 5 },
           { min: 2, max: 4, score: 4 },
@@ -569,6 +589,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualMax: 10,
         actualValue: 4,
         actualUnit: "",
+        enabled: true,
         scoreMapping: [
           { min: 0, max: 2, score: 5 },
           { min: 2, max: 4, score: 4 },

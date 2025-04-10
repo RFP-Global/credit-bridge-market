@@ -1,97 +1,73 @@
 
-import { useState } from "react";
-import { ChevronDown, ChevronUp, Info } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
+import React from "react";
+import { 
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { CriterionItem } from "./CriterionItem";
-import { CriteriaGroup as CriteriaGroupType, Criterion } from "./types";
+import { CriteriaGroup as CriteriaGroupType } from "./types";
 
 interface CriteriaGroupProps {
   group: CriteriaGroupType;
   groupIndex: number;
-  updateGroupWeight: (groupIndex: number, newWeight: number) => void;
   updateCriterionWeight: (groupIndex: number, criterionIndex: number, newWeight: number) => void;
   updateCriterionScore: (groupIndex: number, criterionIndex: number, minScore: number, maxScore: number) => void;
   updateCriterionRange?: (groupIndex: number, criterionIndex: number, min: number, max: number) => void;
   updateActualMetricValue?: (groupIndex: number, criterionIndex: number, value: number) => void;
+  toggleCriterionEnabled?: (groupIndex: number, criterionIndex: number, enabled: boolean) => void;
   getScoreColor: (score: number) => string;
   getScoreBackground: (score: number) => string;
 }
 
-export const CriteriaGroup = ({
+export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
   group,
   groupIndex,
-  updateGroupWeight,
   updateCriterionWeight,
   updateCriterionScore,
   updateCriterionRange,
   updateActualMetricValue,
+  toggleCriterionEnabled,
   getScoreColor,
-  getScoreBackground,
-}: CriteriaGroupProps) => {
-  const avgScore = group.minScore !== undefined && group.maxScore !== undefined 
-    ? (group.minScore + group.maxScore) / 2 
-    : 0;
-    
+  getScoreBackground
+}) => {
   return (
-    <AccordionItem 
-      key={group.name} 
-      value={group.name}
-      className="border border-gray-800 rounded-md overflow-hidden bg-black/40 px-0"
-    >
-      <AccordionTrigger className="px-6 py-4 hover:bg-gray-900/20 [&[data-state=open]>div>svg]:rotate-180">
-        <div className="flex items-center justify-between w-full pr-2">
-          <div className="flex items-center">
-            <span className="font-semibold">{group.name}</span>
-            <Badge className="ml-3" variant="outline">
-              {group.weight}%
-            </Badge>
-          </div>
-          <div className="flex items-center">
-            <span className={`font-bold mr-2 ${getScoreColor(avgScore)}`}>
-              {group.minScore !== undefined && group.maxScore !== undefined
-                ? `${group.minScore.toFixed(1)}-${group.maxScore.toFixed(1)}`
-                : "N/A"}
-            </span>
-            <ChevronDown className="h-4 w-4 transition-transform duration-200" />
+    <Card className="bg-black/40 border-gray-800 mb-4">
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-base font-semibold">{group.name}</CardTitle>
+          <div className={`text-base font-bold ${getScoreColor((group.minScore + group.maxScore) / 2)}`}>
+            {group.minScore?.toFixed(1) || "0.0"}-{group.maxScore?.toFixed(1) || "0.0"}
           </div>
         </div>
-      </AccordionTrigger>
-      <AccordionContent className="pb-4 pt-2 px-6">
-        <div className="text-sm text-muted-foreground mb-4">
-          {group.description}
-        </div>
-        <div className="space-y-6">
-          {group.criteria.map((criterion, criterionIndex) => (
-            <CriterionItem
-              key={criterion.name}
-              criterion={criterion}
-              criterionIndex={criterionIndex}
-              groupIndex={groupIndex}
-              updateCriterionWeight={updateCriterionWeight}
-              updateCriterionScore={updateCriterionScore}
-              updateCriterionRange={updateCriterionRange}
-              updateActualMetricValue={updateActualMetricValue}
-              getScoreColor={getScoreColor}
-              getScoreBackground={getScoreBackground}
-            />
-          ))}
-        </div>
-      </AccordionContent>
-    </AccordionItem>
+        <p className="text-sm text-muted-foreground mt-1">{group.description}</p>
+      </CardHeader>
+      <CardContent>
+        <Accordion type="single" collapsible defaultValue="criteria">
+          <AccordionItem value="criteria" className="border-b-0">
+            <AccordionTrigger>Criteria</AccordionTrigger>
+            <AccordionContent className="space-y-4 pt-4">
+              {group.criteria.map((criterion, criterionIndex) => (
+                <CriterionItem
+                  key={criterionIndex}
+                  criterion={criterion}
+                  criterionIndex={criterionIndex}
+                  groupIndex={groupIndex}
+                  updateCriterionWeight={updateCriterionWeight}
+                  updateCriterionScore={updateCriterionScore}
+                  updateCriterionRange={updateCriterionRange}
+                  updateActualMetricValue={updateActualMetricValue}
+                  toggleCriterionEnabled={toggleCriterionEnabled}
+                  getScoreColor={getScoreColor}
+                  getScoreBackground={getScoreBackground}
+                />
+              ))}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </CardContent>
+    </Card>
   );
 };

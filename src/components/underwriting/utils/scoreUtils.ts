@@ -4,6 +4,7 @@ import { updateCriterionWeight, updateGroupWeight } from './weightUtils';
 import { updateCriterionScore, recalculateScores } from './scoreCalculationUtils';
 import { updateCriterionRange } from './rangeUtils';
 import { updateActualMetricValue } from './metricValueUtils';
+import { toggleCriterionEnabled } from './criteriaUtils';
 
 export {
   updateCriterionWeight,
@@ -11,5 +12,6 @@ export {
   updateCriterionScore,
   updateCriterionRange,
   updateActualMetricValue,
-  recalculateScores
+  recalculateScores,
+  toggleCriterionEnabled
 };
