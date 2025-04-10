@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -90,7 +89,7 @@ const Underwriting = () => {
             </div>
             
             <Card className="bg-black/40 border-gray-800 mb-6 overflow-hidden">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
                 <div className="bg-gradient-to-br from-gray-900 to-gray-950 p-6 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-gray-800/50">
                   <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Overall Risk Score</div>
                   <div className={`text-5xl font-bold ${handleGetScoreColor(avgTotalScore)}`}>
@@ -126,7 +125,7 @@ const Underwriting = () => {
                   </TooltipProvider>
                 </div>
                 
-                <div className="lg:col-span-2 p-6">
+                <div className="p-6 flex items-center justify-center">
                   <CategoryWeights 
                     criteriaGroups={criteriaGroups}
                     updateGroupWeight={handleUpdateGroupWeight}
