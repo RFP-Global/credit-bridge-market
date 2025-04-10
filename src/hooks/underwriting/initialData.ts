@@ -1,4 +1,3 @@
-
 import { ScoreThreshold, CriteriaGroup } from "@/components/underwriting/types";
 
 export const initialScoreThresholds: ScoreThreshold[] = [
@@ -56,11 +55,16 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualValue: 3.6,
         actualUnit: "x",
         scoreMapping: [
-          { min: 0, max: 2, score: 5 },
-          { min: 2, max: 3, score: 4 },
-          { min: 3, max: 4, score: 3 },
-          { min: 4, max: 5, score: 2 },
-          { min: 5, max: 15, score: 1 }
+          { min: 0, max: 1.00, score: 5 },
+          { min: 1.01, max: 2.00, score: 4.5 },
+          { min: 2.01, max: 3.00, score: 4 },
+          { min: 3.01, max: 4.00, score: 3.5 },
+          { min: 4.01, max: 5.00, score: 3 },
+          { min: 5.01, max: 6.00, score: 2.5 },
+          { min: 6.01, max: 7.00, score: 2 },
+          { min: 7.01, max: 8.00, score: 1.5 },
+          { min: 8.01, max: 10.00, score: 1 },
+          { min: 10.01, max: 100, score: 0.5 }
         ]
       },
       {

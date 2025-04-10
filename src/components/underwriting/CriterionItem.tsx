@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,7 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Criterion } from "./types";
+import { Criterion, ScoreRange } from "./types";
 
 interface CriterionItemProps {
   criterion: Criterion;
@@ -64,13 +63,50 @@ export const CriterionItem = ({
     }
   };
 
-  // Helper function to format actual value display with unit
   const getFormattedActualValue = () => {
     if (criterion.actualValue === undefined) return "";
     const formatted = criterion.actualUnit === "$" || criterion.actualUnit === "$M" 
       ? `${criterion.actualUnit}${criterion.actualValue}` 
       : `${criterion.actualValue}${criterion.actualUnit || ""}`;
     return formatted;
+  };
+
+  const formatScoreMapping = (scoreMapping: ScoreRange[]) => {
+    if (criterion.name === "Debt/EBITDA") {
+      return (
+        <div className="grid grid-cols-3 gap-1 mt-1 text-xs">
+          <div className="font-semibold">Range</div>
+          <div className="font-semibold">Score</div>
+          <div></div>
+          {scoreMapping.map((range, idx) => (
+            <>
+              <div key={`range-${idx}`}>
+                {idx === 0 ? 
+                  `≤ ${range.max}${criterion.actualUnit}` : 
+                  idx === scoreMapping.length - 1 ? 
+                  `> ${range.min}${criterion.actualUnit}` : 
+                  `${range.min}-${range.max}${criterion.actualUnit}`}
+              </div>
+              <div key={`score-${idx}`} className={getScoreColor(range.score)}>
+                {range.score}
+              </div>
+              <div key={`empty-${idx}`}></div>
+            </>
+          ))}
+        </div>
+      );
+    }
+
+    return (
+      <div className="text-xs text-blue-400 mt-1">
+        Score mapping: 
+        {scoreMapping.map((range, idx) => (
+          <span key={idx} className="ml-1">
+            {range.min}-{range.max}: {range.score}{idx < scoreMapping.length - 1 ? "," : ""}
+          </span>
+        ))}
+      </div>
+    );
   };
 
   const renderActualMetricSlider = () => {
@@ -152,16 +188,7 @@ export const CriterionItem = ({
         <div className="text-xs text-muted-foreground mt-2">
           <span>Range: {criterion.actualMin} - {criterion.actualMax} {criterion.actualUnit || ''}</span>
         </div>
-        {criterion.scoreMapping && (
-          <div className="text-xs text-blue-400 mt-1">
-            Score mapping: 
-            {criterion.scoreMapping.map((range, idx) => (
-              <span key={idx} className="ml-1">
-                {range.min}-{range.max}: {range.score}{idx < criterion.scoreMapping!.length - 1 ? "," : ""}
-              </span>
-            ))}
-          </div>
-        )}
+        {criterion.scoreMapping && formatScoreMapping(criterion.scoreMapping)}
       </div>
     );
   };
