@@ -99,8 +99,8 @@ export const CriterionItem = ({
     const minNormalized = (min - criterion.min) / totalRange;
     const maxNormalized = (max - criterion.min) / totalRange;
     
-    const newMinScore = 1 + minNormalized * 9;
-    const newMaxScore = 1 + maxNormalized * 9;
+    const newMinScore = Number((1 + minNormalized * 9).toFixed(2));
+    const newMaxScore = Number((1 + maxNormalized * 9).toFixed(2));
     
     setMinScoreValue(newMinScore.toFixed(2));
     setMaxScoreValue(newMaxScore.toFixed(2));
