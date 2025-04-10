@@ -42,7 +42,6 @@ export const CriterionItem = ({
 }: CriterionItemProps) => {
   const [minValue, setMinValue] = useState(criterion.preferredMin !== undefined ? criterion.preferredMin.toString() : "");
   const [maxValue, setMaxValue] = useState(criterion.preferredMax !== undefined ? criterion.preferredMax.toString() : "");
-  const [actualValue, setActualValue] = useState(criterion.actualValue !== undefined ? criterion.actualValue.toString() : "");
   const [minScoreValue, setMinScoreValue] = useState(criterion.minScore !== undefined ? criterion.minScore.toString() : "0");
   const [maxScoreValue, setMaxScoreValue] = useState(criterion.maxScore !== undefined ? criterion.maxScore.toString() : "0");
   const [rangeValues, setRangeValues] = useState<number[]>([
@@ -63,12 +62,6 @@ export const CriterionItem = ({
       setRangeValues(prev => [prev[0], criterion.preferredMax!]);
     }
   }, [criterion.preferredMax]);
-
-  useEffect(() => {
-    if (criterion.actualValue !== undefined) {
-      setActualValue(criterion.actualValue.toString());
-    }
-  }, [criterion.actualValue]);
 
   useEffect(() => {
     if (criterion.minScore !== undefined) {
@@ -106,23 +99,6 @@ export const CriterionItem = ({
     }
   };
 
-  const handleActualValueUpdate = () => {
-    if (updateActualMetricValue && actualValue) {
-      const value = parseFloat(actualValue);
-      if (!isNaN(value)) {
-        updateActualMetricValue(groupIndex, criterionIndex, value);
-      }
-    }
-  };
-
-  const getFormattedActualValue = () => {
-    if (criterion.actualValue === undefined) return "";
-    const formatted = criterion.actualUnit === "$" || criterion.actualUnit === "$M" 
-      ? `${criterion.actualUnit}${criterion.actualValue}` 
-      : `${criterion.actualValue}${criterion.actualUnit || ""}`;
-    return formatted;
-  };
-
   const avgScore = criterion.minScore !== undefined && criterion.maxScore !== undefined 
     ? (criterion.minScore + criterion.maxScore) / 2 
     : 0;
@@ -154,93 +130,6 @@ export const CriterionItem = ({
             ))}
           </tbody>
         </table>
-      </div>
-    );
-  };
-
-  // Simplified the score mapping display by removing it from the main UI
-  // It will now only be visible in the popover triggered by the info button
-  
-  const renderActualMetricSlider = () => {
-    if (criterion.actualMin === undefined || criterion.actualMax === undefined || criterion.actualValue === undefined) {
-      return null;
-    }
-
-    return (
-      <div className="space-y-2 mt-3">
-        <div className="flex justify-between text-xs text-muted-foreground">
-          <span>Actual {criterion.name} Value</span>
-          <span>{getFormattedActualValue()}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            size="icon" 
-            className="h-6 w-6"
-            onClick={() => {
-              if (updateActualMetricValue && criterion.actualValue !== undefined && criterion.actualMin !== undefined) {
-                const step = criterion.actualMax && criterion.actualMin 
-                  ? (criterion.actualMax - criterion.actualMin) / 20 
-                  : 0.1;
-                const newValue = Math.max(criterion.actualMin, criterion.actualValue - step);
-                updateActualMetricValue(groupIndex, criterionIndex, parseFloat(newValue.toFixed(2)));
-              }
-            }}
-          >
-            <ChevronDown className="h-3 w-3" />
-          </Button>
-          <Slider
-            value={[criterion.actualValue]}
-            min={criterion.actualMin}
-            max={criterion.actualMax}
-            step={(criterion.actualMax - criterion.actualMin) / 100}
-            className="flex-1"
-            onValueChange={(value) => {
-              if (updateActualMetricValue) {
-                updateActualMetricValue(groupIndex, criterionIndex, parseFloat(value[0].toFixed(2)));
-              }
-            }}
-          />
-          <Button 
-            variant="outline" 
-            size="icon"
-            className="h-6 w-6"
-            onClick={() => {
-              if (updateActualMetricValue && criterion.actualValue !== undefined && criterion.actualMax !== undefined) {
-                const step = criterion.actualMax && criterion.actualMin 
-                  ? (criterion.actualMax - criterion.actualMin) / 20 
-                  : 0.1;
-                const newValue = Math.min(criterion.actualMax, criterion.actualValue + step);
-                updateActualMetricValue(groupIndex, criterionIndex, parseFloat(newValue.toFixed(2)));
-              }
-            }}
-          >
-            <ChevronUp className="h-3 w-3" />
-          </Button>
-        </div>
-        <div className="flex items-center gap-3 mt-2">
-          <div className="flex flex-1 items-center gap-2">
-            <span className="text-xs text-muted-foreground">Value:</span>
-            <Input
-              value={actualValue}
-              onChange={(e) => setActualValue(e.target.value)}
-              className="h-7 text-xs"
-              placeholder={`Value ${criterion.actualUnit || ''}`}
-            />
-          </div>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="h-7 text-xs"
-            onClick={handleActualValueUpdate}
-          >
-            Set Value
-          </Button>
-        </div>
-        <div className="text-xs text-muted-foreground mt-2">
-          <span>Range: {criterion.actualMin} - {criterion.actualMax} {criterion.actualUnit || ''}</span>
-        </div>
-        {/* Score mapping is now only shown in the info popover */}
       </div>
     );
   };
@@ -360,8 +249,6 @@ export const CriterionItem = ({
           </div>
         </div>
       </div>
-
-      {renderActualMetricSlider && renderActualMetricSlider()}
 
       <div className="mt-3 pt-3 border-t border-gray-800/30">
         <div className="text-xs font-medium mb-2">Preferred Range {criterion.unit ? `(${criterion.unit})` : ''}</div>
