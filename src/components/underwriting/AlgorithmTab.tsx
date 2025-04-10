@@ -2,7 +2,6 @@
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CriteriaGroup } from "./CriteriaGroup";
-import { CategoryWeights } from "./CategoryWeights";
 import { CriteriaGroup as CriteriaGroupType } from "./types";
 
 interface AlgorithmTabProps {
@@ -32,7 +31,6 @@ export const AlgorithmTab: React.FC<AlgorithmTabProps> = ({
     <Tabs defaultValue="categories" className="space-y-6">
       <TabsList className="bg-black/40 border-gray-800">
         <TabsTrigger value="categories" className="data-[state=active]:bg-gray-800/50">Categories</TabsTrigger>
-        <TabsTrigger value="weights" className="data-[state=active]:bg-gray-800/50">Weightings</TabsTrigger>
       </TabsList>
       
       <TabsContent value="categories" className="space-y-6">
@@ -50,14 +48,6 @@ export const AlgorithmTab: React.FC<AlgorithmTabProps> = ({
             getScoreBackground={getScoreBackground}
           />
         ))}
-      </TabsContent>
-      
-      <TabsContent value="weights">
-        <CategoryWeights 
-          criteriaGroups={criteriaGroups}
-          updateGroupWeight={updateGroupWeight}
-          getScoreColor={getScoreColor}
-        />
       </TabsContent>
     </Tabs>
   );
