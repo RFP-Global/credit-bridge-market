@@ -1,4 +1,3 @@
-
 import { ScoreThreshold } from "../types";
 
 export const getScoreColor = (score: number, scoreThresholds: ScoreThreshold[]) => {
@@ -90,19 +89,7 @@ export const financialRatiosScoreMapping = {
     { min: 0, max: 0.75, score: 1, level: "Severe Risk" },
   ],
   
-  // Revenue (in millions)
-  Revenue: [
-    { min: 500.00, max: Number.MAX_VALUE, score: 10, level: "Highly Stable" },
-    { min: 250.00, max: 500.00, score: 9, level: "Strong" },
-    { min: 100.00, max: 249.00, score: 8, level: "Very Good" },
-    { min: 50.00, max: 99.00, score: 7, level: "Good" },
-    { min: 25.00, max: 49.00, score: 6, level: "Moderate" },
-    { min: 10.00, max: 24.00, score: 5, level: "Acceptable" },
-    { min: 5.00, max: 9.00, score: 4, level: "Small Business Risk" },
-    { min: 1.00, max: 4.99, score: 3, level: "High Risk" },
-    { min: 0.50, max: 1.00, score: 2, level: "Very High Risk" },
-    { min: 0, max: 0.50, score: 1, level: "Micro-Business Risk" },
-  ]
+  
 };
 
 // Business stability score mapping

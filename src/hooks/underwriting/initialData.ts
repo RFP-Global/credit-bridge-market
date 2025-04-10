@@ -101,28 +101,33 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         ]
       },
       {
-        name: "Revenue Growth",
-        description: "Year-over-year revenue growth",
-        value: "10.5%",
+        name: "Interest Coverage Ratio",
+        description: "Measures how easily a company can pay interest on its outstanding debt",
+        value: "4.2x",
         weight: 15,
         minScore: 5,
         maxScore: 5,
         min: 1,
         max: 5,
         step: 1,
-        unit: "%",
-        preferredMin: 5,
-        preferredMax: 25,
-        actualMin: -10,
-        actualMax: 30,
-        actualValue: 10.5,
-        actualUnit: "%",
+        unit: "x",
+        preferredMin: 3.5,
+        preferredMax: 8.0,
+        actualMin: 0,
+        actualMax: 10,
+        actualValue: 4.2,
+        actualUnit: "x",
         scoreMapping: [
-          { min: -100, max: 0, score: 1 },
-          { min: 0, max: 3, score: 2 },
-          { min: 3, max: 7, score: 3 },
-          { min: 7, max: 15, score: 4 },
-          { min: 15, max: 100, score: 5 }
+          { min: 8.00, max: 100, score: 10, riskLevel: "Outstanding" },
+          { min: 6.00, max: 7.99, score: 9, riskLevel: "Very Strong" },
+          { min: 4.50, max: 5.99, score: 8, riskLevel: "Strong" },
+          { min: 3.50, max: 4.49, score: 7, riskLevel: "Good" },
+          { min: 2.75, max: 3.49, score: 6, riskLevel: "Moderate" },
+          { min: 2.00, max: 2.74, score: 5, riskLevel: "Acceptable" },
+          { min: 1.50, max: 1.99, score: 4, riskLevel: "Weak" },
+          { min: 1.00, max: 1.49, score: 3, riskLevel: "Very Weak" },
+          { min: 0.75, max: 0.99, score: 2, riskLevel: "High Risk" },
+          { min: 0, max: 0.75, score: 1, riskLevel: "Severe Risk" }
         ]
       }
     ]
