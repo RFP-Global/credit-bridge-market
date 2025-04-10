@@ -13,4 +13,8 @@ export interface UseUnderwritingStateReturn {
     max: number;
   };
   setScoreRange: React.Dispatch<React.SetStateAction<{ min: number; max: number }>>;
+  metricRanges: {
+    [key: string]: { min: number; max: number };
+  };
+  setMetricRanges: React.Dispatch<React.SetStateAction<{ [key: string]: { min: number; max: number } }>>;
 }

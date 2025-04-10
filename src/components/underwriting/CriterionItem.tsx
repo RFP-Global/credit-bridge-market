@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Info, HelpCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,7 @@ interface CriterionItemProps {
   updateCriterionScore: (groupIndex: number, criterionIndex: number, newScore: number) => void;
   updateCriterionRange?: (groupIndex: number, criterionIndex: number, min: number, max: number) => void;
   updateActualMetricValue?: (groupIndex: number, criterionIndex: number, value: number) => void;
+  updateActualMetricRange?: (groupIndex: number, criterionIndex: number, min: number, max: number) => void;
   getScoreColor: (score: number) => string;
   getScoreBackground: (score: number) => string;
 }
@@ -40,6 +42,7 @@ export const CriterionItem = ({
   updateCriterionScore,
   updateCriterionRange,
   updateActualMetricValue,
+  updateActualMetricRange,
   getScoreColor,
   getScoreBackground,
 }: CriterionItemProps) => {
@@ -184,16 +187,25 @@ export const CriterionItem = ({
         onScoreUpdate={(newScore) => updateCriterionScore(groupIndex, criterionIndex, newScore)}
       />
 
-      {updateActualMetricValue && (
+      {(updateActualMetricValue || updateActualMetricRange) && (
         <MetricSlider
           actualValue={criterion.actualValue}
+          actualMinValue={criterion.actualMinValue}
+          actualMaxValue={criterion.actualMaxValue}
           actualMin={criterion.actualMin}
           actualMax={criterion.actualMax}
           actualUnit={criterion.actualUnit}
           name={criterion.name}
           scoreMapping={criterion.scoreMapping}
           getScoreColor={getScoreColor}
-          onValueUpdate={(value) => updateActualMetricValue(groupIndex, criterionIndex, value)}
+          onValueUpdate={(value) => {
+            if (updateActualMetricValue) {
+              updateActualMetricValue(groupIndex, criterionIndex, value);
+            }
+          }}
+          onRangeUpdate={updateActualMetricRange ? 
+            (min, max) => updateActualMetricRange(groupIndex, criterionIndex, min, max) : 
+            undefined}
         />
       )}
 
