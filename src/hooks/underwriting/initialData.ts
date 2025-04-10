@@ -33,16 +33,16 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         actualValue: 1.8,
         actualUnit: "x",
         scoreMapping: [
-          { min: 3.00, max: 100, score: 10 },
-          { min: 2.50, max: 2.99, score: 9 },
-          { min: 2.00, max: 2.49, score: 8 },
-          { min: 1.75, max: 1.99, score: 7 },
-          { min: 1.50, max: 1.74, score: 6 },
-          { min: 1.25, max: 1.49, score: 5 },
-          { min: 1.10, max: 1.24, score: 4 },
-          { min: 1.00, max: 1.09, score: 3 },
-          { min: 0.75, max: 0.99, score: 2 },
-          { min: 0, max: 0.75, score: 1 }
+          { min: 3.00, max: 100, score: 10, riskLevel: "Exceptional" },
+          { min: 2.50, max: 2.99, score: 9, riskLevel: "Very Strong" },
+          { min: 2.00, max: 2.49, score: 8, riskLevel: "Strong" },
+          { min: 1.75, max: 1.99, score: 7, riskLevel: "Good" },
+          { min: 1.50, max: 1.74, score: 6, riskLevel: "Moderate" },
+          { min: 1.25, max: 1.49, score: 5, riskLevel: "Acceptable" },
+          { min: 1.10, max: 1.24, score: 4, riskLevel: "Weak" },
+          { min: 1.00, max: 1.09, score: 3, riskLevel: "Very Weak" },
+          { min: 0.75, max: 0.99, score: 2, riskLevel: "High Risk" },
+          { min: 0, max: 0.75, score: 1, riskLevel: "Severe Risk" }
         ]
       },
       {

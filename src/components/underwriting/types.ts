@@ -1,4 +1,3 @@
-
 export interface UnderwritingMetric {
   name: string;
   value?: string | number;
@@ -40,6 +39,7 @@ export interface ScoreRange {
   min: number;
   max: number;
   score: number;
+  riskLevel?: string;
 }
 
 export interface CriteriaGroup {

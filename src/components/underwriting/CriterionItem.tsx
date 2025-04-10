@@ -165,6 +165,7 @@ export const CriterionItem = ({
             <tr className="bg-gray-900/60">
               <th className="py-1.5 px-2 text-left border-b border-gray-700">Range</th>
               <th className="py-1.5 px-2 text-left border-b border-gray-700">Score</th>
+              {scoreMapping[0].riskLevel && <th className="py-1.5 px-2 text-left border-b border-gray-700">Risk Level</th>}
             </tr>
           </thead>
           <tbody>
@@ -172,14 +173,19 @@ export const CriterionItem = ({
               <tr key={`mapping-row-${idx}`} className="border-b border-gray-800/40 last:border-0">
                 <td className="py-1.5 px-2">
                   {idx === 0 ? 
-                    `≤ ${range.max}${criterion.actualUnit || ''}` : 
+                    `≥ ${range.min}${criterion.actualUnit || ''}` : 
                     idx === scoreMapping.length - 1 ? 
-                    `> ${range.min}${criterion.actualUnit || ''}` : 
+                    `< ${range.min}${criterion.actualUnit || ''}` : 
                     `${range.min} - ${range.max}${criterion.actualUnit || ''}`}
                 </td>
                 <td className={`py-1.5 px-2 ${getScoreColor(range.score)}`}>
                   {range.score}
                 </td>
+                {scoreMapping[0].riskLevel && (
+                  <td className="py-1.5 px-2 text-gray-300">
+                    {range.riskLevel}
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
