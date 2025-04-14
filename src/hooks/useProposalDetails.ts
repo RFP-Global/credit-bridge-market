@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { financeProposals } from "@/data/marketplaceProposals";
@@ -37,18 +36,7 @@ export const useProposalDetails = (id: string | undefined) => {
           debtServiceCoverageRatio: 1.35,
           currentRatio: 1.8,
           quickRatio: 1.2,
-          debtToEquityRatio: 0.65,
-          returnOnAssets: 0.09,
-          returnOnEquity: 0.14,
-          grossMargin: 0.38,
-          operatingMargin: 0.12,
-          netProfitMargin: 0.08,
-          assetTurnover: 1.5,
-          inventoryTurnover: 6.8,
-          daysReceivablesOutstanding: 42,
-          daysPayablesOutstanding: 38,
-          workingCapitalTurnover: 4.2,
-          zScore: 3.1
+          debtToEBITDA: 0.65
         });
         
         setDemographics({

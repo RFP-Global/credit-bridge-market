@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { CustomBadge } from "@/components/ui/custom-badge";
 import { HelpCircle } from "lucide-react";
 import { FinanceProposal } from "@/types/marketplace";
+import { FinancialRatios } from "@/types/proposalDetails";
 
 interface OverviewTabProps {
   proposal: FinanceProposal;
@@ -15,9 +16,7 @@ interface OverviewTabProps {
     totalLiabilities: string;
     netWorth: string;
   };
-  financialRatios: {
-    debtServiceCoverageRatio: number;
-  };
+  financialRatios: Partial<FinancialRatios>;
 }
 
 const OverviewTab: React.FC<OverviewTabProps> = ({ 
@@ -112,12 +111,24 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
               <div>
                 <p className="text-xs text-gray-400 mb-1">DEBT SERVICE COVERAGE</p>
                 <div className="flex items-center">
-                  <span className="font-semibold mr-2">{financialRatios.debtServiceCoverageRatio.toFixed(2)}x</span>
-                  <CustomBadge variant={financialRatios.debtServiceCoverageRatio > 1.25 ? "success" : 
-                    financialRatios.debtServiceCoverageRatio > 1 ? "warning" : "destructive"} 
-                    className="text-xs">
-                    {financialRatios.debtServiceCoverageRatio > 1.25 ? "STRONG" : 
-                      financialRatios.debtServiceCoverageRatio > 1 ? "ADEQUATE" : "WEAK"}
+                  <span className="font-semibold mr-2">
+                    {financialRatios.debtServiceCoverageRatio?.toFixed(2) || "N/A"}x
+                  </span>
+                  <CustomBadge 
+                    variant={
+                      financialRatios.debtServiceCoverageRatio && 
+                      financialRatios.debtServiceCoverageRatio > 1.25 ? "success" : 
+                      financialRatios.debtServiceCoverageRatio && 
+                      financialRatios.debtServiceCoverageRatio > 1 ? "warning" : "destructive"
+                    } 
+                    className="text-xs"
+                  >
+                    {
+                      financialRatios.debtServiceCoverageRatio && 
+                      financialRatios.debtServiceCoverageRatio > 1.25 ? "STRONG" : 
+                      financialRatios.debtServiceCoverageRatio && 
+                      financialRatios.debtServiceCoverageRatio > 1 ? "ADEQUATE" : "WEAK"
+                    }
                   </CustomBadge>
                 </div>
               </div>

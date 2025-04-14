@@ -3,6 +3,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { DollarSign, TrendingUp, BarChart } from "lucide-react";
+import { FinancialRatios } from "@/types/proposalDetails";
 
 interface DealFinancialsTabProps {
   dealData: any;
@@ -10,10 +11,19 @@ interface DealFinancialsTabProps {
 
 const DealFinancialsTab: React.FC<DealFinancialsTabProps> = ({ dealData }) => {
   // Mock financial ratios for the deal
-  const financialRatios = {
+  const financialRatios: FinancialRatios & {
+    debtToEquityRatio: number;
+    returnOnAssets: number;
+    returnOnEquity: number;
+    grossMargin: number;
+    operatingMargin: number;
+    netProfitMargin: number;
+  } = {
     debtServiceCoverageRatio: 1.35,
     currentRatio: 1.8,
     quickRatio: 1.2,
+    debtToEBITDA: 0.65,
+    // Additional ratios for display purposes
     debtToEquityRatio: 0.65,
     returnOnAssets: 0.09,
     returnOnEquity: 0.14,
@@ -66,6 +76,15 @@ const DealFinancialsTab: React.FC<DealFinancialsTabProps> = ({ dealData }) => {
                 <p className="text-xs text-gray-400 mt-1">
                   {financialRatios.debtToEquityRatio < 0.5 ? "Low leverage" : 
                    financialRatios.debtToEquityRatio < 1 ? "Moderate leverage" : "High leverage"}
+                </p>
+              </div>
+              
+              <div>
+                <p className="text-xs text-gray-400 mb-1">DEBT TO EBITDA</p>
+                <p className="font-semibold">{financialRatios.debtToEBITDA.toFixed(2)}</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  {financialRatios.debtToEBITDA < 3 ? "Strong" : 
+                   financialRatios.debtToEBITDA < 5 ? "Moderate" : "High"}
                 </p>
               </div>
               
