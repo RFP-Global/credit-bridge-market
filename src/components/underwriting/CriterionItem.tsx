@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { CriterionWeight } from "./criterion/CriterionWeight";
-import { ScoreMappingTable } from "./criterion/ScoreMappingTable";
-import { SubRatioPreferences } from "./criterion/SubRatioPreferences";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { ScoreMappingPanel } from "./criterion/ScoreMappingPanel";
+import { SubRatioPreferences } from "./criterion/SubRatioPreferences";
 
 interface CriterionItemProps {
   criterion: {
@@ -66,7 +66,6 @@ export const CriterionItem: React.FC<CriterionItemProps> = ({
   const [isSubRatioDialogOpen, setIsSubRatioDialogOpen] = useState(false);
 
   const handleSubRatioScoreUpdate = (subRatioIndex: number, minScore: string, maxScore: string) => {
-    // Update the score for the specific sub-ratio
     const newSubcriteria = [...(criterion.subcriteria || [])];
     if (newSubcriteria[subRatioIndex]) {
       updateCriterionScore(
@@ -273,7 +272,7 @@ export const CriterionItem: React.FC<CriterionItemProps> = ({
           </div>
         </div>
 
-        <ScoreMappingTable 
+        <ScoreMappingPanel 
           scoreMapping={criterion.scoreMapping}
           unit={criterion.unit}
           getScoreColor={getScoreColor}
