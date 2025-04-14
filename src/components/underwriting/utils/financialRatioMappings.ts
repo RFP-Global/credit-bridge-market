@@ -1,15 +1,15 @@
 
 export const financialRatiosScoreMapping = {
   CurrentRatio: [
-    { min: 3.00, max: Number.MAX_VALUE, score: 5, level: "Exceptional liquidity; strong cash cushion" },
-    { min: 2.50, max: 2.99, score: 5, level: "Very strong short-term liquidity" },
-    { min: 2.00, max: 2.49, score: 4, level: "Strong liquidity, comfortably above most lending norms" },
-    { min: 1.75, max: 1.99, score: 4, level: "Solid buffer, typical of well-managed mid-market firms" },
-    { min: 1.50, max: 1.74, score: 3, level: "Acceptable but slightly tighter liquidity" },
-    { min: 1.25, max: 1.49, score: 3, level: "Manageable but may raise caution for certain lenders" },
-    { min: 1.00, max: 1.24, score: 2, level: "Tight liquidity; needs monitoring" },
-    { min: 0.85, max: 0.99, score: 2, level: "Below 1.0 – potential working capital shortfall" },
-    { min: 0.60, max: 0.84, score: 1, level: "Weak liquidity; at risk of cash flow issues" },
+    { min: 3.00, max: Number.MAX_VALUE, score: 10, level: "Exceptional liquidity; strong cash cushion" },
+    { min: 2.50, max: 3.00, score: 9, level: "Very strong short-term liquidity" },
+    { min: 2.00, max: 2.49, score: 8, level: "Strong liquidity, comfortably above most lending norms" },
+    { min: 1.75, max: 1.99, score: 7, level: "Solid buffer, typical of well-managed mid-market firms" },
+    { min: 1.50, max: 1.74, score: 6, level: "Acceptable but slightly tighter liquidity" },
+    { min: 1.25, max: 1.49, score: 5, level: "Manageable but may raise caution for certain lenders" },
+    { min: 1.00, max: 1.24, score: 4, level: "Tight liquidity; needs monitoring" },
+    { min: 0.85, max: 0.99, score: 3, level: "Below 1.0 – potential working capital shortfall" },
+    { min: 0.60, max: 0.84, score: 2, level: "Weak liquidity; at risk of cash flow issues" },
     { min: -Infinity, max: 0.59, score: 1, level: "Severely constrained liquidity; likely distressed" }
   ],
   
