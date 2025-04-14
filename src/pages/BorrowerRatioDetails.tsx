@@ -1,15 +1,10 @@
 import { useLocation, Navigate, useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { roundToTenth } from "@/components/underwriting/utils/roundingUtils";
 import { FinancialRatios } from "@/types/proposalDetails";
 import { getRiskLevelInfo } from "@/components/vdr/utils/borrowerRiskUtils";
-import { RatioGroup } from "@/components/borrower/ratio-groups/RatioGroup";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard } from "lucide-react";
 import RatioDetailsHeader from "@/components/borrower/ratio-details/RatioDetailsHeader";
 import RiskScoreCard from "@/components/borrower/ratio-details/RiskScoreCard";
-import RatioDetailsGrid from "@/components/borrower/ratio-details/RatioDetailsGrid";
+import RatioSectionsGrid from "@/components/borrower/ratio-sections/RatioSectionsGrid";
 
 const BorrowerRatioDetails = () => {
   const location = useLocation();
@@ -37,7 +32,7 @@ const BorrowerRatioDetails = () => {
           value: safeRatio(ratios.currentRatio),
           formula: "Current Assets / Current Liabilities",
           weight: 12,
-          score: roundToTenth(safeRatio(ratios.currentRatio) * 2)
+          score: Math.round(safeRatio(ratios.currentRatio) * 2 * 10) / 10
         },
         {
           name: "Quick Ratio",
@@ -240,7 +235,7 @@ const BorrowerRatioDetails = () => {
           </Button>
         </div>
         <RiskScoreCard riskScore={riskScore} riskLevel={riskLevel} />
-        <RatioDetailsGrid ratioGroups={ratioGroups} />
+        <RatioSectionsGrid ratioGroups={ratioGroups} />
       </div>
     </div>
   );
