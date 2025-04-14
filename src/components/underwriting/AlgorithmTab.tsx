@@ -9,6 +9,8 @@ interface AlgorithmTabProps {
   updateGroupWeight: (groupIndex: number, newWeight: number) => void;
   updateCriterionWeight: (groupIndex: number, criterionIndex: number, newWeight: number) => void;
   updateCriterionScore: (groupIndex: number, criterionIndex: number, minScore: number, maxScore: number) => void;
+  updateCriterionRange?: (groupIndex: number, criterionIndex: number, min: number, max: number) => void;
+  updateActualMetricValue?: (groupIndex: number, criterionIndex: number, value: number) => void;
   toggleCriterionEnabled?: (groupIndex: number, criterionIndex: number, enabled: boolean) => void;
   getScoreColor: (score: number) => string;
   getScoreBackground: (score: number) => string;
@@ -19,6 +21,8 @@ export const AlgorithmTab: React.FC<AlgorithmTabProps> = ({
   updateGroupWeight,
   updateCriterionWeight,
   updateCriterionScore,
+  updateCriterionRange,
+  updateActualMetricValue,
   toggleCriterionEnabled,
   getScoreColor,
   getScoreBackground
@@ -33,6 +37,8 @@ export const AlgorithmTab: React.FC<AlgorithmTabProps> = ({
             groupIndex={groupIndex}
             updateCriterionWeight={updateCriterionWeight}
             updateCriterionScore={updateCriterionScore}
+            updateCriterionRange={updateCriterionRange}
+            updateActualMetricValue={updateActualMetricValue}
             toggleCriterionEnabled={toggleCriterionEnabled}
             getScoreColor={getScoreColor}
             getScoreBackground={getScoreBackground}

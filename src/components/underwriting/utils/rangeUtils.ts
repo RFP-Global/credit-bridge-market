@@ -5,7 +5,7 @@ import { recalculateScores } from "./scoreCalculationUtils";
 const roundToTenth = (value: number) => parseFloat(value.toFixed(1));
 
 /**
- * Updates criterion scores and recalculates total scores.
+ * Updates the preferred range for a criterion and recalculates scores.
  */
 export const updateCriterionRange = (
   criteriaGroups: CriteriaGroup[],
@@ -20,29 +20,25 @@ export const updateCriterionRange = (
   const newGroups = [...criteriaGroups];
   const criterion = newGroups[groupIndex].criteria[criterionIndex];
   
+  // Round min and max to tenth decimal place
+  criterion.preferredMin = roundToTenth(min);
+  criterion.preferredMax = roundToTenth(max);
+  
   // Find matching score range if available
   if (criterion.scoreMapping) {
-    const ranges = criterion.scoreMapping;
-    let minScore = 1;
-    let maxScore = 1;
-
-    // Find scores based on min and max values
-    for (const range of ranges) {
-      if (min >= range.min && min <= (range.max || Infinity)) {
-        minScore = range.score;
-      }
-      if (max >= range.min && max <= (range.max || Infinity)) {
-        maxScore = range.score;
-      }
-    }
-
-    // Ensure scores are between 1 and 10
-    criterion.minScore = roundToTenth(Math.max(1, Math.min(10, minScore)));
-    criterion.maxScore = roundToTenth(Math.max(1, Math.min(10, maxScore)));
+    const matchingRange = criterion.scoreMapping.find(
+      range => min >= range.min && max <= range.max
+    );
     
-    if (criterion.minScore > criterion.maxScore) {
-      [criterion.minScore, criterion.maxScore] = [criterion.maxScore, criterion.minScore];
+    if (matchingRange) {
+      criterion.minScore = roundToTenth(Math.max(1, matchingRange.score - 1));
+      criterion.maxScore = roundToTenth(Math.min(10, matchingRange.score + 1));
+    } else {
+      // Interpolate between ranges
+      updateScoreBasedOnRange(criterion, roundToTenth((min + max) / 2), min, max);
     }
+  } else {
+    updateScoreBasedOnRange(criterion, roundToTenth((min + max) / 2), min, max);
   }
   
   recalculateScores(newGroups, setMinTotalScore, setMaxTotalScore);
@@ -50,10 +46,35 @@ export const updateCriterionRange = (
 };
 
 /**
- * Helper function to interpolate a score between 1-10 based on a value's position in a range
+ * Helper function to calculate scores based on where the value falls relative to the preferred range.
  */
-const interpolateScore = (value: number, min: number, max: number): number => {
-  if (max === min) return 5;
-  const percentage = (value - min) / (max - min);
-  return 1 + percentage * 9;
+const updateScoreBasedOnRange = (
+  criterion: CriteriaGroup['criteria'][0],
+  currentValue: number,
+  min: number,
+  max: number
+) => {
+  if (!criterion.actualMin || !criterion.actualMax) return;
+  
+  const roundToTenth = (value: number) => parseFloat(value.toFixed(1));
+  
+  const rangePercent = roundToTenth((max - min) / (criterion.actualMax - criterion.actualMin));
+  const midPoint = roundToTenth((min + max) / 2);
+  const valuePercent = roundToTenth((midPoint - criterion.actualMin) / (criterion.actualMax - criterion.actualMin));
+  
+  // Adjust for metrics where lower is better
+  const adjustedPercent = criterion.name.toLowerCase().includes('debt') || 
+                         criterion.name.toLowerCase().includes('risk') ? 
+                         roundToTenth(1 - valuePercent) : valuePercent;
+  
+  const baseScore = roundToTenth(1 + (adjustedPercent * 9));
+  criterion.minScore = roundToTenth(Math.max(1, baseScore - 1));
+  criterion.maxScore = roundToTenth(Math.min(10, baseScore + 1));
+  
+  if (criterion.actualValue !== undefined) {
+    criterion.actualValue = roundToTenth(currentValue);
+    criterion.value = criterion.actualUnit ? 
+      `${criterion.actualUnit}${roundToTenth(currentValue)}` : 
+      roundToTenth(currentValue).toString();
+  }
 };

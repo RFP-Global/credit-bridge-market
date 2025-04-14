@@ -28,6 +28,7 @@ export const recalculateScores = (
     
     if (weightSum > 0) {
       group.minScore = roundToTenth(minScoreSum / weightSum);
+      // Ensure maxScore never exceeds 10
       group.maxScore = roundToTenth(Math.min(10, (maxScoreSum / weightSum)));
     } else {
       group.minScore = 0;
@@ -48,6 +49,7 @@ export const recalculateScores = (
   
   if (totalWeight > 0) {
     setMinTotalScore(roundToTenth(totalMinWeightedScore / totalWeight));
+    // Ensure maxTotalScore never exceeds 10
     setMaxTotalScore(roundToTenth(Math.min(10, (totalMaxWeightedScore / totalWeight))));
   }
 };
@@ -66,28 +68,9 @@ export const updateCriterionScore = (
   setMaxTotalScore: React.Dispatch<React.SetStateAction<number>>
 ) => {
   const newGroups = [...criteriaGroups];
-  const criterion = newGroups[groupIndex].criteria[criterionIndex];
-  
-  // Ensure scores are between 1 and 10 and update the criterion
-  criterion.minScore = roundToTenth(Math.max(1, Math.min(10, newMinScore)));
-  criterion.maxScore = roundToTenth(Math.max(1, Math.min(10, newMaxScore)));
-  
-  if (criterion.minScore > criterion.maxScore) {
-    [criterion.minScore, criterion.maxScore] = [criterion.maxScore, criterion.minScore];
-  }
-
-  // Update preferred range based on score if scoreMapping exists
-  if (criterion.scoreMapping) {
-    const minRange = criterion.scoreMapping.find(r => r.score === Math.floor(criterion.minScore));
-    const maxRange = criterion.scoreMapping.find(r => r.score === Math.ceil(criterion.maxScore));
-    
-    if (minRange && maxRange) {
-      criterion.preferredMin = minRange.min;
-      criterion.preferredMax = maxRange.max;
-    }
-  }
-
+  // Ensure newMinScore is at least 1 and newMaxScore doesn't exceed 10, and round to 1 decimal place
+  newGroups[groupIndex].criteria[criterionIndex].minScore = roundToTenth(Math.max(1, newMinScore));
+  newGroups[groupIndex].criteria[criterionIndex].maxScore = roundToTenth(Math.min(10, newMaxScore));
   recalculateScores(newGroups, setMinTotalScore, setMaxTotalScore);
   setCriteriaGroups(newGroups);
 };
-

@@ -17,6 +17,8 @@ import {
   updateCriterionWeight, 
   updateGroupWeight, 
   updateCriterionScore, 
+  updateCriterionRange,
+  updateActualMetricValue,
   toggleCriterionEnabled
 } from "@/components/underwriting/utils/scoreUtils";
 import {
@@ -79,6 +81,14 @@ const Underwriting = () => {
 
   const handleUpdateCriterionScore = (groupIndex: number, criterionIndex: number, minScore: number, maxScore: number) => {
     updateCriterionScore(criteriaGroups, groupIndex, criterionIndex, minScore, maxScore, setCriteriaGroups, setMinTotalScore, setMaxTotalScore);
+  };
+
+  const handleUpdateCriterionRange = (groupIndex: number, criterionIndex: number, min: number, max: number) => {
+    updateCriterionRange(criteriaGroups, groupIndex, criterionIndex, min, max, setCriteriaGroups, setMinTotalScore, setMaxTotalScore);
+  };
+  
+  const handleUpdateActualMetricValue = (groupIndex: number, criterionIndex: number, value: number) => {
+    updateActualMetricValue(criteriaGroups, groupIndex, criterionIndex, value, setCriteriaGroups, setMinTotalScore, setMaxTotalScore);
   };
   
   const handleToggleCriterionEnabled = (groupIndex: number, criterionIndex: number, enabled: boolean) => {
@@ -170,6 +180,8 @@ const Underwriting = () => {
               updateGroupWeight={handleUpdateGroupWeight}
               updateCriterionWeight={handleUpdateCriterionWeight}
               updateCriterionScore={handleUpdateCriterionScore}
+              updateCriterionRange={handleUpdateCriterionRange}
+              updateActualMetricValue={handleUpdateActualMetricValue}
               toggleCriterionEnabled={handleToggleCriterionEnabled}
               getScoreColor={handleGetScoreColor}
               getScoreBackground={handleGetScoreBackground}
