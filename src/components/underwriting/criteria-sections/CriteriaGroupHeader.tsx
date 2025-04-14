@@ -19,6 +19,9 @@ export const CriteriaGroupHeader: React.FC<CriteriaGroupHeaderProps> = ({
   maxScore,
   getScoreColor,
 }) => {
+  // Calculate the average score to determine the color
+  const avgScore = (minScore + maxScore) / 2;
+
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
       <div>
@@ -37,9 +40,21 @@ export const CriteriaGroupHeader: React.FC<CriteriaGroupHeaderProps> = ({
         </div>
       </div>
       <div className="flex items-center space-x-2">
-        <div className={`font-medium ${getScoreColor((minScore + maxScore) / 2)}`}>
+        <div className={`font-medium ${getScoreColor(avgScore)}`}>
           Score: {minScore?.toFixed(1) || "0.0"}-{maxScore?.toFixed(1) || "0.0"}
         </div>
+        <CustomBadge 
+          variant={
+            avgScore >= 9 ? "success" : 
+            avgScore >= 7 ? "secondary" :
+            avgScore >= 5 ? "warning" : "destructive"
+          } 
+          className="text-xs px-1.5 py-0"
+        >
+          {avgScore >= 9 ? "Low Risk" : 
+           avgScore >= 7 ? "Moderate Risk" : 
+           avgScore >= 5 ? "Medium-High Risk" : "High Risk"}
+        </CustomBadge>
       </div>
     </div>
   );
