@@ -17,7 +17,6 @@ export interface UnderwritingCategory {
 }
 
 export interface Criterion {
-  id?: string;
   name: string;
   description: string;
   value: string;
@@ -27,22 +26,15 @@ export interface Criterion {
   min: number;
   max: number;
   step: number;
-  unit?: string;
-  enabled: boolean;
-  scoreMapping: ScoreRange[];
-  // Added properties to fix TypeScript errors
   preferredMin?: number;
   preferredMax?: number;
+  unit?: string;
   actualMin?: number;
   actualMax?: number;
   actualValue?: number;
   actualUnit?: string;
-  subcriteria?: {
-    name: string;
-    description: string;
-    target: string;
-    weight: number;
-  }[];
+  scoreMapping?: ScoreRange[];
+  enabled: boolean;
 }
 
 export interface ScoreRange {
@@ -53,7 +45,6 @@ export interface ScoreRange {
 }
 
 export interface CriteriaGroup {
-  id?: string;  // Also added optional id property here for consistency
   name: string;
   description: string;
   weight: number;

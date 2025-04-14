@@ -1,4 +1,4 @@
-import { CriteriaGroup, ScoreThreshold } from "@/components/underwriting/types";
+import { ScoreThreshold, CriteriaGroup } from "@/components/underwriting/types";
 
 export const initialScoreThresholds: ScoreThreshold[] = [
   { threshold: 9, color: "text-green-500" },
@@ -10,246 +10,164 @@ export const initialScoreThresholds: ScoreThreshold[] = [
 export const initialCriteriaGroups: CriteriaGroup[] = [
   {
     name: "Financial Strength",
-    description: "Key financial ratios and metrics",
-    weight: 30,
-    minScore: 1,
-    maxScore: 10,
+    description: "Measures the overall financial health of the borrower",
+    weight: 25,
+    minScore: 4.0,
+    maxScore: 4.2,
     criteria: [
       {
-        name: "Liquidity Ratios",
-        description: "Measures of short-term liquidity",
-        value: "Moderate",
-        weight: 25,
-        minScore: 1,
-        maxScore: 10,
-        min: 0,
-        max: 3,
-        step: 0.1,
-        unit: "ratio",
-        enabled: true,
-        scoreMapping: [
-          { min: 0, max: 0.5, score: 1, riskLevel: "High Risk" },
-          { min: 0.5, max: 1, score: 3, riskLevel: "Moderate Risk" },
-          { min: 1, max: 1.5, score: 7, riskLevel: "Low Risk" },
-          { min: 1.5, max: 3, score: 10, riskLevel: "Very Low Risk" }
-        ],
-        subcriteria: [
-          {
-            name: "Current Ratio",
-            description: "Current Assets / Current Liabilities",
-            target: ">= 1.5",
-            weight: 35
-          },
-          {
-            name: "Quick Ratio",
-            description: "(Current Assets - Inventory) / Current Liabilities",
-            target: ">= 1.0",
-            weight: 35
-          },
-          {
-            name: "Cash Ratio",
-            description: "Cash & Equivalents / Current Liabilities",
-            target: ">= 0.5",
-            weight: 30
-          }
-        ]
-      },
-      {
-        name: "Leverage Ratios",
-        description: "Measures of financial leverage and solvency",
-        value: "Moderate",
-        weight: 25,
-        minScore: 1,
-        maxScore: 10,
-        min: 0,
+        name: "DSCR Ratio",
+        description: "Debt Service Coverage Ratio - measures ability to service debt",
+        value: "1.8x",
+        weight: 35,
+        minScore: 4,
+        maxScore: 4,
+        min: 1,
         max: 5,
-        step: 0.1,
-        unit: "ratio",
-        enabled: true,
-        scoreMapping: [
-          { min: 0, max: 1, score: 10, riskLevel: "Very Low Risk" },
-          { min: 1, max: 2, score: 7, riskLevel: "Low Risk" },
-          { min: 2, max: 3, score: 4, riskLevel: "Moderate Risk" },
-          { min: 3, max: 5, score: 1, riskLevel: "High Risk" }
-        ],
-        subcriteria: [
-          {
-            name: "Debt-to-Equity Ratio",
-            description: "Total Debt / Total Equity",
-            target: "<= 2.0",
-            weight: 25
-          },
-          {
-            name: "Debt Ratio",
-            description: "Total Liabilities / Total Assets",
-            target: "<= 0.6",
-            weight: 25
-          },
-          {
-            name: "Equity Ratio",
-            description: "Total Equity / Total Assets",
-            target: ">= 0.4",
-            weight: 20
-          },
-          {
-            name: "Interest Coverage Ratio",
-            description: "EBIT / Interest Expense",
-            target: ">= 2.0",
-            weight: 15
-          },
-          {
-            name: "Fixed Charge Coverage Ratio",
-            description: "(EBIT + Lease Payments) / (Interest + Lease Payments)",
-            target: ">= 1.5",
-            weight: 15
-          }
-        ]
-      },
-      {
-        name: "Profitability Ratios",
-        description: "Measures of operational effectiveness",
-        value: "Moderate",
-        weight: 20,
-        minScore: 1,
-        maxScore: 10,
-        min: -20,
-        max: 40,
         step: 1,
-        unit: "%",
+        unit: "x",
+        preferredMin: 1.5,
+        preferredMax: 3.0,
+        actualMin: 0,
+        actualMax: 5,
+        actualValue: 1.8,
+        actualUnit: "x",
         enabled: true,
         scoreMapping: [
-          { min: 20, max: 40, score: 10, riskLevel: "Very Low Risk" },
-          { min: 10, max: 20, score: 7, riskLevel: "Low Risk" },
-          { min: 0, max: 10, score: 4, riskLevel: "Moderate Risk" },
-          { min: -20, max: 0, score: 1, riskLevel: "High Risk" }
-        ],
-        subcriteria: [
-          {
-            name: "Net Profit Margin",
-            description: "Net Income / Revenue",
-            target: ">= 10%",
-            weight: 20
-          },
-          {
-            name: "Gross Margin",
-            description: "Gross Profit / Revenue",
-            target: ">= 30%",
-            weight: 20
-          },
-          {
-            name: "Operating Margin",
-            description: "Operating Income / Revenue",
-            target: ">= 15%",
-            weight: 20
-          },
-          {
-            name: "Return on Assets (ROA)",
-            description: "Net Income / Total Assets",
-            target: ">= 5%",
-            weight: 20
-          },
-          {
-            name: "Return on Equity (ROE)",
-            description: "Net Income / Total Equity",
-            target: ">= 15%",
-            weight: 20
-          }
+          { min: 3.00, max: 100, score: 10, riskLevel: "Exceptional" },
+          { min: 2.50, max: 2.99, score: 9, riskLevel: "Very Strong" },
+          { min: 2.00, max: 2.49, score: 8, riskLevel: "Strong" },
+          { min: 1.75, max: 1.99, score: 7, riskLevel: "Good" },
+          { min: 1.50, max: 1.74, score: 6, riskLevel: "Moderate" },
+          { min: 1.25, max: 1.49, score: 5, riskLevel: "Acceptable" },
+          { min: 1.10, max: 1.24, score: 4, riskLevel: "Weak" },
+          { min: 1.00, max: 1.09, score: 3, riskLevel: "Very Weak" },
+          { min: 0.75, max: 0.99, score: 2, riskLevel: "High Risk" },
+          { min: 0, max: 0.75, score: 1, riskLevel: "Severe Risk" }
         ]
       },
       {
-        name: "Cash Flow & Coverage Ratios",
-        description: "Measures of cash flow adequacy and debt service capability",
-        value: "Moderate",
-        weight: 15,
-        minScore: 1,
-        maxScore: 10,
-        min: 0,
-        max: 2,
-        step: 0.1,
-        unit: "ratio",
+        name: "Debt/EBITDA",
+        description: "Ratio of total debt to EBITDA",
+        value: "3.6x",
+        weight: 20,
+        minScore: 4,
+        maxScore: 4,
+        min: 1,
+        max: 5,
+        step: 1,
+        unit: "x",
+        preferredMin: 2.0,
+        preferredMax: 4.0,
+        actualMin: 0,
+        actualMax: 10,
+        actualValue: 3.6,
+        actualUnit: "x",
         enabled: true,
         scoreMapping: [
-          { min: 1.5, max: 2, score: 10, riskLevel: "Very Low Risk" },
-          { min: 1.25, max: 1.5, score: 7, riskLevel: "Low Risk" },
-          { min: 1, max: 1.25, score: 4, riskLevel: "Moderate Risk" },
-          { min: 0, max: 1, score: 1, riskLevel: "High Risk" }
-        ],
-        subcriteria: [
-          {
-            name: "Operating Cash Flow Ratio",
-            description: "Operating Cash Flow / Current Liabilities",
-            target: ">= 1.0",
-            weight: 15
-          },
-          {
-            name: "Debt Service Coverage Ratio",
-            description: "EBITDA / (Principal + Interest)",
-            target: ">= 1.25",
-            weight: 20
-          },
-          {
-            name: "Free Cash Flow to Firm",
-            description: "EBIT × (1 - Tax Rate) + Depreciation - CapEx - ΔWorking Capital",
-            target: "> 0",
-            weight: 15
-          },
-          {
-            name: "Loan-to-Value Ratio",
-            description: "Loan Amount / Collateral Value",
-            target: "<= 80%",
-            weight: 15
-          },
-          {
-            name: "Collateral Coverage Ratio",
-            description: "Collateral Value / Loan Amount",
-            target: ">= 1.25",
-            weight: 20
-          },
-          {
-            name: "Leverage Coverage Ratio",
-            description: "EBITDA / Total Debt",
-            target: ">= 0.2",
-            weight: 15
-          }
+          { min: 0, max: 1.00, score: 10, riskLevel: "Minimal Leverage" },
+          { min: 1.01, max: 2.00, score: 9, riskLevel: "Low Leverage" },
+          { min: 2.01, max: 3.00, score: 8, riskLevel: "Very Manageable" },
+          { min: 3.01, max: 4.00, score: 7, riskLevel: "Moderate Risk" },
+          { min: 4.01, max: 5.00, score: 6, riskLevel: "Slightly Elevated Risk" },
+          { min: 5.01, max: 6.00, score: 5, riskLevel: "Cautionary" },
+          { min: 6.01, max: 7.00, score: 4, riskLevel: "High Risk" },
+          { min: 7.01, max: 8.00, score: 3, riskLevel: "Very High Risk" },
+          { min: 8.01, max: 10.00, score: 2, riskLevel: "Distressed Leverage" },
+          { min: 10.01, max: 100, score: 1, riskLevel: "Unsustainable" }
         ]
       },
       {
-        name: "Efficiency Ratios",
-        description: "Measures of operational efficiency",
-        value: "Moderate",
+        name: "Current Ratio",
+        description: "Current assets divided by current liabilities",
+        value: "1.8x",
         weight: 15,
-        minScore: 1,
-        maxScore: 10,
-        min: 0,
-        max: 20,
-        step: 0.1,
-        unit: "turns",
+        minScore: 4,
+        maxScore: 4,
+        min: 1,
+        max: 5,
+        step: 1,
+        unit: "x",
+        preferredMin: 1.5,
+        preferredMax: 3.0,
+        actualMin: 0.5,
+        actualMax: 3,
+        actualValue: 1.8,
+        actualUnit: "x",
         enabled: true,
         scoreMapping: [
-          { min: 10, max: 20, score: 10, riskLevel: "Very Low Risk" },
-          { min: 6, max: 10, score: 7, riskLevel: "Low Risk" },
-          { min: 3, max: 6, score: 4, riskLevel: "Moderate Risk" },
-          { min: 0, max: 3, score: 1, riskLevel: "High Risk" }
-        ],
-        subcriteria: [
-          {
-            name: "Accounts Receivable Turnover",
-            description: "Net Credit Sales / Average Accounts Receivable",
-            target: ">= 4",
-            weight: 35
-          },
-          {
-            name: "Inventory Turnover",
-            description: "COGS / Average Inventory",
-            target: ">= 6",
-            weight: 35
-          },
-          {
-            name: "Asset Turnover Ratio",
-            description: "Revenue / Total Assets",
-            target: ">= 1",
-            weight: 30
-          }
+          { min: 3.00, max: 5.00, score: 10, riskLevel: "Highly Liquid" },
+          { min: 2.50, max: 2.99, score: 9, riskLevel: "Very Strong" },
+          { min: 2.00, max: 2.49, score: 8, riskLevel: "Strong" },
+          { min: 1.75, max: 1.99, score: 7, riskLevel: "Good" },
+          { min: 1.50, max: 1.74, score: 6, riskLevel: "Moderate" },
+          { min: 1.25, max: 1.49, score: 5, riskLevel: "Acceptable" },
+          { min: 1.10, max: 1.24, score: 4, riskLevel: "Weak" },
+          { min: 1.00, max: 1.09, score: 3, riskLevel: "Poor" },
+          { min: 0.75, max: 0.99, score: 2, riskLevel: "Very Poor" },
+          { min: 0, max: 0.75, score: 1, riskLevel: "Critical" }
+        ]
+      },
+      {
+        name: "Interest Coverage Ratio",
+        description: "Measures how easily a company can pay interest on its outstanding debt",
+        value: "4.2x",
+        weight: 15,
+        minScore: 5,
+        maxScore: 5,
+        min: 1,
+        max: 5,
+        step: 1,
+        unit: "x",
+        preferredMin: 3.5,
+        preferredMax: 8.0,
+        actualMin: 0,
+        actualMax: 10,
+        actualValue: 4.2,
+        actualUnit: "x",
+        enabled: true,
+        scoreMapping: [
+          { min: 8.00, max: 100, score: 10, riskLevel: "Outstanding" },
+          { min: 6.00, max: 7.99, score: 9, riskLevel: "Very Strong" },
+          { min: 4.50, max: 5.99, score: 8, riskLevel: "Strong" },
+          { min: 3.50, max: 4.49, score: 7, riskLevel: "Good" },
+          { min: 2.75, max: 3.49, score: 6, riskLevel: "Moderate" },
+          { min: 2.00, max: 2.74, score: 5, riskLevel: "Acceptable" },
+          { min: 1.50, max: 1.99, score: 4, riskLevel: "Weak" },
+          { min: 1.00, max: 1.49, score: 3, riskLevel: "Very Weak" },
+          { min: 0.75, max: 0.99, score: 2, riskLevel: "High Risk" },
+          { min: 0, max: 0.75, score: 1, riskLevel: "Severe Risk" }
+        ]
+      },
+      {
+        name: "Quick Ratio",
+        description: "Measures a company's ability to pay short-term obligations with its most liquid assets",
+        value: "10.5",
+        weight: 15,
+        minScore: 6,
+        maxScore: 6,
+        min: 1,
+        max: 10,
+        step: 1,
+        unit: "",
+        preferredMin: 8,
+        preferredMax: 16,
+        actualMin: 0,
+        actualMax: 20,
+        actualValue: 10.5,
+        actualUnit: "",
+        enabled: true,
+        scoreMapping: [
+          { min: 18.00, max: 20.00, score: 10, riskLevel: "Exceptionally Liquid" },
+          { min: 16.00, max: 17.99, score: 9, riskLevel: "Extremely Liquid" },
+          { min: 14.00, max: 15.99, score: 8, riskLevel: "Very Liquid" },
+          { min: 12.00, max: 13.99, score: 7, riskLevel: "Highly Liquid" },
+          { min: 10.00, max: 11.99, score: 6, riskLevel: "Good Liquidity" },
+          { min: 8.00, max: 9.99, score: 5, riskLevel: "Moderate Liquidity" },
+          { min: 6.00, max: 7.99, score: 4, riskLevel: "Fair Liquidity" },
+          { min: 4.00, max: 5.99, score: 3, riskLevel: "Low Liquidity" },
+          { min: 2.00, max: 3.99, score: 2, riskLevel: "Very Low Liquidity" },
+          { min: 0, max: 1.99, score: 1, riskLevel: "Critical Liquidity" }
         ]
       }
     ]

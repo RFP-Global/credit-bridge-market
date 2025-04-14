@@ -1,5 +1,5 @@
 
-import { CriteriaGroup, ScoreThreshold, Criterion, ScoreRange } from "@/components/underwriting/types";
+import { CriteriaGroup, ScoreThreshold } from "@/components/underwriting/types";
 
 export interface UseUnderwritingStateReturn {
   minTotalScore: number;
@@ -13,6 +13,3 @@ export interface UseUnderwritingStateReturn {
   loadIndustryCriteria: (industry: string) => void;
   saveIndustryCriteria: (industry: string, groups: CriteriaGroup[]) => void;
 }
-
-// Re-export these types so they can be imported directly from this module
-export type { CriteriaGroup, ScoreThreshold, Criterion, ScoreRange };
