@@ -1,3 +1,4 @@
+
 import { useLocation, Navigate, useNavigate } from "react-router-dom";
 import { FinancialRatios } from "@/types/proposalDetails";
 import { getRiskLevelInfo } from "@/components/vdr/utils/borrowerRiskUtils";
@@ -5,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import RatioDetailsHeader from "@/components/borrower/ratio-details/RatioDetailsHeader";
 import RiskScoreCard from "@/components/borrower/ratio-details/RiskScoreCard";
 import RatioSectionsGrid from "@/components/borrower/ratio-sections/RatioSectionsGrid";
+import { roundToTenth } from "@/components/underwriting/utils/roundingUtils";
 
 const BorrowerRatioDetails = () => {
   const location = useLocation();
