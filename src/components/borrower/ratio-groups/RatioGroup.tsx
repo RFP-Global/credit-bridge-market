@@ -54,11 +54,15 @@ export const RatioGroup = ({ title, description, ratios }: RatioGroupProps) => {
           <div key={index} className="space-y-4 p-4 rounded-lg bg-gray-900/30">
             <div className="flex justify-between items-start">
               <div>
-                <h4 className="font-semibold">{ratio.name}</h4>
+                <h4 className="font-semibold flex items-center gap-2">
+                  {ratio.name}
+                  <span className="text-primary font-mono text-sm">
+                    ({formatRatioValue(ratio.value)})
+                  </span>
+                </h4>
                 <p className="text-sm text-gray-400 mt-1 font-mono">{ratio.formula}</p>
               </div>
               <div className="text-right">
-                <p className="text-lg font-semibold">{formatRatioValue(ratio.value)}</p>
                 <p className="text-sm text-gray-400">Score: {ratio.score.toFixed(1)} / 10</p>
               </div>
             </div>
