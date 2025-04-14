@@ -4,6 +4,7 @@ import { liquidityRatios } from "./ratios/liquidityRatios";
 import { leverageRatios } from "./ratios/leverageRatios";
 import { profitabilityRatios } from "./ratios/profitabilityRatios";
 import { cashFlowRatios } from "./ratios/cashFlowRatios";
+import { coverageRatios } from "./ratios/coverageRatios";
 
 export const financialStrengthGroup: CriteriaGroup = {
   name: "Financial Strength",
@@ -15,6 +16,7 @@ export const financialStrengthGroup: CriteriaGroup = {
     ...liquidityRatios,
     ...leverageRatios,
     ...cashFlowRatios,
+    ...coverageRatios,
     ...profitabilityRatios
   ]
 };
