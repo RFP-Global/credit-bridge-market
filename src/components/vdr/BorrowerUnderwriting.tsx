@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -48,7 +49,15 @@ const BorrowerUnderwriting = () => {
       debtToEBITDA: data.totalDebt / (data.operatingIncome || 1),
     };
 
-    const score = calculateOverallRiskScore(calculatedRatios);
+    // Convert FinancialRatios to Record<string, number> for calculateOverallRiskScore
+    const ratiosRecord: Record<string, number> = {
+      debtServiceCoverageRatio: calculatedRatios.debtServiceCoverageRatio,
+      currentRatio: calculatedRatios.currentRatio,
+      quickRatio: calculatedRatios.quickRatio,
+      debtToEBITDA: calculatedRatios.debtToEBITDA
+    };
+
+    const score = calculateOverallRiskScore(ratiosRecord);
     setRiskScore(score);
     setRatios(calculatedRatios);
     toast.success("Financial ratios and risk score calculated successfully");
