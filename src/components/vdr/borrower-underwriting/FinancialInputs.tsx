@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { FileSpreadsheet } from "lucide-react";
@@ -18,12 +17,18 @@ export const FinancialInputs = ({ financialData, onInputChange }: FinancialInput
     grossProfit: 'Gross Profit',
     operatingIncome: 'Operating Income',
     netIncome: 'Net Income',
+    ebit: 'EBIT',
+    ebitda: 'EBITDA',
+    interestExpense: 'Interest Expense',
+    leasePayments: 'Lease Payments',
   };
 
   const balanceSheetFields = {
     totalAssets: 'Total Assets',
     currentAssets: 'Current Assets',
     inventory: 'Inventory',
+    cashAndEquivalents: 'Cash & Equivalents',
+    accountsReceivable: 'Accounts Receivable',
     totalLiabilities: 'Total Liabilities',
     currentLiabilities: 'Current Liabilities',
     totalEquity: 'Total Equity',
@@ -31,7 +36,16 @@ export const FinancialInputs = ({ financialData, onInputChange }: FinancialInput
   };
 
   const cashFlowFields = {
-    annualDebtService: 'Annual Debt Service',
+    operatingCashFlow: 'Operating Cash Flow',
+    annualCashInflow: 'Annual Cash Inflow',
+    depreciation: 'Depreciation',
+    capex: 'Capital Expenditure',
+    workingCapitalChange: 'Working Capital Change',
+    netCreditSales: 'Net Credit Sales',
+    cogs: 'Cost of Goods Sold',
+    loanAmount: 'Loan Amount',
+    collateralValue: 'Collateral Value',
+    principalPayment: 'Principal Payment',
   };
 
   const renderInputSection = (fields: Record<string, string>, title: string) => (
