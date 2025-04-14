@@ -30,7 +30,7 @@ export const liquidityRatios: Criterion[] = [
       { min: 0.85, max: 0.99, score: 3, riskLevel: "Below 1.0 – potential working capital shortfall" },
       { min: 0.60, max: 0.84, score: 2, riskLevel: "Weak liquidity; at risk of cash flow issues" },
       { min: 0, max: 0.59, score: 1, riskLevel: "Severely constrained liquidity; likely distressed" }
-    ]
+    ].map(item => ({ ...item, score: Math.ceil(item.score / 2) }))
   },
   {
     name: "Quick Ratio",

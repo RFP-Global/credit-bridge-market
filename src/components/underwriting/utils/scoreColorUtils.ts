@@ -1,4 +1,6 @@
 
+import { ScoreThreshold } from "../types";
+
 export const getScoreColor = (score: number, scoreThresholds: ScoreThreshold[]) => {
   for (const threshold of scoreThresholds) {
     if (score >= threshold.threshold) {
@@ -21,4 +23,3 @@ export const getRiskLevel = (score: number) => {
   if (score >= 5) return { label: "Medium-High Risk", color: "bg-yellow-500/20 text-yellow-500 border-yellow-500/20" };
   return { label: "High Risk", color: "bg-red-500/20 text-red-500 border-red-500/20" };
 };
-
