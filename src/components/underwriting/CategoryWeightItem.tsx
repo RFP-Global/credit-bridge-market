@@ -4,8 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { CriteriaGroup } from "./types";
-import PreferredRangeControls from "./PreferredRangeControls";
-import { useState } from "react";
 
 interface CategoryWeightItemProps {
   group: CriteriaGroup;
@@ -30,24 +28,6 @@ export const CategoryWeightItem = ({
   getScoreColor,
   toggleLock
 }: CategoryWeightItemProps) => {
-  const [minValue, setMinValue] = useState(group.minScore.toString());
-  const [maxValue, setMaxValue] = useState(group.maxScore.toString());
-  const [rangeValues, setRangeValues] = useState<number[]>([
-    group.minScore,
-    group.maxScore
-  ]);
-
-  const handleRangeUpdate = () => {
-    const min = parseFloat(minValue);
-    const max = parseFloat(maxValue);
-    if (!isNaN(min) && !isNaN(max) && min <= max && min >= 1 && max <= 10) {
-      group.minScore = parseFloat(min.toFixed(1));
-      group.maxScore = parseFloat(max.toFixed(1));
-      setRangeValues([min, max]);
-      updateGroupWeight(groupIndex, group.weight);
-    }
-  };
-
   return (
     <div className="space-y-1">
       <div className="flex justify-between items-center">
@@ -106,26 +86,9 @@ export const CategoryWeightItem = ({
             +
           </Button>
         </div>
-
-        <PreferredRangeControls
-          minValue={minValue}
-          maxValue={maxValue}
-          onMinChange={setMinValue}
-          onMaxChange={setMaxValue}
-          onSliderChange={(values) => {
-            setRangeValues(values);
-            setMinValue(values[0].toFixed(1));
-            setMaxValue(values[1].toFixed(1));
-          }}
-          onUpdateRange={handleRangeUpdate}
-          sliderValue={rangeValues}
-          min={1}
-          max={10}
-        />
       </div>
       
       <Progress value={group.weight} className="h-1.5" />
     </div>
   );
 };
-
