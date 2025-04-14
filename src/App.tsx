@@ -35,6 +35,7 @@ import Lenders from "./pages/Lenders";
 import LenderProfile from "./pages/LenderProfile";
 import Team from "./pages/Team";
 import Underwriting from "./pages/Underwriting";
+import BorrowerUnderwritingPage from "./pages/BorrowerUnderwritingPage";
 import { useState } from "react";
 import TransactionDetailsView from "./pages/TransactionDetailsView";
 import EnterpriseNetwork from "./pages/EnterpriseNetwork";
@@ -76,7 +77,7 @@ const App = () => {
             <Route path="/facility-mechanics/:facilityId" element={<FacilityMechanics />} />
             <Route path="/facility-reference/:facilityId/:sectionType" element={<FacilityReferenceDetail />} />
             <Route path="/vdr" element={<VDR />} />
-            <Route path="/vdr/underwriting" element={<VDRUnderwriting />} />
+            <Route path="/borrower-underwriting" element={<BorrowerUnderwritingPage />} />
             <Route path="/lenders" element={<Lenders />} />
             <Route path="/lender/:id" element={<LenderProfile />} />
             <Route path="/enterprise-network" element={<EnterpriseNetwork />} />

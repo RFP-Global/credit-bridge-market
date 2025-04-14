@@ -2,7 +2,7 @@
 import EnterpriseLayout from "@/components/layout/EnterpriseLayout";
 import BorrowerUnderwriting from "@/components/vdr/BorrowerUnderwriting";
 
-const VDRUnderwriting = () => {
+const BorrowerUnderwritingPage = () => {
   return (
     <EnterpriseLayout>
       <div className="container mx-auto px-6 py-8">
@@ -18,4 +18,4 @@ const VDRUnderwriting = () => {
   );
 };
 
-export default VDRUnderwriting;
+export default BorrowerUnderwritingPage;
