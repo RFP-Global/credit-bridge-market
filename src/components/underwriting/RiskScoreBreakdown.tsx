@@ -1,6 +1,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CriteriaGroup } from "./types";
+import { roundToTenth } from "@/components/underwriting/utils/roundingUtils";
 
 interface RiskScoreBreakdownProps {
   criteriaGroups: CriteriaGroup[];
@@ -57,3 +58,4 @@ export const RiskScoreBreakdown = ({
     </Card>
   );
 };
+
