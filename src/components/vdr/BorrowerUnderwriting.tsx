@@ -47,14 +47,35 @@ const BorrowerUnderwriting = () => {
       currentRatio: data.currentAssets / (data.currentLiabilities || 1),
       quickRatio: (data.currentAssets - data.inventory) / (data.currentLiabilities || 1),
       debtToEBITDA: data.totalDebt / (data.operatingIncome || 1),
+      operatingCashFlowRatio: data.operatingIncome / (data.currentLiabilities || 1),
+      leverageRatio: data.totalLiabilities / (data.totalAssets || 1),
+      netProfitMargin: data.netIncome / (data.revenue || 1),
+      grossProfitMargin: data.grossProfit / (data.revenue || 1),
+      operatingMargin: data.operatingIncome / (data.revenue || 1),
+      returnOnAssets: data.netIncome / (data.totalAssets || 1),
+      returnOnEquity: data.netIncome / (data.totalEquity || 1),
+      assetTurnover: data.revenue / (data.totalAssets || 1),
+      inventoryTurnover: data.revenue / (data.inventory || 1),
+      debtToEquity: data.totalLiabilities / (data.totalEquity || 1),
+      equityRatio: data.totalEquity / (data.totalAssets || 1),
     };
 
-    // Convert FinancialRatios to Record<string, number> for calculateOverallRiskScore
     const ratiosRecord: Record<string, number> = {
       debtServiceCoverageRatio: calculatedRatios.debtServiceCoverageRatio,
       currentRatio: calculatedRatios.currentRatio,
       quickRatio: calculatedRatios.quickRatio,
-      debtToEBITDA: calculatedRatios.debtToEBITDA
+      debtToEBITDA: calculatedRatios.debtToEBITDA,
+      operatingCashFlowRatio: calculatedRatios.operatingCashFlowRatio,
+      leverageRatio: calculatedRatios.leverageRatio,
+      netProfitMargin: calculatedRatios.netProfitMargin,
+      grossProfitMargin: calculatedRatios.grossProfitMargin,
+      operatingMargin: calculatedRatios.operatingMargin,
+      returnOnAssets: calculatedRatios.returnOnAssets,
+      returnOnEquity: calculatedRatios.returnOnEquity,
+      assetTurnover: calculatedRatios.assetTurnover,
+      inventoryTurnover: calculatedRatios.inventoryTurnover,
+      debtToEquity: calculatedRatios.debtToEquity,
+      equityRatio: calculatedRatios.equityRatio
     };
 
     const score = calculateOverallRiskScore(ratiosRecord);

@@ -3,6 +3,17 @@ export interface FinancialRatios {
   currentRatio: number;
   quickRatio: number;
   debtToEBITDA: number;
+  operatingCashFlowRatio: number;
+  leverageRatio: number;
+  netProfitMargin: number;
+  grossProfitMargin: number;
+  operatingMargin: number;
+  returnOnAssets: number;
+  returnOnEquity: number;
+  assetTurnover: number;
+  inventoryTurnover: number;
+  debtToEquity: number;
+  equityRatio: number;
 }
 
 export interface CompanyDemographics {

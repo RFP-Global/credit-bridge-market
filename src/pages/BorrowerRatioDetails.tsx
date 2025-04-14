@@ -30,29 +30,106 @@ const BorrowerRatioDetails = () => {
       name: "Debt Service Coverage Ratio",
       value: ratios.debtServiceCoverageRatio,
       formula: "Operating Income / Annual Debt Service",
-      weight: 30,
+      weight: 15,
       score: roundToTenth(ratios.debtServiceCoverageRatio * 2)
     },
     {
       name: "Current Ratio",
       value: ratios.currentRatio,
       formula: "Current Assets / Current Liabilities",
-      weight: 25,
+      weight: 10,
       score: roundToTenth(ratios.currentRatio * 2)
     },
     {
       name: "Quick Ratio",
       value: ratios.quickRatio,
       formula: "(Current Assets - Inventory) / Current Liabilities",
-      weight: 25,
+      weight: 10,
       score: roundToTenth(ratios.quickRatio * 2)
     },
     {
       name: "Debt to EBITDA",
       value: ratios.debtToEBITDA,
       formula: "Total Debt / Operating Income",
-      weight: 20,
+      weight: 10,
       score: roundToTenth((10 - ratios.debtToEBITDA) * 2)
+    },
+    {
+      name: "Operating Cash Flow Ratio",
+      value: ratios.operatingCashFlowRatio,
+      formula: "Operating Income / Current Liabilities",
+      weight: 5,
+      score: roundToTenth(ratios.operatingCashFlowRatio * 2)
+    },
+    {
+      name: "Leverage Ratio",
+      value: ratios.leverageRatio,
+      formula: "Total Liabilities / Total Assets",
+      weight: 5,
+      score: roundToTenth((1 - ratios.leverageRatio) * 10)
+    },
+    {
+      name: "Net Profit Margin",
+      value: ratios.netProfitMargin,
+      formula: "Net Income / Revenue",
+      weight: 7,
+      score: roundToTenth(ratios.netProfitMargin * 10)
+    },
+    {
+      name: "Gross Profit Margin",
+      value: ratios.grossProfitMargin,
+      formula: "Gross Profit / Revenue",
+      weight: 7,
+      score: roundToTenth(ratios.grossProfitMargin * 10)
+    },
+    {
+      name: "Operating Margin",
+      value: ratios.operatingMargin,
+      formula: "Operating Income / Revenue",
+      weight: 7,
+      score: roundToTenth(ratios.operatingMargin * 10)
+    },
+    {
+      name: "Return on Assets",
+      value: ratios.returnOnAssets,
+      formula: "Net Income / Total Assets",
+      weight: 6,
+      score: roundToTenth(ratios.returnOnAssets * 20)
+    },
+    {
+      name: "Return on Equity",
+      value: ratios.returnOnEquity,
+      formula: "Net Income / Total Equity",
+      weight: 6,
+      score: roundToTenth(ratios.returnOnEquity * 20)
+    },
+    {
+      name: "Asset Turnover",
+      value: ratios.assetTurnover,
+      formula: "Revenue / Total Assets",
+      weight: 4,
+      score: roundToTenth(ratios.assetTurnover * 5)
+    },
+    {
+      name: "Inventory Turnover",
+      value: ratios.inventoryTurnover,
+      formula: "Revenue / Inventory",
+      weight: 3,
+      score: roundToTenth(ratios.inventoryTurnover * 0.5)
+    },
+    {
+      name: "Debt to Equity",
+      value: ratios.debtToEquity,
+      formula: "Total Liabilities / Total Equity",
+      weight: 3,
+      score: roundToTenth((3 - ratios.debtToEquity) * 3)
+    },
+    {
+      name: "Equity Ratio",
+      value: ratios.equityRatio,
+      formula: "Total Equity / Total Assets",
+      weight: 2,
+      score: roundToTenth(ratios.equityRatio * 10)
     }
   ];
 
