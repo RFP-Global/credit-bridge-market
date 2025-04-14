@@ -36,8 +36,9 @@ export const LiquidityRatios: React.FC<LiquidityRatiosProps> = ({ ratios }) => {
                     ratios.currentRatio && ratios.currentRatio >= 1.25 ? "warning" : "destructive"} 
                   className="text-xs"
                 >
-                  {ratios.currentRatio && ratios.currentRatio >= 1.75 ? "STRONG" : 
-                    ratios.currentRatio && ratios.currentRatio >= 1.25 ? "ADEQUATE" : "WEAK"}
+                  {ratios.currentRatio && ratios.currentRatio >= 2.00 ? "STRONG" : 
+                    ratios.currentRatio && ratios.currentRatio >= 1.50 ? "ADEQUATE" : 
+                    ratios.currentRatio && ratios.currentRatio >= 1.00 ? "TIGHT" : "WEAK"}
                 </CustomBadge>
               </div>
               <Progress value={(ratios.currentRatio || 0) * 33.3} className="h-1 mt-1 bg-gray-800" />

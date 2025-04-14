@@ -1,4 +1,3 @@
-
 import { getScoreBackground, getRiskLevel } from "@/components/underwriting/utils/styleUtils";
 
 interface RatioScoreMapping {
@@ -10,10 +9,10 @@ interface RatioScoreMapping {
   }[];
 }
 
-// Updated to match the Financial Strength ratios from the lender underwriting
+// Updated to match the Current Ratio methodology from the image
 const ratioScoreMappings: RatioScoreMapping[] = [
   {
-    ratio: "debtServiceCoverageRatio",
+    ratio: "currentRatio",
     ranges: [
       { min: 3.00, max: Infinity, score: 10 },
       { min: 2.50, max: 2.99, score: 9 },
@@ -21,14 +20,14 @@ const ratioScoreMappings: RatioScoreMapping[] = [
       { min: 1.75, max: 1.99, score: 7 },
       { min: 1.50, max: 1.74, score: 6 },
       { min: 1.25, max: 1.49, score: 5 },
-      { min: 1.10, max: 1.24, score: 4 },
-      { min: 1.00, max: 1.09, score: 3 },
-      { min: 0.75, max: 0.99, score: 2 },
-      { min: -Infinity, max: 0.75, score: 1 }
+      { min: 1.00, max: 1.24, score: 4 },
+      { min: 0.85, max: 0.99, score: 3 },
+      { min: 0.60, max: 0.84, score: 2 },
+      { min: -Infinity, max: 0.59, score: 1 }
     ]
   },
   {
-    ratio: "currentRatio",
+    ratio: "debtServiceCoverageRatio",
     ranges: [
       { min: 3.00, max: Infinity, score: 10 },
       { min: 2.50, max: 2.99, score: 9 },
