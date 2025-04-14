@@ -10,6 +10,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { CriterionItem } from "./CriterionItem";
 import { LiquidityRatiosSection } from "./LiquidityRatiosSection";
 import { LeverageRatiosSection } from "./LeverageRatiosSection";
+import { ProfitabilityRatiosSection } from "./ProfitabilityRatiosSection";
 import { CriteriaGroup as CriteriaGroupType } from "./types";
 
 interface CriteriaGroupProps {
@@ -35,7 +36,7 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
   getScoreColor,
   getScoreBackground
 }) => {
-  // Separate liquidity and leverage ratios from other criteria
+  // Separate liquidity, leverage, and profitability ratios from other criteria
   const liquidityRatios = group.name === "Financial Strength" 
     ? group.criteria.filter(c => ["Current Ratio", "Quick Ratio", "Cash Ratio"].includes(c.name))
     : [];
@@ -49,11 +50,22 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
         "Interest Coverage Ratio"
       ].includes(c.name))
     : [];
+
+  const profitabilityRatios = group.name === "Financial Strength"
+    ? group.criteria.filter(c => [
+        "Net Profit Margin",
+        "Gross Profit Margin",
+        "Operating Margin",
+        "Return on Assets",
+        "Return on Equity"
+      ].includes(c.name))
+    : [];
   
   const otherCriteria = group.name === "Financial Strength"
     ? group.criteria.filter(c => 
         !["Current Ratio", "Quick Ratio", "Cash Ratio"].includes(c.name) &&
-        !["Debt-to-Equity", "Debt Ratio", "Equity Ratio", "Fixed Charge Coverage Ratio", "Interest Coverage Ratio"].includes(c.name)
+        !["Debt-to-Equity", "Debt Ratio", "Equity Ratio", "Fixed Charge Coverage Ratio", "Interest Coverage Ratio"].includes(c.name) &&
+        !["Net Profit Margin", "Gross Profit Margin", "Operating Margin", "Return on Assets", "Return on Equity"].includes(c.name)
       )
     : group.criteria;
 
@@ -101,13 +113,27 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
                 />
               )}
 
+              {group.name === "Financial Strength" && profitabilityRatios.length > 0 && (
+                <ProfitabilityRatiosSection
+                  criteria={profitabilityRatios}
+                  groupIndex={groupIndex}
+                  updateCriterionWeight={updateCriterionWeight}
+                  updateCriterionScore={updateCriterionScore}
+                  updateCriterionRange={updateCriterionRange}
+                  updateActualMetricValue={updateActualMetricValue}
+                  toggleCriterionEnabled={toggleCriterionEnabled}
+                  getScoreColor={getScoreColor}
+                  getScoreBackground={getScoreBackground}
+                />
+              )}
+
               {otherCriteria.map((criterion, criterionIndex) => (
                 <CriterionItem
                   key={criterionIndex}
                   criterion={criterion}
                   criterionIndex={criterionIndex + 
                     (group.name === "Financial Strength" ? 
-                      liquidityRatios.length + leverageRatios.length : 
+                      liquidityRatios.length + leverageRatios.length + profitabilityRatios.length : 
                       0
                     )}
                   groupIndex={groupIndex}
