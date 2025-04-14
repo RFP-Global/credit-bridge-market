@@ -1,7 +1,7 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { FileSpreadsheet } from "lucide-react";
+import { useEffect } from "react";
 
 interface FinancialData {
   [key: string]: string;
@@ -34,6 +34,16 @@ export const FinancialInputs = ({ financialData, onInputChange }: FinancialInput
     annualDebtService: 'Annual Debt Service',
   };
 
+  useEffect(() => {
+    const savedData = localStorage.getItem('financialInputData');
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      Object.entries(parsedData).forEach(([field, value]) => {
+        onInputChange(field, value as string);
+      });
+    }
+  }, [onInputChange]);
+
   const formatDisplayValue = (value: string) => {
     if (!value) return '';
     const numValue = parseFloat(value);
@@ -47,8 +57,9 @@ export const FinancialInputs = ({ financialData, onInputChange }: FinancialInput
   };
 
   const handleInputChange = (field: string, displayValue: string) => {
-    // Remove currency formatting to store raw number
     const rawValue = displayValue.replace(/[$,]/g, '');
+    const newData = { ...financialData, [field]: rawValue };
+    localStorage.setItem('financialInputData', JSON.stringify(newData));
     onInputChange(field, rawValue);
   };
 
