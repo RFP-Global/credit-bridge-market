@@ -9,6 +9,7 @@ import {
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { CriterionItem } from "./CriterionItem";
 import { LiquidityRatiosSection } from "./LiquidityRatiosSection";
+import { LeverageRatiosSection } from "./LeverageRatiosSection";
 import { CriteriaGroup as CriteriaGroupType } from "./types";
 
 interface CriteriaGroupProps {
@@ -34,13 +35,26 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
   getScoreColor,
   getScoreBackground
 }) => {
-  // Separate liquidity ratios from other criteria
+  // Separate liquidity and leverage ratios from other criteria
   const liquidityRatios = group.name === "Financial Strength" 
     ? group.criteria.filter(c => ["Current Ratio", "Quick Ratio", "Cash Ratio"].includes(c.name))
     : [];
   
+  const leverageRatios = group.name === "Financial Strength"
+    ? group.criteria.filter(c => [
+        "Debt-to-Equity", 
+        "Debt Ratio", 
+        "Equity Ratio", 
+        "Fixed Charge Coverage Ratio",
+        "Interest Coverage Ratio"
+      ].includes(c.name))
+    : [];
+  
   const otherCriteria = group.name === "Financial Strength"
-    ? group.criteria.filter(c => !["Current Ratio", "Quick Ratio", "Cash Ratio"].includes(c.name))
+    ? group.criteria.filter(c => 
+        !["Current Ratio", "Quick Ratio", "Cash Ratio"].includes(c.name) &&
+        !["Debt-to-Equity", "Debt Ratio", "Equity Ratio", "Fixed Charge Coverage Ratio", "Interest Coverage Ratio"].includes(c.name)
+      )
     : group.criteria;
 
   return (
@@ -72,11 +86,30 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
                   getScoreBackground={getScoreBackground}
                 />
               )}
+              
+              {group.name === "Financial Strength" && leverageRatios.length > 0 && (
+                <LeverageRatiosSection
+                  criteria={leverageRatios}
+                  groupIndex={groupIndex}
+                  updateCriterionWeight={updateCriterionWeight}
+                  updateCriterionScore={updateCriterionScore}
+                  updateCriterionRange={updateCriterionRange}
+                  updateActualMetricValue={updateActualMetricValue}
+                  toggleCriterionEnabled={toggleCriterionEnabled}
+                  getScoreColor={getScoreColor}
+                  getScoreBackground={getScoreBackground}
+                />
+              )}
+
               {otherCriteria.map((criterion, criterionIndex) => (
                 <CriterionItem
                   key={criterionIndex}
                   criterion={criterion}
-                  criterionIndex={criterionIndex + (group.name === "Financial Strength" ? liquidityRatios.length : 0)}
+                  criterionIndex={criterionIndex + 
+                    (group.name === "Financial Strength" ? 
+                      liquidityRatios.length + leverageRatios.length : 
+                      0
+                    )}
                   groupIndex={groupIndex}
                   updateCriterionWeight={updateCriterionWeight}
                   updateCriterionScore={updateCriterionScore}
