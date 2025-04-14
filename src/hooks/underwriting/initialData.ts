@@ -169,6 +169,37 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
           { min: 2.00, max: 3.99, score: 2, riskLevel: "Very Low Liquidity" },
           { min: 0, max: 1.99, score: 1, riskLevel: "Critical Liquidity" }
         ]
+      },
+      {
+        name: "Cash Ratio",
+        description: "Cash and cash equivalents divided by current liabilities - measures immediate liquidity",
+        value: "0.8x",
+        weight: 15,
+        minScore: 4,
+        maxScore: 4,
+        min: 0.1,
+        max: 2.0,
+        step: 0.1,
+        unit: "x",
+        preferredMin: 0.5,
+        preferredMax: 1.5,
+        actualMin: 0,
+        actualMax: 5,
+        actualValue: 0.8,
+        actualUnit: "x",
+        enabled: true,
+        scoreMapping: [
+          { min: 2.00, max: 100, score: 10, riskLevel: "Exceptional Liquidity" },
+          { min: 1.50, max: 1.99, score: 9, riskLevel: "Very Strong Liquidity" },
+          { min: 1.25, max: 1.49, score: 8, riskLevel: "Strong Liquidity" },
+          { min: 1.00, max: 1.24, score: 7, riskLevel: "Good Liquidity" },
+          { min: 0.75, max: 0.99, score: 6, riskLevel: "Moderate Liquidity" },
+          { min: 0.50, max: 0.74, score: 5, riskLevel: "Acceptable Liquidity" },
+          { min: 0.35, max: 0.49, score: 4, riskLevel: "Weak Liquidity" },
+          { min: 0.25, max: 0.34, score: 3, riskLevel: "Very Weak Liquidity" },
+          { min: 0.10, max: 0.24, score: 2, riskLevel: "High Liquidity Risk" },
+          { min: 0, max: 0.09, score: 1, riskLevel: "Critical Liquidity Risk" }
+        ]
       }
     ]
   },
