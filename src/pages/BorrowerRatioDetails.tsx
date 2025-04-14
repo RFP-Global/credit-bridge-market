@@ -6,9 +6,13 @@ import { roundToTenth } from "@/components/underwriting/utils/roundingUtils";
 import { FinancialRatios } from "@/types/proposalDetails";
 import { getRiskLevelInfo } from "@/components/vdr/utils/borrowerRiskUtils";
 import { RatioGroup } from "@/components/borrower/ratio-groups/RatioGroup";
+import { Button } from "@/components/ui/button";
+import { LayoutDashboard } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const BorrowerRatioDetails = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const state = location.state as { ratios: FinancialRatios; riskScore: number } | null;
 
   if (!state?.ratios || state.riskScore === undefined) {
@@ -137,11 +141,22 @@ const BorrowerRatioDetails = () => {
   return (
     <div className="min-h-screen bg-black text-gray-200">
       <div className="container mx-auto px-6 py-8">
-        <div className="border-b border-primary/10 pb-4 mb-6">
-          <h1 className="text-2xl font-mono">Financial Ratio Analysis</h1>
-          <p className="text-sm text-muted-foreground">
-            Detailed breakdown of financial ratios and risk assessment
-          </p>
+        <div className="flex items-center justify-between border-b border-primary/10 pb-4 mb-6">
+          <div>
+            <h1 className="text-2xl font-mono">Financial Ratio Analysis</h1>
+            <p className="text-sm text-muted-foreground">
+              Detailed breakdown of financial ratios and risk assessment
+            </p>
+          </div>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => navigate('/enterprise-dashboard')}
+            className="font-mono text-xs"
+          >
+            <LayoutDashboard className="mr-2 h-4 w-4" />
+            Dashboard
+          </Button>
         </div>
 
         <Card className="bg-black/40 border-gray-800 mb-6">
