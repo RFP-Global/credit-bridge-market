@@ -1,10 +1,10 @@
 
 /**
- * Rounds a number to the 10th decimal place
+ * Rounds a number to a whole number
  * @param value The number to round
- * @returns Number rounded to 10th decimal place
+ * @returns Rounded whole number
  */
 export const roundToTenth = (value: number | undefined): number => {
   if (value === undefined) return 0;
-  return parseFloat(value.toFixed(1));
+  return Math.round(value);
 };

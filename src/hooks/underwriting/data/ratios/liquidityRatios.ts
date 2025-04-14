@@ -1,3 +1,4 @@
+
 import { Criterion } from "@/components/underwriting/types";
 
 export const liquidityRatios: Criterion[] = [
@@ -20,17 +21,17 @@ export const liquidityRatios: Criterion[] = [
     actualUnit: "x",
     enabled: true,
     scoreMapping: [
-      { min: 3.00, max: 100, score: 10, riskLevel: "Exceptional liquidity; strong cash cushion" },
-      { min: 2.50, max: 2.99, score: 9, riskLevel: "Very strong short-term liquidity" },
-      { min: 2.00, max: 2.49, score: 8, riskLevel: "Strong liquidity, comfortably above most lending norms" },
-      { min: 1.75, max: 1.99, score: 7, riskLevel: "Solid buffer, typical of well-managed mid-market firms" },
-      { min: 1.50, max: 1.74, score: 6, riskLevel: "Acceptable but slightly tighter liquidity" },
-      { min: 1.25, max: 1.49, score: 5, riskLevel: "Manageable but may raise caution for certain lenders" },
-      { min: 1.00, max: 1.24, score: 4, riskLevel: "Tight liquidity; needs monitoring" },
-      { min: 0.85, max: 0.99, score: 3, riskLevel: "Below 1.0 – potential working capital shortfall" },
-      { min: 0.60, max: 0.84, score: 2, riskLevel: "Weak liquidity; at risk of cash flow issues" },
+      { min: 3.00, max: 100, score: 5, riskLevel: "Exceptional liquidity; strong cash cushion" },
+      { min: 2.50, max: 2.99, score: 5, riskLevel: "Very strong short-term liquidity" },
+      { min: 2.00, max: 2.49, score: 4, riskLevel: "Strong liquidity, comfortably above most lending norms" },
+      { min: 1.75, max: 1.99, score: 4, riskLevel: "Solid buffer, typical of well-managed mid-market firms" },
+      { min: 1.50, max: 1.74, score: 3, riskLevel: "Acceptable but slightly tighter liquidity" },
+      { min: 1.25, max: 1.49, score: 3, riskLevel: "Manageable but may raise caution for certain lenders" },
+      { min: 1.00, max: 1.24, score: 2, riskLevel: "Tight liquidity; needs monitoring" },
+      { min: 0.85, max: 0.99, score: 2, riskLevel: "Below 1.0 – potential working capital shortfall" },
+      { min: 0.60, max: 0.84, score: 1, riskLevel: "Weak liquidity; at risk of cash flow issues" },
       { min: 0, max: 0.59, score: 1, riskLevel: "Severely constrained liquidity; likely distressed" }
-    ].map(item => ({ ...item, score: Math.ceil(item.score / 2) }))
+    ]
   },
   {
     name: "Quick Ratio",
@@ -51,15 +52,15 @@ export const liquidityRatios: Criterion[] = [
     actualUnit: "",
     enabled: true,
     scoreMapping: [
-      { min: 18.00, max: 20.00, score: 10, riskLevel: "Exceptionally Liquid" },
-      { min: 16.00, max: 17.99, score: 9, riskLevel: "Extremely Liquid" },
-      { min: 14.00, max: 15.99, score: 8, riskLevel: "Very Liquid" },
-      { min: 12.00, max: 13.99, score: 7, riskLevel: "Highly Liquid" },
-      { min: 10.00, max: 11.99, score: 6, riskLevel: "Good Liquidity" },
-      { min: 8.00, max: 9.99, score: 5, riskLevel: "Moderate Liquidity" },
-      { min: 6.00, max: 7.99, score: 4, riskLevel: "Fair Liquidity" },
-      { min: 4.00, max: 5.99, score: 3, riskLevel: "Low Liquidity" },
-      { min: 2.00, max: 3.99, score: 2, riskLevel: "Very Low Liquidity" },
+      { min: 18.00, max: 20.00, score: 5, riskLevel: "Exceptionally Liquid" },
+      { min: 16.00, max: 17.99, score: 5, riskLevel: "Extremely Liquid" },
+      { min: 14.00, max: 15.99, score: 4, riskLevel: "Very Liquid" },
+      { min: 12.00, max: 13.99, score: 4, riskLevel: "Highly Liquid" },
+      { min: 10.00, max: 11.99, score: 3, riskLevel: "Good Liquidity" },
+      { min: 8.00, max: 9.99, score: 3, riskLevel: "Moderate Liquidity" },
+      { min: 6.00, max: 7.99, score: 2, riskLevel: "Fair Liquidity" },
+      { min: 4.00, max: 5.99, score: 2, riskLevel: "Low Liquidity" },
+      { min: 2.00, max: 3.99, score: 1, riskLevel: "Very Low Liquidity" },
       { min: 0, max: 1.99, score: 1, riskLevel: "Critical Liquidity" }
     ]
   },
@@ -82,15 +83,15 @@ export const liquidityRatios: Criterion[] = [
     actualUnit: "x",
     enabled: true,
     scoreMapping: [
-      { min: 2.00, max: 100, score: 10, riskLevel: "Exceptional Liquidity" },
-      { min: 1.50, max: 1.99, score: 9, riskLevel: "Very Strong Liquidity" },
-      { min: 1.25, max: 1.49, score: 8, riskLevel: "Strong Liquidity" },
-      { min: 1.00, max: 1.24, score: 7, riskLevel: "Good Liquidity" },
-      { min: 0.75, max: 0.99, score: 6, riskLevel: "Moderate Liquidity" },
-      { min: 0.50, max: 0.74, score: 5, riskLevel: "Acceptable Liquidity" },
-      { min: 0.35, max: 0.49, score: 4, riskLevel: "Weak Liquidity" },
-      { min: 0.25, max: 0.34, score: 3, riskLevel: "Very Weak Liquidity" },
-      { min: 0.10, max: 0.24, score: 2, riskLevel: "High Liquidity Risk" },
+      { min: 2.00, max: 100, score: 5, riskLevel: "Exceptional Liquidity" },
+      { min: 1.50, max: 1.99, score: 5, riskLevel: "Very Strong Liquidity" },
+      { min: 1.25, max: 1.49, score: 4, riskLevel: "Strong Liquidity" },
+      { min: 1.00, max: 1.24, score: 4, riskLevel: "Good Liquidity" },
+      { min: 0.75, max: 0.99, score: 3, riskLevel: "Moderate Liquidity" },
+      { min: 0.50, max: 0.74, score: 3, riskLevel: "Acceptable Liquidity" },
+      { min: 0.35, max: 0.49, score: 2, riskLevel: "Weak Liquidity" },
+      { min: 0.25, max: 0.34, score: 2, riskLevel: "Very Weak Liquidity" },
+      { min: 0.10, max: 0.24, score: 1, riskLevel: "High Liquidity Risk" },
       { min: 0, max: 0.09, score: 1, riskLevel: "Critical Liquidity Risk" }
     ]
   }

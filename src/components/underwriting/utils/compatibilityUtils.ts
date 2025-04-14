@@ -5,4 +5,3 @@ export const getCompatibilityScore = (score: number) => {
   if (score >= 40) return { label: "Moderate Match", color: "bg-yellow-500/20 text-yellow-500 border-yellow-500/20" };
   return { label: "Poor Match", color: "bg-red-500/20 text-red-500 border-red-500/20" };
 };
-
