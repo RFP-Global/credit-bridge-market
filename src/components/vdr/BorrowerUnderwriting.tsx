@@ -42,18 +42,7 @@ const BorrowerUnderwriting = () => {
       debtServiceCoverageRatio: data.operatingIncome / (data.annualDebtService || 1),
       currentRatio: data.currentAssets / (data.currentLiabilities || 1),
       quickRatio: (data.currentAssets - data.inventory) / (data.currentLiabilities || 1),
-      interestCoverageRatio: data.operatingIncome / (data.annualDebtService || 1),
       debtToEBITDA: data.totalDebt / (data.operatingIncome || 1),
-      returnOnEquity: data.netIncome / (data.totalEquity || 1),
-      grossMargin: data.grossProfit / (data.revenue || 1),
-      operatingMargin: data.operatingIncome / (data.revenue || 1),
-      netProfitMargin: data.netIncome / (data.revenue || 1),
-      assetTurnover: data.revenue / (data.totalAssets || 1),
-      inventoryTurnover: data.revenue / (data.inventory || 1),
-      daysReceivablesOutstanding: 0,
-      daysPayablesOutstanding: 0,
-      workingCapitalTurnover: data.revenue / ((data.currentAssets - data.currentLiabilities) || 1),
-      zScore: 0,
     };
 
     // Convert to Record<string, number> to pass to calculateOverallRiskScore

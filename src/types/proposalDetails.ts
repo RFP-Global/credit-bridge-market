@@ -1,20 +1,8 @@
-
 export interface FinancialRatios {
   debtServiceCoverageRatio: number;
   currentRatio: number;
   quickRatio: number;
-  debtToEquityRatio: number;
-  returnOnAssets: number;
-  returnOnEquity: number;
-  grossMargin: number;
-  operatingMargin: number;
-  netProfitMargin: number;
-  assetTurnover: number;
-  inventoryTurnover: number;
-  daysReceivablesOutstanding: number;
-  daysPayablesOutstanding: number;
-  workingCapitalTurnover: number;
-  zScore: number;
+  debtToEBITDA: number;
 }
 
 export interface CompanyDemographics {
