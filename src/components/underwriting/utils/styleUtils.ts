@@ -1,4 +1,3 @@
-
 import { ScoreThreshold } from "../types";
 
 export const getScoreColor = (score: number, scoreThresholds: ScoreThreshold[]) => {
@@ -32,8 +31,20 @@ export const getCompatibilityScore = (score: number) => {
   return { label: "Poor Match", color: "bg-red-500/20 text-red-500 border-red-500/20" };
 };
 
-// Financial ratio score mapping
 export const financialRatiosScoreMapping = {
+  // Current Ratio scoring
+  CurrentRatio: [
+    { min: 3.00, max: Number.MAX_VALUE, score: 10, level: "Exceptional liquidity" },
+    { min: 2.50, max: 2.99, score: 9, level: "Very strong short-term liquidity" },
+    { min: 2.00, max: 2.49, score: 8, level: "Strong liquidity" },
+    { min: 1.75, max: 1.99, score: 7, level: "Solid buffer" },
+    { min: 1.50, max: 1.74, score: 6, level: "Acceptable liquidity" },
+    { min: 1.25, max: 1.49, score: 5, level: "Manageable liquidity" },
+    { min: 1.00, max: 1.24, score: 4, level: "Tight liquidity" },
+    { min: 0.85, max: 0.99, score: 3, level: "Potential shortfall" },
+    { min: 0.60, max: 0.84, score: 2, level: "Weak liquidity" },
+    { min: -Infinity, max: 0.59, score: 1, level: "Severely constrained" }
+  ],
   // DSCR (Debt Service Coverage Ratio)
   DSCR: [
     { min: 3.00, max: Number.MAX_VALUE, score: 10, level: "Exceptional" },
@@ -60,20 +71,6 @@ export const financialRatiosScoreMapping = {
     { min: 7.01, max: 8.00, score: 3, level: "Very High Risk" },
     { min: 8.01, max: 10.00, score: 2, level: "Distressed Leverage" },
     { min: 10.01, max: Number.MAX_VALUE, score: 1, level: "Unsustainable" },
-  ],
-  
-  // Current Ratio
-  CurrentRatio: [
-    { min: 3.00, max: Number.MAX_VALUE, score: 10, level: "Highly Liquid" },
-    { min: 2.50, max: 2.99, score: 9, level: "Very Strong" },
-    { min: 2.00, max: 2.49, score: 8, level: "Strong" },
-    { min: 1.75, max: 1.99, score: 7, level: "Good" },
-    { min: 1.50, max: 1.74, score: 6, level: "Moderate" },
-    { min: 1.25, max: 1.49, score: 5, level: "Acceptable" },
-    { min: 1.10, max: 1.24, score: 4, level: "Weak" },
-    { min: 1.00, max: 1.09, score: 3, level: "Poor" },
-    { min: 0.75, max: 0.99, score: 2, level: "Very Poor" },
-    { min: 0, max: 0.75, score: 1, level: "Critical" },
   ],
   
   // Interest Coverage

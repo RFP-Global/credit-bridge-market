@@ -32,12 +32,12 @@ export const LiquidityRatios: React.FC<LiquidityRatiosProps> = ({ ratios }) => {
               <div className="flex justify-between items-center">
                 <p className="font-semibold">{ratios.currentRatio?.toFixed(2) || "N/A"}</p>
                 <CustomBadge 
-                  variant={ratios.currentRatio && ratios.currentRatio >= 1.5 ? "success" : 
-                    ratios.currentRatio && ratios.currentRatio >= 1 ? "warning" : "destructive"} 
+                  variant={ratios.currentRatio && ratios.currentRatio >= 1.75 ? "success" : 
+                    ratios.currentRatio && ratios.currentRatio >= 1.25 ? "warning" : "destructive"} 
                   className="text-xs"
                 >
-                  {ratios.currentRatio && ratios.currentRatio >= 1.5 ? "STRONG" : 
-                    ratios.currentRatio && ratios.currentRatio >= 1 ? "ADEQUATE" : "WEAK"}
+                  {ratios.currentRatio && ratios.currentRatio >= 1.75 ? "STRONG" : 
+                    ratios.currentRatio && ratios.currentRatio >= 1.25 ? "ADEQUATE" : "WEAK"}
                 </CustomBadge>
               </div>
               <Progress value={(ratios.currentRatio || 0) * 33.3} className="h-1 mt-1 bg-gray-800" />
