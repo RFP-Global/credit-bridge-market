@@ -7,7 +7,7 @@ import VDRHeader from "@/components/vdr/VDRHeader";
 import EnterpriseLayout from "@/components/layout/EnterpriseLayout";
 import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Folder, Files, FileCheck } from "lucide-react";
+import { Folder, Files, FileCheck, BarChart3 } from "lucide-react";
 import DocumentVerification from "@/components/vdr/DocumentVerification";
 
 const VDR = () => {
