@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -31,6 +30,7 @@ import FacilityMechanics from "./pages/FacilityMechanics";
 import FacilityReferenceDetail from "./pages/FacilityReferenceDetail";
 import BidComparison from "./pages/BidComparison";
 import VDR from "./pages/VDR";
+import VDRUnderwriting from "./pages/VDRUnderwriting";
 import Lenders from "./pages/Lenders";
 import LenderProfile from "./pages/LenderProfile";
 import Team from "./pages/Team";
@@ -76,6 +76,7 @@ const App = () => {
             <Route path="/facility-mechanics/:facilityId" element={<FacilityMechanics />} />
             <Route path="/facility-reference/:facilityId/:sectionType" element={<FacilityReferenceDetail />} />
             <Route path="/vdr" element={<VDR />} />
+            <Route path="/vdr/underwriting" element={<VDRUnderwriting />} />
             <Route path="/lenders" element={<Lenders />} />
             <Route path="/lender/:id" element={<LenderProfile />} />
             <Route path="/enterprise-network" element={<EnterpriseNetwork />} />

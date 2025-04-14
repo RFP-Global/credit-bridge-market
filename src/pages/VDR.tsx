@@ -33,7 +33,7 @@ const VDR = () => {
         
         <div className="container mx-auto px-6 py-8">
           <Tabs defaultValue="browser" className="w-full">
-            <TabsList className="grid grid-cols-3 mb-6 w-full max-w-[600px] mx-auto gap-4">
+            <TabsList className="grid grid-cols-4 mb-6 w-full max-w-[800px] mx-auto gap-4">
               <TabsTrigger value="browser" className="font-mono text-xs flex gap-2">
                 <Folder className="h-4 w-4" />
                 FILE BROWSER
@@ -45,6 +45,14 @@ const VDR = () => {
               <TabsTrigger value="shared" className="font-mono text-xs flex gap-2">
                 <Files className="h-4 w-4" />
                 SHARED FILES
+              </TabsTrigger>
+              <TabsTrigger 
+                value="underwriting" 
+                className="font-mono text-xs flex gap-2"
+                onClick={() => navigate('/vdr/underwriting')}
+              >
+                <BarChart3 className="h-4 w-4" />
+                UNDERWRITING
               </TabsTrigger>
             </TabsList>
             
