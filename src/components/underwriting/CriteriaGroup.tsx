@@ -1,4 +1,3 @@
-
 import React from "react";
 import { 
   Accordion,
@@ -36,11 +35,10 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
   getScoreColor,
   getScoreBackground
 }) => {
-  // Separate liquidity, leverage, and profitability ratios from other criteria
   const liquidityRatios = group.name === "Financial Strength" 
     ? group.criteria.filter(c => ["Current Ratio", "Quick Ratio", "Cash Ratio"].includes(c.name))
     : [];
-  
+
   const leverageRatios = group.name === "Financial Strength"
     ? group.criteria.filter(c => [
         "Debt-to-Equity", 
