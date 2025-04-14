@@ -15,21 +15,44 @@ const DealFinancialsTab: React.FC<DealFinancialsTabProps> = ({ dealData }) => {
     debtToEquityRatio: number;
     grossMargin: number;
   } = {
-    debtServiceCoverageRatio: 1.35,
+    // Liquidity Ratios
     currentRatio: 1.8,
     quickRatio: 1.2,
-    debtToEBITDA: 0.65,
-    operatingCashFlowRatio: 1.25,
+    cashRatio: 0.7,
+    
+    // Leverage Ratios
+    debtToEquity: 0.65,
     leverageRatio: 0.42,
+    equityRatio: 0.58,
+    interestCoverageRatio: 3.2,
+    fixedChargeCoverageRatio: 2.8,
+    
+    // Profitability Ratios
     netProfitMargin: 0.08,
     grossProfitMargin: 0.38,
     operatingMargin: 0.12,
     returnOnAssets: 0.09,
     returnOnEquity: 0.14,
-    assetTurnover: 1.4,
+    
+    // Cash Flow Ratios
+    operatingCashFlowRatio: 1.25,
+    debtServiceCoverageRatio: 1.35,
+    freeCashFlowToFirm: 250000,
+    
+    // Coverage & Repayment Ratios
+    loanToValueRatio: 0.65,
+    collateralCoverageRatio: 1.75,
+    leverageCoverageRatio: 2.1,
+    paybackPeriod: 4.2,
+    
+    // Efficiency & Operational Ratios
+    accountsReceivableTurnover: 8.5,
     inventoryTurnover: 6.8,
-    debtToEquity: 0.65,
-    equityRatio: 0.58,
+    assetTurnover: 1.4,
+    
+    // Legacy
+    debtToEBITDA: 0.65,
+    
     // Additional ratios for display purposes
     debtToEquityRatio: 0.65,
     grossMargin: 0.38

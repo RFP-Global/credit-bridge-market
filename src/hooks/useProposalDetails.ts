@@ -33,21 +33,36 @@ export const useProposalDetails = (id: string | undefined) => {
         setProposal(foundProposal);
         
         setFinancialRatios({
-          debtServiceCoverageRatio: 1.35,
           currentRatio: 1.8,
           quickRatio: 1.2,
-          debtToEBITDA: 0.65,
-          operatingCashFlowRatio: 1.25,
+          cashRatio: 0.7,
+          
+          debtToEquity: 0.7,
           leverageRatio: 0.42,
+          equityRatio: 0.58,
+          interestCoverageRatio: 3.5,
+          fixedChargeCoverageRatio: 2.8,
+          
           netProfitMargin: 0.15,
           grossProfitMargin: 0.42,
           operatingMargin: 0.23,
           returnOnAssets: 0.12,
           returnOnEquity: 0.18,
-          assetTurnover: 1.4,
+          
+          operatingCashFlowRatio: 1.25,
+          debtServiceCoverageRatio: 1.35,
+          freeCashFlowToFirm: 450000,
+          
+          loanToValueRatio: 0.62,
+          collateralCoverageRatio: 1.8,
+          leverageCoverageRatio: 2.4,
+          paybackPeriod: 3.2,
+          
+          accountsReceivableTurnover: 8.4,
           inventoryTurnover: 6.8,
-          debtToEquity: 0.7,
-          equityRatio: 0.58
+          assetTurnover: 1.4,
+          
+          debtToEBITDA: 0.65
         });
         
         setDemographics({
