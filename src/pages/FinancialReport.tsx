@@ -1,12 +1,11 @@
 
 import { useLocation, Navigate } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card";
 import { FinancialRatios } from "@/types/proposalDetails";
 import { FinancialSynopsis } from "@/components/reports/FinancialSynopsis";
 import { RatioCharts } from "@/components/reports/RatioCharts";
 import { RatioBreakdown } from "@/components/reports/RatioBreakdown";
 import { Button } from "@/components/ui/button";
-import { Printer } from "lucide-react";
+import { Printer, FileText } from "lucide-react";
 
 const FinancialReport = () => {
   const location = useLocation();
@@ -24,8 +23,11 @@ const FinancialReport = () => {
     <div className="min-h-screen bg-background p-6 print:p-4 print:bg-white">
       <div className="container mx-auto max-w-7xl space-y-6">
         <div className="flex items-center justify-between print:hidden mb-4">
-          <h1 className="text-2xl font-mono">Financial Analysis Report</h1>
-          <Button onClick={handlePrint} size="sm">
+          <div className="flex items-center gap-2">
+            <FileText className="h-6 w-6 text-primary" />
+            <h1 className="text-2xl font-semibold">Financial Analysis Report</h1>
+          </div>
+          <Button onClick={handlePrint} variant="outline" size="sm">
             <Printer className="h-4 w-4 mr-2" />
             Print Report
           </Button>
@@ -33,11 +35,7 @@ const FinancialReport = () => {
         
         <div className="grid gap-6 print:gap-4">
           <FinancialSynopsis ratios={state.ratios} riskScore={state.riskScore} />
-          
-          <div className="grid md:grid-cols-2 gap-6 print:gap-4">
-            <RatioCharts ratios={state.ratios} />
-          </div>
-          
+          <RatioCharts ratios={state.ratios} />
           <RatioBreakdown ratios={state.ratios} />
         </div>
       </div>
