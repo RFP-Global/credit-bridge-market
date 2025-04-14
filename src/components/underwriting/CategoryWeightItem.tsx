@@ -30,20 +30,21 @@ export const CategoryWeightItem = ({
   getScoreColor,
   toggleLock
 }: CategoryWeightItemProps) => {
-  const [minValue, setMinValue] = useState(group.preferredMin?.toString() || "0");
-  const [maxValue, setMaxValue] = useState(group.preferredMax?.toString() || "100");
+  const [minValue, setMinValue] = useState(group.minScore.toString());
+  const [maxValue, setMaxValue] = useState(group.maxScore.toString());
   const [rangeValues, setRangeValues] = useState<number[]>([
-    group.preferredMin || 0,
-    group.preferredMax || 100
+    group.minScore,
+    group.maxScore
   ]);
 
   const handleRangeUpdate = () => {
     const min = parseFloat(minValue);
     const max = parseFloat(maxValue);
-    if (!isNaN(min) && !isNaN(max) && min <= max) {
-      group.preferredMin = parseFloat(min.toFixed(1));
-      group.preferredMax = parseFloat(max.toFixed(1));
+    if (!isNaN(min) && !isNaN(max) && min <= max && min >= 1 && max <= 10) {
+      group.minScore = parseFloat(min.toFixed(1));
+      group.maxScore = parseFloat(max.toFixed(1));
       setRangeValues([min, max]);
+      updateGroupWeight(groupIndex, group.weight);
     }
   };
 
@@ -118,8 +119,8 @@ export const CategoryWeightItem = ({
           }}
           onUpdateRange={handleRangeUpdate}
           sliderValue={rangeValues}
-          min={0}
-          max={100}
+          min={1}
+          max={10}
         />
       </div>
       
@@ -127,3 +128,4 @@ export const CategoryWeightItem = ({
     </div>
   );
 };
+

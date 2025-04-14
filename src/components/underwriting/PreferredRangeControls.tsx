@@ -30,7 +30,7 @@ const PreferredRangeControls: React.FC<PreferredRangeControlsProps> = ({
   return (
     <div className="space-y-2">
       <div className="flex justify-between text-xs text-muted-foreground">
-        <span>Preferred Range</span>
+        <span>Score Range</span>
         <span>{minValue}-{maxValue}</span>
       </div>
       <Slider
