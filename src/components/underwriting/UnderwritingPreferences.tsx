@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +8,7 @@ import { UnderwritingCategoryCard } from "./UnderwritingCategoryCard";
 import { UnderwritingCategory, UnderwritingMetric } from "./types";
 import { getScoreColor } from "./utils/styleUtils";
 import CategoryDetailsModal from "../proposals/details/CategoryDetailsModal";
+import { roundToTenth } from "./utils/roundingUtils";
 
 export const UnderwritingPreferences = () => {
   const [selectedCategory, setSelectedCategory] = useState<UnderwritingCategory | null>(null);
@@ -95,12 +95,11 @@ export const UnderwritingPreferences = () => {
 
   const updateCategoryScore = (categoryIndex: number, newScore: number) => {
     const updatedCategories = [...categories];
-    // Since we now have min and max scores, let's adjust both with the same difference
-    const currentAvg = (updatedCategories[categoryIndex].minTotalScore + updatedCategories[categoryIndex].maxTotalScore) / 2;
-    const diff = newScore - currentAvg;
+    const currentAvg = roundToTenth((updatedCategories[categoryIndex].minTotalScore + updatedCategories[categoryIndex].maxTotalScore) / 2);
+    const diff = roundToTenth(newScore - currentAvg);
     
-    updatedCategories[categoryIndex].minTotalScore = parseFloat((updatedCategories[categoryIndex].minTotalScore + diff).toFixed(2));
-    updatedCategories[categoryIndex].maxTotalScore = parseFloat((updatedCategories[categoryIndex].maxTotalScore + diff).toFixed(2));
+    updatedCategories[categoryIndex].minTotalScore = roundToTenth(updatedCategories[categoryIndex].minTotalScore + diff);
+    updatedCategories[categoryIndex].maxTotalScore = roundToTenth(updatedCategories[categoryIndex].maxTotalScore + diff);
     
     setCategories(updatedCategories);
   };
@@ -109,29 +108,27 @@ export const UnderwritingPreferences = () => {
     const updatedCategories = [...categories];
     const category = updatedCategories[categoryIndex];
     
-    // Since we now have min and max scores, let's set them around the new score
     const metric = category.metrics[metricIndex];
-    const oldAvg = (metric.minScore + metric.maxScore) / 2;
-    const diff = newScore - oldAvg;
+    const oldAvg = roundToTenth((metric.minScore + metric.maxScore) / 2);
+    const diff = roundToTenth(newScore - oldAvg);
     
-    metric.minScore = Math.max(1, metric.minScore + diff);
-    metric.maxScore = Math.min(10, metric.maxScore + diff);
+    metric.minScore = roundToTenth(Math.max(1, metric.minScore + diff));
+    metric.maxScore = roundToTenth(Math.min(10, metric.maxScore + diff));
     
-    // Recalculate the category total score
-    const totalWeightedMinScore = category.metrics.reduce(
-      (sum, metric) => sum + (metric.minScore * metric.weighting), 0
-    );
+    const totalWeightedMinScore = roundToTenth(category.metrics.reduce(
+      (sum, metric) => sum + roundToTenth(metric.minScore * metric.weighting), 0
+    ));
     
-    const totalWeightedMaxScore = category.metrics.reduce(
-      (sum, metric) => sum + (metric.maxScore * metric.weighting), 0
-    );
+    const totalWeightedMaxScore = roundToTenth(category.metrics.reduce(
+      (sum, metric) => sum + roundToTenth(metric.maxScore * metric.weighting), 0
+    ));
     
     const totalWeighting = category.metrics.reduce(
       (sum, metric) => sum + metric.weighting, 0
     );
     
-    category.minTotalScore = parseFloat((totalWeightedMinScore / totalWeighting).toFixed(2));
-    category.maxTotalScore = parseFloat((totalWeightedMaxScore / totalWeighting).toFixed(2));
+    category.minTotalScore = roundToTenth(totalWeightedMinScore / totalWeighting);
+    category.maxTotalScore = roundToTenth(totalWeightedMaxScore / totalWeighting);
     
     setCategories(updatedCategories);
   };

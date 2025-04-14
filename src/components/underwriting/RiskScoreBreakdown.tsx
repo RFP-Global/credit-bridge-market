@@ -25,7 +25,7 @@ export const RiskScoreBreakdown = ({
         <div className="space-y-4">
           {criteriaGroups.map((group) => {
             const avgScore = group.minScore !== undefined && group.maxScore !== undefined 
-              ? (group.minScore + group.maxScore) / 2 
+              ? roundToTenth((group.minScore + group.maxScore) / 2)
               : 0;
               
             return (
@@ -38,14 +38,14 @@ export const RiskScoreBreakdown = ({
                     <div className="text-sm font-medium">{group.name}</div>
                     <div className={`text-sm font-bold ${getScoreColor(avgScore)}`}>
                       {group.minScore !== undefined && group.maxScore !== undefined
-                        ? `${group.minScore.toFixed(1)}-${group.maxScore.toFixed(1)}`
+                        ? `${roundToTenth(group.minScore).toFixed(1)}-${roundToTenth(group.maxScore).toFixed(1)}`
                         : "N/A"}
                     </div>
                   </div>
                   <div className="w-full h-2 bg-gray-800/50 rounded-full overflow-hidden">
                     <div 
                       className={`h-full ${getScoreBackground(avgScore)}`}
-                      style={{ width: `${(avgScore / 10) * 100}%` }}
+                      style={{ width: `${roundToTenth((avgScore / 10) * 100)}%` }}
                     />
                   </div>
                 </div>

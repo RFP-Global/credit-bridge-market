@@ -16,6 +16,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Criterion, ScoreRange } from "./types";
+import { roundToTenth } from './utils/roundingUtils';
 
 interface CriterionItemProps {
   criterion: Criterion;
@@ -99,15 +100,14 @@ export const CriterionItem = ({
 
   const calculateAndUpdateScores = (min: number, max: number) => {
     const totalRange = criterion.max - criterion.min;
-    const minNormalized = (min - criterion.min) / totalRange;
-    const maxNormalized = (max - criterion.min) / totalRange;
+    const minNormalized = roundToTenth((min - criterion.min) / totalRange);
+    const maxNormalized = roundToTenth((max - criterion.min) / totalRange);
     
-    // Ensure scores are between 1 and 10
-    const newMinScore = Math.max(1, Math.min(10, Number((1 + minNormalized * 9).toFixed(2))));
-    const newMaxScore = Math.max(1, Math.min(10, Number((1 + maxNormalized * 9).toFixed(2))));
+    const newMinScore = roundToTenth(Math.max(1, Math.min(10, roundToTenth(1 + minNormalized * 9))));
+    const newMaxScore = roundToTenth(Math.max(1, Math.min(10, roundToTenth(1 + maxNormalized * 9))));
     
-    setMinScoreValue(newMinScore.toFixed(2));
-    setMaxScoreValue(newMaxScore.toFixed(2));
+    setMinScoreValue(newMinScore.toFixed(1));
+    setMaxScoreValue(newMaxScore.toFixed(1));
     
     updateCriterionScore(groupIndex, criterionIndex, newMinScore, newMaxScore);
   };
@@ -116,7 +116,6 @@ export const CriterionItem = ({
     const minScore = parseFloat(minScoreValue);
     const maxScore = parseFloat(maxScoreValue);
     if (!isNaN(minScore) && !isNaN(maxScore) && minScore <= maxScore) {
-      // Ensure scores are between 1 and 10
       const cappedMinScore = Math.max(1, Math.min(10, minScore));
       const cappedMaxScore = Math.max(1, Math.min(10, maxScore));
       

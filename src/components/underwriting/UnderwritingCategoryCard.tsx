@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UnderwritingCategory } from "./types";
 
@@ -43,8 +42,8 @@ export const UnderwritingCategoryCard = ({ category }: UnderwritingCategoryCardP
                   )}
                   <td className="text-center px-4 py-2">
                     {metric.minScore !== undefined && metric.maxScore !== undefined ? (
-                      <span className={`font-medium ${getScoreColorClass((metric.minScore + metric.maxScore) / 2)}`}>
-                        {metric.minScore.toFixed(1)}-{metric.maxScore.toFixed(1)}
+                      <span className={`font-medium ${getScoreColorClass(roundToTenth((metric.minScore + metric.maxScore) / 2))}`}>
+                        {roundToTenth(metric.minScore).toFixed(1)}-{roundToTenth(metric.maxScore).toFixed(1)}
                       </span>
                     ) : (
                       <span className="text-gray-500">N/A</span>
@@ -61,8 +60,8 @@ export const UnderwritingCategoryCard = ({ category }: UnderwritingCategoryCardP
                 {hasFormulaColumn && <td></td>}
                 <td className="text-center font-semibold px-4 py-2">
                   {category.minTotalScore !== undefined && category.maxTotalScore !== undefined ? (
-                    <span className={`${getScoreColorClass((category.minTotalScore + category.maxTotalScore) / 2)}`}>
-                      {category.minTotalScore.toFixed(2)}-{category.maxTotalScore.toFixed(2)}
+                    <span className={`${getScoreColorClass(roundToTenth((category.minTotalScore + category.maxTotalScore) / 2))}`}>
+                      {roundToTenth(category.minTotalScore).toFixed(1)}-{roundToTenth(category.maxTotalScore).toFixed(1)}
                     </span>
                   ) : (
                     <span className="text-gray-500">N/A</span>
@@ -83,4 +82,8 @@ const getScoreColorClass = (score: number) => {
   if (score >= 6) return 'text-blue-500';
   if (score >= 4) return 'text-yellow-500';
   return 'text-red-500';
+};
+
+const roundToTenth = (num: number) => {
+  return Math.round(num * 10) / 10;
 };
