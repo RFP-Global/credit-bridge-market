@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { CriteriaGroup } from "./types";
@@ -38,11 +37,9 @@ export const CategoryWeights = ({
   );
 
   useEffect(() => {
-    // Update total weight when criteriaGroups change
     const total = criteriaGroups.reduce((sum, group) => sum + group.weight, 0);
     setTotalWeight(total);
     
-    // Update input values when criteriaGroups change
     setInputValues(
       criteriaGroups.reduce((acc, group, index) => {
         acc[index] = group.weight.toString();
@@ -50,7 +47,6 @@ export const CategoryWeights = ({
       }, {} as { [key: number]: string })
     );
     
-    // Update edit all values when criteriaGroups change
     setEditAllValues(
       criteriaGroups.reduce((acc, group, index) => {
         acc[index] = group.weight.toString();
@@ -60,7 +56,6 @@ export const CategoryWeights = ({
   }, [criteriaGroups]);
 
   const handleInputChange = (groupIndex: number, value: string) => {
-    // Update the input field value
     setInputValues((prev) => ({
       ...prev,
       [groupIndex]: value
@@ -70,10 +65,8 @@ export const CategoryWeights = ({
   const handleInputBlur = (groupIndex: number) => {
     const numValue = parseInt(inputValues[groupIndex], 10);
     if (!isNaN(numValue) && numValue >= 1 && numValue <= 99) {
-      // Only update if value is valid
       updateGroupWeight(groupIndex, numValue);
     } else {
-      // Reset to current weight if invalid
       setInputValues((prev) => ({
         ...prev,
         [groupIndex]: criteriaGroups[groupIndex].weight.toString()
@@ -105,7 +98,6 @@ export const CategoryWeights = ({
       return;
     }
     
-    // Apply all changes one by one
     Object.entries(editAllValues).forEach(([indexStr, valueStr]) => {
       const groupIndex = parseInt(indexStr, 10);
       const newWeight = parseInt(valueStr, 10);
@@ -124,6 +116,27 @@ export const CategoryWeights = ({
       }, {} as { [key: number]: string })
     );
     setIsEditing(false);
+  };
+
+  const toggleLock = (groupIndex: number) => {
+    const group = criteriaGroups[groupIndex];
+    if (!group.locked && totalWeight !== 100) {
+      toast.error("Total weight must be 100% before locking a category");
+      return;
+    }
+    
+    const newGroups = [...criteriaGroups];
+    newGroups[groupIndex] = {
+      ...newGroups[groupIndex],
+      locked: !newGroups[groupIndex].locked
+    };
+    
+    setInputValues((prev) => ({
+      ...prev,
+      [groupIndex]: newGroups[groupIndex].weight.toString()
+    }));
+    
+    toast.success(`${group.name} weight ${group.locked ? 'unlocked' : 'locked'}`);
   };
 
   const editAllTotal = calculateEditAllTotal(editAllValues);
@@ -159,8 +172,13 @@ export const CategoryWeights = ({
             handleInputChange={handleInputChange}
             handleInputBlur={handleInputBlur}
             handleKeyDown={handleKeyDown}
-            updateGroupWeight={updateGroupWeight}
+            updateGroupWeight={(groupIndex, newWeight) => {
+              if (!group.locked) {
+                updateGroupWeight(groupIndex, newWeight);
+              }
+            }}
             getScoreColor={getScoreColor}
+            toggleLock={toggleLock}
           />
         ))}
       </div>

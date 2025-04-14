@@ -13,6 +13,7 @@ export const financialStrengthGroup: CriteriaGroup = {
   weight: 25,
   minScore: 4.0,
   maxScore: 4.2,
+  locked: false,
   criteria: [
     ...liquidityRatios,
     ...leverageRatios,

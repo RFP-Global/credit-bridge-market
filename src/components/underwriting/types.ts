@@ -1,4 +1,3 @@
-
 export interface UnderwritingMetric {
   name: string;
   value?: string | number;
@@ -51,6 +50,7 @@ export interface CriteriaGroup {
   minScore: number;
   maxScore: number;
   criteria: Criterion[];
+  locked?: boolean;
 }
 
 export interface ScoreThreshold {

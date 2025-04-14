@@ -1,4 +1,5 @@
 
+import { Lock, Unlock } from "lucide-react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -15,6 +16,7 @@ interface CategoryWeightItemProps {
   handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>, groupIndex: number) => void;
   updateGroupWeight: (groupIndex: number, newWeight: number) => void;
   getScoreColor: (score: number) => string;
+  toggleLock?: (groupIndex: number) => void;
 }
 
 export const CategoryWeightItem = ({
@@ -26,6 +28,7 @@ export const CategoryWeightItem = ({
   handleKeyDown,
   updateGroupWeight,
   getScoreColor,
+  toggleLock
 }: CategoryWeightItemProps) => {
   return (
     <div className="space-y-1">
@@ -38,6 +41,20 @@ export const CategoryWeightItem = ({
               "N/A"}
           </div>
           <div className="text-xs text-muted-foreground">{group.weight}%</div>
+          {toggleLock && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6"
+              onClick={() => toggleLock(groupIndex)}
+            >
+              {group.locked ? (
+                <Lock className="h-3 w-3" />
+              ) : (
+                <Unlock className="h-3 w-3" />
+              )}
+            </Button>
+          )}
         </div>
       </div>
       <div className="flex items-center gap-2">
@@ -46,7 +63,7 @@ export const CategoryWeightItem = ({
           size="icon" 
           className="h-6 w-6"
           onClick={() => updateGroupWeight(groupIndex, Math.max(1, group.weight - 1))}
-          disabled={group.weight <= 1}
+          disabled={group.weight <= 1 || group.locked}
         >
           <ChevronDown className="h-3 w-3" />
         </Button>
@@ -57,6 +74,7 @@ export const CategoryWeightItem = ({
           step={1}
           className="flex-1"
           onValueChange={(value) => updateGroupWeight(groupIndex, value[0])}
+          disabled={group.locked}
         />
         <Input
           type="text"
@@ -67,13 +85,14 @@ export const CategoryWeightItem = ({
           className="w-14 h-6 px-2 py-1 text-xs text-center"
           min={1}
           max={99}
+          disabled={group.locked}
         />
         <Button 
           variant="outline" 
           size="icon"
           className="h-6 w-6"
           onClick={() => updateGroupWeight(groupIndex, Math.min(99, group.weight + 1))}
-          disabled={group.weight >= 99}
+          disabled={group.weight >= 99 || group.locked}
         >
           <ChevronUp className="h-3 w-3" />
         </Button>
