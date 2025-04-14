@@ -23,7 +23,7 @@ export const financialRatiosScoreMapping = {
     { min: 1.10, max: 1.24, score: 2, level: "Weak" },
     { min: 1.00, max: 1.09, score: 2, level: "Very Weak" },
     { min: 0.75, max: 0.99, score: 1, level: "High Risk" },
-    { min: 0, max: 0.75, score: 1, level: "Severe Risk" },
+    { min: 0, max: 0.75, score: 1, level: "Severe Risk" }
   ],
   
   DebtToEBITDA: [
@@ -36,7 +36,7 @@ export const financialRatiosScoreMapping = {
     { min: 6.01, max: 7.00, score: 2, level: "High Risk" },
     { min: 7.01, max: 8.00, score: 2, level: "Very High Risk" },
     { min: 8.01, max: 10.00, score: 1, level: "Distressed Leverage" },
-    { min: 10.01, max: Number.MAX_VALUE, score: 1, level: "Unsustainable" },
+    { min: 10.01, max: Number.MAX_VALUE, score: 1, level: "Unsustainable" }
   ],
   
   InterestCoverage: [
@@ -49,7 +49,7 @@ export const financialRatiosScoreMapping = {
     { min: 1.50, max: 1.99, score: 2, level: "Weak" },
     { min: 1.00, max: 1.49, score: 2, level: "Very Weak" },
     { min: 0.75, max: 0.99, score: 1, level: "High Risk" },
-    { min: 0, max: 0.75, score: 1, level: "Severe Risk" },
+    { min: 0, max: 0.75, score: 1, level: "Severe Risk" }
   ],
   
   QuickRatio: [
@@ -62,6 +62,6 @@ export const financialRatiosScoreMapping = {
     { min: 6.00, max: 7.99, score: 2, level: "Fair Liquidity" },
     { min: 4.00, max: 5.99, score: 2, level: "Low Liquidity" },
     { min: 2.00, max: 3.99, score: 1, level: "Very Low Liquidity" },
-    { min: 0, max: 1.99, score: 1, level: "Critical Liquidity" },
-  },
+    { min: 0, max: 1.99, score: 1, level: "Critical Liquidity" }
+  ]
 };
