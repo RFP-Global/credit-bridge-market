@@ -1,4 +1,3 @@
-
 import { useLocation, Navigate, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,10 +7,12 @@ import { getRiskLevelInfo } from "@/components/vdr/utils/borrowerRiskUtils";
 import { RatioGroup } from "@/components/borrower/ratio-groups/RatioGroup";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard } from "lucide-react";
+import RatioDetailsHeader from "@/components/borrower/ratio-details/RatioDetailsHeader";
+import RiskScoreCard from "@/components/borrower/ratio-details/RiskScoreCard";
+import RatioDetailsGrid from "@/components/borrower/ratio-details/RatioDetailsGrid";
 
 const BorrowerRatioDetails = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const state = location.state as { ratios: FinancialRatios; riskScore: number } | null;
 
   if (!state?.ratios || state.riskScore === undefined) {
@@ -229,45 +230,9 @@ const BorrowerRatioDetails = () => {
   return (
     <div className="min-h-screen bg-black text-gray-200">
       <div className="container mx-auto px-6 py-8">
-        <div className="flex items-center justify-between border-b border-primary/10 pb-4 mb-6">
-          <div>
-            <h1 className="text-2xl font-mono">Financial Ratio Analysis</h1>
-            <p className="text-sm text-muted-foreground">
-              Detailed breakdown of financial ratios and risk assessment
-            </p>
-          </div>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => navigate('/enterprise-dashboard')}
-            className="font-mono text-xs"
-          >
-            <LayoutDashboard className="mr-2 h-4 w-4" />
-            Dashboard
-          </Button>
-        </div>
-
-        <Card className="bg-black/40 border-gray-800 mb-6">
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span>Overall Risk Score</span>
-              <Badge className={riskLevel.color}>
-                {riskScore.toFixed(1)} - {riskLevel.label}
-              </Badge>
-            </CardTitle>
-          </CardHeader>
-        </Card>
-
-        <div className="grid gap-6">
-          {ratioGroups.map((group, index) => (
-            <RatioGroup
-              key={index}
-              title={group.title}
-              description={group.description}
-              ratios={group.ratios}
-            />
-          ))}
-        </div>
+        <RatioDetailsHeader />
+        <RiskScoreCard riskScore={riskScore} riskLevel={riskLevel} />
+        <RatioDetailsGrid ratioGroups={ratioGroups} />
       </div>
     </div>
   );
