@@ -1,3 +1,4 @@
+
 export interface UnderwritingMetric {
   name: string;
   value?: string | number;
@@ -29,6 +30,13 @@ export interface Criterion {
   unit?: string;
   enabled: boolean;
   scoreMapping: ScoreRange[];
+  // Added properties to fix TypeScript errors
+  preferredMin?: number;
+  preferredMax?: number;
+  actualMin?: number;
+  actualMax?: number;
+  actualValue?: number;
+  actualUnit?: string;
   subcriteria?: {
     name: string;
     description: string;
