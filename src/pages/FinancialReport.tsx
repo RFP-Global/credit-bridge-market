@@ -1,8 +1,6 @@
-
 import { useLocation, Navigate } from "react-router-dom";
 import { FinancialRatios } from "@/types/proposalDetails";
 import { FinancialSynopsis } from "@/components/reports/FinancialSynopsis";
-import { RatioCharts } from "@/components/reports/RatioCharts";
 import { RatioBreakdown } from "@/components/reports/RatioBreakdown";
 import { Button } from "@/components/ui/button";
 import { Printer, FileText } from "lucide-react";
@@ -35,7 +33,6 @@ const FinancialReport = () => {
         
         <div className="grid gap-6 print:gap-4">
           <FinancialSynopsis ratios={state.ratios} riskScore={state.riskScore} />
-          <RatioCharts ratios={state.ratios} />
           <RatioBreakdown ratios={state.ratios} />
         </div>
       </div>
