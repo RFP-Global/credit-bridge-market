@@ -24,11 +24,6 @@ interface RatioGroupProps {
 
 export const RatioGroup = ({ title, description, ratios }: RatioGroupProps) => {
   const formatRatioValue = (value: number) => {
-    // Handle percentage ratios
-    if (["margin", "return", "ratio"].some(term => value < 1)) {
-      return `${(value * 100).toFixed(1)}%`;
-    }
-    // For ratios that are typically expressed as "X:1" or plain numbers
     return value.toFixed(2);
   };
 
