@@ -13,23 +13,26 @@ const DealFinancialsTab: React.FC<DealFinancialsTabProps> = ({ dealData }) => {
   // Mock financial ratios for the deal
   const financialRatios: FinancialRatios & {
     debtToEquityRatio: number;
-    returnOnAssets: number;
-    returnOnEquity: number;
     grossMargin: number;
-    operatingMargin: number;
-    netProfitMargin: number;
   } = {
     debtServiceCoverageRatio: 1.35,
     currentRatio: 1.8,
     quickRatio: 1.2,
     debtToEBITDA: 0.65,
-    // Additional ratios for display purposes
-    debtToEquityRatio: 0.65,
+    operatingCashFlowRatio: 1.25,
+    leverageRatio: 0.42,
+    netProfitMargin: 0.08,
+    grossProfitMargin: 0.38,
+    operatingMargin: 0.12,
     returnOnAssets: 0.09,
     returnOnEquity: 0.14,
-    grossMargin: 0.38,
-    operatingMargin: 0.12,
-    netProfitMargin: 0.08
+    assetTurnover: 1.4,
+    inventoryTurnover: 6.8,
+    debtToEquity: 0.65,
+    equityRatio: 0.58,
+    // Additional ratios for display purposes
+    debtToEquityRatio: 0.65,
+    grossMargin: 0.38
   };
 
   return (
