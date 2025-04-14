@@ -1,6 +1,6 @@
 
 import { useLocation, Navigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { FinancialRatios } from "@/types/proposalDetails";
 import { FinancialSynopsis } from "@/components/reports/FinancialSynopsis";
 import { RatioCharts } from "@/components/reports/RatioCharts";
@@ -22,7 +22,7 @@ const FinancialReport = () => {
 
   return (
     <div className="min-h-screen bg-background p-6 print:p-4 print:bg-white">
-      <div className="container mx-auto space-y-6">
+      <div className="container mx-auto max-w-7xl space-y-6">
         <div className="flex items-center justify-between print:hidden mb-4">
           <h1 className="text-2xl font-mono">Financial Analysis Report</h1>
           <Button onClick={handlePrint} size="sm">
@@ -31,11 +31,13 @@ const FinancialReport = () => {
           </Button>
         </div>
         
-        <div className="space-y-6 print:space-y-4">
+        <div className="grid gap-6 print:gap-4">
           <FinancialSynopsis ratios={state.ratios} riskScore={state.riskScore} />
+          
           <div className="grid md:grid-cols-2 gap-6 print:gap-4">
             <RatioCharts ratios={state.ratios} />
           </div>
+          
           <RatioBreakdown ratios={state.ratios} />
         </div>
       </div>
