@@ -1,4 +1,3 @@
-
 import React from "react";
 import { 
   Accordion,
@@ -13,6 +12,7 @@ import { LeverageRatiosSection } from "./LeverageRatiosSection";
 import { ProfitabilityRatiosSection } from "./ProfitabilityRatiosSection";
 import { CashFlowRatiosSection } from "./CashFlowRatiosSection";
 import { CoverageRatiosSection } from "./CoverageRatiosSection";
+import { TurnoverRatiosSection } from "./TurnoverRatiosSection";
 import { CriteriaGroup as CriteriaGroupType } from "./types";
 
 interface CriteriaGroupProps {
@@ -78,12 +78,21 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
       ].includes(c.name))
     : [];
   
+  const turnoverRatios = group.name === "Financial Strength"
+    ? group.criteria.filter(c => [
+        "Accounts Receivable Turnover Ratio",
+        "Inventory Turnover Ratio",
+        "Asset Turnover Ratio"
+      ].includes(c.name))
+    : [];
+
   const otherCriteria = group.name === "Financial Strength"
     ? group.criteria.filter(c => 
         !["Current Ratio", "Quick Ratio", "Cash Ratio"].includes(c.name) &&
         !["Debt-to-Equity", "Debt Ratio", "Equity Ratio", "Fixed Charge Coverage Ratio", "Interest Coverage Ratio"].includes(c.name) &&
         !["Operating Cash Flow Ratio", "Debt Service Coverage Ratio"].includes(c.name) &&
         !["Loan-to-Value Ratio", "Collateral Coverage Ratio", "Leverage Coverage Ratio", "Payback Ratio"].includes(c.name) &&
+        !["Accounts Receivable Turnover Ratio", "Inventory Turnover Ratio", "Asset Turnover Ratio"].includes(c.name) &&
         !["Net Profit Margin", "Gross Profit Margin", "Operating Margin", "Return on Assets", "Return on Equity"].includes(c.name)
       )
     : group.criteria;
@@ -160,6 +169,20 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
                 />
               )}
 
+              {group.name === "Financial Strength" && turnoverRatios.length > 0 && (
+                <TurnoverRatiosSection
+                  criteria={turnoverRatios}
+                  groupIndex={groupIndex}
+                  updateCriterionWeight={updateCriterionWeight}
+                  updateCriterionScore={updateCriterionScore}
+                  updateCriterionRange={updateCriterionRange}
+                  updateActualMetricValue={updateActualMetricValue}
+                  toggleCriterionEnabled={toggleCriterionEnabled}
+                  getScoreColor={getScoreColor}
+                  getScoreBackground={getScoreBackground}
+                />
+              )}
+
               {group.name === "Financial Strength" && profitabilityRatios.length > 0 && (
                 <ProfitabilityRatiosSection
                   criteria={profitabilityRatios}
@@ -180,7 +203,8 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
                   criterion={criterion}
                   criterionIndex={criterionIndex + 
                     (group.name === "Financial Strength" ? 
-                      liquidityRatios.length + leverageRatios.length + cashFlowRatios.length + coverageRatios.length + profitabilityRatios.length : 
+                      liquidityRatios.length + leverageRatios.length + cashFlowRatios.length + 
+                      coverageRatios.length + turnoverRatios.length + profitabilityRatios.length : 
                       0
                     )}
                   groupIndex={groupIndex}
