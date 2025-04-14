@@ -171,6 +171,37 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         ]
       },
       {
+        name: "Debt-to-Equity",
+        description: "Total liabilities divided by total shareholders' equity - measures financial leverage",
+        value: "1.2x",
+        weight: 15,
+        minScore: 4,
+        maxScore: 4,
+        min: 0.1,
+        max: 3.0,
+        step: 0.1,
+        unit: "x",
+        preferredMin: 0.5,
+        preferredMax: 2.0,
+        actualMin: 0,
+        actualMax: 5,
+        actualValue: 1.2,
+        actualUnit: "x",
+        enabled: true,
+        scoreMapping: [
+          { min: 0, max: 0.25, score: 10, riskLevel: "Minimal Leverage" },
+          { min: 0.25, max: 0.50, score: 9, riskLevel: "Very Low Leverage" },
+          { min: 0.50, max: 0.75, score: 8, riskLevel: "Low Leverage" },
+          { min: 0.75, max: 1.00, score: 7, riskLevel: "Moderate Leverage" },
+          { min: 1.00, max: 1.50, score: 6, riskLevel: "Balanced Leverage" },
+          { min: 1.50, max: 2.00, score: 5, riskLevel: "High Leverage" },
+          { min: 2.00, max: 2.50, score: 4, riskLevel: "Very High Leverage" },
+          { min: 2.50, max: 3.00, score: 3, riskLevel: "Excessive Leverage" },
+          { min: 3.00, max: 4.00, score: 2, riskLevel: "Critical Leverage" },
+          { min: 4.00, max: 100, score: 1, riskLevel: "Unsustainable Leverage" }
+        ]
+      },
+      {
         name: "Interest Coverage Ratio",
         description: "Measures how easily a company can pay interest on its outstanding debt",
         value: "4.2x",
