@@ -1,4 +1,3 @@
-
 export const financialRatiosScoreMapping = {
   CurrentRatio: [
     { min: 3.00, max: Number.MAX_VALUE, score: 10, level: "Exceptional liquidity; strong cash cushion" },

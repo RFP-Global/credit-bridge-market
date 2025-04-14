@@ -1,4 +1,3 @@
-
 import { getScoreBackground, getRiskLevel } from "@/components/underwriting/utils/styleUtils";
 
 interface RatioScoreMapping {

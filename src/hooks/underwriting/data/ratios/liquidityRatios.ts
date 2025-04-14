@@ -1,4 +1,3 @@
-
 import { Criterion } from "@/components/underwriting/types";
 
 export const liquidityRatios: Criterion[] = [
@@ -7,8 +6,8 @@ export const liquidityRatios: Criterion[] = [
     description: "Current assets divided by current liabilities - measures short-term liquidity",
     value: "1.8x",
     weight: 20,
-    minScore: 7,
-    maxScore: 7,
+    minScore: 6,
+    maxScore: 6,
     min: 0.5,
     max: 3.0,
     step: 0.1,
