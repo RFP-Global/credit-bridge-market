@@ -122,6 +122,21 @@ export const FinancialRatios = ({ ratios }: FinancialRatiosProps) => {
             name: "Loan-to-Value Ratio",
             value: ((fd.loanAmount / fd.collateralValue) * 100 || 0).toFixed(2) + "%",
             description: "Measures collateral adequacy"
+          },
+          {
+            name: "Collateral Coverage Ratio",
+            value: (fd.collateralValue / fd.loanAmount || 0).toFixed(2),
+            description: "Ensures secured lending"
+          },
+          {
+            name: "Leverage Coverage Ratio",
+            value: (fd.ebitda / fd.totalDebt || 0).toFixed(2),
+            description: "Measures repayment ability with cash flow"
+          },
+          {
+            name: "Payback Period",
+            value: (fd.loanAmount / fd.annualCashInflow || 0).toFixed(2),
+            description: "Time to repay the loan from internal funds"
           }
         ]
       },
