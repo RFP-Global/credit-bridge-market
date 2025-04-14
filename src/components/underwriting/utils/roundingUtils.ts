@@ -6,5 +6,5 @@
  */
 export const roundToTenth = (value: number | undefined): number => {
   if (value === undefined) return 0;
-  return Math.round(value);
+  return Math.round(value * 10) / 10; // Round to 1 decimal place
 };

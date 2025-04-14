@@ -15,15 +15,15 @@ const ratioScoreMappings: RatioScoreMapping[] = [
   {
     ratio: "currentRatio",
     ranges: [
-      { min: 3.00, max: Infinity, score: 5 },
-      { min: 2.50, max: 2.99, score: 5 },
-      { min: 2.00, max: 2.49, score: 4 },
-      { min: 1.75, max: 1.99, score: 4 },
-      { min: 1.50, max: 1.74, score: 3 },
-      { min: 1.25, max: 1.49, score: 3 },
-      { min: 1.00, max: 1.24, score: 2 },
-      { min: 0.85, max: 0.99, score: 2 },
-      { min: 0.60, max: 0.84, score: 1 },
+      { min: 3.00, max: Infinity, score: 10 },
+      { min: 2.50, max: 2.99, score: 9 },
+      { min: 2.00, max: 2.49, score: 8 },
+      { min: 1.75, max: 1.99, score: 7 },
+      { min: 1.50, max: 1.74, score: 6 },
+      { min: 1.25, max: 1.49, score: 5 },
+      { min: 1.00, max: 1.24, score: 4 },
+      { min: 0.85, max: 0.99, score: 3 },
+      { min: 0.60, max: 0.84, score: 2 },
       { min: -Infinity, max: 0.59, score: 1 }
     ]
   },
