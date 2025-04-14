@@ -1,3 +1,4 @@
+
 import { getScoreBackground, getRiskLevel } from "@/components/underwriting/utils/styleUtils";
 
 interface RatioScoreMapping {
@@ -122,6 +123,7 @@ export const calculateRatioScore = (ratioName: string, value: number): number =>
   const mapping = ratioScoreMappings.find(m => m.ratio === ratioName);
   if (!mapping) return 3; // Default middle score
 
+  // Find the matching range for the value
   const range = mapping.ranges.find(r => value >= r.min && value < r.max);
   return range ? range.score : 3; // Return whole number score directly
 };

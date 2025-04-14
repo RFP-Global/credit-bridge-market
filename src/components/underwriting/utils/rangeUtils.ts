@@ -27,12 +27,12 @@ export const updateCriterionRange = (
   // Find matching score range if available
   if (criterion.scoreMapping) {
     const matchingRange = criterion.scoreMapping.find(
-      range => min >= range.min && max <= range.max
+      range => min >= range.min && min < range.max
     );
     
     if (matchingRange) {
-      criterion.minScore = roundToTenth(Math.max(1, matchingRange.score - 1));
-      criterion.maxScore = roundToTenth(Math.min(10, matchingRange.score + 1));
+      criterion.minScore = roundToTenth(matchingRange.score);
+      criterion.maxScore = roundToTenth(matchingRange.score);
     } else {
       // Interpolate between ranges
       updateScoreBasedOnRange(criterion, roundToTenth((min + max) / 2), min, max);
