@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/accordion";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { CriterionItem } from "./CriterionItem";
+import { LiquidityRatiosSection } from "./LiquidityRatiosSection";
 import { CriteriaGroup as CriteriaGroupType } from "./types";
 
 interface CriteriaGroupProps {
@@ -33,6 +34,15 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
   getScoreColor,
   getScoreBackground
 }) => {
+  // Separate liquidity ratios from other criteria
+  const liquidityRatios = group.name === "Financial Strength" 
+    ? group.criteria.filter(c => ["Current Ratio", "Quick Ratio", "Cash Ratio"].includes(c.name))
+    : [];
+  
+  const otherCriteria = group.name === "Financial Strength"
+    ? group.criteria.filter(c => !["Current Ratio", "Quick Ratio", "Cash Ratio"].includes(c.name))
+    : group.criteria;
+
   return (
     <Card className="bg-black/40 border-gray-800 mb-4">
       <CardHeader className="pb-3">
@@ -49,11 +59,24 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
           <AccordionItem value="criteria" className="border-b-0">
             <AccordionTrigger>Criteria</AccordionTrigger>
             <AccordionContent className="space-y-4 pt-4">
-              {group.criteria.map((criterion, criterionIndex) => (
+              {group.name === "Financial Strength" && liquidityRatios.length > 0 && (
+                <LiquidityRatiosSection
+                  criteria={liquidityRatios}
+                  groupIndex={groupIndex}
+                  updateCriterionWeight={updateCriterionWeight}
+                  updateCriterionScore={updateCriterionScore}
+                  updateCriterionRange={updateCriterionRange}
+                  updateActualMetricValue={updateActualMetricValue}
+                  toggleCriterionEnabled={toggleCriterionEnabled}
+                  getScoreColor={getScoreColor}
+                  getScoreBackground={getScoreBackground}
+                />
+              )}
+              {otherCriteria.map((criterion, criterionIndex) => (
                 <CriterionItem
                   key={criterionIndex}
                   criterion={criterion}
-                  criterionIndex={criterionIndex}
+                  criterionIndex={criterionIndex + (group.name === "Financial Strength" ? liquidityRatios.length : 0)}
                   groupIndex={groupIndex}
                   updateCriterionWeight={updateCriterionWeight}
                   updateCriterionScore={updateCriterionScore}
