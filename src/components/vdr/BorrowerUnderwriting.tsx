@@ -1,5 +1,5 @@
-
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { FinancialRatios } from "@/types/proposalDetails";
 import { toast } from "sonner";
@@ -9,6 +9,7 @@ import { FinancialInputs } from './borrower-underwriting/FinancialInputs';
 import { LiquidityRatios } from '../proposals/details/financials/LiquidityRatios';
 
 const BorrowerUnderwriting = () => {
+  const navigate = useNavigate();
   const [financialData, setFinancialData] = useState({
     revenue: '',
     grossProfit: '',
@@ -47,15 +48,14 @@ const BorrowerUnderwriting = () => {
       debtToEBITDA: data.totalDebt / (data.operatingIncome || 1),
     };
 
-    const ratioRecord: Record<string, number> = {};
-    Object.entries(calculatedRatios).forEach(([key, value]) => {
-      ratioRecord[key] = value;
-    });
-
-    const score = calculateOverallRiskScore(ratioRecord);
+    const score = calculateOverallRiskScore(calculatedRatios);
     setRiskScore(score);
     setRatios(calculatedRatios);
     toast.success("Financial ratios and risk score calculated successfully");
+    
+    navigate('/borrower-ratio-details', {
+      state: { ratios: calculatedRatios, riskScore: score }
+    });
   };
 
   const riskLevel = riskScore ? getRiskLevel(riskScore) : null;

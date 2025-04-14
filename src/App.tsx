@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -40,6 +39,7 @@ import { useState } from "react";
 import TransactionDetailsView from "./pages/TransactionDetailsView";
 import EnterpriseNetwork from "./pages/EnterpriseNetwork";
 import EnterpriseDetail from "./pages/EnterpriseDetail";
+import BorrowerRatioDetails from "./pages/BorrowerRatioDetails";
 
 const App = () => {
   const [queryClient] = useState(() => new QueryClient());
@@ -78,6 +78,7 @@ const App = () => {
             <Route path="/facility-reference/:facilityId/:sectionType" element={<FacilityReferenceDetail />} />
             <Route path="/vdr" element={<VDR />} />
             <Route path="/borrower-underwriting" element={<BorrowerUnderwritingPage />} />
+            <Route path="/borrower-ratio-details" element={<BorrowerRatioDetails />} />
             <Route path="/lenders" element={<Lenders />} />
             <Route path="/lender/:id" element={<LenderProfile />} />
             <Route path="/enterprise-network" element={<EnterpriseNetwork />} />
