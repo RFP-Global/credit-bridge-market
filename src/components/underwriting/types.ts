@@ -51,6 +51,8 @@ export interface CriteriaGroup {
   maxScore: number;
   criteria: Criterion[];
   locked?: boolean;
+  preferredMin?: number;
+  preferredMax?: number;
 }
 
 export interface ScoreThreshold {
