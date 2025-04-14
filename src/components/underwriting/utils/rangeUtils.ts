@@ -21,12 +21,21 @@ export const updateCriterionRange = (
   criterion.preferredMin = min;
   criterion.preferredMax = max;
   
-  // Only update score if it's based on a numeric value
-  const currentValue = criterion.actualValue || 
-                      (criterion.value ? parseFloat(criterion.value.replace(/[^0-9.-]+/g, "")) : NaN);
-  
-  if (!isNaN(currentValue)) {
-    updateScoreBasedOnRange(criterion, currentValue, min, max);
+  // Find matching score range if available
+  if (criterion.scoreMapping) {
+    const matchingRange = criterion.scoreMapping.find(
+      range => min >= range.min && max <= range.max
+    );
+    
+    if (matchingRange) {
+      criterion.minScore = Math.max(1, matchingRange.score - 1);
+      criterion.maxScore = Math.min(10, matchingRange.score + 1);
+    } else {
+      // Interpolate between ranges
+      updateScoreBasedOnRange(criterion, (min + max) / 2, min, max);
+    }
+  } else {
+    updateScoreBasedOnRange(criterion, (min + max) / 2, min, max);
   }
   
   recalculateScores(newGroups, setMinTotalScore, setMaxTotalScore);
@@ -42,22 +51,25 @@ const updateScoreBasedOnRange = (
   min: number,
   max: number
 ) => {
-  if (currentValue >= min && currentValue <= max) {
-    // Value is in the preferred range
-    const baseScore = 8 + (2 * (1 - (max - currentValue) / (max - min)));
-    criterion.minScore = Math.max(1, baseScore - 1.5);
-    criterion.maxScore = Math.min(10, baseScore + 1.5);
-  } else if (currentValue < min) {
-    // Value is below preferred range
-    const distance = (min - currentValue) / min;
-    const baseScore = 6 - (distance * 4);
-    criterion.minScore = Math.max(1, baseScore - 1.5);
-    criterion.maxScore = Math.min(10, baseScore + 1.5);
-  } else {
-    // Value is above preferred range
-    const distance = (currentValue - max) / max;
-    const baseScore = 6 - (distance * 4);
-    criterion.minScore = Math.max(1, baseScore - 1.5);
-    criterion.maxScore = Math.min(10, baseScore + 1.5);
+  if (!criterion.actualMin || !criterion.actualMax) return;
+  
+  const rangePercent = (max - min) / (criterion.actualMax - criterion.actualMin);
+  const midPoint = (min + max) / 2;
+  const valuePercent = (midPoint - criterion.actualMin) / (criterion.actualMax - criterion.actualMin);
+  
+  // Adjust for metrics where lower is better
+  const adjustedPercent = criterion.name.toLowerCase().includes('debt') || 
+                         criterion.name.toLowerCase().includes('risk') ? 
+                         1 - valuePercent : valuePercent;
+  
+  const baseScore = 1 + (adjustedPercent * 9);
+  criterion.minScore = Math.max(1, baseScore - 1);
+  criterion.maxScore = Math.min(10, baseScore + 1);
+  
+  if (criterion.actualValue !== undefined) {
+    criterion.actualValue = currentValue;
+    criterion.value = criterion.actualUnit ? 
+      `${criterion.actualUnit}${currentValue}` : 
+      currentValue.toString();
   }
 };

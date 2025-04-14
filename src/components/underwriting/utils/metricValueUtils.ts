@@ -22,11 +22,20 @@ export const updateActualMetricValue = (
   // Update the displayed value string
   updateDisplayValue(criterion, newValue);
   
-  // Calculate score based on actual value
+  // Calculate score based on actual value and update preferred range
   if (criterion.scoreMapping) {
-    updateScoreFromMapping(criterion, newValue);
+    const { score, range } = updateScoreFromMapping(criterion, newValue);
+    if (range) {
+      criterion.preferredMin = range.min;
+      criterion.preferredMax = range.max;
+    }
   } else if (criterion.actualMin !== undefined && criterion.actualMax !== undefined) {
     updateScoreFromRange(criterion, newValue);
+    // Update preferred range based on score
+    const scorePercent = (criterion.minScore + criterion.maxScore) / 20; // Convert to 0-1 range
+    const range = criterion.actualMax - criterion.actualMin;
+    criterion.preferredMin = criterion.actualMin + (range * Math.max(0, scorePercent - 0.2));
+    criterion.preferredMax = criterion.actualMin + (range * Math.min(1, scorePercent + 0.2));
   }
   
   recalculateScores(newGroups, setMinTotalScore, setMaxTotalScore);
@@ -53,8 +62,8 @@ const updateDisplayValue = (
 const updateScoreFromMapping = (
   criterion: CriteriaGroup['criteria'][0],
   value: number
-) => {
-  if (!criterion.scoreMapping) return;
+): { score: number, range: ScoreRange | null } => {
+  if (!criterion.scoreMapping) return { score: 5, range: null };
   
   // Find the appropriate score range
   const matchingRange = criterion.scoreMapping.find(
@@ -65,16 +74,18 @@ const updateScoreFromMapping = (
     const baseScore = matchingRange.score;
     criterion.minScore = Math.max(1, baseScore - 1);
     criterion.maxScore = Math.min(10, baseScore + 1);
+    return { score: baseScore, range: matchingRange };
   } else if (value < criterion.scoreMapping[0].min) {
-    // If value is below the lowest range
     const baseScore = criterion.scoreMapping[0].score;
     criterion.minScore = Math.max(1, baseScore - 1);
     criterion.maxScore = Math.min(10, baseScore + 1);
-  } else if (value > criterion.scoreMapping[criterion.scoreMapping.length - 1].max) {
-    // If value is above the highest range
-    const baseScore = criterion.scoreMapping[criterion.scoreMapping.length - 1].score;
+    return { score: baseScore, range: criterion.scoreMapping[0] };
+  } else {
+    const lastRange = criterion.scoreMapping[criterion.scoreMapping.length - 1];
+    const baseScore = lastRange.score;
     criterion.minScore = Math.max(1, baseScore - 1);
     criterion.maxScore = Math.min(10, baseScore + 1);
+    return { score: baseScore, range: lastRange };
   }
 };
 
@@ -87,13 +98,20 @@ const updateScoreFromRange = (
 ) => {
   if (criterion.actualMin === undefined || criterion.actualMax === undefined) return;
   
-  // Simple linear interpolation
+  // Linear interpolation
   const percent = (value - criterion.actualMin) / (criterion.actualMax - criterion.actualMin);
   const idealPercent = criterion.name.toLowerCase().includes('debt') || 
                        criterion.name.toLowerCase().includes('risk') ? 
                        1 - percent : percent; // Invert for metrics where lower is better
   
   const baseScore = 1 + idealPercent * 9; // Scale to 1-10
-  criterion.minScore = Math.max(1, baseScore - 1.5);
-  criterion.maxScore = Math.min(10, baseScore + 1.5);
+  criterion.minScore = Math.max(1, baseScore - 1);
+  criterion.maxScore = Math.min(10, baseScore + 1);
+  
+  // Update preferred range based on score
+  const range = criterion.actualMax - criterion.actualMin;
+  const scorePercent = baseScore / 10;
+  criterion.preferredMin = criterion.actualMin + (range * Math.max(0, scorePercent - 0.2));
+  criterion.preferredMax = criterion.actualMin + (range * Math.min(1, scorePercent + 0.2));
 };
+
