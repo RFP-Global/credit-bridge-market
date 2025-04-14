@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { CriterionWeight } from "./criterion/CriterionWeight";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
+import { CriterionHeader } from "./criterion/CriterionHeader";
+import { ScoreRange } from "./criterion/ScoreRange";
+import { PreferredRange } from "./criterion/PreferredRange";
 import { ScoreMappingPanel } from "./criterion/ScoreMappingPanel";
 import { SubRatioPreferences } from "./criterion/SubRatioPreferences";
 
@@ -64,6 +64,10 @@ export const CriterionItem: React.FC<CriterionItemProps> = ({
   getScoreBackground,
 }) => {
   const [isSubRatioDialogOpen, setIsSubRatioDialogOpen] = useState(false);
+  const [rangeValues, setRangeValues] = useState([
+    criterion.preferredMin || criterion.min,
+    criterion.preferredMax || criterion.max
+  ]);
 
   const handleSubRatioScoreUpdate = (subRatioIndex: number, minScore: string, maxScore: string) => {
     const newSubcriteria = [...(criterion.subcriteria || [])];
@@ -83,27 +87,14 @@ export const CriterionItem: React.FC<CriterionItemProps> = ({
     <Card className={`bg-black/40 border-gray-800 relative overflow-hidden ${
       criterion.enabled ? "" : "opacity-50"
     }`}>
-      <div className="absolute top-2 right-2">
-        <Checkbox
-          id={`criterion-${criterionIndex}`}
-          checked={criterion.enabled}
-          onCheckedChange={(checked) => toggleCriterionEnabled(groupIndex, criterionIndex, !!checked)}
-        />
-      </div>
-
       <div className="p-4 border-b border-gray-800">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <h3 className="text-sm font-medium">{criterion.name}</h3>
-            <p className="text-xs text-muted-foreground">{criterion.description}</p>
-          </div>
-          <CriterionWeight
-            weight={criterion.weight}
-            groupIndex={groupIndex}
-            criterionIndex={criterionIndex}
-            updateCriterionWeight={updateCriterionWeight}
-          />
-        </div>
+        <CriterionHeader
+          criterion={criterion}
+          groupIndex={groupIndex}
+          criterionIndex={criterionIndex}
+          toggleCriterionEnabled={toggleCriterionEnabled}
+          getScoreColor={getScoreColor}
+        />
       </div>
 
       <div className="p-4 space-y-6">
@@ -123,117 +114,73 @@ export const CriterionItem: React.FC<CriterionItemProps> = ({
           </div>
         )}
 
-        <div className="space-y-2">
-          <div className="flex justify-between text-xs text-muted-foreground">
-            <span>Score Range</span>
-            <span>{criterion.minScore}-{criterion.maxScore}</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="flex flex-1 items-center gap-2">
-              <span className="text-xs text-muted-foreground">Min:</span>
-              <Input
-                value={criterion.minScore.toString()}
-                onChange={(e) => {
-                  const newMinScore = parseFloat(e.target.value);
-                  updateCriterionScore(
-                    groupIndex,
-                    criterionIndex,
-                    newMinScore,
-                    criterion.maxScore
-                  );
-                }}
-                className="h-7 text-xs"
-                placeholder="Min score"
-              />
-            </div>
-            <div className="flex flex-1 items-center gap-2">
-              <span className="text-xs text-muted-foreground">Max:</span>
-              <Input
-                value={criterion.maxScore.toString()}
-                onChange={(e) => {
-                  const newMaxScore = parseFloat(e.target.value);
-                  updateCriterionScore(
-                    groupIndex,
-                    criterionIndex,
-                    criterion.minScore,
-                    newMaxScore
-                  );
-                }}
-                className="h-7 text-xs"
-                placeholder="Max score"
-              />
-            </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="h-7 text-xs"
-              onClick={() => updateCriterionScore(
-                groupIndex,
-                criterionIndex,
-                criterion.minScore,
-                criterion.maxScore
-              )}
-            >
-              Set Score
-            </Button>
-          </div>
-        </div>
+        <ScoreRange
+          minScore={criterion.minScore.toString()}
+          maxScore={criterion.maxScore.toString()}
+          onMinScoreValueChange={(e) => {
+            const newMinScore = parseFloat(e.target.value);
+            updateCriterionScore(
+              groupIndex,
+              criterionIndex,
+              newMinScore,
+              criterion.maxScore
+            );
+          }}
+          onMaxScoreValueChange={(e) => {
+            const newMaxScore = parseFloat(e.target.value);
+            updateCriterionScore(
+              groupIndex,
+              criterionIndex,
+              criterion.minScore,
+              newMaxScore
+            );
+          }}
+          onScoreRangeUpdate={() => updateCriterionScore(
+            groupIndex,
+            criterionIndex,
+            criterion.minScore,
+            criterion.maxScore
+          )}
+        />
 
-        <div className="space-y-2">
-          <div className="flex justify-between text-xs text-muted-foreground">
-            <span>Preferred Range</span>
-            <span>{criterion.preferredMin}-{criterion.preferredMax}</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="flex flex-1 items-center gap-2">
-              <span className="text-xs text-muted-foreground">Min:</span>
-              <Input
-                value={criterion.preferredMin?.toString() || ""}
-                onChange={(e) => {
-                  const newMin = parseFloat(e.target.value);
-                  updateCriterionRange(
-                    groupIndex,
-                    criterionIndex,
-                    newMin,
-                    criterion.preferredMax || 0
-                  );
-                }}
-                className="h-7 text-xs"
-                placeholder="Min range"
-              />
-            </div>
-            <div className="flex flex-1 items-center gap-2">
-              <span className="text-xs text-muted-foreground">Max:</span>
-              <Input
-                value={criterion.preferredMax?.toString() || ""}
-                onChange={(e) => {
-                  const newMax = parseFloat(e.target.value);
-                  updateCriterionRange(
-                    groupIndex,
-                    criterionIndex,
-                    criterion.preferredMin || 0,
-                    newMax
-                  );
-                }}
-                className="h-7 text-xs"
-                placeholder="Max range"
-              />
-            </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="h-7 text-xs"
-              onClick={() => updateCriterionRange(
-                groupIndex,
-                criterionIndex,
-                criterion.min,
-                criterion.max
-              )}
-            >
-              Set Range
-            </Button>
-          </div>
-        </div>
+        <PreferredRange
+          min={criterion.min}
+          max={criterion.max}
+          step={criterion.step}
+          unit={criterion.unit}
+          preferredMin={criterion.preferredMin}
+          preferredMax={criterion.preferredMax}
+          rangeValues={rangeValues}
+          onRangeUpdate={(min, max) => {
+            updateCriterionRange(
+              groupIndex,
+              criterionIndex,
+              parseFloat(min),
+              parseFloat(max)
+            );
+          }}
+          onRangeSliderUpdate={setRangeValues}
+          minValue={criterion.preferredMin?.toString() || ""}
+          maxValue={criterion.preferredMax?.toString() || ""}
+          onMinValueChange={(e) => {
+            const newMin = parseFloat(e.target.value);
+            updateCriterionRange(
+              groupIndex,
+              criterionIndex,
+              newMin,
+              criterion.preferredMax || 0
+            );
+          }}
+          onMaxValueChange={(e) => {
+            const newMax = parseFloat(e.target.value);
+            updateCriterionRange(
+              groupIndex,
+              criterionIndex,
+              criterion.preferredMin || 0,
+              newMax
+            );
+          }}
+        />
 
         <div className="space-y-2">
           <div className="flex justify-between text-xs text-muted-foreground">
