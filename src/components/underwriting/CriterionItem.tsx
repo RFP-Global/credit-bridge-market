@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,6 @@ import { Criterion, ScoreRange } from "./types";
 import { CriterionHeader } from "./criterion-sections/CriterionHeader";
 import { CriterionWeight } from "./criterion-sections/CriterionWeight";
 import { ScoreRange as ScoreRangeComponent } from "./criterion-sections/ScoreRange";
-import { PreferredRange } from "./criterion-sections/PreferredRange";
 
 interface CriterionItemProps {
   criterion: Criterion;
@@ -32,34 +30,12 @@ export const CriterionItem: React.FC<CriterionItemProps> = ({
   groupIndex,
   updateCriterionWeight,
   updateCriterionScore,
-  updateCriterionRange,
-  updateActualMetricValue,
   toggleCriterionEnabled,
   getScoreColor,
   getScoreBackground,
 }) => {
-  const [minValue, setMinValue] = useState(criterion.preferredMin !== undefined ? criterion.preferredMin.toString() : "");
-  const [maxValue, setMaxValue] = useState(criterion.preferredMax !== undefined ? criterion.preferredMax.toString() : "");
   const [minScoreValue, setMinScoreValue] = useState(criterion.minScore !== undefined ? criterion.minScore.toString() : "0");
   const [maxScoreValue, setMaxScoreValue] = useState(criterion.maxScore !== undefined ? criterion.maxScore.toString() : "0");
-  const [rangeValues, setRangeValues] = useState<number[]>([
-    criterion.preferredMin !== undefined ? criterion.preferredMin : criterion.min || 0,
-    criterion.preferredMax !== undefined ? criterion.preferredMax : criterion.max || 100
-  ]);
-
-  useEffect(() => {
-    if (criterion.preferredMin !== undefined) {
-      setMinValue(criterion.preferredMin.toString());
-      setRangeValues(prev => [criterion.preferredMin!, prev[1]]);
-    }
-  }, [criterion.preferredMin]);
-
-  useEffect(() => {
-    if (criterion.preferredMax !== undefined) {
-      setMaxValue(criterion.preferredMax.toString());
-      setRangeValues(prev => [prev[0], criterion.preferredMax!]);
-    }
-  }, [criterion.preferredMax]);
 
   useEffect(() => {
     if (criterion.minScore !== undefined) {
@@ -70,31 +46,11 @@ export const CriterionItem: React.FC<CriterionItemProps> = ({
     }
   }, [criterion.minScore, criterion.maxScore]);
 
-  const handleRangeUpdate = () => {
-    if (updateCriterionRange && minValue && maxValue) {
-      const min = parseFloat(minValue);
-      const max = parseFloat(maxValue);
-      if (!isNaN(min) && !isNaN(max) && min <= max) {
-        updateCriterionRange(groupIndex, criterionIndex, min, max);
-        setRangeValues([min, max]);
-      }
-    }
-  };
-
   const handleScoreRangeUpdate = () => {
     const minScore = parseFloat(minScoreValue);
     const maxScore = parseFloat(maxScoreValue);
     if (!isNaN(minScore) && !isNaN(maxScore) && minScore <= maxScore) {
       updateCriterionScore(groupIndex, criterionIndex, minScore, maxScore);
-    }
-  };
-
-  const handleRangeSliderUpdate = (values: number[]) => {
-    if (values.length === 2 && updateCriterionRange) {
-      setRangeValues(values);
-      setMinValue(values[0].toString());
-      setMaxValue(values[1].toString());
-      updateCriterionRange(groupIndex, criterionIndex, values[0], values[1]);
     }
   };
 
@@ -166,17 +122,6 @@ export const CriterionItem: React.FC<CriterionItemProps> = ({
               onUpdateRange={handleScoreRangeUpdate}
             />
           </div>
-
-          <PreferredRange
-            criterion={criterion}
-            rangeValues={rangeValues}
-            minValue={minValue}
-            maxValue={maxValue}
-            onRangeSliderChange={handleRangeSliderUpdate}
-            onMinValueChange={(e) => setMinValue(e.target.value)}
-            onMaxValueChange={(e) => setMaxValue(e.target.value)}
-            onUpdateRange={handleRangeUpdate}
-          />
 
           {criterion.scoreMapping && (
             <div className="mt-2">

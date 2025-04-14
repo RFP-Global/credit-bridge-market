@@ -5,7 +5,7 @@ import { recalculateScores } from "./scoreCalculationUtils";
 const roundToTenth = (value: number) => parseFloat(value.toFixed(1));
 
 /**
- * Updates the preferred range for a criterion and recalculates scores.
+ * Updates criterion scores and recalculates total scores.
  */
 export const updateCriterionRange = (
   criteriaGroups: CriteriaGroup[],
@@ -19,10 +19,6 @@ export const updateCriterionRange = (
 ) => {
   const newGroups = [...criteriaGroups];
   const criterion = newGroups[groupIndex].criteria[criterionIndex];
-  
-  // Round min and max to tenth decimal place
-  criterion.preferredMin = roundToTenth(min);
-  criterion.preferredMax = roundToTenth(max);
   
   // Find matching score range if available
   if (criterion.scoreMapping) {
@@ -67,4 +63,3 @@ const interpolateScore = (value: number, min: number, max: number): number => {
   const percentage = (value - min) / (max - min);
   return 1 + percentage * 9;
 };
-
