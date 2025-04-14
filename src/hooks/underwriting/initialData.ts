@@ -17,7 +17,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
     criteria: [
       {
         name: "Liquidity Ratios",
-        description: "Measures of short-term solvency",
+        description: "Measures of short-term liquidity",
         value: "Moderate",
         weight: 25,
         minScore: 1,
@@ -126,31 +126,31 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         subcriteria: [
           {
             name: "Net Profit Margin",
-            description: "(Net Income / Revenue) * 100",
+            description: "Net Income / Revenue",
             target: ">= 10%",
             weight: 20
           },
           {
             name: "Gross Margin",
-            description: "(Gross Profit / Revenue) * 100",
+            description: "Gross Profit / Revenue",
             target: ">= 30%",
             weight: 20
           },
           {
             name: "Operating Margin",
-            description: "(Operating Income / Revenue) * 100",
+            description: "Operating Income / Revenue",
             target: ">= 15%",
             weight: 20
           },
           {
             name: "Return on Assets (ROA)",
-            description: "(Net Income / Total Assets) * 100",
+            description: "Net Income / Total Assets",
             target: ">= 5%",
             weight: 20
           },
           {
             name: "Return on Equity (ROE)",
-            description: "(Net Income / Total Equity) * 100",
+            description: "Net Income / Total Equity",
             target: ">= 15%",
             weight: 20
           }
@@ -158,7 +158,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
       },
       {
         name: "Cash Flow & Coverage Ratios",
-        description: "Measures of cash generation and debt service capability",
+        description: "Measures of cash flow adequacy and debt service capability",
         value: "Moderate",
         weight: 15,
         minScore: 1,
@@ -183,19 +183,19 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
           },
           {
             name: "Debt Service Coverage Ratio",
-            description: "EBITDA / (Principal + Interest Payments)",
+            description: "EBITDA / (Principal + Interest)",
             target: ">= 1.25",
             weight: 20
           },
           {
             name: "Free Cash Flow to Firm",
-            description: "EBIT(1-tax) + Depreciation - CapEx - ΔWorking Capital",
+            description: "EBIT × (1 - Tax Rate) + Depreciation - CapEx - ΔWorking Capital",
             target: "> 0",
             weight: 15
           },
           {
             name: "Loan-to-Value Ratio",
-            description: "(Loan Amount / Collateral Value) * 100",
+            description: "Loan Amount / Collateral Value",
             target: "<= 80%",
             weight: 15
           },
@@ -240,13 +240,13 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
           },
           {
             name: "Inventory Turnover",
-            description: "Cost of Goods Sold / Average Inventory",
+            description: "COGS / Average Inventory",
             target: ">= 6",
             weight: 35
           },
           {
             name: "Asset Turnover Ratio",
-            description: "Revenue / Average Total Assets",
+            description: "Revenue / Total Assets",
             target: ">= 1",
             weight: 30
           }
