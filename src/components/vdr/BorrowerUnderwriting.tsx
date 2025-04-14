@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -43,8 +42,8 @@ const BorrowerUnderwriting = () => {
       debtServiceCoverageRatio: data.operatingIncome / (data.annualDebtService || 1),
       currentRatio: data.currentAssets / (data.currentLiabilities || 1),
       quickRatio: (data.currentAssets - data.inventory) / (data.currentLiabilities || 1),
-      debtToEquityRatio: data.totalDebt / (data.totalEquity || 1),
-      returnOnAssets: data.netIncome / (data.totalAssets || 1),
+      interestCoverageRatio: data.operatingIncome / (data.annualDebtService || 1),
+      debtToEBITDA: data.totalDebt / (data.operatingIncome || 1),
       returnOnEquity: data.netIncome / (data.totalEquity || 1),
       grossMargin: data.grossProfit / (data.revenue || 1),
       operatingMargin: data.operatingIncome / (data.revenue || 1),
