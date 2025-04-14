@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FinancialRatios } from "@/types/proposalDetails";
 import { toast } from "sonner";
+import { calculateOverallRiskScore, getScoreColor, getScoreBackground, getRiskLevel } from './utils/borrowerRiskUtils';
+import { Badge } from '@/components/ui/badge';
 
 const BorrowerUnderwriting = () => {
   const [financialData, setFinancialData] = useState({
@@ -23,6 +25,7 @@ const BorrowerUnderwriting = () => {
   });
 
   const [ratios, setRatios] = useState<FinancialRatios | null>(null);
+  const [riskScore, setRiskScore] = useState<number | null>(null);
 
   const calculateRatios = () => {
     const data = Object.entries(financialData).reduce((acc, [key, value]) => {
@@ -42,14 +45,16 @@ const BorrowerUnderwriting = () => {
       netProfitMargin: data.netIncome / (data.revenue || 1),
       assetTurnover: data.revenue / (data.totalAssets || 1),
       inventoryTurnover: data.revenue / (data.inventory || 1),
-      daysReceivablesOutstanding: 0, // Requires additional data
-      daysPayablesOutstanding: 0, // Requires additional data
+      daysReceivablesOutstanding: 0,
+      daysPayablesOutstanding: 0,
       workingCapitalTurnover: data.revenue / ((data.currentAssets - data.currentLiabilities) || 1),
-      zScore: 0, // Requires additional calculation
+      zScore: 0,
     };
 
+    const score = calculateOverallRiskScore(calculatedRatios);
+    setRiskScore(score);
     setRatios(calculatedRatios);
-    toast.success("Financial ratios calculated successfully");
+    toast.success("Financial ratios and risk score calculated successfully");
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -63,11 +68,24 @@ const BorrowerUnderwriting = () => {
     return value.toFixed(2);
   };
 
+  const riskLevel = riskScore ? getRiskLevel(riskScore) : null;
+
   return (
     <div className="space-y-6">
       <Card className="bg-black/40 border-gray-800">
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-sm font-mono">FINANCIAL DATA INPUT</CardTitle>
+          {riskScore && (
+            <div className="flex items-center gap-3">
+              <div className="text-sm">Risk Score:</div>
+              <div className={`text-xl font-bold ${getScoreColor(riskScore)}`}>
+                {riskScore.toFixed(2)}
+              </div>
+              <Badge variant="outline" className={`${riskLevel?.color}`}>
+                {riskLevel?.label}
+              </Badge>
+            </div>
+          )}
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {Object.entries(financialData).map(([field, value]) => (
@@ -86,7 +104,7 @@ const BorrowerUnderwriting = () => {
           ))}
           <div className="md:col-span-3">
             <Button onClick={calculateRatios} className="w-full">
-              Calculate Ratios
+              Calculate Ratios & Risk Score
             </Button>
           </div>
         </CardContent>
@@ -99,11 +117,13 @@ const BorrowerUnderwriting = () => {
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {Object.entries(ratios).map(([ratio, value]) => (
-              <div key={ratio}>
+              <div key={ratio} className="space-y-1">
                 <p className="text-xs text-gray-400 mb-1">
                   {ratio.replace(/([A-Z])/g, ' $1').trim().toUpperCase()}
                 </p>
-                <p className="font-semibold">{formatRatio(value)}</p>
+                <p className={`font-semibold ${getScoreColor(calculateRatioScore(ratio, value))}`}>
+                  {formatRatio(value)}
+                </p>
               </div>
             ))}
           </CardContent>
