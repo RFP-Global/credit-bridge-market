@@ -11,13 +11,13 @@ interface RatioCategory {
   }[];
 }
 
-interface FinancialRatiosProps {
-  financialData: Record<string, number>;
+export interface FinancialRatiosProps {
+  ratios: Record<string, number>;
 }
 
-export const FinancialRatios = ({ financialData }: FinancialRatiosProps) => {
+export const FinancialRatios = ({ ratios }: FinancialRatiosProps) => {
   const calculateRatios = (): RatioCategory[] => {
-    const fd = financialData;
+    const fd = ratios;
     
     return [
       {
@@ -29,7 +29,7 @@ export const FinancialRatios = ({ financialData }: FinancialRatiosProps) => {
             description: "Measures short-term liquidity"
           },
           {
-            name: "Quick Ratio",
+            name: "Quick Ratio (Acid Test)",
             value: ((fd.currentAssets - fd.inventory) / fd.currentLiabilities || 0).toFixed(2),
             description: "More conservative measure of liquidity"
           },
