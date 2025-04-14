@@ -2,6 +2,8 @@
 import { CriteriaGroup } from "../types";
 import { recalculateScores } from "./scoreCalculationUtils";
 
+const roundToTenth = (value: number) => parseFloat(value.toFixed(1));
+
 /**
  * Updates the preferred range for a criterion and recalculates scores.
  */
@@ -18,8 +20,9 @@ export const updateCriterionRange = (
   const newGroups = [...criteriaGroups];
   const criterion = newGroups[groupIndex].criteria[criterionIndex];
   
-  criterion.preferredMin = min;
-  criterion.preferredMax = max;
+  // Round min and max to tenth decimal place
+  criterion.preferredMin = roundToTenth(min);
+  criterion.preferredMax = roundToTenth(max);
   
   // Find matching score range if available
   if (criterion.scoreMapping) {
@@ -28,14 +31,14 @@ export const updateCriterionRange = (
     );
     
     if (matchingRange) {
-      criterion.minScore = Math.max(1, matchingRange.score - 1);
-      criterion.maxScore = Math.min(10, matchingRange.score + 1);
+      criterion.minScore = roundToTenth(Math.max(1, matchingRange.score - 1));
+      criterion.maxScore = roundToTenth(Math.min(10, matchingRange.score + 1));
     } else {
       // Interpolate between ranges
-      updateScoreBasedOnRange(criterion, (min + max) / 2, min, max);
+      updateScoreBasedOnRange(criterion, roundToTenth((min + max) / 2), min, max);
     }
   } else {
-    updateScoreBasedOnRange(criterion, (min + max) / 2, min, max);
+    updateScoreBasedOnRange(criterion, roundToTenth((min + max) / 2), min, max);
   }
   
   recalculateScores(newGroups, setMinTotalScore, setMaxTotalScore);
@@ -53,23 +56,25 @@ const updateScoreBasedOnRange = (
 ) => {
   if (!criterion.actualMin || !criterion.actualMax) return;
   
-  const rangePercent = (max - min) / (criterion.actualMax - criterion.actualMin);
-  const midPoint = (min + max) / 2;
-  const valuePercent = (midPoint - criterion.actualMin) / (criterion.actualMax - criterion.actualMin);
+  const roundToTenth = (value: number) => parseFloat(value.toFixed(1));
+  
+  const rangePercent = roundToTenth((max - min) / (criterion.actualMax - criterion.actualMin));
+  const midPoint = roundToTenth((min + max) / 2);
+  const valuePercent = roundToTenth((midPoint - criterion.actualMin) / (criterion.actualMax - criterion.actualMin));
   
   // Adjust for metrics where lower is better
   const adjustedPercent = criterion.name.toLowerCase().includes('debt') || 
                          criterion.name.toLowerCase().includes('risk') ? 
-                         1 - valuePercent : valuePercent;
+                         roundToTenth(1 - valuePercent) : valuePercent;
   
-  const baseScore = 1 + (adjustedPercent * 9);
-  criterion.minScore = Math.max(1, baseScore - 1);
-  criterion.maxScore = Math.min(10, baseScore + 1);
+  const baseScore = roundToTenth(1 + (adjustedPercent * 9));
+  criterion.minScore = roundToTenth(Math.max(1, baseScore - 1));
+  criterion.maxScore = roundToTenth(Math.min(10, baseScore + 1));
   
   if (criterion.actualValue !== undefined) {
-    criterion.actualValue = currentValue;
+    criterion.actualValue = roundToTenth(currentValue);
     criterion.value = criterion.actualUnit ? 
-      `${criterion.actualUnit}${currentValue}` : 
-      currentValue.toString();
+      `${criterion.actualUnit}${roundToTenth(currentValue)}` : 
+      roundToTenth(currentValue).toString();
   }
 };

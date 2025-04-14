@@ -1,6 +1,8 @@
 
 import { CriteriaGroup } from "../types";
 
+const roundToTenth = (value: number) => parseFloat(value.toFixed(1));
+
 /**
  * Recalculates min and max scores for all groups and updates the total score.
  */
@@ -19,15 +21,15 @@ export const recalculateScores = (
     const enabledCriteria = group.criteria.filter(criterion => criterion.enabled);
     
     enabledCriteria.forEach(criterion => {
-      minScoreSum += criterion.minScore * criterion.weight;
-      maxScoreSum += criterion.maxScore * criterion.weight;
+      minScoreSum += roundToTenth(criterion.minScore) * criterion.weight;
+      maxScoreSum += roundToTenth(criterion.maxScore) * criterion.weight;
       weightSum += criterion.weight;
     });
     
     if (weightSum > 0) {
-      group.minScore = parseFloat((minScoreSum / weightSum).toFixed(2));
+      group.minScore = roundToTenth(minScoreSum / weightSum);
       // Ensure maxScore never exceeds 10
-      group.maxScore = parseFloat(Math.min(10, (maxScoreSum / weightSum)).toFixed(2));
+      group.maxScore = roundToTenth(Math.min(10, (maxScoreSum / weightSum)));
     } else {
       group.minScore = 0;
       group.maxScore = 0;
@@ -40,15 +42,15 @@ export const recalculateScores = (
   let totalWeight = 0;
   
   groups.forEach(group => {
-    totalMinWeightedScore += group.minScore * group.weight;
-    totalMaxWeightedScore += group.maxScore * group.weight;
+    totalMinWeightedScore += roundToTenth(group.minScore) * group.weight;
+    totalMaxWeightedScore += roundToTenth(group.maxScore) * group.weight;
     totalWeight += group.weight;
   });
   
   if (totalWeight > 0) {
-    setMinTotalScore(parseFloat((totalMinWeightedScore / totalWeight).toFixed(2)));
+    setMinTotalScore(roundToTenth(totalMinWeightedScore / totalWeight));
     // Ensure maxTotalScore never exceeds 10
-    setMaxTotalScore(parseFloat(Math.min(10, (totalMaxWeightedScore / totalWeight)).toFixed(2)));
+    setMaxTotalScore(roundToTenth(Math.min(10, (totalMaxWeightedScore / totalWeight))));
   }
 };
 
@@ -66,9 +68,9 @@ export const updateCriterionScore = (
   setMaxTotalScore: React.Dispatch<React.SetStateAction<number>>
 ) => {
   const newGroups = [...criteriaGroups];
-  // Ensure newMinScore is at least 1 and newMaxScore doesn't exceed 10
-  newGroups[groupIndex].criteria[criterionIndex].minScore = Math.max(1, newMinScore);
-  newGroups[groupIndex].criteria[criterionIndex].maxScore = Math.min(10, newMaxScore);
+  // Ensure newMinScore is at least 1 and newMaxScore doesn't exceed 10, and round to 1 decimal place
+  newGroups[groupIndex].criteria[criterionIndex].minScore = roundToTenth(Math.max(1, newMinScore));
+  newGroups[groupIndex].criteria[criterionIndex].maxScore = roundToTenth(Math.min(10, newMaxScore));
   recalculateScores(newGroups, setMinTotalScore, setMaxTotalScore);
   setCriteriaGroups(newGroups);
 };
