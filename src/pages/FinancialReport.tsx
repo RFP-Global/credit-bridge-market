@@ -5,6 +5,8 @@ import { FinancialRatios } from "@/types/proposalDetails";
 import { FinancialSynopsis } from "@/components/reports/FinancialSynopsis";
 import { RatioCharts } from "@/components/reports/RatioCharts";
 import { RatioBreakdown } from "@/components/reports/RatioBreakdown";
+import { Button } from "@/components/ui/button";
+import { Printer } from "lucide-react";
 
 const FinancialReport = () => {
   const location = useLocation();
@@ -14,19 +16,45 @@ const FinancialReport = () => {
     return <Navigate to="/borrower-underwriting" replace />;
   }
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-6 print:p-4 print:bg-white">
       <div className="container mx-auto space-y-6">
-        <Card className="bg-black/40 border-gray-800">
-          <CardHeader>
-            <CardTitle className="text-2xl font-mono">Financial Analysis Report</CardTitle>
-          </CardHeader>
-        </Card>
+        <div className="flex items-center justify-between print:hidden mb-4">
+          <h1 className="text-2xl font-mono">Financial Analysis Report</h1>
+          <Button onClick={handlePrint} size="sm">
+            <Printer className="h-4 w-4 mr-2" />
+            Print Report
+          </Button>
+        </div>
         
-        <FinancialSynopsis ratios={state.ratios} riskScore={state.riskScore} />
-        <RatioCharts ratios={state.ratios} />
-        <RatioBreakdown ratios={state.ratios} />
+        <div className="space-y-6 print:space-y-4">
+          <FinancialSynopsis ratios={state.ratios} riskScore={state.riskScore} />
+          <div className="grid md:grid-cols-2 gap-6 print:gap-4">
+            <RatioCharts ratios={state.ratios} />
+          </div>
+          <RatioBreakdown ratios={state.ratios} />
+        </div>
       </div>
+
+      <style>{`
+        @media print {
+          @page {
+            margin: 1cm;
+            size: A4;
+          }
+          body {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+          .print\\:hidden {
+            display: none !important;
+          }
+        }
+      `}</style>
     </div>
   );
 };
