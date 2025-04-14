@@ -1,3 +1,4 @@
+
 import React from "react";
 import { 
   Accordion,
@@ -10,6 +11,7 @@ import { CriterionItem } from "./CriterionItem";
 import { LiquidityRatiosSection } from "./LiquidityRatiosSection";
 import { LeverageRatiosSection } from "./LeverageRatiosSection";
 import { ProfitabilityRatiosSection } from "./ProfitabilityRatiosSection";
+import { CashFlowRatiosSection } from "./CashFlowRatiosSection";
 import { CriteriaGroup as CriteriaGroupType } from "./types";
 
 interface CriteriaGroupProps {
@@ -49,6 +51,13 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
       ].includes(c.name))
     : [];
 
+  const cashFlowRatios = group.name === "Financial Strength"
+    ? group.criteria.filter(c => [
+        "Operating Cash Flow Ratio",
+        "Debt Service Coverage Ratio"
+      ].includes(c.name))
+    : [];
+
   const profitabilityRatios = group.name === "Financial Strength"
     ? group.criteria.filter(c => [
         "Net Profit Margin",
@@ -63,6 +72,7 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
     ? group.criteria.filter(c => 
         !["Current Ratio", "Quick Ratio", "Cash Ratio"].includes(c.name) &&
         !["Debt-to-Equity", "Debt Ratio", "Equity Ratio", "Fixed Charge Coverage Ratio", "Interest Coverage Ratio"].includes(c.name) &&
+        !["Operating Cash Flow Ratio", "Debt Service Coverage Ratio"].includes(c.name) &&
         !["Net Profit Margin", "Gross Profit Margin", "Operating Margin", "Return on Assets", "Return on Equity"].includes(c.name)
       )
     : group.criteria;
@@ -111,6 +121,20 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
                 />
               )}
 
+              {group.name === "Financial Strength" && cashFlowRatios.length > 0 && (
+                <CashFlowRatiosSection
+                  criteria={cashFlowRatios}
+                  groupIndex={groupIndex}
+                  updateCriterionWeight={updateCriterionWeight}
+                  updateCriterionScore={updateCriterionScore}
+                  updateCriterionRange={updateCriterionRange}
+                  updateActualMetricValue={updateActualMetricValue}
+                  toggleCriterionEnabled={toggleCriterionEnabled}
+                  getScoreColor={getScoreColor}
+                  getScoreBackground={getScoreBackground}
+                />
+              )}
+
               {group.name === "Financial Strength" && profitabilityRatios.length > 0 && (
                 <ProfitabilityRatiosSection
                   criteria={profitabilityRatios}
@@ -131,7 +155,7 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
                   criterion={criterion}
                   criterionIndex={criterionIndex + 
                     (group.name === "Financial Strength" ? 
-                      liquidityRatios.length + leverageRatios.length + profitabilityRatios.length : 
+                      liquidityRatios.length + leverageRatios.length + cashFlowRatios.length + profitabilityRatios.length : 
                       0
                     )}
                   groupIndex={groupIndex}

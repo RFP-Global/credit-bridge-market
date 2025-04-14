@@ -3,6 +3,7 @@ import { CriteriaGroup } from "@/components/underwriting/types";
 import { liquidityRatios } from "./ratios/liquidityRatios";
 import { leverageRatios } from "./ratios/leverageRatios";
 import { profitabilityRatios } from "./ratios/profitabilityRatios";
+import { cashFlowRatios } from "./ratios/cashFlowRatios";
 
 export const financialStrengthGroup: CriteriaGroup = {
   name: "Financial Strength",
@@ -13,6 +14,7 @@ export const financialStrengthGroup: CriteriaGroup = {
   criteria: [
     ...liquidityRatios,
     ...leverageRatios,
+    ...cashFlowRatios,
     ...profitabilityRatios
   ]
 };
