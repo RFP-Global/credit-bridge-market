@@ -1,3 +1,4 @@
+
 import React from "react";
 import { 
   Accordion,
@@ -38,64 +39,47 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
   getScoreColor,
   getScoreBackground
 }) => {
-  const liquidityRatios = group.name === "Financial Strength" 
-    ? group.criteria.filter(c => ["Current Ratio", "Quick Ratio", "Cash Ratio"].includes(c.name))
-    : [];
-
-  const leverageRatios = group.name === "Financial Strength"
-    ? group.criteria.filter(c => [
-        "Debt-to-Equity", 
-        "Debt Ratio", 
-        "Equity Ratio", 
-        "Fixed Charge Coverage Ratio",
-        "Interest Coverage Ratio"
-      ].includes(c.name))
-    : [];
-
-  const cashFlowRatios = group.name === "Financial Strength"
-    ? group.criteria.filter(c => [
-        "Operating Cash Flow Ratio",
-        "Debt Service Coverage Ratio"
-      ].includes(c.name))
-    : [];
-    
-  const coverageRatios = group.name === "Financial Strength"
-    ? group.criteria.filter(c => [
-        "Loan-to-Value Ratio",
-        "Collateral Coverage Ratio",
-        "Leverage Coverage Ratio",
-        "Payback Ratio"
-      ].includes(c.name))
-    : [];
-
-  const profitabilityRatios = group.name === "Financial Strength"
-    ? group.criteria.filter(c => [
-        "Net Profit Margin",
-        "Gross Profit Margin",
-        "Operating Margin",
-        "Return on Assets",
-        "Return on Equity"
-      ].includes(c.name))
-    : [];
+  // Helper function to get correct index for specific ratio types
+  const getFilteredCriteria = (criteriaNames: string[]) => {
+    return group.criteria.filter(c => criteriaNames.includes(c.name));
+  };
   
-  const turnoverRatios = group.name === "Financial Strength"
-    ? group.criteria.filter(c => [
-        "Accounts Receivable Turnover Ratio",
-        "Inventory Turnover Ratio",
-        "Asset Turnover Ratio"
-      ].includes(c.name))
-    : [];
+  // Find indices within the full criteria array for each ratio type
+  const findCriteriaIndices = (criteria: CriteriaGroupType["criteria"], filteredCriteria: CriteriaGroupType["criteria"]) => {
+    return filteredCriteria.map(fc => criteria.findIndex(c => c.name === fc.name));
+  };
 
-  const otherCriteria = group.name === "Financial Strength"
-    ? group.criteria.filter(c => 
-        !["Current Ratio", "Quick Ratio", "Cash Ratio"].includes(c.name) &&
-        !["Debt-to-Equity", "Debt Ratio", "Equity Ratio", "Fixed Charge Coverage Ratio", "Interest Coverage Ratio"].includes(c.name) &&
-        !["Operating Cash Flow Ratio", "Debt Service Coverage Ratio"].includes(c.name) &&
-        !["Loan-to-Value Ratio", "Collateral Coverage Ratio", "Leverage Coverage Ratio", "Payback Ratio"].includes(c.name) &&
-        !["Accounts Receivable Turnover Ratio", "Inventory Turnover Ratio", "Asset Turnover Ratio"].includes(c.name) &&
-        !["Net Profit Margin", "Gross Profit Margin", "Operating Margin", "Return on Assets", "Return on Equity"].includes(c.name)
-      )
-    : group.criteria;
+  const liquidityRatioNames = ["Current Ratio", "Quick Ratio", "Cash Ratio"];
+  const leverageRatioNames = ["Debt-to-Equity", "Debt Ratio", "Equity Ratio", "Fixed Charge Coverage Ratio", "Interest Coverage Ratio"];
+  const cashFlowRatioNames = ["Operating Cash Flow Ratio", "Debt Service Coverage Ratio"];
+  const coverageRatioNames = ["Loan-to-Value Ratio", "Collateral Coverage Ratio", "Leverage Coverage Ratio", "Payback Ratio"];
+  const profitabilityRatioNames = ["Net Profit Margin", "Gross Profit Margin", "Operating Margin", "Return on Assets", "Return on Equity"];
+  const turnoverRatioNames = ["Accounts Receivable Turnover Ratio", "Inventory Turnover Ratio", "Asset Turnover Ratio"];
+
+  const liquidityRatios = getFilteredCriteria(liquidityRatioNames);
+  const leverageRatios = getFilteredCriteria(leverageRatioNames);
+  const cashFlowRatios = getFilteredCriteria(cashFlowRatioNames);
+  const coverageRatios = getFilteredCriteria(coverageRatioNames);
+  const profitabilityRatios = getFilteredCriteria(profitabilityRatioNames);
+  const turnoverRatios = getFilteredCriteria(turnoverRatioNames);
+
+  // Get indices for each ratio type
+  const liquidityIndices = findCriteriaIndices(group.criteria, liquidityRatios);
+  const leverageIndices = findCriteriaIndices(group.criteria, leverageRatios);
+  const cashFlowIndices = findCriteriaIndices(group.criteria, cashFlowRatios);
+  const coverageIndices = findCriteriaIndices(group.criteria, coverageRatios);
+  const profitabilityIndices = findCriteriaIndices(group.criteria, profitabilityRatios);
+  const turnoverIndices = findCriteriaIndices(group.criteria, turnoverRatios);
+
+  // Calculate other criteria (those not in any specific category)
+  const otherCriteria = group.criteria.filter(c => 
+    !liquidityRatioNames.includes(c.name) &&
+    !leverageRatioNames.includes(c.name) &&
+    !cashFlowRatioNames.includes(c.name) &&
+    !coverageRatioNames.includes(c.name) &&
+    !profitabilityRatioNames.includes(c.name) &&
+    !turnoverRatioNames.includes(c.name)
+  );
 
   return (
     <Card className="bg-black/40 border-gray-800 mb-4">
@@ -117,11 +101,21 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
                 <LiquidityRatiosSection
                   criteria={liquidityRatios}
                   groupIndex={groupIndex}
-                  updateCriterionWeight={updateCriterionWeight}
-                  updateCriterionScore={updateCriterionScore}
-                  updateCriterionRange={updateCriterionRange}
-                  updateActualMetricValue={updateActualMetricValue}
-                  toggleCriterionEnabled={toggleCriterionEnabled}
+                  updateCriterionWeight={(groupIdx, criterionIdx, newWeight) => {
+                    updateCriterionWeight(groupIdx, liquidityIndices[criterionIdx], newWeight);
+                  }}
+                  updateCriterionScore={(groupIdx, criterionIdx, minScore, maxScore) => {
+                    updateCriterionScore(groupIdx, liquidityIndices[criterionIdx], minScore, maxScore);
+                  }}
+                  updateCriterionRange={updateCriterionRange && ((groupIdx, criterionIdx, min, max) => {
+                    updateCriterionRange(groupIdx, liquidityIndices[criterionIdx], min, max);
+                  })}
+                  updateActualMetricValue={updateActualMetricValue && ((groupIdx, criterionIdx, value) => {
+                    updateActualMetricValue(groupIdx, liquidityIndices[criterionIdx], value);
+                  })}
+                  toggleCriterionEnabled={toggleCriterionEnabled && ((groupIdx, criterionIdx, enabled) => {
+                    toggleCriterionEnabled(groupIdx, liquidityIndices[criterionIdx], enabled);
+                  })}
                   getScoreColor={getScoreColor}
                   getScoreBackground={getScoreBackground}
                 />
@@ -131,11 +125,21 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
                 <LeverageRatiosSection
                   criteria={leverageRatios}
                   groupIndex={groupIndex}
-                  updateCriterionWeight={updateCriterionWeight}
-                  updateCriterionScore={updateCriterionScore}
-                  updateCriterionRange={updateCriterionRange}
-                  updateActualMetricValue={updateActualMetricValue}
-                  toggleCriterionEnabled={toggleCriterionEnabled}
+                  updateCriterionWeight={(groupIdx, criterionIdx, newWeight) => {
+                    updateCriterionWeight(groupIdx, leverageIndices[criterionIdx], newWeight);
+                  }}
+                  updateCriterionScore={(groupIdx, criterionIdx, minScore, maxScore) => {
+                    updateCriterionScore(groupIdx, leverageIndices[criterionIdx], minScore, maxScore);
+                  }}
+                  updateCriterionRange={updateCriterionRange && ((groupIdx, criterionIdx, min, max) => {
+                    updateCriterionRange(groupIdx, leverageIndices[criterionIdx], min, max);
+                  })}
+                  updateActualMetricValue={updateActualMetricValue && ((groupIdx, criterionIdx, value) => {
+                    updateActualMetricValue(groupIdx, leverageIndices[criterionIdx], value);
+                  })}
+                  toggleCriterionEnabled={toggleCriterionEnabled && ((groupIdx, criterionIdx, enabled) => {
+                    toggleCriterionEnabled(groupIdx, leverageIndices[criterionIdx], enabled);
+                  })}
                   getScoreColor={getScoreColor}
                   getScoreBackground={getScoreBackground}
                 />
@@ -145,11 +149,21 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
                 <CashFlowRatiosSection
                   criteria={cashFlowRatios}
                   groupIndex={groupIndex}
-                  updateCriterionWeight={updateCriterionWeight}
-                  updateCriterionScore={updateCriterionScore}
-                  updateCriterionRange={updateCriterionRange}
-                  updateActualMetricValue={updateActualMetricValue}
-                  toggleCriterionEnabled={toggleCriterionEnabled}
+                  updateCriterionWeight={(groupIdx, criterionIdx, newWeight) => {
+                    updateCriterionWeight(groupIdx, cashFlowIndices[criterionIdx], newWeight);
+                  }}
+                  updateCriterionScore={(groupIdx, criterionIdx, minScore, maxScore) => {
+                    updateCriterionScore(groupIdx, cashFlowIndices[criterionIdx], minScore, maxScore);
+                  }}
+                  updateCriterionRange={updateCriterionRange && ((groupIdx, criterionIdx, min, max) => {
+                    updateCriterionRange(groupIdx, cashFlowIndices[criterionIdx], min, max);
+                  })}
+                  updateActualMetricValue={updateActualMetricValue && ((groupIdx, criterionIdx, value) => {
+                    updateActualMetricValue(groupIdx, cashFlowIndices[criterionIdx], value);
+                  })}
+                  toggleCriterionEnabled={toggleCriterionEnabled && ((groupIdx, criterionIdx, enabled) => {
+                    toggleCriterionEnabled(groupIdx, cashFlowIndices[criterionIdx], enabled);
+                  })}
                   getScoreColor={getScoreColor}
                   getScoreBackground={getScoreBackground}
                 />
@@ -159,11 +173,21 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
                 <CoverageRatiosSection
                   criteria={coverageRatios}
                   groupIndex={groupIndex}
-                  updateCriterionWeight={updateCriterionWeight}
-                  updateCriterionScore={updateCriterionScore}
-                  updateCriterionRange={updateCriterionRange}
-                  updateActualMetricValue={updateActualMetricValue}
-                  toggleCriterionEnabled={toggleCriterionEnabled}
+                  updateCriterionWeight={(groupIdx, criterionIdx, newWeight) => {
+                    updateCriterionWeight(groupIdx, coverageIndices[criterionIdx], newWeight);
+                  }}
+                  updateCriterionScore={(groupIdx, criterionIdx, minScore, maxScore) => {
+                    updateCriterionScore(groupIdx, coverageIndices[criterionIdx], minScore, maxScore);
+                  }}
+                  updateCriterionRange={updateCriterionRange && ((groupIdx, criterionIdx, min, max) => {
+                    updateCriterionRange(groupIdx, coverageIndices[criterionIdx], min, max);
+                  })}
+                  updateActualMetricValue={updateActualMetricValue && ((groupIdx, criterionIdx, value) => {
+                    updateActualMetricValue(groupIdx, coverageIndices[criterionIdx], value);
+                  })}
+                  toggleCriterionEnabled={toggleCriterionEnabled && ((groupIdx, criterionIdx, enabled) => {
+                    toggleCriterionEnabled(groupIdx, coverageIndices[criterionIdx], enabled);
+                  })}
                   getScoreColor={getScoreColor}
                   getScoreBackground={getScoreBackground}
                 />
@@ -173,11 +197,21 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
                 <TurnoverRatiosSection
                   criteria={turnoverRatios}
                   groupIndex={groupIndex}
-                  updateCriterionWeight={updateCriterionWeight}
-                  updateCriterionScore={updateCriterionScore}
-                  updateCriterionRange={updateCriterionRange}
-                  updateActualMetricValue={updateActualMetricValue}
-                  toggleCriterionEnabled={toggleCriterionEnabled}
+                  updateCriterionWeight={(groupIdx, criterionIdx, newWeight) => {
+                    updateCriterionWeight(groupIdx, turnoverIndices[criterionIdx], newWeight);
+                  }}
+                  updateCriterionScore={(groupIdx, criterionIdx, minScore, maxScore) => {
+                    updateCriterionScore(groupIdx, turnoverIndices[criterionIdx], minScore, maxScore);
+                  }}
+                  updateCriterionRange={updateCriterionRange && ((groupIdx, criterionIdx, min, max) => {
+                    updateCriterionRange(groupIdx, turnoverIndices[criterionIdx], min, max);
+                  })}
+                  updateActualMetricValue={updateActualMetricValue && ((groupIdx, criterionIdx, value) => {
+                    updateActualMetricValue(groupIdx, turnoverIndices[criterionIdx], value);
+                  })}
+                  toggleCriterionEnabled={toggleCriterionEnabled && ((groupIdx, criterionIdx, enabled) => {
+                    toggleCriterionEnabled(groupIdx, turnoverIndices[criterionIdx], enabled);
+                  })}
                   getScoreColor={getScoreColor}
                   getScoreBackground={getScoreBackground}
                 />
@@ -187,36 +221,44 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
                 <ProfitabilityRatiosSection
                   criteria={profitabilityRatios}
                   groupIndex={groupIndex}
-                  updateCriterionWeight={updateCriterionWeight}
-                  updateCriterionScore={updateCriterionScore}
-                  updateCriterionRange={updateCriterionRange}
-                  updateActualMetricValue={updateActualMetricValue}
-                  toggleCriterionEnabled={toggleCriterionEnabled}
+                  updateCriterionWeight={(groupIdx, criterionIdx, newWeight) => {
+                    updateCriterionWeight(groupIdx, profitabilityIndices[criterionIdx], newWeight);
+                  }}
+                  updateCriterionScore={(groupIdx, criterionIdx, minScore, maxScore) => {
+                    updateCriterionScore(groupIdx, profitabilityIndices[criterionIdx], minScore, maxScore);
+                  }}
+                  updateCriterionRange={updateCriterionRange && ((groupIdx, criterionIdx, min, max) => {
+                    updateCriterionRange(groupIdx, profitabilityIndices[criterionIdx], min, max);
+                  })}
+                  updateActualMetricValue={updateActualMetricValue && ((groupIdx, criterionIdx, value) => {
+                    updateActualMetricValue(groupIdx, profitabilityIndices[criterionIdx], value);
+                  })}
+                  toggleCriterionEnabled={toggleCriterionEnabled && ((groupIdx, criterionIdx, enabled) => {
+                    toggleCriterionEnabled(groupIdx, profitabilityIndices[criterionIdx], enabled);
+                  })}
                   getScoreColor={getScoreColor}
                   getScoreBackground={getScoreBackground}
                 />
               )}
 
-              {otherCriteria.map((criterion, criterionIndex) => (
-                <CriterionItem
-                  key={criterionIndex}
-                  criterion={criterion}
-                  criterionIndex={criterionIndex + 
-                    (group.name === "Financial Strength" ? 
-                      liquidityRatios.length + leverageRatios.length + cashFlowRatios.length + 
-                      coverageRatios.length + turnoverRatios.length + profitabilityRatios.length : 
-                      0
-                    )}
-                  groupIndex={groupIndex}
-                  updateCriterionWeight={updateCriterionWeight}
-                  updateCriterionScore={updateCriterionScore}
-                  updateCriterionRange={updateCriterionRange}
-                  updateActualMetricValue={updateActualMetricValue}
-                  toggleCriterionEnabled={toggleCriterionEnabled}
-                  getScoreColor={getScoreColor}
-                  getScoreBackground={getScoreBackground}
-                />
-              ))}
+              {otherCriteria.map((criterion, criterionIndex) => {
+                const fullCriterionIndex = group.criteria.findIndex(c => c.name === criterion.name);
+                return (
+                  <CriterionItem
+                    key={criterion.name}
+                    criterion={criterion}
+                    criterionIndex={fullCriterionIndex}
+                    groupIndex={groupIndex}
+                    updateCriterionWeight={updateCriterionWeight}
+                    updateCriterionScore={updateCriterionScore}
+                    updateCriterionRange={updateCriterionRange}
+                    updateActualMetricValue={updateActualMetricValue}
+                    toggleCriterionEnabled={toggleCriterionEnabled}
+                    getScoreColor={getScoreColor}
+                    getScoreBackground={getScoreBackground}
+                  />
+                );
+              })}
             </AccordionContent>
           </AccordionItem>
         </Accordion>

@@ -12,7 +12,7 @@ export const financialStrengthGroup: CriteriaGroup = {
   description: "Measures the overall financial health of the borrower",
   weight: 25,
   minScore: 4.0,
-  maxScore: 4.2,
+  maxScore: 4.3,  // Updated to reflect the actual calculated score
   locked: false,
   criteria: [
     ...liquidityRatios,
