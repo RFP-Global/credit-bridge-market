@@ -1,0 +1,98 @@
+
+import { Criterion } from "@/components/underwriting/types";
+
+export const liquidityRatios: Criterion[] = [
+  {
+    name: "Current Ratio",
+    description: "Current assets divided by current liabilities - measures short-term liquidity",
+    value: "1.8x",
+    weight: 20,
+    minScore: 4,
+    maxScore: 4,
+    min: 0.5,
+    max: 3.0,
+    step: 0.1,
+    unit: "x",
+    preferredMin: 1.5,
+    preferredMax: 3.0,
+    actualMin: 0,
+    actualMax: 5,
+    actualValue: 1.8,
+    actualUnit: "x",
+    enabled: true,
+    scoreMapping: [
+      { min: 3.00, max: 100, score: 10, riskLevel: "Exceptional" },
+      { min: 2.50, max: 2.99, score: 9, riskLevel: "Very Strong" },
+      { min: 2.00, max: 2.49, score: 8, riskLevel: "Strong" },
+      { min: 1.75, max: 1.99, score: 7, riskLevel: "Good" },
+      { min: 1.50, max: 1.74, score: 6, riskLevel: "Moderate" },
+      { min: 1.25, max: 1.49, score: 5, riskLevel: "Acceptable" },
+      { min: 1.10, max: 1.24, score: 4, riskLevel: "Weak" },
+      { min: 1.00, max: 1.09, score: 3, riskLevel: "Very Weak" },
+      { min: 0.75, max: 0.99, score: 2, riskLevel: "High Risk" },
+      { min: 0, max: 0.75, score: 1, riskLevel: "Severe Risk" }
+    ]
+  },
+  {
+    name: "Quick Ratio",
+    description: "Measures a company's ability to pay short-term obligations with its most liquid assets",
+    value: "10.5",
+    weight: 15,
+    minScore: 6,
+    maxScore: 6,
+    min: 1,
+    max: 10,
+    step: 1,
+    unit: "",
+    preferredMin: 8,
+    preferredMax: 16,
+    actualMin: 0,
+    actualMax: 20,
+    actualValue: 10.5,
+    actualUnit: "",
+    enabled: true,
+    scoreMapping: [
+      { min: 18.00, max: 20.00, score: 10, riskLevel: "Exceptionally Liquid" },
+      { min: 16.00, max: 17.99, score: 9, riskLevel: "Extremely Liquid" },
+      { min: 14.00, max: 15.99, score: 8, riskLevel: "Very Liquid" },
+      { min: 12.00, max: 13.99, score: 7, riskLevel: "Highly Liquid" },
+      { min: 10.00, max: 11.99, score: 6, riskLevel: "Good Liquidity" },
+      { min: 8.00, max: 9.99, score: 5, riskLevel: "Moderate Liquidity" },
+      { min: 6.00, max: 7.99, score: 4, riskLevel: "Fair Liquidity" },
+      { min: 4.00, max: 5.99, score: 3, riskLevel: "Low Liquidity" },
+      { min: 2.00, max: 3.99, score: 2, riskLevel: "Very Low Liquidity" },
+      { min: 0, max: 1.99, score: 1, riskLevel: "Critical Liquidity" }
+    ]
+  },
+  {
+    name: "Cash Ratio",
+    description: "Cash and cash equivalents divided by current liabilities - measures immediate liquidity",
+    value: "0.8x",
+    weight: 15,
+    minScore: 4,
+    maxScore: 4,
+    min: 0.1,
+    max: 2.0,
+    step: 0.1,
+    unit: "x",
+    preferredMin: 0.5,
+    preferredMax: 1.5,
+    actualMin: 0,
+    actualMax: 5,
+    actualValue: 0.8,
+    actualUnit: "x",
+    enabled: true,
+    scoreMapping: [
+      { min: 2.00, max: 100, score: 10, riskLevel: "Exceptional Liquidity" },
+      { min: 1.50, max: 1.99, score: 9, riskLevel: "Very Strong Liquidity" },
+      { min: 1.25, max: 1.49, score: 8, riskLevel: "Strong Liquidity" },
+      { min: 1.00, max: 1.24, score: 7, riskLevel: "Good Liquidity" },
+      { min: 0.75, max: 0.99, score: 6, riskLevel: "Moderate Liquidity" },
+      { min: 0.50, max: 0.74, score: 5, riskLevel: "Acceptable Liquidity" },
+      { min: 0.35, max: 0.49, score: 4, riskLevel: "Weak Liquidity" },
+      { min: 0.25, max: 0.34, score: 3, riskLevel: "Very Weak Liquidity" },
+      { min: 0.10, max: 0.24, score: 2, riskLevel: "High Liquidity Risk" },
+      { min: 0, max: 0.09, score: 1, riskLevel: "Critical Liquidity Risk" }
+    ]
+  }
+];
