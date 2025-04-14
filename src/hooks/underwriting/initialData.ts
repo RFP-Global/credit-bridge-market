@@ -1,5 +1,4 @@
-
-import { CriteriaGroup, ScoreThreshold } from "./types";
+import { CriteriaGroup, ScoreThreshold } from "@/components/underwriting/types";
 
 export const initialScoreThresholds: ScoreThreshold[] = [
   { threshold: 9, color: "text-green-500" },
@@ -10,21 +9,30 @@ export const initialScoreThresholds: ScoreThreshold[] = [
 
 export const initialCriteriaGroups: CriteriaGroup[] = [
   {
-    id: "financial-strength",
     name: "Financial Strength",
+    description: "Key financial ratios and metrics",
     weight: 30,
     minScore: 1,
     maxScore: 10,
     criteria: [
       {
-        id: "liquidity-ratios",
         name: "Liquidity Ratios",
-        weight: 20,
-        enabled: true,
-        minRange: 0,
-        maxRange: 3,
+        description: "Measures of short-term solvency",
+        value: "Moderate",
+        weight: 25,
         minScore: 1,
         maxScore: 10,
+        min: 0,
+        max: 3,
+        step: 0.1,
+        unit: "ratio",
+        enabled: true,
+        scoreMapping: [
+          { min: 0, max: 0.5, score: 1, riskLevel: "High Risk" },
+          { min: 0.5, max: 1, score: 3, riskLevel: "Moderate Risk" },
+          { min: 1, max: 1.5, score: 7, riskLevel: "Low Risk" },
+          { min: 1.5, max: 3, score: 10, riskLevel: "Very Low Risk" }
+        ],
         subcriteria: [
           {
             name: "Current Ratio",
@@ -47,14 +55,23 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         ]
       },
       {
-        id: "leverage-ratios",
         name: "Leverage Ratios",
-        weight: 20,
-        enabled: true,
-        minRange: 0,
-        maxRange: 5,
+        description: "Measures of financial leverage and solvency",
+        value: "Moderate",
+        weight: 25,
         minScore: 1,
         maxScore: 10,
+        min: 0,
+        max: 5,
+        step: 0.1,
+        unit: "ratio",
+        enabled: true,
+        scoreMapping: [
+          { min: 0, max: 1, score: 10, riskLevel: "Very Low Risk" },
+          { min: 1, max: 2, score: 7, riskLevel: "Low Risk" },
+          { min: 2, max: 3, score: 4, riskLevel: "Moderate Risk" },
+          { min: 3, max: 5, score: 1, riskLevel: "High Risk" }
+        ],
         subcriteria: [
           {
             name: "Debt-to-Equity Ratio",
@@ -66,7 +83,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
             name: "Debt Ratio",
             description: "Total Liabilities / Total Assets",
             target: "<= 0.6",
-            weight: 20
+            weight: 25
           },
           {
             name: "Equity Ratio",
@@ -78,7 +95,7 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
             name: "Interest Coverage Ratio",
             description: "EBIT / Interest Expense",
             target: ">= 2.0",
-            weight: 20
+            weight: 15
           },
           {
             name: "Fixed Charge Coverage Ratio",
@@ -89,14 +106,23 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         ]
       },
       {
-        id: "profitability-ratios",
         name: "Profitability Ratios",
+        description: "Measures of operational effectiveness",
+        value: "Moderate",
         weight: 20,
-        enabled: true,
-        minRange: -20,
-        maxRange: 40,
         minScore: 1,
         maxScore: 10,
+        min: -20,
+        max: 40,
+        step: 1,
+        unit: "%",
+        enabled: true,
+        scoreMapping: [
+          { min: 20, max: 40, score: 10, riskLevel: "Very Low Risk" },
+          { min: 10, max: 20, score: 7, riskLevel: "Low Risk" },
+          { min: 0, max: 10, score: 4, riskLevel: "Moderate Risk" },
+          { min: -20, max: 0, score: 1, riskLevel: "High Risk" }
+        ],
         subcriteria: [
           {
             name: "Net Profit Margin",
@@ -131,14 +157,23 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         ]
       },
       {
-        id: "cash-flow-ratios",
         name: "Cash Flow & Coverage Ratios",
-        weight: 25,
-        enabled: true,
-        minRange: 0,
-        maxRange: 2,
+        description: "Measures of cash generation and debt service capability",
+        value: "Moderate",
+        weight: 15,
         minScore: 1,
         maxScore: 10,
+        min: 0,
+        max: 2,
+        step: 0.1,
+        unit: "ratio",
+        enabled: true,
+        scoreMapping: [
+          { min: 1.5, max: 2, score: 10, riskLevel: "Very Low Risk" },
+          { min: 1.25, max: 1.5, score: 7, riskLevel: "Low Risk" },
+          { min: 1, max: 1.25, score: 4, riskLevel: "Moderate Risk" },
+          { min: 0, max: 1, score: 1, riskLevel: "High Risk" }
+        ],
         subcriteria: [
           {
             name: "Operating Cash Flow Ratio",
@@ -179,14 +214,23 @@ export const initialCriteriaGroups: CriteriaGroup[] = [
         ]
       },
       {
-        id: "efficiency-ratios",
         name: "Efficiency Ratios",
+        description: "Measures of operational efficiency",
+        value: "Moderate",
         weight: 15,
-        enabled: true,
-        minRange: 0,
-        maxRange: 20,
         minScore: 1,
         maxScore: 10,
+        min: 0,
+        max: 20,
+        step: 0.1,
+        unit: "turns",
+        enabled: true,
+        scoreMapping: [
+          { min: 10, max: 20, score: 10, riskLevel: "Very Low Risk" },
+          { min: 6, max: 10, score: 7, riskLevel: "Low Risk" },
+          { min: 3, max: 6, score: 4, riskLevel: "Moderate Risk" },
+          { min: 0, max: 3, score: 1, riskLevel: "High Risk" }
+        ],
         subcriteria: [
           {
             name: "Accounts Receivable Turnover",

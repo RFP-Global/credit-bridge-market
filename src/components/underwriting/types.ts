@@ -1,4 +1,3 @@
-
 export interface UnderwritingMetric {
   name: string;
   value?: string | number;
@@ -17,7 +16,7 @@ export interface UnderwritingCategory {
 }
 
 export interface Criterion {
-  id?: string;  // Added optional id property
+  id?: string;
   name: string;
   description: string;
   value: string;
@@ -27,15 +26,15 @@ export interface Criterion {
   min: number;
   max: number;
   step: number;
-  preferredMin?: number;
-  preferredMax?: number;
   unit?: string;
-  actualMin?: number;
-  actualMax?: number;
-  actualValue?: number;
-  actualUnit?: string;
-  scoreMapping?: ScoreRange[];
   enabled: boolean;
+  scoreMapping: ScoreRange[];
+  subcriteria?: {
+    name: string;
+    description: string;
+    target: string;
+    weight: number;
+  }[];
 }
 
 export interface ScoreRange {
