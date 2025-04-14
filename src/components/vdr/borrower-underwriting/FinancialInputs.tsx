@@ -34,6 +34,24 @@ export const FinancialInputs = ({ financialData, onInputChange }: FinancialInput
     annualDebtService: 'Annual Debt Service',
   };
 
+  const formatDisplayValue = (value: string) => {
+    if (!value) return '';
+    const numValue = parseFloat(value);
+    if (isNaN(numValue)) return value;
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(numValue);
+  };
+
+  const handleInputChange = (field: string, displayValue: string) => {
+    // Remove currency formatting to store raw number
+    const rawValue = displayValue.replace(/[$,]/g, '');
+    onInputChange(field, rawValue);
+  };
+
   const renderInputSection = (fields: Record<string, string>, title: string) => (
     <div className="space-y-4">
       <h3 className="text-sm font-semibold text-primary">{title}</h3>
@@ -44,11 +62,11 @@ export const FinancialInputs = ({ financialData, onInputChange }: FinancialInput
               {label}
             </label>
             <Input
-              type="number"
-              value={financialData[field] || ''}
-              onChange={(e) => onInputChange(field, e.target.value)}
-              className="bg-black/20"
-              placeholder="Enter value..."
+              type="text"
+              value={formatDisplayValue(financialData[field])}
+              onChange={(e) => handleInputChange(field, e.target.value)}
+              className="bg-black/20 font-mono"
+              placeholder="$0"
             />
           </div>
         ))}
