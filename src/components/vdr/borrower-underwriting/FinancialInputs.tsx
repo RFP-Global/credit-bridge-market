@@ -13,27 +13,6 @@ interface FinancialInputsProps {
 }
 
 export const FinancialInputs = ({ financialData, onInputChange }: FinancialInputsProps) => {
-  const formatCurrency = (value: string) => {
-    // Remove any non-digit characters except decimal point
-    const numberValue = value.replace(/[^\d.]/g, '');
-    
-    // Convert to number and format with commas and dollar sign
-    const formattedValue = Number(numberValue).toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    });
-
-    return formattedValue;
-  };
-
-  const handleInputChange = (field: string, value: string) => {
-    // Store raw number value in state
-    const rawValue = value.replace(/[^\d.]/g, '');
-    onInputChange(field, rawValue);
-  };
-
   const incomeStatementFields = {
     revenue: 'Revenue',
     grossProfit: 'Gross Profit',
@@ -65,9 +44,9 @@ export const FinancialInputs = ({ financialData, onInputChange }: FinancialInput
               {label}
             </label>
             <Input
-              type="text"
-              value={financialData[field] ? formatCurrency(financialData[field]) : ''}
-              onChange={(e) => handleInputChange(field, e.target.value)}
+              type="number"
+              value={financialData[field] || ''}
+              onChange={(e) => onInputChange(field, e.target.value)}
               className="bg-black/20"
               placeholder="Enter value..."
             />
