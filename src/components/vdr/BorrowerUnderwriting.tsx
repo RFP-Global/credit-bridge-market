@@ -5,7 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FinancialRatios } from "@/types/proposalDetails";
 import { toast } from "sonner";
-import { calculateOverallRiskScore, getScoreColor, getScoreBackground, getRiskLevel } from './utils/borrowerRiskUtils';
+import { 
+  calculateOverallRiskScore, 
+  calculateRatioScore, 
+  getScoreColor, 
+  getScoreBackground, 
+  getRiskLevel 
+} from './utils/borrowerRiskUtils';
 import { Badge } from '@/components/ui/badge';
 
 const BorrowerUnderwriting = () => {
@@ -51,7 +57,13 @@ const BorrowerUnderwriting = () => {
       zScore: 0,
     };
 
-    const score = calculateOverallRiskScore(calculatedRatios);
+    // Convert to Record<string, number> to pass to calculateOverallRiskScore
+    const ratioRecord: Record<string, number> = {};
+    Object.entries(calculatedRatios).forEach(([key, value]) => {
+      ratioRecord[key] = value;
+    });
+
+    const score = calculateOverallRiskScore(ratioRecord);
     setRiskScore(score);
     setRatios(calculatedRatios);
     toast.success("Financial ratios and risk score calculated successfully");

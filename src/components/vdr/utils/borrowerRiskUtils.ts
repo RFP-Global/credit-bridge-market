@@ -1,5 +1,5 @@
 
-import { getScoreColor, getScoreBackground, getRiskLevel } from "@/components/underwriting/utils/styleUtils";
+import { getScoreBackground, getRiskLevel } from "@/components/underwriting/utils/styleUtils";
 
 interface RatioScoreMapping {
   ratio: string;
@@ -63,6 +63,14 @@ const ratioScoreMappings: RatioScoreMapping[] = [
   }
 ];
 
+// Define our own score thresholds for the borrower risk utility
+const scoreThresholds = [
+  { threshold: 9, color: "text-green-500" },
+  { threshold: 7, color: "text-blue-500" },
+  { threshold: 5, color: "text-yellow-500" },
+  { threshold: 0, color: "text-red-500" }
+];
+
 export const calculateRatioScore = (ratioName: string, value: number): number => {
   const mapping = ratioScoreMappings.find(m => m.ratio === ratioName);
   if (!mapping) return 5; // Default middle score
@@ -85,4 +93,14 @@ export const calculateOverallRiskScore = (ratios: Record<string, number>): numbe
   return count > 0 ? Number((totalScore / count).toFixed(2)) : 5;
 };
 
-export { getScoreColor, getScoreBackground, getRiskLevel };
+// Create our own version of getScoreColor that doesn't require the scoreThresholds parameter
+export const getScoreColor = (score: number): string => {
+  for (const threshold of scoreThresholds) {
+    if (score >= threshold.threshold) {
+      return threshold.color;
+    }
+  }
+  return "text-red-500";
+};
+
+export { getScoreBackground, getRiskLevel };
