@@ -23,6 +23,15 @@ interface RatioGroupProps {
 }
 
 export const RatioGroup = ({ title, description, ratios }: RatioGroupProps) => {
+  const formatRatioValue = (value: number) => {
+    // Handle percentage ratios
+    if (["margin", "return", "ratio"].some(term => value < 1)) {
+      return `${(value * 100).toFixed(1)}%`;
+    }
+    // For ratios that are typically expressed as "X:1" or plain numbers
+    return value.toFixed(2);
+  };
+
   return (
     <Card className="bg-black/40 border-gray-800">
       <CardHeader>
@@ -49,7 +58,7 @@ export const RatioGroup = ({ title, description, ratios }: RatioGroupProps) => {
                 <p className="text-sm text-gray-400 mt-1 font-mono">{ratio.formula}</p>
               </div>
               <div className="text-right">
-                <p className="text-lg font-semibold">{ratio.value.toFixed(2)}</p>
+                <p className="text-lg font-semibold">{formatRatioValue(ratio.value)}</p>
                 <p className="text-sm text-gray-400">Score: {ratio.score.toFixed(1)} / 10</p>
               </div>
             </div>
