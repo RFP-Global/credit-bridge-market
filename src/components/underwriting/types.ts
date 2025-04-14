@@ -17,6 +17,7 @@ export interface UnderwritingCategory {
 }
 
 export interface Criterion {
+  id?: string;  // Added optional id property
   name: string;
   description: string;
   value: string;
@@ -45,6 +46,7 @@ export interface ScoreRange {
 }
 
 export interface CriteriaGroup {
+  id?: string;  // Also added optional id property here for consistency
   name: string;
   description: string;
   weight: number;
