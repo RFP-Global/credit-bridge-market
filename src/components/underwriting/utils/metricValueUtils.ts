@@ -1,8 +1,6 @@
-
 import { CriteriaGroup, ScoreRange } from "../types";
 import { recalculateScores } from "./scoreCalculationUtils";
-
-const roundToTenth = (value: number) => parseFloat(value.toFixed(1));
+import { roundToTenth } from './roundingUtils';
 
 /**
  * Updates the actual value of a metric and recalculates the corresponding scores.
