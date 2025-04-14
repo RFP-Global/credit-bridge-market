@@ -1,15 +1,13 @@
+
 import React from "react";
 import { CriteriaGroup as CriteriaGroupType } from "../types";
-import { CriterionItem } from "../CriterionItem";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Slider } from "@/components/ui/slider";
-import { Button } from "@/components/ui/button";
 import { LiquidityRatiosSection } from "../LiquidityRatiosSection";
 import { LeverageRatiosSection } from "../LeverageRatiosSection";
 import { ProfitabilityRatiosSection } from "../ProfitabilityRatiosSection";
 import { CashFlowRatiosSection } from "../CashFlowRatiosSection";
 import { CoverageRatiosSection } from "../CoverageRatiosSection";
 import { TurnoverRatiosSection } from "../TurnoverRatiosSection";
+import { CriterionItem } from "../CriterionItem";
 
 interface CriteriaSectionsProps {
   group: CriteriaGroupType;
@@ -76,56 +74,150 @@ export const CriteriaSections: React.FC<CriteriaSectionsProps> = ({
     !turnoverRatioNames.includes(c.name)
   );
 
-  const renderSubCategoryHeader = (title: string, criteria: CriteriaGroupType["criteria"]) => {
-    if (criteria.length === 0) return null;
-
-    const avgScore = criteria.reduce((sum, c) => sum + (c.minScore + c.maxScore) / 2, 0) / criteria.length;
-
-    return (
-      <Card className="bg-gray-900/50 mb-4">
-        <CardHeader className="py-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-medium">{title}</CardTitle>
-            <span className={`text-sm font-medium ${getScoreColor(avgScore)}`}>
-              Score: {avgScore.toFixed(1)}
-            </span>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {criteria.map((criterion, idx) => {
-            const criterionIndex = group.criteria.findIndex(c => c.name === criterion.name);
-            return (
-              <CriterionItem
-                key={criterion.name}
-                criterion={criterion}
-                criterionIndex={criterionIndex}
-                groupIndex={groupIndex}
-                updateCriterionWeight={updateCriterionWeight}
-                updateCriterionScore={updateCriterionScore}
-                updateCriterionRange={updateCriterionRange}
-                updateActualMetricValue={updateActualMetricValue}
-                toggleCriterionEnabled={toggleCriterionEnabled}
-                getScoreColor={getScoreColor}
-                getScoreBackground={getScoreBackground}
-              />
-            );
-          })}
-        </CardContent>
-      </Card>
-    );
-  };
-
   return (
     <>
-      {group.name === "Financial Strength" && (
-        <>
-          {renderSubCategoryHeader("Liquidity Ratios", liquidityRatios)}
-          {renderSubCategoryHeader("Leverage Ratios", leverageRatios)}
-          {renderSubCategoryHeader("Cash Flow Ratios", cashFlowRatios)}
-          {renderSubCategoryHeader("Coverage Ratios", coverageRatios)}
-          {renderSubCategoryHeader("Turnover Ratios", turnoverRatios)}
-          {renderSubCategoryHeader("Profitability Ratios", profitabilityRatios)}
-        </>
+      {group.name === "Financial Strength" && liquidityRatios.length > 0 && (
+        <LiquidityRatiosSection
+          criteria={liquidityRatios}
+          groupIndex={groupIndex}
+          updateCriterionWeight={(groupIdx, criterionIdx, newWeight) => {
+            updateCriterionWeight(groupIdx, liquidityIndices[criterionIdx], newWeight);
+          }}
+          updateCriterionScore={(groupIdx, criterionIdx, minScore, maxScore) => {
+            updateCriterionScore(groupIdx, liquidityIndices[criterionIdx], minScore, maxScore);
+          }}
+          updateCriterionRange={updateCriterionRange && ((groupIdx, criterionIdx, min, max) => {
+            updateCriterionRange(groupIdx, liquidityIndices[criterionIdx], min, max);
+          })}
+          updateActualMetricValue={updateActualMetricValue && ((groupIdx, criterionIdx, value) => {
+            updateActualMetricValue(groupIdx, liquidityIndices[criterionIdx], value);
+          })}
+          toggleCriterionEnabled={toggleCriterionEnabled && ((groupIdx, criterionIdx, enabled) => {
+            toggleCriterionEnabled(groupIdx, liquidityIndices[criterionIdx], enabled);
+          })}
+          getScoreColor={getScoreColor}
+          getScoreBackground={getScoreBackground}
+        />
+      )}
+      
+      {group.name === "Financial Strength" && leverageRatios.length > 0 && (
+        <LeverageRatiosSection
+          criteria={leverageRatios}
+          groupIndex={groupIndex}
+          updateCriterionWeight={(groupIdx, criterionIdx, newWeight) => {
+            updateCriterionWeight(groupIdx, leverageIndices[criterionIdx], newWeight);
+          }}
+          updateCriterionScore={(groupIdx, criterionIdx, minScore, maxScore) => {
+            updateCriterionScore(groupIdx, leverageIndices[criterionIdx], minScore, maxScore);
+          }}
+          updateCriterionRange={updateCriterionRange && ((groupIdx, criterionIdx, min, max) => {
+            updateCriterionRange(groupIdx, leverageIndices[criterionIdx], min, max);
+          })}
+          updateActualMetricValue={updateActualMetricValue && ((groupIdx, criterionIdx, value) => {
+            updateActualMetricValue(groupIdx, leverageIndices[criterionIdx], value);
+          })}
+          toggleCriterionEnabled={toggleCriterionEnabled && ((groupIdx, criterionIdx, enabled) => {
+            toggleCriterionEnabled(groupIdx, leverageIndices[criterionIdx], enabled);
+          })}
+          getScoreColor={getScoreColor}
+          getScoreBackground={getScoreBackground}
+        />
+      )}
+
+      {group.name === "Financial Strength" && cashFlowRatios.length > 0 && (
+        <CashFlowRatiosSection
+          criteria={cashFlowRatios}
+          groupIndex={groupIndex}
+          updateCriterionWeight={(groupIdx, criterionIdx, newWeight) => {
+            updateCriterionWeight(groupIdx, cashFlowIndices[criterionIdx], newWeight);
+          }}
+          updateCriterionScore={(groupIdx, criterionIdx, minScore, maxScore) => {
+            updateCriterionScore(groupIdx, cashFlowIndices[criterionIdx], minScore, maxScore);
+          }}
+          updateCriterionRange={updateCriterionRange && ((groupIdx, criterionIdx, min, max) => {
+            updateCriterionRange(groupIdx, cashFlowIndices[criterionIdx], min, max);
+          })}
+          updateActualMetricValue={updateActualMetricValue && ((groupIdx, criterionIdx, value) => {
+            updateActualMetricValue(groupIdx, cashFlowIndices[criterionIdx], value);
+          })}
+          toggleCriterionEnabled={toggleCriterionEnabled && ((groupIdx, criterionIdx, enabled) => {
+            toggleCriterionEnabled(groupIdx, cashFlowIndices[criterionIdx], enabled);
+          })}
+          getScoreColor={getScoreColor}
+          getScoreBackground={getScoreBackground}
+        />
+      )}
+      
+      {group.name === "Financial Strength" && coverageRatios.length > 0 && (
+        <CoverageRatiosSection
+          criteria={coverageRatios}
+          groupIndex={groupIndex}
+          updateCriterionWeight={(groupIdx, criterionIdx, newWeight) => {
+            updateCriterionWeight(groupIdx, coverageIndices[criterionIdx], newWeight);
+          }}
+          updateCriterionScore={(groupIdx, criterionIdx, minScore, maxScore) => {
+            updateCriterionScore(groupIdx, coverageIndices[criterionIdx], minScore, maxScore);
+          }}
+          updateCriterionRange={updateCriterionRange && ((groupIdx, criterionIdx, min, max) => {
+            updateCriterionRange(groupIdx, coverageIndices[criterionIdx], min, max);
+          })}
+          updateActualMetricValue={updateActualMetricValue && ((groupIdx, criterionIdx, value) => {
+            updateActualMetricValue(groupIdx, coverageIndices[criterionIdx], value);
+          })}
+          toggleCriterionEnabled={toggleCriterionEnabled && ((groupIdx, criterionIdx, enabled) => {
+            toggleCriterionEnabled(groupIdx, coverageIndices[criterionIdx], enabled);
+          })}
+          getScoreColor={getScoreColor}
+          getScoreBackground={getScoreBackground}
+        />
+      )}
+
+      {group.name === "Financial Strength" && turnoverRatios.length > 0 && (
+        <TurnoverRatiosSection
+          criteria={turnoverRatios}
+          groupIndex={groupIndex}
+          updateCriterionWeight={(groupIdx, criterionIdx, newWeight) => {
+            updateCriterionWeight(groupIdx, turnoverIndices[criterionIdx], newWeight);
+          }}
+          updateCriterionScore={(groupIdx, criterionIdx, minScore, maxScore) => {
+            updateCriterionScore(groupIdx, turnoverIndices[criterionIdx], minScore, maxScore);
+          }}
+          updateCriterionRange={updateCriterionRange && ((groupIdx, criterionIdx, min, max) => {
+            updateCriterionRange(groupIdx, turnoverIndices[criterionIdx], min, max);
+          })}
+          updateActualMetricValue={updateActualMetricValue && ((groupIdx, criterionIdx, value) => {
+            updateActualMetricValue(groupIdx, turnoverIndices[criterionIdx], value);
+          })}
+          toggleCriterionEnabled={toggleCriterionEnabled && ((groupIdx, criterionIdx, enabled) => {
+            toggleCriterionEnabled(groupIdx, turnoverIndices[criterionIdx], enabled);
+          })}
+          getScoreColor={getScoreColor}
+          getScoreBackground={getScoreBackground}
+        />
+      )}
+
+      {group.name === "Financial Strength" && profitabilityRatios.length > 0 && (
+        <ProfitabilityRatiosSection
+          criteria={profitabilityRatios}
+          groupIndex={groupIndex}
+          updateCriterionWeight={(groupIdx, criterionIdx, newWeight) => {
+            updateCriterionWeight(groupIdx, profitabilityIndices[criterionIdx], newWeight);
+          }}
+          updateCriterionScore={(groupIdx, criterionIdx, minScore, maxScore) => {
+            updateCriterionScore(groupIdx, profitabilityIndices[criterionIdx], minScore, maxScore);
+          }}
+          updateCriterionRange={updateCriterionRange && ((groupIdx, criterionIdx, min, max) => {
+            updateCriterionRange(groupIdx, profitabilityIndices[criterionIdx], min, max);
+          })}
+          updateActualMetricValue={updateActualMetricValue && ((groupIdx, criterionIdx, value) => {
+            updateActualMetricValue(groupIdx, profitabilityIndices[criterionIdx], value);
+          })}
+          toggleCriterionEnabled={toggleCriterionEnabled && ((groupIdx, criterionIdx, enabled) => {
+            toggleCriterionEnabled(groupIdx, profitabilityIndices[criterionIdx], enabled);
+          })}
+          getScoreColor={getScoreColor}
+          getScoreBackground={getScoreBackground}
+        />
       )}
 
       {otherCriteria.map((criterion, criterionIndex) => {
