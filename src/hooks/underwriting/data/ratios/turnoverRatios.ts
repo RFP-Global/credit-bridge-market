@@ -1,9 +1,11 @@
 
-export const turnoverRatios = [
+import { Criterion } from "@/components/underwriting/types";
+
+export const turnoverRatios: Criterion[] = [
   {
     name: "Accounts Receivable Turnover Ratio",
     description: "Measures how efficiently a company collects its receivables",
-    value: "Net Credit Sales / Average Accounts Receivable",
+    value: "8.5x",
     weight: 5,
     minScore: 4.0,
     maxScore: 8.0,
@@ -11,12 +13,30 @@ export const turnoverRatios = [
     max: 20,
     step: 0.1,
     unit: "times",
-    enabled: true
+    preferredMin: 6,
+    preferredMax: 12,
+    actualMin: 0,
+    actualMax: 20,
+    actualValue: 8.5,
+    actualUnit: "times",
+    enabled: true,
+    scoreMapping: [
+      { min: 12.0, max: 100, score: 10, riskLevel: "Exceptional Efficiency" },
+      { min: 10.0, max: 11.9, score: 9, riskLevel: "Very High Efficiency" },
+      { min: 8.0, max: 9.9, score: 8, riskLevel: "High Efficiency" },
+      { min: 6.0, max: 7.9, score: 7, riskLevel: "Good Efficiency" },
+      { min: 5.0, max: 5.9, score: 6, riskLevel: "Above Average" },
+      { min: 4.0, max: 4.9, score: 5, riskLevel: "Average Efficiency" },
+      { min: 3.0, max: 3.9, score: 4, riskLevel: "Below Average" },
+      { min: 2.0, max: 2.9, score: 3, riskLevel: "Low Efficiency" },
+      { min: 1.0, max: 1.9, score: 2, riskLevel: "Very Low Efficiency" },
+      { min: 0, max: 0.9, score: 1, riskLevel: "Critical Efficiency" }
+    ]
   },
   {
     name: "Inventory Turnover Ratio",
     description: "Indicates how many times inventory is sold and replaced over a period",
-    value: "Cost of Goods Sold / Average Inventory",
+    value: "6.2x",
     weight: 5,
     minScore: 4.0,
     maxScore: 8.0,
@@ -24,12 +44,30 @@ export const turnoverRatios = [
     max: 20,
     step: 0.1,
     unit: "times",
-    enabled: true
+    preferredMin: 4,
+    preferredMax: 10,
+    actualMin: 0,
+    actualMax: 20,
+    actualValue: 6.2,
+    actualUnit: "times",
+    enabled: true,
+    scoreMapping: [
+      { min: 10.0, max: 100, score: 10, riskLevel: "Exceptional Turnover" },
+      { min: 8.0, max: 9.9, score: 9, riskLevel: "Very High Turnover" },
+      { min: 6.0, max: 7.9, score: 8, riskLevel: "High Turnover" },
+      { min: 5.0, max: 5.9, score: 7, riskLevel: "Good Turnover" },
+      { min: 4.0, max: 4.9, score: 6, riskLevel: "Above Average" },
+      { min: 3.0, max: 3.9, score: 5, riskLevel: "Average Turnover" },
+      { min: 2.0, max: 2.9, score: 4, riskLevel: "Below Average" },
+      { min: 1.5, max: 1.9, score: 3, riskLevel: "Low Turnover" },
+      { min: 1.0, max: 1.4, score: 2, riskLevel: "Very Low Turnover" },
+      { min: 0, max: 0.9, score: 1, riskLevel: "Critical Turnover" }
+    ]
   },
   {
     name: "Asset Turnover Ratio",
     description: "Measures the efficiency of company's assets in generating revenue",
-    value: "Net Sales / Average Total Assets",
+    value: "1.8x",
     weight: 5,
     minScore: 4.0,
     maxScore: 8.0,
@@ -37,6 +75,24 @@ export const turnoverRatios = [
     max: 5,
     step: 0.1,
     unit: "times",
-    enabled: true
+    preferredMin: 1,
+    preferredMax: 3,
+    actualMin: 0,
+    actualMax: 5,
+    actualValue: 1.8,
+    actualUnit: "times",
+    enabled: true,
+    scoreMapping: [
+      { min: 2.5, max: 100, score: 10, riskLevel: "Exceptional Efficiency" },
+      { min: 2.0, max: 2.4, score: 9, riskLevel: "Very High Efficiency" },
+      { min: 1.7, max: 1.9, score: 8, riskLevel: "High Efficiency" },
+      { min: 1.4, max: 1.6, score: 7, riskLevel: "Good Efficiency" },
+      { min: 1.1, max: 1.3, score: 6, riskLevel: "Above Average" },
+      { min: 0.8, max: 1.0, score: 5, riskLevel: "Average Efficiency" },
+      { min: 0.6, max: 0.7, score: 4, riskLevel: "Below Average" },
+      { min: 0.4, max: 0.5, score: 3, riskLevel: "Low Efficiency" },
+      { min: 0.2, max: 0.3, score: 2, riskLevel: "Very Low Efficiency" },
+      { min: 0, max: 0.1, score: 1, riskLevel: "Critical Efficiency" }
+    ]
   }
 ];
