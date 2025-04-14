@@ -25,111 +25,116 @@ const BorrowerRatioDetails = () => {
   const { ratios, riskScore } = state;
   const riskLevel = getRiskLevelInfo(riskScore);
 
+  // Safely access ratio values with fallbacks for undefined values
+  const safeRatio = (value: number | undefined): number => {
+    return typeof value === 'number' ? value : 0;
+  };
+
   const ratioDetails: RatioDetails[] = [
     {
       name: "Debt Service Coverage Ratio",
-      value: ratios.debtServiceCoverageRatio,
+      value: safeRatio(ratios.debtServiceCoverageRatio),
       formula: "Operating Income / Annual Debt Service",
       weight: 15,
-      score: roundToTenth(ratios.debtServiceCoverageRatio * 2)
+      score: roundToTenth(safeRatio(ratios.debtServiceCoverageRatio) * 2)
     },
     {
       name: "Current Ratio",
-      value: ratios.currentRatio,
+      value: safeRatio(ratios.currentRatio),
       formula: "Current Assets / Current Liabilities",
       weight: 10,
-      score: roundToTenth(ratios.currentRatio * 2)
+      score: roundToTenth(safeRatio(ratios.currentRatio) * 2)
     },
     {
       name: "Quick Ratio",
-      value: ratios.quickRatio,
+      value: safeRatio(ratios.quickRatio),
       formula: "(Current Assets - Inventory) / Current Liabilities",
       weight: 10,
-      score: roundToTenth(ratios.quickRatio * 2)
+      score: roundToTenth(safeRatio(ratios.quickRatio) * 2)
     },
     {
       name: "Debt to EBITDA",
-      value: ratios.debtToEBITDA,
+      value: safeRatio(ratios.debtToEBITDA),
       formula: "Total Debt / Operating Income",
       weight: 10,
-      score: roundToTenth((10 - ratios.debtToEBITDA) * 2)
+      score: roundToTenth((10 - safeRatio(ratios.debtToEBITDA)) * 2)
     },
     {
       name: "Operating Cash Flow Ratio",
-      value: ratios.operatingCashFlowRatio,
+      value: safeRatio(ratios.operatingCashFlowRatio),
       formula: "Operating Income / Current Liabilities",
       weight: 5,
-      score: roundToTenth(ratios.operatingCashFlowRatio * 2)
+      score: roundToTenth(safeRatio(ratios.operatingCashFlowRatio) * 2)
     },
     {
       name: "Leverage Ratio",
-      value: ratios.leverageRatio,
+      value: safeRatio(ratios.leverageRatio),
       formula: "Total Liabilities / Total Assets",
       weight: 5,
-      score: roundToTenth((1 - ratios.leverageRatio) * 10)
+      score: roundToTenth((1 - safeRatio(ratios.leverageRatio)) * 10)
     },
     {
       name: "Net Profit Margin",
-      value: ratios.netProfitMargin,
+      value: safeRatio(ratios.netProfitMargin),
       formula: "Net Income / Revenue",
       weight: 7,
-      score: roundToTenth(ratios.netProfitMargin * 10)
+      score: roundToTenth(safeRatio(ratios.netProfitMargin) * 10)
     },
     {
       name: "Gross Profit Margin",
-      value: ratios.grossProfitMargin,
+      value: safeRatio(ratios.grossProfitMargin),
       formula: "Gross Profit / Revenue",
       weight: 7,
-      score: roundToTenth(ratios.grossProfitMargin * 10)
+      score: roundToTenth(safeRatio(ratios.grossProfitMargin) * 10)
     },
     {
       name: "Operating Margin",
-      value: ratios.operatingMargin,
+      value: safeRatio(ratios.operatingMargin),
       formula: "Operating Income / Revenue",
       weight: 7,
-      score: roundToTenth(ratios.operatingMargin * 10)
+      score: roundToTenth(safeRatio(ratios.operatingMargin) * 10)
     },
     {
       name: "Return on Assets",
-      value: ratios.returnOnAssets,
+      value: safeRatio(ratios.returnOnAssets),
       formula: "Net Income / Total Assets",
       weight: 6,
-      score: roundToTenth(ratios.returnOnAssets * 20)
+      score: roundToTenth(safeRatio(ratios.returnOnAssets) * 20)
     },
     {
       name: "Return on Equity",
-      value: ratios.returnOnEquity,
+      value: safeRatio(ratios.returnOnEquity),
       formula: "Net Income / Total Equity",
       weight: 6,
-      score: roundToTenth(ratios.returnOnEquity * 20)
+      score: roundToTenth(safeRatio(ratios.returnOnEquity) * 20)
     },
     {
       name: "Asset Turnover",
-      value: ratios.assetTurnover,
+      value: safeRatio(ratios.assetTurnover),
       formula: "Revenue / Total Assets",
       weight: 4,
-      score: roundToTenth(ratios.assetTurnover * 5)
+      score: roundToTenth(safeRatio(ratios.assetTurnover) * 5)
     },
     {
       name: "Inventory Turnover",
-      value: ratios.inventoryTurnover,
+      value: safeRatio(ratios.inventoryTurnover),
       formula: "Revenue / Inventory",
       weight: 3,
-      score: roundToTenth(ratios.inventoryTurnover * 0.5)
+      score: roundToTenth(safeRatio(ratios.inventoryTurnover) * 0.5)
     },
     {
       name: "Debt to Equity",
-      value: ratios.debtToEquity,
+      value: safeRatio(ratios.debtToEquity),
       formula: "Total Liabilities / Total Equity",
       weight: 3,
-      score: roundToTenth((3 - ratios.debtToEquity) * 3)
+      score: roundToTenth((3 - safeRatio(ratios.debtToEquity)) * 3)
     },
     {
       name: "Equity Ratio",
-      value: ratios.equityRatio,
+      value: safeRatio(ratios.equityRatio),
       formula: "Total Equity / Total Assets",
       weight: 2,
-      score: roundToTenth(ratios.equityRatio * 10)
+      score: roundToTenth(safeRatio(ratios.equityRatio) * 10)
     }
   ];
 

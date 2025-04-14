@@ -60,23 +60,11 @@ const BorrowerUnderwriting = () => {
       equityRatio: data.totalEquity / (data.totalAssets || 1),
     };
 
-    const ratiosRecord: Record<string, number> = {
-      debtServiceCoverageRatio: calculatedRatios.debtServiceCoverageRatio,
-      currentRatio: calculatedRatios.currentRatio,
-      quickRatio: calculatedRatios.quickRatio,
-      debtToEBITDA: calculatedRatios.debtToEBITDA,
-      operatingCashFlowRatio: calculatedRatios.operatingCashFlowRatio,
-      leverageRatio: calculatedRatios.leverageRatio,
-      netProfitMargin: calculatedRatios.netProfitMargin,
-      grossProfitMargin: calculatedRatios.grossProfitMargin,
-      operatingMargin: calculatedRatios.operatingMargin,
-      returnOnAssets: calculatedRatios.returnOnAssets,
-      returnOnEquity: calculatedRatios.returnOnEquity,
-      assetTurnover: calculatedRatios.assetTurnover,
-      inventoryTurnover: calculatedRatios.inventoryTurnover,
-      debtToEquity: calculatedRatios.debtToEquity,
-      equityRatio: calculatedRatios.equityRatio
-    };
+    // Create a record for risk score calculation
+    const ratiosRecord: Record<string, number> = Object.entries(calculatedRatios).reduce((acc, [key, value]) => {
+      acc[key] = value;
+      return acc;
+    }, {} as Record<string, number>);
 
     const score = calculateOverallRiskScore(ratiosRecord);
     setRiskScore(score);

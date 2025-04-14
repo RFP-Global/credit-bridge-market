@@ -36,7 +36,18 @@ export const useProposalDetails = (id: string | undefined) => {
           debtServiceCoverageRatio: 1.35,
           currentRatio: 1.8,
           quickRatio: 1.2,
-          debtToEBITDA: 0.65
+          debtToEBITDA: 0.65,
+          operatingCashFlowRatio: 1.25,
+          leverageRatio: 0.42,
+          netProfitMargin: 0.15,
+          grossProfitMargin: 0.42,
+          operatingMargin: 0.23,
+          returnOnAssets: 0.12,
+          returnOnEquity: 0.18,
+          assetTurnover: 1.4,
+          inventoryTurnover: 6.8,
+          debtToEquity: 0.7,
+          equityRatio: 0.58
         });
         
         setDemographics({
