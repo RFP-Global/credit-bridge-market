@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -154,3 +155,5 @@ export const CriterionItem: React.FC<CriterionItemProps> = ({
     </div>
   );
 };
+
+export type { CriterionItemProps };

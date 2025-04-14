@@ -14,8 +14,6 @@ interface CriteriaSectionsProps {
   groupIndex: number;
   updateCriterionWeight: (groupIndex: number, criterionIndex: number, newWeight: number) => void;
   updateCriterionScore: (groupIndex: number, criterionIndex: number, minScore: number, maxScore: number) => void;
-  updateCriterionRange?: (groupIndex: number, criterionIndex: number, min: number, max: number) => void;
-  updateActualMetricValue?: (groupIndex: number, criterionIndex: number, value: number) => void;
   toggleCriterionEnabled?: (groupIndex: number, criterionIndex: number, enabled: boolean) => void;
   getScoreColor: (score: number) => string;
   getScoreBackground: (score: number) => string;
@@ -26,8 +24,6 @@ export const CriteriaSections: React.FC<CriteriaSectionsProps> = ({
   groupIndex,
   updateCriterionWeight,
   updateCriterionScore,
-  updateCriterionRange,
-  updateActualMetricValue,
   toggleCriterionEnabled,
   getScoreColor,
   getScoreBackground
@@ -86,12 +82,6 @@ export const CriteriaSections: React.FC<CriteriaSectionsProps> = ({
           updateCriterionScore={(groupIdx, criterionIdx, minScore, maxScore) => {
             updateCriterionScore(groupIdx, liquidityIndices[criterionIdx], minScore, maxScore);
           }}
-          updateCriterionRange={updateCriterionRange && ((groupIdx, criterionIdx, min, max) => {
-            updateCriterionRange(groupIdx, liquidityIndices[criterionIdx], min, max);
-          })}
-          updateActualMetricValue={updateActualMetricValue && ((groupIdx, criterionIdx, value) => {
-            updateActualMetricValue(groupIdx, liquidityIndices[criterionIdx], value);
-          })}
           toggleCriterionEnabled={toggleCriterionEnabled && ((groupIdx, criterionIdx, enabled) => {
             toggleCriterionEnabled(groupIdx, liquidityIndices[criterionIdx], enabled);
           })}
@@ -110,12 +100,6 @@ export const CriteriaSections: React.FC<CriteriaSectionsProps> = ({
           updateCriterionScore={(groupIdx, criterionIdx, minScore, maxScore) => {
             updateCriterionScore(groupIdx, leverageIndices[criterionIdx], minScore, maxScore);
           }}
-          updateCriterionRange={updateCriterionRange && ((groupIdx, criterionIdx, min, max) => {
-            updateCriterionRange(groupIdx, leverageIndices[criterionIdx], min, max);
-          })}
-          updateActualMetricValue={updateActualMetricValue && ((groupIdx, criterionIdx, value) => {
-            updateActualMetricValue(groupIdx, leverageIndices[criterionIdx], value);
-          })}
           toggleCriterionEnabled={toggleCriterionEnabled && ((groupIdx, criterionIdx, enabled) => {
             toggleCriterionEnabled(groupIdx, leverageIndices[criterionIdx], enabled);
           })}
@@ -134,12 +118,6 @@ export const CriteriaSections: React.FC<CriteriaSectionsProps> = ({
           updateCriterionScore={(groupIdx, criterionIdx, minScore, maxScore) => {
             updateCriterionScore(groupIdx, cashFlowIndices[criterionIdx], minScore, maxScore);
           }}
-          updateCriterionRange={updateCriterionRange && ((groupIdx, criterionIdx, min, max) => {
-            updateCriterionRange(groupIdx, cashFlowIndices[criterionIdx], min, max);
-          })}
-          updateActualMetricValue={updateActualMetricValue && ((groupIdx, criterionIdx, value) => {
-            updateActualMetricValue(groupIdx, cashFlowIndices[criterionIdx], value);
-          })}
           toggleCriterionEnabled={toggleCriterionEnabled && ((groupIdx, criterionIdx, enabled) => {
             toggleCriterionEnabled(groupIdx, cashFlowIndices[criterionIdx], enabled);
           })}
@@ -158,12 +136,6 @@ export const CriteriaSections: React.FC<CriteriaSectionsProps> = ({
           updateCriterionScore={(groupIdx, criterionIdx, minScore, maxScore) => {
             updateCriterionScore(groupIdx, coverageIndices[criterionIdx], minScore, maxScore);
           }}
-          updateCriterionRange={updateCriterionRange && ((groupIdx, criterionIdx, min, max) => {
-            updateCriterionRange(groupIdx, coverageIndices[criterionIdx], min, max);
-          })}
-          updateActualMetricValue={updateActualMetricValue && ((groupIdx, criterionIdx, value) => {
-            updateActualMetricValue(groupIdx, coverageIndices[criterionIdx], value);
-          })}
           toggleCriterionEnabled={toggleCriterionEnabled && ((groupIdx, criterionIdx, enabled) => {
             toggleCriterionEnabled(groupIdx, coverageIndices[criterionIdx], enabled);
           })}
@@ -182,12 +154,6 @@ export const CriteriaSections: React.FC<CriteriaSectionsProps> = ({
           updateCriterionScore={(groupIdx, criterionIdx, minScore, maxScore) => {
             updateCriterionScore(groupIdx, turnoverIndices[criterionIdx], minScore, maxScore);
           }}
-          updateCriterionRange={updateCriterionRange && ((groupIdx, criterionIdx, min, max) => {
-            updateCriterionRange(groupIdx, turnoverIndices[criterionIdx], min, max);
-          })}
-          updateActualMetricValue={updateActualMetricValue && ((groupIdx, criterionIdx, value) => {
-            updateActualMetricValue(groupIdx, turnoverIndices[criterionIdx], value);
-          })}
           toggleCriterionEnabled={toggleCriterionEnabled && ((groupIdx, criterionIdx, enabled) => {
             toggleCriterionEnabled(groupIdx, turnoverIndices[criterionIdx], enabled);
           })}
@@ -206,12 +172,6 @@ export const CriteriaSections: React.FC<CriteriaSectionsProps> = ({
           updateCriterionScore={(groupIdx, criterionIdx, minScore, maxScore) => {
             updateCriterionScore(groupIdx, profitabilityIndices[criterionIdx], minScore, maxScore);
           }}
-          updateCriterionRange={updateCriterionRange && ((groupIdx, criterionIdx, min, max) => {
-            updateCriterionRange(groupIdx, profitabilityIndices[criterionIdx], min, max);
-          })}
-          updateActualMetricValue={updateActualMetricValue && ((groupIdx, criterionIdx, value) => {
-            updateActualMetricValue(groupIdx, profitabilityIndices[criterionIdx], value);
-          })}
           toggleCriterionEnabled={toggleCriterionEnabled && ((groupIdx, criterionIdx, enabled) => {
             toggleCriterionEnabled(groupIdx, profitabilityIndices[criterionIdx], enabled);
           })}
@@ -220,7 +180,7 @@ export const CriteriaSections: React.FC<CriteriaSectionsProps> = ({
         />
       )}
 
-      {otherCriteria.map((criterion, criterionIndex) => {
+      {otherCriteria.map((criterion) => {
         const fullCriterionIndex = group.criteria.findIndex(c => c.name === criterion.name);
         return (
           <CriterionItem
@@ -230,8 +190,6 @@ export const CriteriaSections: React.FC<CriteriaSectionsProps> = ({
             groupIndex={groupIndex}
             updateCriterionWeight={updateCriterionWeight}
             updateCriterionScore={updateCriterionScore}
-            updateCriterionRange={updateCriterionRange}
-            updateActualMetricValue={updateActualMetricValue}
             toggleCriterionEnabled={toggleCriterionEnabled}
             getScoreColor={getScoreColor}
             getScoreBackground={getScoreBackground}
