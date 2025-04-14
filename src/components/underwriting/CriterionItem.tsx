@@ -1,21 +1,17 @@
+
 import React, { useState, useEffect } from "react";
-import { ChevronDown, ChevronUp, Info, HelpCircle } from "lucide-react";
+import { HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Criterion, ScoreRange } from "./types";
+import { CriterionHeader } from "./criterion-sections/CriterionHeader";
+import { CriterionWeight } from "./criterion-sections/CriterionWeight";
+import { ScoreRange as ScoreRangeComponent } from "./criterion-sections/ScoreRange";
+import { PreferredRange } from "./criterion-sections/PreferredRange";
 
 interface CriterionItemProps {
   criterion: Criterion;
@@ -30,7 +26,7 @@ interface CriterionItemProps {
   getScoreBackground: (score: number) => string;
 }
 
-export const CriterionItem = ({
+export const CriterionItem: React.FC<CriterionItemProps> = ({
   criterion,
   criterionIndex,
   groupIndex,
@@ -41,7 +37,7 @@ export const CriterionItem = ({
   toggleCriterionEnabled,
   getScoreColor,
   getScoreBackground,
-}: CriterionItemProps) => {
+}) => {
   const [minValue, setMinValue] = useState(criterion.preferredMin !== undefined ? criterion.preferredMin.toString() : "");
   const [maxValue, setMaxValue] = useState(criterion.preferredMax !== undefined ? criterion.preferredMax.toString() : "");
   const [minScoreValue, setMinScoreValue] = useState(criterion.minScore !== undefined ? criterion.minScore.toString() : "0");
@@ -81,8 +77,15 @@ export const CriterionItem = ({
       if (!isNaN(min) && !isNaN(max) && min <= max) {
         updateCriterionRange(groupIndex, criterionIndex, min, max);
         setRangeValues([min, max]);
-        calculateAndUpdateScores(min, max);
       }
+    }
+  };
+
+  const handleScoreRangeUpdate = () => {
+    const minScore = parseFloat(minScoreValue);
+    const maxScore = parseFloat(maxScoreValue);
+    if (!isNaN(minScore) && !isNaN(maxScore) && minScore <= maxScore) {
+      updateCriterionScore(groupIndex, criterionIndex, minScore, maxScore);
     }
   };
 
@@ -92,67 +95,7 @@ export const CriterionItem = ({
       setMinValue(values[0].toString());
       setMaxValue(values[1].toString());
       updateCriterionRange(groupIndex, criterionIndex, values[0], values[1]);
-      
-      calculateAndUpdateScores(values[0], values[1]);
     }
-  };
-
-  const calculateAndUpdateScores = (min: number, max: number) => {
-    const totalRange = criterion.max - criterion.min;
-    const minNormalized = (min - criterion.min) / totalRange;
-    const maxNormalized = (max - criterion.min) / totalRange;
-    
-    // Ensure scores are between 1 and 10
-    const newMinScore = Math.max(1, Math.min(10, Number((1 + minNormalized * 9).toFixed(2))));
-    const newMaxScore = Math.max(1, Math.min(10, Number((1 + maxNormalized * 9).toFixed(2))));
-    
-    setMinScoreValue(newMinScore.toFixed(2));
-    setMaxScoreValue(newMaxScore.toFixed(2));
-    
-    updateCriterionScore(groupIndex, criterionIndex, newMinScore, newMaxScore);
-  };
-
-  const handleScoreRangeUpdate = () => {
-    const minScore = parseFloat(minScoreValue);
-    const maxScore = parseFloat(maxScoreValue);
-    if (!isNaN(minScore) && !isNaN(maxScore) && minScore <= maxScore) {
-      // Ensure scores are between 1 and 10
-      const cappedMinScore = Math.max(1, Math.min(10, minScore));
-      const cappedMaxScore = Math.max(1, Math.min(10, maxScore));
-      
-      updateCriterionScore(groupIndex, criterionIndex, cappedMinScore, cappedMaxScore);
-      
-      const totalRange = criterion.max - criterion.min;
-      const minNormalized = (cappedMinScore - 1) / 9;
-      const maxNormalized = (cappedMaxScore - 1) / 9;
-      
-      const newMin = criterion.min + (minNormalized * totalRange);
-      const newMax = criterion.min + (maxNormalized * totalRange);
-      
-      setMinValue(newMin.toFixed(2));
-      setMaxValue(newMax.toFixed(2));
-      setRangeValues([newMin, newMax]);
-      
-      if (updateCriterionRange) {
-        updateCriterionRange(groupIndex, criterionIndex, newMin, newMax);
-      }
-    }
-  };
-
-  const handleMinValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMinValue(e.target.value);
-  };
-
-  const handleMaxValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMaxValue(e.target.value);
-  };
-
-  const handleMinScoreValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMinScoreValue(e.target.value);
-  };
-
-  const handleMaxScoreValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMaxScoreValue(e.target.value);
   };
 
   const avgScore = criterion.minScore !== undefined && criterion.maxScore !== undefined 
@@ -196,191 +139,60 @@ export const CriterionItem = ({
     );
   };
 
-  const handleToggleEnabled = (checked: boolean) => {
-    if (toggleCriterionEnabled) {
-      toggleCriterionEnabled(groupIndex, criterionIndex, checked);
-    }
-  };
-
   return (
     <div className={`space-y-2 border-b border-gray-800/40 pb-4 last:border-0 last:pb-0 ${!criterion.enabled ? 'opacity-60' : ''}`}>
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
-        <div>
-          <div className="flex items-center">
-            <div className="flex items-center gap-2">
-              {toggleCriterionEnabled && (
-                <Checkbox 
-                  id={`criterion-${groupIndex}-${criterionIndex}`} 
-                  checked={criterion.enabled}
-                  onCheckedChange={handleToggleEnabled}
-                />
-              )}
-              <div className="font-medium">{criterion.name}</div>
-            </div>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Info className="h-3.5 w-3.5 ml-1.5 text-muted-foreground" />
-                </TooltipTrigger>
-                <TooltipContent side="top" className="max-w-[250px] text-xs">
-                  {criterion.description}
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <div className="text-xs text-muted-foreground ml-3">
-              Current value: {criterion.value}
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center space-x-2">
-          <div className="text-xs text-muted-foreground">
-            Weight: {criterion.weight}%
-          </div>
-          {criterion.scoreMapping && (
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-primary">
-                  <HelpCircle className="h-4 w-4" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent side="left" className="w-auto max-w-[300px] p-3 bg-gray-950 border border-gray-800">
-                <div className="text-xs font-semibold mb-2 text-gray-300">Score Mapping for {criterion.name}</div>
-                {criterion.scoreMapping && renderScoreMappingTable(criterion.scoreMapping)}
-              </PopoverContent>
-            </Popover>
-          )}
-          <div className={`font-medium ${getScoreColor(avgScore)}`}>
-            Score: {criterion.minScore !== undefined ? criterion.minScore.toFixed(1) : "0.0"}-{criterion.maxScore !== undefined ? criterion.maxScore.toFixed(1) : "0.0"}
-          </div>
-        </div>
-      </div>
+      <CriterionHeader
+        criterion={criterion}
+        groupIndex={groupIndex}
+        criterionIndex={criterionIndex}
+        toggleCriterionEnabled={toggleCriterionEnabled}
+        avgScore={avgScore}
+        getScoreColor={getScoreColor}
+      />
       
       {criterion.enabled && (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>Criterion Weight</span>
-                <span>{criterion.weight}%</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button 
-                  variant="outline" 
-                  size="icon" 
-                  className="h-6 w-6"
-                  onClick={() => updateCriterionWeight(groupIndex, criterionIndex, Math.max(5, criterion.weight - 5))}
-                  disabled={criterion.weight <= 5}
-                >
-                  <ChevronDown className="h-3 w-3" />
-                </Button>
-                <Slider
-                  value={[criterion.weight]}
-                  min={5}
-                  max={70}
-                  step={5}
-                  className="flex-1"
-                  onValueChange={(value) => updateCriterionWeight(groupIndex, criterionIndex, value[0])}
-                />
-                <Button 
-                  variant="outline" 
-                  size="icon"
-                  className="h-6 w-6"
-                  onClick={() => updateCriterionWeight(groupIndex, criterionIndex, Math.min(70, criterion.weight + 5))}
-                  disabled={criterion.weight >= 70}
-                >
-                  <ChevronUp className="h-3 w-3" />
-                </Button>
-              </div>
-            </div>
+            <CriterionWeight
+              weight={criterion.weight}
+              onUpdateWeight={(newWeight) => updateCriterionWeight(groupIndex, criterionIndex, newWeight)}
+            />
             
-            <div className="space-y-2">
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>Risk Score Range</span>
-                <span>{criterion.minScore !== undefined ? criterion.minScore.toFixed(1) : "0.0"}-{criterion.maxScore !== undefined ? criterion.maxScore.toFixed(1) : "0.0"}</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex flex-1 items-center gap-2">
-                  <span className="text-xs text-muted-foreground">Min:</span>
-                  <Input
-                    value={minScoreValue}
-                    onChange={handleMinScoreValueChange}
-                    className="h-7 text-xs"
-                    placeholder="Min score"
-                  />
-                </div>
-                <div className="flex flex-1 items-center gap-2">
-                  <span className="text-xs text-muted-foreground">Max:</span>
-                  <Input
-                    value={maxScoreValue}
-                    onChange={handleMaxScoreValueChange}
-                    className="h-7 text-xs"
-                    placeholder="Max score"
-                  />
-                </div>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="h-7 text-xs"
-                  onClick={handleScoreRangeUpdate}
-                >
-                  Set Range
-                </Button>
-              </div>
-            </div>
+            <ScoreRangeComponent
+              minScore={minScoreValue}
+              maxScore={maxScoreValue}
+              onMinScoreChange={(e) => setMinScoreValue(e.target.value)}
+              onMaxScoreChange={(e) => setMaxScoreValue(e.target.value)}
+              onUpdateRange={handleScoreRangeUpdate}
+            />
           </div>
 
-          <div className="mt-3 pt-3 border-t border-gray-800/30">
-            <div className="text-xs font-medium mb-2">Preferred Range {criterion.unit ? `(${criterion.unit})` : ''}</div>
-            
-            <div className="mb-3">
-              <Slider
-                value={rangeValues}
-                min={criterion.min || 0}
-                max={criterion.max || 100}
-                step={(criterion.max - criterion.min) / 100}
-                className="my-4"
-                onValueChange={handleRangeSliderUpdate}
-              />
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>{criterion.min}{criterion.unit || ''}</span>
-                <span>{criterion.max}{criterion.unit || ''}</span>
-              </div>
+          <PreferredRange
+            criterion={criterion}
+            rangeValues={rangeValues}
+            minValue={minValue}
+            maxValue={maxValue}
+            onRangeSliderChange={handleRangeSliderUpdate}
+            onMinValueChange={(e) => setMinValue(e.target.value)}
+            onMaxValueChange={(e) => setMaxValue(e.target.value)}
+            onUpdateRange={handleRangeUpdate}
+          />
+
+          {criterion.scoreMapping && (
+            <div className="mt-2">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-primary">
+                    <HelpCircle className="h-4 w-4" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent side="left" className="w-auto max-w-[300px] p-3 bg-gray-950 border border-gray-800">
+                  <div className="text-xs font-semibold mb-2 text-gray-300">Score Mapping for {criterion.name}</div>
+                  {criterion.scoreMapping && renderScoreMappingTable(criterion.scoreMapping)}
+                </PopoverContent>
+              </Popover>
             </div>
-            
-            <div className="flex items-center gap-3">
-              <div className="flex flex-1 items-center gap-2">
-                <span className="text-xs text-muted-foreground">Min:</span>
-                <Input
-                  value={minValue}
-                  onChange={handleMinValueChange}
-                  className="h-7 text-xs"
-                  placeholder={`Min ${criterion.unit || ''}`}
-                />
-              </div>
-              <div className="flex flex-1 items-center gap-2">
-                <span className="text-xs text-muted-foreground">Max:</span>
-                <Input
-                  value={maxValue}
-                  onChange={handleMaxValueChange}
-                  className="h-7 text-xs"
-                  placeholder={`Max ${criterion.unit || ''}`}
-                />
-              </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="h-7 text-xs"
-                onClick={handleRangeUpdate}
-              >
-                Set Range
-              </Button>
-            </div>
-            {criterion.preferredMin !== undefined && criterion.preferredMax !== undefined && (
-              <div className="mt-2 text-xs text-blue-400">
-                Current preferred range: {criterion.preferredMin} - {criterion.preferredMax} {criterion.unit || ''}
-              </div>
-            )}
-          </div>
+          )}
         </>
       )}
     </div>
