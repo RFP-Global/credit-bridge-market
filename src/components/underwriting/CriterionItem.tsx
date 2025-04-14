@@ -17,8 +17,6 @@ interface CriterionItemProps {
   groupIndex: number;
   updateCriterionWeight: (groupIndex: number, criterionIndex: number, newWeight: number) => void;
   updateCriterionScore: (groupIndex: number, criterionIndex: number, minScore: number, maxScore: number) => void;
-  updateCriterionRange?: (groupIndex: number, criterionIndex: number, min: number, max: number) => void;
-  updateActualMetricValue?: (groupIndex: number, criterionIndex: number, value: number) => void;
   toggleCriterionEnabled?: (groupIndex: number, criterionIndex: number, enabled: boolean) => void;
   getScoreColor: (score: number) => string;
   getScoreBackground: (score: number) => string;
@@ -54,9 +52,21 @@ export const CriterionItem: React.FC<CriterionItemProps> = ({
     }
   };
 
-  const avgScore = criterion.minScore !== undefined && criterion.maxScore !== undefined 
-    ? (criterion.minScore + criterion.maxScore) / 2 
-    : 0;
+  const getActualRange = () => {
+    if (!criterion.scoreMapping) return null;
+
+    const minScoreMapping = criterion.scoreMapping.find(r => r.score === Math.floor(criterion.minScore));
+    const maxScoreMapping = criterion.scoreMapping.find(r => r.score === Math.ceil(criterion.maxScore));
+
+    if (minScoreMapping && maxScoreMapping) {
+      return {
+        low: minScoreMapping.min,
+        high: maxScoreMapping.max === 100 ? maxScoreMapping.min : maxScoreMapping.max,
+        unit: criterion.actualUnit
+      };
+    }
+    return null;
+  };
 
   const renderScoreMappingTable = (scoreMapping: ScoreRange[]) => {
     return (
@@ -102,7 +112,7 @@ export const CriterionItem: React.FC<CriterionItemProps> = ({
         groupIndex={groupIndex}
         criterionIndex={criterionIndex}
         toggleCriterionEnabled={toggleCriterionEnabled}
-        avgScore={avgScore}
+        avgScore={(criterion.minScore + criterion.maxScore) / 2}
         getScoreColor={getScoreColor}
       />
       
@@ -117,6 +127,7 @@ export const CriterionItem: React.FC<CriterionItemProps> = ({
             <ScoreRangeComponent
               minScore={minScoreValue}
               maxScore={maxScoreValue}
+              actualRange={getActualRange()}
               onMinScoreChange={(e) => setMinScoreValue(e.target.value)}
               onMaxScoreChange={(e) => setMaxScoreValue(e.target.value)}
               onUpdateRange={handleScoreRangeUpdate}

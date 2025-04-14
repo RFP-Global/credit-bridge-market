@@ -43,12 +43,6 @@ export const updateCriterionRange = (
     if (criterion.minScore > criterion.maxScore) {
       [criterion.minScore, criterion.maxScore] = [criterion.maxScore, criterion.minScore];
     }
-  } else {
-    // For ratios without score mapping, interpolate the score based on the range
-    const normalizedValue = (min + max) / 2;
-    const score = interpolateScore(normalizedValue, criterion.actualMin || 0, criterion.actualMax || 100);
-    criterion.minScore = roundToTenth(Math.max(1, score - 1));
-    criterion.maxScore = roundToTenth(Math.min(10, score + 1));
   }
   
   recalculateScores(newGroups, setMinTotalScore, setMaxTotalScore);
