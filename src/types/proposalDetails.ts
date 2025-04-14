@@ -1,19 +1,41 @@
 export interface FinancialRatios {
-  debtServiceCoverageRatio: number;
+  // Liquidity Ratios
   currentRatio: number;
   quickRatio: number;
-  debtToEBITDA: number;
-  operatingCashFlowRatio: number;
+  cashRatio: number;
+
+  // Leverage Ratios
+  debtToEquity: number;
   leverageRatio: number;
+  equityRatio: number;
+  interestCoverageRatio: number;
+  fixedChargeCoverageRatio: number;
+
+  // Profitability Ratios
   netProfitMargin: number;
   grossProfitMargin: number;
   operatingMargin: number;
   returnOnAssets: number;
   returnOnEquity: number;
-  assetTurnover: number;
+
+  // Cash Flow Ratios
+  operatingCashFlowRatio: number;
+  debtServiceCoverageRatio: number;
+  freeCashFlowToFirm: number;
+
+  // Coverage & Repayment Ratios
+  loanToValueRatio: number;
+  collateralCoverageRatio: number;
+  leverageCoverageRatio: number;
+  paybackPeriod: number;
+
+  // Efficiency & Operational Ratios
+  accountsReceivableTurnover: number;
   inventoryTurnover: number;
-  debtToEquity: number;
-  equityRatio: number;
+  assetTurnover: number;
+
+  // Legacy ratios (kept for backward compatibility)
+  debtToEBITDA: number;
 }
 
 export interface CompanyDemographics {
