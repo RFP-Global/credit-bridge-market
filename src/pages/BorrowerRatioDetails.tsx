@@ -13,6 +13,7 @@ import RatioDetailsGrid from "@/components/borrower/ratio-details/RatioDetailsGr
 
 const BorrowerRatioDetails = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const state = location.state as { ratios: FinancialRatios; riskScore: number } | null;
 
   if (!state?.ratios || state.riskScore === undefined) {
@@ -22,7 +23,6 @@ const BorrowerRatioDetails = () => {
   const { ratios, riskScore } = state;
   const riskLevel = getRiskLevelInfo(riskScore);
 
-  // Safely access ratio values with fallbacks for undefined values
   const safeRatio = (value: number | undefined): number => {
     return typeof value === 'number' ? value : 0;
   };
@@ -230,7 +230,15 @@ const BorrowerRatioDetails = () => {
   return (
     <div className="min-h-screen bg-black text-gray-200">
       <div className="container mx-auto px-6 py-8">
-        <RatioDetailsHeader />
+        <div className="flex justify-between items-center mb-6">
+          <RatioDetailsHeader />
+          <Button
+            onClick={() => navigate('/financial-report', { state })}
+            className="bg-primary hover:bg-primary/90"
+          >
+            Generate Report
+          </Button>
+        </div>
         <RiskScoreCard riskScore={riskScore} riskLevel={riskLevel} />
         <RatioDetailsGrid ratioGroups={ratioGroups} />
       </div>
