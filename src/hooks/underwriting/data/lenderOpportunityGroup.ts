@@ -37,8 +37,8 @@ export const lenderOpportunityGroup = {
       max: 100,
       step: 5,
       preferredMin: 60,
-      preferredMax: 100,
       unit: "%",
+      singleSlider: true,
       enabled: true,
       scoreMapping: [
         { min: 0, max: 40, score: 3, riskLevel: "Low Volume" },
@@ -57,8 +57,8 @@ export const lenderOpportunityGroup = {
       max: 100,
       step: 5,
       preferredMin: 40,
-      preferredMax: 100,
       unit: "%",
+      singleSlider: true,
       enabled: true,
       scoreMapping: [
         { min: 0, max: 25, score: 3, riskLevel: "Minimal FX Needs" },
@@ -77,8 +77,8 @@ export const lenderOpportunityGroup = {
       max: 100,
       step: 5,
       preferredMin: 50,
-      preferredMax: 100,
       unit: "%",
+      singleSlider: true,
       enabled: true,
       scoreMapping: [
         { min: 0, max: 30, score: 3, riskLevel: "Limited Interest" },
@@ -97,8 +97,8 @@ export const lenderOpportunityGroup = {
       max: 100,
       step: 5,
       preferredMin: 30,
-      preferredMax: 100,
       unit: "%",
+      singleSlider: true,
       enabled: true,
       scoreMapping: [
         { min: 0, max: 20, score: 3, riskLevel: "Low Potential" },
