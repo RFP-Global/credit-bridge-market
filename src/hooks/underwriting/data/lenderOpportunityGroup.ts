@@ -1,3 +1,4 @@
+
 export const lenderOpportunityGroup = {
   name: "Lender Opportunity",
   description: "Assessment of borrower's potential for additional banking services",
@@ -16,8 +17,8 @@ export const lenderOpportunityGroup = {
       max: 100,
       step: 33.33,
       preferredMin: 50,
-      preferredMax: 100,
       unit: "%",
+      singleSlider: true,
       enabled: true,
       scoreMapping: [
         { min: 0, max: 33.33, score: 1, riskLevel: "Low Potential" },

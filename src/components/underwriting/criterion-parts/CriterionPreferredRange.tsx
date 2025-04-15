@@ -28,13 +28,15 @@ export const CriterionPreferredRange: React.FC<CriterionPreferredRangeProps> = (
 }) => {
   return (
     <div className="mt-3 pt-3 border-t border-gray-800/30">
-      <div className="text-xs font-medium mb-2">Preferred Range {criterion.unit ? `(${criterion.unit})` : ''}</div>
+      <div className="text-xs font-medium mb-2">
+        {criterion.singleSlider ? "Preferred Value" : "Preferred Range"} {criterion.unit ? `(${criterion.unit})` : ''}
+      </div>
       <div className="mb-3">
         <Slider
-          value={rangeValues}
+          value={criterion.singleSlider ? [Number(minValue)] : rangeValues}
           min={criterion.min || 0}
           max={criterion.max || 100}
-          step={(criterion.max - criterion.min) / 100}
+          step={criterion.step}
           className="my-4"
           onValueChange={onSliderChange}
         />
@@ -45,35 +47,39 @@ export const CriterionPreferredRange: React.FC<CriterionPreferredRangeProps> = (
       </div>
       <div className="flex items-center gap-3">
         <div className="flex flex-1 items-center gap-2">
-          <span className="text-xs text-muted-foreground">Min:</span>
+          <span className="text-xs text-muted-foreground">{criterion.singleSlider ? "Value:" : "Min:"}</span>
           <Input
             value={minValue}
             onChange={onMinValueChange}
             className="h-7 text-xs"
-            placeholder={`Min ${criterion.unit || ''}`}
+            placeholder={criterion.singleSlider ? `Value ${criterion.unit || ''}` : `Min ${criterion.unit || ''}`}
           />
         </div>
-        <div className="flex flex-1 items-center gap-2">
-          <span className="text-xs text-muted-foreground">Max:</span>
-          <Input
-            value={maxValue}
-            onChange={onMaxValueChange}
-            className="h-7 text-xs"
-            placeholder={`Max ${criterion.unit || ''}`}
-          />
-        </div>
+        {!criterion.singleSlider && (
+          <div className="flex flex-1 items-center gap-2">
+            <span className="text-xs text-muted-foreground">Max:</span>
+            <Input
+              value={maxValue}
+              onChange={onMaxValueChange}
+              className="h-7 text-xs"
+              placeholder={`Max ${criterion.unit || ''}`}
+            />
+          </div>
+        )}
         <Button 
           variant="outline" 
           size="sm" 
           className="h-7 text-xs"
           onClick={onRangeUpdate}
         >
-          Set Range
+          Set {criterion.singleSlider ? "Value" : "Range"}
         </Button>
       </div>
-      {criterion.preferredMin !== undefined && criterion.preferredMax !== undefined && (
+      {criterion.preferredMin !== undefined && (
         <div className="mt-2 text-xs text-blue-400">
-          Current preferred range: {criterion.preferredMin} - {criterion.preferredMax} {criterion.unit || ''}
+          Current preferred {criterion.singleSlider ? "value" : "range"}: {criterion.preferredMin}
+          {!criterion.singleSlider && criterion.preferredMax !== undefined && ` - ${criterion.preferredMax}`} 
+          {criterion.unit || ''}
         </div>
       )}
     </div>

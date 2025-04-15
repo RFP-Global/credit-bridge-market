@@ -34,6 +34,7 @@ export interface Criterion {
   actualUnit?: string;
   scoreMapping?: ScoreRange[];
   enabled: boolean;
+  singleSlider?: boolean;
 }
 
 export interface ScoreRange {
