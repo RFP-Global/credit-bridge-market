@@ -5,7 +5,6 @@ import { businessStabilityGroup } from "./data/businessStabilityGroup";
 import { competitivePositioningGroup } from "./data/competitivePositioningGroup";
 import { managementStrengthGroup } from "./data/managementStrengthGroup";
 import { industryMarketRiskGroup } from "./data/industryMarketRiskGroup";
-import { covenantHealthGroup } from "./data/covenantHealthGroup";
 
 export { initialScoreThresholds };
 
@@ -14,6 +13,5 @@ export const initialCriteriaGroups = [
   businessStabilityGroup,
   competitivePositioningGroup,
   managementStrengthGroup,
-  industryMarketRiskGroup,
-  covenantHealthGroup
+  industryMarketRiskGroup
 ];
