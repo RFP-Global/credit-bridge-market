@@ -28,14 +28,7 @@ export const CriterionPreferredRange: React.FC<CriterionPreferredRangeProps> = (
 }) => {
   return (
     <div className="mt-3 pt-3 border-t border-gray-800/30">
-      <div className="flex justify-between items-center mb-2">
-        <div className="text-xs font-medium">Preferred Range {criterion.unit ? `(${criterion.unit})` : ''}</div>
-        {criterion.preferredMin !== undefined && criterion.preferredMax !== undefined && (
-          <div className="text-xs text-blue-400">
-            Current: {criterion.preferredMin} - {criterion.preferredMax} {criterion.unit || ''}
-          </div>
-        )}
-      </div>
+      <div className="text-xs font-medium mb-2">Preferred Range {criterion.unit ? `(${criterion.unit})` : ''}</div>
       <div className="mb-3">
         <Slider
           value={rangeValues}
@@ -50,30 +43,39 @@ export const CriterionPreferredRange: React.FC<CriterionPreferredRangeProps> = (
           <span>{criterion.max}{criterion.unit || ''}</span>
         </div>
       </div>
-      <div className="grid grid-cols-9 gap-2 items-center">
-        <span className="text-xs text-muted-foreground col-span-1">Min:</span>
-        <Input
-          value={minValue}
-          onChange={onMinValueChange}
-          className="h-7 text-xs col-span-3"
-          placeholder={`Min ${criterion.unit || ''}`}
-        />
-        <span className="text-xs text-muted-foreground col-span-1">Max:</span>
-        <Input
-          value={maxValue}
-          onChange={onMaxValueChange}
-          className="h-7 text-xs col-span-3"
-          placeholder={`Max ${criterion.unit || ''}`}
-        />
+      <div className="flex items-center gap-3">
+        <div className="flex flex-1 items-center gap-2">
+          <span className="text-xs text-muted-foreground">Min:</span>
+          <Input
+            value={minValue}
+            onChange={onMinValueChange}
+            className="h-7 text-xs"
+            placeholder={`Min ${criterion.unit || ''}`}
+          />
+        </div>
+        <div className="flex flex-1 items-center gap-2">
+          <span className="text-xs text-muted-foreground">Max:</span>
+          <Input
+            value={maxValue}
+            onChange={onMaxValueChange}
+            className="h-7 text-xs"
+            placeholder={`Max ${criterion.unit || ''}`}
+          />
+        </div>
         <Button 
           variant="outline" 
           size="sm" 
-          className="h-7 text-xs whitespace-nowrap col-span-1"
+          className="h-7 text-xs"
           onClick={onRangeUpdate}
         >
-          Set
+          Set Range
         </Button>
       </div>
+      {criterion.preferredMin !== undefined && criterion.preferredMax !== undefined && (
+        <div className="mt-2 text-xs text-blue-400">
+          Current preferred range: {criterion.preferredMin} - {criterion.preferredMax} {criterion.unit || ''}
+        </div>
+      )}
     </div>
   );
 };

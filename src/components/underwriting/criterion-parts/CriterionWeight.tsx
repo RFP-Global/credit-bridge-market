@@ -1,6 +1,8 @@
 
 import React from 'react';
-import { Input } from "@/components/ui/input";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 
 interface CriterionWeightProps {
   weight: number;
@@ -15,28 +17,39 @@ export const CriterionWeight: React.FC<CriterionWeightProps> = ({
   criterionIndex,
   updateCriterionWeight,
 }) => {
-  const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    if (!isNaN(value) && value >= 0 && value <= 100) {
-      updateCriterionWeight(groupIndex, criterionIndex, value);
-    }
-  };
-
   return (
     <div className="space-y-2">
       <div className="flex justify-between text-xs text-muted-foreground">
-        <span>Weight</span>
+        <span>Criterion Weight</span>
         <span>{weight}%</span>
       </div>
-      <div className="flex items-center">
-        <Input
-          type="number"
-          value={weight}
-          onChange={handleWeightChange}
-          min={0}
-          max={100}
-          className="h-7 text-xs"
+      <div className="flex items-center gap-2">
+        <Button 
+          variant="outline" 
+          size="icon" 
+          className="h-6 w-6"
+          onClick={() => updateCriterionWeight(groupIndex, criterionIndex, Math.max(5, weight - 5))}
+          disabled={weight <= 5}
+        >
+          <ChevronDown className="h-3 w-3" />
+        </Button>
+        <Slider
+          value={[weight]}
+          min={5}
+          max={70}
+          step={5}
+          className="flex-1"
+          onValueChange={(value) => updateCriterionWeight(groupIndex, criterionIndex, value[0])}
         />
+        <Button 
+          variant="outline" 
+          size="icon"
+          className="h-6 w-6"
+          onClick={() => updateCriterionWeight(groupIndex, criterionIndex, Math.min(70, weight + 5))}
+          disabled={weight >= 70}
+        >
+          <ChevronUp className="h-3 w-3" />
+        </Button>
       </div>
     </div>
   );

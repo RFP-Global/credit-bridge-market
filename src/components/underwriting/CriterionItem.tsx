@@ -102,39 +102,33 @@ export const CriterionItem = ({
       
       {criterion.enabled && (
         <>
-          <div className="grid grid-cols-1 gap-4">
-            <div className="grid grid-cols-12 gap-4">
-              <div className="col-span-4">
-                <CriterionWeight 
-                  weight={criterion.weight}
-                  groupIndex={groupIndex}
-                  criterionIndex={criterionIndex}
-                  updateCriterionWeight={updateCriterionWeight}
-                />
-              </div>
-              
-              <div className="col-span-8">
-                <CriterionScoreRange 
-                  minScoreValue={minScoreValue}
-                  maxScoreValue={maxScoreValue}
-                  onMinScoreChange={(e) => setMinScoreValue(e.target.value)}
-                  onMaxScoreChange={(e) => setMaxScoreValue(e.target.value)}
-                  onUpdateRange={handleScoreRangeUpdate}
-                />
-              </div>
-            </div>
-
-            <CriterionPreferredRange 
-              criterion={criterion}
-              minValue={minValue}
-              maxValue={maxValue}
-              rangeValues={rangeValues}
-              onMinValueChange={(e) => setMinValue(e.target.value)}
-              onMaxValueChange={(e) => setMaxValue(e.target.value)}
-              onRangeUpdate={handleRangeUpdate}
-              onSliderChange={handleRangeSliderUpdate}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <CriterionWeight 
+              weight={criterion.weight}
+              groupIndex={groupIndex}
+              criterionIndex={criterionIndex}
+              updateCriterionWeight={updateCriterionWeight}
+            />
+            
+            <CriterionScoreRange 
+              minScoreValue={minScoreValue}
+              maxScoreValue={maxScoreValue}
+              onMinScoreChange={(e) => setMinScoreValue(e.target.value)}
+              onMaxScoreChange={(e) => setMaxScoreValue(e.target.value)}
+              onUpdateRange={handleScoreRangeUpdate}
             />
           </div>
+
+          <CriterionPreferredRange 
+            criterion={criterion}
+            minValue={minValue}
+            maxValue={maxValue}
+            rangeValues={rangeValues}
+            onMinValueChange={(e) => setMinValue(e.target.value)}
+            onMaxValueChange={(e) => setMaxValue(e.target.value)}
+            onRangeUpdate={handleRangeUpdate}
+            onSliderChange={handleRangeSliderUpdate}
+          />
         </>
       )}
     </div>

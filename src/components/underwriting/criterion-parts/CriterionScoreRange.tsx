@@ -24,28 +24,32 @@ export const CriterionScoreRange: React.FC<CriterionScoreRangeProps> = ({
         <span>Risk Score Range</span>
         <span>{minScoreValue}-{maxScoreValue}</span>
       </div>
-      <div className="grid grid-cols-9 gap-2 items-center">
-        <span className="text-xs text-muted-foreground col-span-1">Min:</span>
-        <Input
-          value={minScoreValue}
-          onChange={onMinScoreChange}
-          className="h-7 text-xs col-span-3"
-          placeholder="Min score"
-        />
-        <span className="text-xs text-muted-foreground col-span-1">Max:</span>
-        <Input
-          value={maxScoreValue}
-          onChange={onMaxScoreChange}
-          className="h-7 text-xs col-span-3"
-          placeholder="Max score"
-        />
+      <div className="flex items-center gap-3">
+        <div className="flex flex-1 items-center gap-2">
+          <span className="text-xs text-muted-foreground">Min:</span>
+          <Input
+            value={minScoreValue}
+            onChange={onMinScoreChange}
+            className="h-7 text-xs"
+            placeholder="Min score"
+          />
+        </div>
+        <div className="flex flex-1 items-center gap-2">
+          <span className="text-xs text-muted-foreground">Max:</span>
+          <Input
+            value={maxScoreValue}
+            onChange={onMaxScoreChange}
+            className="h-7 text-xs"
+            placeholder="Max score"
+          />
+        </div>
         <Button 
           variant="outline" 
           size="sm" 
-          className="h-7 text-xs whitespace-nowrap col-span-1"
+          className="h-7 text-xs"
           onClick={onUpdateRange}
         >
-          Set
+          Set Range
         </Button>
       </div>
     </div>
