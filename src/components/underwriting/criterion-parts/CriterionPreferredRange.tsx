@@ -26,6 +26,26 @@ export const CriterionPreferredRange: React.FC<CriterionPreferredRangeProps> = (
   onRangeUpdate,
   onSliderChange,
 }) => {
+  // Helper function to render discrete value labels for integer scales
+  const renderValueLabels = () => {
+    if (criterion.min === 1 && criterion.max === 3 && criterion.step === 1) {
+      return (
+        <div className="flex justify-between text-xs text-muted-foreground mt-2">
+          <span>1 - Low</span>
+          <span>2 - Medium</span>
+          <span>3 - High</span>
+        </div>
+      );
+    }
+    
+    return (
+      <div className="flex justify-between text-xs text-muted-foreground">
+        <span>{criterion.min}{criterion.unit || ''}</span>
+        <span>{criterion.max}{criterion.unit || ''}</span>
+      </div>
+    );
+  };
+
   return (
     <div className="mt-3 pt-3 border-t border-gray-800/30">
       <div className="text-xs font-medium mb-2">
@@ -40,10 +60,7 @@ export const CriterionPreferredRange: React.FC<CriterionPreferredRangeProps> = (
           className="my-4"
           onValueChange={onSliderChange}
         />
-        <div className="flex justify-between text-xs text-muted-foreground">
-          <span>{criterion.min}{criterion.unit || ''}</span>
-          <span>{criterion.max}{criterion.unit || ''}</span>
-        </div>
+        {renderValueLabels()}
       </div>
       <div className="flex items-center gap-3">
         <div className="flex flex-1 items-center gap-2">

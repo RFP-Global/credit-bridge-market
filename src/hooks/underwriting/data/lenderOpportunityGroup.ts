@@ -4,7 +4,7 @@ export const lenderOpportunityGroup = {
   description: "Assessment of borrower's potential for additional banking services",
   weight: 15,
   minScore: 1,
-  maxScore: 10,
+  maxScore: 3,
   criteria: [
     {
       name: "Treasury Services Potential",
@@ -13,17 +13,17 @@ export const lenderOpportunityGroup = {
       weight: 25,
       minScore: 1,
       maxScore: 3,
-      min: 0,
-      max: 100,
-      step: 33.33,
-      preferredMin: 50,
-      unit: "%",
+      min: 1,
+      max: 3,
+      step: 1,
+      preferredMin: 2,
+      unit: "",
       singleSlider: true,
       enabled: true,
       scoreMapping: [
-        { min: 0, max: 33.33, score: 1, riskLevel: "Low Potential" },
-        { min: 33.33, max: 66.66, score: 2, riskLevel: "Medium Potential" },
-        { min: 66.66, max: 100, score: 3, riskLevel: "High Potential" }
+        { min: 1, max: 1.1, score: 1, riskLevel: "Low Potential" },
+        { min: 2, max: 2.1, score: 2, riskLevel: "Medium Potential" },
+        { min: 3, max: 3.1, score: 3, riskLevel: "High Potential" }
       ]
     },
     {
@@ -33,17 +33,17 @@ export const lenderOpportunityGroup = {
       weight: 25,
       minScore: 1,
       maxScore: 3,
-      min: 0,
-      max: 100,
-      step: 33.33,
-      preferredMin: 60,
-      unit: "%",
+      min: 1,
+      max: 3,
+      step: 1,
+      preferredMin: 3,
+      unit: "",
       singleSlider: true,
       enabled: true,
       scoreMapping: [
-        { min: 0, max: 33.33, score: 1, riskLevel: "Low Volume" },
-        { min: 33.33, max: 66.66, score: 2, riskLevel: "Medium Volume" },
-        { min: 66.66, max: 100, score: 3, riskLevel: "High Volume" }
+        { min: 1, max: 1.1, score: 1, riskLevel: "Low Volume" },
+        { min: 2, max: 2.1, score: 2, riskLevel: "Medium Volume" },
+        { min: 3, max: 3.1, score: 3, riskLevel: "High Volume" }
       ]
     },
     {
@@ -53,17 +53,17 @@ export const lenderOpportunityGroup = {
       weight: 20,
       minScore: 1,
       maxScore: 3,
-      min: 0,
-      max: 100,
-      step: 33.33,
-      preferredMin: 40,
-      unit: "%",
+      min: 1,
+      max: 3,
+      step: 1,
+      preferredMin: 1,
+      unit: "",
       singleSlider: true,
       enabled: true,
       scoreMapping: [
-        { min: 0, max: 33.33, score: 1, riskLevel: "Minimal FX Needs" },
-        { min: 33.33, max: 66.66, score: 2, riskLevel: "Moderate FX Needs" },
-        { min: 66.66, max: 100, score: 3, riskLevel: "Significant FX Needs" }
+        { min: 1, max: 1.1, score: 1, riskLevel: "Minimal FX Needs" },
+        { min: 2, max: 2.1, score: 2, riskLevel: "Moderate FX Needs" },
+        { min: 3, max: 3.1, score: 3, riskLevel: "Significant FX Needs" }
       ]
     },
     {
@@ -73,17 +73,17 @@ export const lenderOpportunityGroup = {
       weight: 15,
       minScore: 1,
       maxScore: 3,
-      min: 0,
-      max: 100,
-      step: 33.33,
-      preferredMin: 50,
-      unit: "%",
+      min: 1,
+      max: 3,
+      step: 1,
+      preferredMin: 2,
+      unit: "",
       singleSlider: true,
       enabled: true,
       scoreMapping: [
-        { min: 0, max: 33.33, score: 1, riskLevel: "Limited Interest" },
-        { min: 33.33, max: 66.66, score: 2, riskLevel: "Moderate Interest" },
-        { min: 66.66, max: 100, score: 3, riskLevel: "High Interest" }
+        { min: 1, max: 1.1, score: 1, riskLevel: "Limited Interest" },
+        { min: 2, max: 2.1, score: 2, riskLevel: "Moderate Interest" },
+        { min: 3, max: 3.1, score: 3, riskLevel: "High Interest" }
       ]
     },
     {
@@ -93,19 +93,18 @@ export const lenderOpportunityGroup = {
       weight: 15,
       minScore: 1,
       maxScore: 3,
-      min: 0,
-      max: 100,
-      step: 33.33,
-      preferredMin: 30,
-      unit: "%",
+      min: 1,
+      max: 3,
+      step: 1,
+      preferredMin: 1,
+      unit: "",
       singleSlider: true,
       enabled: true,
       scoreMapping: [
-        { min: 0, max: 33.33, score: 1, riskLevel: "Low Potential" },
-        { min: 33.33, max: 66.66, score: 2, riskLevel: "Medium Potential" },
-        { min: 66.66, max: 100, score: 3, riskLevel: "High Potential" }
+        { min: 1, max: 1.1, score: 1, riskLevel: "Low Potential" },
+        { min: 2, max: 2.1, score: 2, riskLevel: "Medium Potential" },
+        { min: 3, max: 3.1, score: 3, riskLevel: "High Potential" }
       ]
     }
   ]
 };
-
