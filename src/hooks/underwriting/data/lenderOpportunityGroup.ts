@@ -1,3 +1,4 @@
+
 export const lenderOpportunityGroup = {
   name: "Lender Opportunity",
   description: "Assessment of borrower's potential for additional banking services",
