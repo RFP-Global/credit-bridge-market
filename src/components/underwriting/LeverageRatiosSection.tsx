@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Criterion } from "@/components/underwriting/types";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
