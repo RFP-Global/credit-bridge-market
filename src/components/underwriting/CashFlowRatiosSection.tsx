@@ -37,7 +37,7 @@ export const CashFlowRatiosSection: React.FC<CashFlowRatiosSectionProps> = ({
       <CollapsibleContent className="space-y-4 pt-4">
         {criteria.map((criterion, criterionIndex) => (
           <CriterionItem
-            key={criterion.name}
+            key={criterionIndex}
             criterion={criterion}
             criterionIndex={criterionIndex}
             groupIndex={groupIndex}

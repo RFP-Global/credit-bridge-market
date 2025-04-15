@@ -29,7 +29,7 @@ export const LeverageRatiosSection: React.FC<LeverageRatiosSectionProps> = ({
   getScoreBackground
 }) => {
   return (
-    <Collapsible className="border border-gray-800 rounded-md p-4 space-y-2">
+    <Collapsible className="border border-gray-800 rounded-md p-4 space-y-2" defaultOpen>
       <CollapsibleTrigger className="flex items-center justify-between w-full">
         <h4 className="text-sm font-medium">Leverage Ratios</h4>
         <ChevronDown className="h-4 w-4" />

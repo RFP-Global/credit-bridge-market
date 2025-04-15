@@ -1,9 +1,15 @@
 
 import React from "react";
-import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
-import { CriteriaGroupHeader } from "./CriteriaGroupHeader";
-import { CriteriaSections } from "./criteria-sections/CriteriaSections";
+import { 
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { CriteriaGroup as CriteriaGroupType } from "./types";
+import { CriteriaSections } from "./criteria-sections/CriteriaSections";
+import { CriteriaGroupHeader } from "./criteria-sections/CriteriaGroupHeader";
 
 interface CriteriaGroupProps {
   group: CriteriaGroupType;
@@ -29,25 +35,36 @@ export const CriteriaGroup: React.FC<CriteriaGroupProps> = ({
   getScoreBackground
 }) => {
   return (
-    <Collapsible className="border border-gray-800 rounded-md p-4 space-y-4">
-      <CriteriaGroupHeader 
-        group={group} 
-        groupIndex={groupIndex}
-        getScoreColor={getScoreColor}
-      />
-      <CollapsibleContent className="space-y-4">
-        <CriteriaSections
-          group={group}
-          groupIndex={groupIndex}
-          updateCriterionWeight={updateCriterionWeight}
-          updateCriterionScore={updateCriterionScore}
-          updateCriterionRange={updateCriterionRange}
-          updateActualMetricValue={updateActualMetricValue}
-          toggleCriterionEnabled={toggleCriterionEnabled}
+    <Card className="bg-black/40 border-gray-800 mb-4">
+      <CardHeader className="pb-3">
+        <CriteriaGroupHeader
+          name={group.name}
+          description={group.description}
+          minScore={group.minScore}
+          maxScore={group.maxScore}
           getScoreColor={getScoreColor}
-          getScoreBackground={getScoreBackground}
         />
-      </CollapsibleContent>
-    </Collapsible>
+      </CardHeader>
+      <CardContent>
+        <Accordion type="single" collapsible defaultValue="criteria">
+          <AccordionItem value="criteria" className="border-b-0">
+            <AccordionTrigger>Criteria</AccordionTrigger>
+            <AccordionContent className="space-y-4 pt-4">
+              <CriteriaSections
+                group={group}
+                groupIndex={groupIndex}
+                updateCriterionWeight={updateCriterionWeight}
+                updateCriterionScore={updateCriterionScore}
+                updateCriterionRange={updateCriterionRange}
+                updateActualMetricValue={updateActualMetricValue}
+                toggleCriterionEnabled={toggleCriterionEnabled}
+                getScoreColor={getScoreColor}
+                getScoreBackground={getScoreBackground}
+              />
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </CardContent>
+    </Card>
   );
 };

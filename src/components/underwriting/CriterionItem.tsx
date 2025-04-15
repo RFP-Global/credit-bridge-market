@@ -1,8 +1,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Criterion } from "./types";
-import { ChevronDown } from "lucide-react";
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { CriterionHeader } from "./criterion-parts/CriterionHeader";
 import { CriterionWeight } from "./criterion-parts/CriterionWeight";
 import { CriterionScoreRange } from "./criterion-parts/CriterionScoreRange";
@@ -93,51 +91,46 @@ export const CriterionItem = ({
   };
 
   return (
-    <Collapsible className={`space-y-2 border-b border-gray-800/40 pb-4 last:border-0 last:pb-0 ${!criterion.enabled ? 'opacity-60' : ''}`}>
-      <CollapsibleTrigger className="flex items-center justify-between w-full">
-        <CriterionHeader 
-          criterion={criterion}
-          groupIndex={groupIndex}
-          criterionIndex={criterionIndex}
-          toggleCriterionEnabled={toggleCriterionEnabled}
-          getScoreColor={getScoreColor}
-        />
-        <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 ui-expanded:rotate-180" />
-      </CollapsibleTrigger>
+    <div className={`space-y-2 border-b border-gray-800/40 pb-4 last:border-0 last:pb-0 ${!criterion.enabled ? 'opacity-60' : ''}`}>
+      <CriterionHeader 
+        criterion={criterion}
+        groupIndex={groupIndex}
+        criterionIndex={criterionIndex}
+        toggleCriterionEnabled={toggleCriterionEnabled}
+        getScoreColor={getScoreColor}
+      />
       
       {criterion.enabled && (
-        <CollapsibleContent>
-          <div className="pt-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <CriterionWeight 
-                weight={criterion.weight}
-                groupIndex={groupIndex}
-                criterionIndex={criterionIndex}
-                updateCriterionWeight={updateCriterionWeight}
-              />
-              
-              <CriterionScoreRange 
-                minScoreValue={minScoreValue}
-                maxScoreValue={maxScoreValue}
-                onMinScoreChange={(e) => setMinScoreValue(e.target.value)}
-                onMaxScoreChange={(e) => setMaxScoreValue(e.target.value)}
-                onUpdateRange={handleScoreRangeUpdate}
-              />
-            </div>
-
-            <CriterionPreferredRange 
-              criterion={criterion}
-              minValue={minValue}
-              maxValue={maxValue}
-              rangeValues={rangeValues}
-              onMinValueChange={(e) => setMinValue(e.target.value)}
-              onMaxValueChange={(e) => setMaxValue(e.target.value)}
-              onRangeUpdate={handleRangeUpdate}
-              onSliderChange={handleRangeSliderUpdate}
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <CriterionWeight 
+              weight={criterion.weight}
+              groupIndex={groupIndex}
+              criterionIndex={criterionIndex}
+              updateCriterionWeight={updateCriterionWeight}
+            />
+            
+            <CriterionScoreRange 
+              minScoreValue={minScoreValue}
+              maxScoreValue={maxScoreValue}
+              onMinScoreChange={(e) => setMinScoreValue(e.target.value)}
+              onMaxScoreChange={(e) => setMaxScoreValue(e.target.value)}
+              onUpdateRange={handleScoreRangeUpdate}
             />
           </div>
-        </CollapsibleContent>
+
+          <CriterionPreferredRange 
+            criterion={criterion}
+            minValue={minValue}
+            maxValue={maxValue}
+            rangeValues={rangeValues}
+            onMinValueChange={(e) => setMinValue(e.target.value)}
+            onMaxValueChange={(e) => setMaxValue(e.target.value)}
+            onRangeUpdate={handleRangeUpdate}
+            onSliderChange={handleRangeSliderUpdate}
+          />
+        </>
       )}
-    </Collapsible>
+    </div>
   );
 };
