@@ -1,4 +1,3 @@
-
 export const lenderOpportunityGroup = {
   name: "Lender Opportunity",
   description: "Assessment of borrower's potential for additional banking services",
@@ -12,18 +11,18 @@ export const lenderOpportunityGroup = {
       value: "Medium",
       weight: 25,
       minScore: 1,
-      maxScore: 10,
+      maxScore: 3,
       min: 0,
       max: 100,
-      step: 5,
+      step: 33.33,
       preferredMin: 50,
       preferredMax: 100,
       unit: "%",
       enabled: true,
       scoreMapping: [
-        { min: 0, max: 30, score: 3, riskLevel: "Low Potential" },
-        { min: 30, max: 60, score: 6, riskLevel: "Medium Potential" },
-        { min: 60, max: 100, score: 9, riskLevel: "High Potential" }
+        { min: 0, max: 33.33, score: 1, riskLevel: "Low Potential" },
+        { min: 33.33, max: 66.66, score: 2, riskLevel: "Medium Potential" },
+        { min: 66.66, max: 100, score: 3, riskLevel: "High Potential" }
       ]
     },
     {
