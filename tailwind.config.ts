@@ -53,7 +53,7 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        gridBlue: "#2A85E8",
+        gridBlue: "#0E90D9",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -90,14 +90,14 @@ export default {
         "scan": "scan 3s linear infinite"
       },
       backgroundImage: {
-        'grid-pattern': 'linear-gradient(to right, rgba(42, 133, 232, 0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(42, 133, 232, 0.06) 1px, transparent 1px)',
+        'grid-pattern': 'linear-gradient(to right, rgba(14, 144, 217, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(14, 144, 217, 0.08) 1px, transparent 1px)',
       },
       backgroundSize: {
         'grid-size': '40px 40px',
       },
       boxShadow: {
-        'matte': '0 2px 6px rgba(0, 0, 0, 0.08)',
-        'matte-lg': '0 4px 12px rgba(0, 0, 0, 0.12)',
+        'matte': '0 2px 6px rgba(0, 0, 0, 0.05)',
+        'matte-lg': '0 4px 12px rgba(0, 0, 0, 0.08)',
       },
     },
   },
