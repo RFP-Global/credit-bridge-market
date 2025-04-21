@@ -13,11 +13,11 @@
   }
 
   .terminal-card {
-    @apply border border-blue-900/40 bg-black/60 rounded-md p-4 shadow-[0_0_15px_rgba(0,80,160,0.1)] relative;
+    @apply border border-primary/20 bg-black/60 rounded-md p-4 shadow-[0_0_15px_rgba(0,109,223,0.1)] relative;
   }
 
   .terminal-header {
-    @apply absolute top-0 left-0 right-0 border-b border-blue-900/40 py-1 px-3 flex items-center;
+    @apply absolute top-0 left-0 right-0 border-b border-primary/20 py-1 px-3 flex items-center;
   }
 
   .terminal-dot {
@@ -53,18 +53,18 @@
   }
   
   .data-item {
-    @apply px-4 py-1 border-r border-blue-900/20 flex-shrink-0;
+    @apply px-4 py-1 border-r border-primary/20 flex-shrink-0;
   }
 
   .market-ticker {
-    @apply bg-black/50 border-y border-blue-900/20 w-full;
+    @apply bg-black/50 border-y border-primary/20 w-full;
     position: relative;
     left: 0;
     right: 0;
   }
   
   .bid-button {
-    @apply bg-cyan-800 hover:bg-cyan-700 text-cyan-50 font-semibold transition-colors duration-200;
+    @apply bg-primary/80 hover:bg-primary text-primary-foreground font-semibold transition-colors duration-200;
   }
   
   .matte-card {

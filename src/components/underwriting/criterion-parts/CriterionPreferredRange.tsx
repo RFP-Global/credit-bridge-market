@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Criterion } from "../types";
+import { toast } from "@/hooks/use-toast";
 
 interface CriterionPreferredRangeProps {
   criterion: Criterion;
@@ -46,8 +47,17 @@ export const CriterionPreferredRange: React.FC<CriterionPreferredRangeProps> = (
     );
   };
 
+  const handleSetRangeWithToast = () => {
+    onRangeUpdate();
+    toast({
+      title: criterion.singleSlider ? "Value updated" : "Range updated",
+      description: `Preferred ${criterion.singleSlider ? "value" : "range"} has been set for ${criterion.name}`,
+      variant: "default",
+    });
+  };
+
   return (
-    <div className="mt-3 pt-3 border-t border-gray-800/30">
+    <div className="mt-3 pt-3 border-t border-border/40">
       <div className="text-xs font-medium mb-2">
         {criterion.singleSlider ? "Preferred Value" : "Preferred Range"} {criterion.unit ? `(${criterion.unit})` : ''}
       </div>
@@ -68,7 +78,7 @@ export const CriterionPreferredRange: React.FC<CriterionPreferredRangeProps> = (
           <Input
             value={minValue}
             onChange={onMinValueChange}
-            className="h-7 text-xs"
+            className="h-7 text-xs bg-secondary/70 border-border/40"
             placeholder={criterion.singleSlider ? `Value ${criterion.unit || ''}` : `Min ${criterion.unit || ''}`}
           />
         </div>
@@ -78,7 +88,7 @@ export const CriterionPreferredRange: React.FC<CriterionPreferredRangeProps> = (
             <Input
               value={maxValue}
               onChange={onMaxValueChange}
-              className="h-7 text-xs"
+              className="h-7 text-xs bg-secondary/70 border-border/40"
               placeholder={`Max ${criterion.unit || ''}`}
             />
           </div>
@@ -87,13 +97,13 @@ export const CriterionPreferredRange: React.FC<CriterionPreferredRangeProps> = (
           variant="outline" 
           size="sm" 
           className="h-7 text-xs"
-          onClick={onRangeUpdate}
+          onClick={handleSetRangeWithToast}
         >
           Set {criterion.singleSlider ? "Value" : "Range"}
         </Button>
       </div>
       {criterion.preferredMin !== undefined && (
-        <div className="mt-2 text-xs text-blue-400">
+        <div className="mt-2 text-xs text-primary">
           Current preferred {criterion.singleSlider ? "value" : "range"}: {criterion.preferredMin}
           {!criterion.singleSlider && criterion.preferredMax !== undefined && ` - ${criterion.preferredMax}`} 
           {criterion.unit || ''}
