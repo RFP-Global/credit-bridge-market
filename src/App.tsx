@@ -1,9 +1,11 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import Login from "@/pages/Login";
 import Index from "./pages/Index";
 import Marketplace from "./pages/Marketplace";
 import Access from "./pages/Access";
@@ -48,50 +50,53 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <FullscreenButton />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/marketplace" element={<Marketplace />} />
-            <Route path="/proposal/:id" element={<ProposalDetails />} />
-            <Route path="/proposal/:id/bid" element={<BidSubmission />} />
-            <Route path="/access" element={<Access />} />
-            <Route path="/enterprise-login" element={<EnterpriseLogin />} />
-            <Route path="/lender-login" element={<LenderLogin />} />
-            <Route path="/enterprise-signup" element={<EnterpriseSignUp />} />
-            <Route path="/lender-signup" element={<LenderSignUp />} />
-            <Route path="/enterprise-dashboard" element={<EnterpriseDashboard />} />
-            <Route path="/enterprise-profile" element={<EnterpriseProfile />} />
-            <Route path="/lender-dashboard" element={<LenderDashboard />} />
-            <Route path="/lender-dashboard/deal/:id" element={<DealDetails />} />
-            <Route path="/intelligence" element={<Intelligence />} />
-            <Route path="/education" element={<Education />} />
-            <Route path="/proposals-dashboard" element={<ProposalsDashboard />} />
-            <Route path="/proposal-bids/:id" element={<ProposalBids />} />
-            <Route path="/bid-comparison/:id" element={<BidComparison />} />
-            <Route path="/create-proposal" element={<CreateProposal />} />
-            <Route path="/transaction-archive" element={<TransactionArchive />} />
-            <Route path="/transaction-details/:id" element={<TransactionDetailsView />} />
-            <Route path="/facility-builder" element={<FacilityBuilder />} />
-            <Route path="/facility-mechanics/:facilityId" element={<FacilityMechanics />} />
-            <Route path="/facility-reference/:facilityId/:sectionType" element={<FacilityReferenceDetail />} />
-            <Route path="/vdr" element={<VDR />} />
-            <Route path="/borrower-underwriting" element={<BorrowerUnderwritingPage />} />
-            <Route path="/borrower-ratio-details" element={<BorrowerRatioDetails />} />
-            <Route path="/financial-report" element={<FinancialReport />} />
-            <Route path="/lenders" element={<Lenders />} />
-            <Route path="/lender/:id" element={<LenderProfile />} />
-            <Route path="/enterprise-network" element={<EnterpriseNetwork />} />
-            <Route path="/enterprise/:id" element={<EnterpriseDetail />} />
-            <Route path="/team" element={<Team />} />
-            <Route path="/underwriting" element={<Underwriting />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <FullscreenButton />
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+              <Route path="/marketplace" element={<ProtectedRoute><Marketplace /></ProtectedRoute>} />
+              <Route path="/proposal/:id" element={<ProtectedRoute><ProposalDetails /></ProtectedRoute>} />
+              <Route path="/proposal/:id/bid" element={<ProtectedRoute><BidSubmission /></ProtectedRoute>} />
+              <Route path="/access" element={<ProtectedRoute><Access /></ProtectedRoute>} />
+              <Route path="/enterprise-login" element={<ProtectedRoute><EnterpriseLogin /></ProtectedRoute>} />
+              <Route path="/lender-login" element={<ProtectedRoute><LenderLogin /></ProtectedRoute>} />
+              <Route path="/enterprise-signup" element={<ProtectedRoute><EnterpriseSignUp /></ProtectedRoute>} />
+              <Route path="/lender-signup" element={<ProtectedRoute><LenderSignUp /></ProtectedRoute>} />
+              <Route path="/enterprise-dashboard" element={<ProtectedRoute><EnterpriseDashboard /></ProtectedRoute>} />
+              <Route path="/enterprise-profile" element={<ProtectedRoute><EnterpriseProfile /></ProtectedRoute>} />
+              <Route path="/lender-dashboard" element={<ProtectedRoute><LenderDashboard /></ProtectedRoute>} />
+              <Route path="/lender-dashboard/deal/:id" element={<ProtectedRoute><DealDetails /></ProtectedRoute>} />
+              <Route path="/intelligence" element={<ProtectedRoute><Intelligence /></ProtectedRoute>} />
+              <Route path="/education" element={<ProtectedRoute><Education /></ProtectedRoute>} />
+              <Route path="/proposals-dashboard" element={<ProtectedRoute><ProposalsDashboard /></ProtectedRoute>} />
+              <Route path="/proposal-bids/:id" element={<ProtectedRoute><ProposalBids /></ProtectedRoute>} />
+              <Route path="/bid-comparison/:id" element={<ProtectedRoute><BidComparison /></ProtectedRoute>} />
+              <Route path="/create-proposal" element={<ProtectedRoute><CreateProposal /></ProtectedRoute>} />
+              <Route path="/transaction-archive" element={<ProtectedRoute><TransactionArchive /></ProtectedRoute>} />
+              <Route path="/transaction-details/:id" element={<ProtectedRoute><TransactionDetailsView /></ProtectedRoute>} />
+              <Route path="/facility-builder" element={<ProtectedRoute><FacilityBuilder /></ProtectedRoute>} />
+              <Route path="/facility-mechanics/:facilityId" element={<ProtectedRoute><FacilityMechanics /></ProtectedRoute>} />
+              <Route path="/facility-reference/:facilityId/:sectionType" element={<ProtectedRoute><FacilityReferenceDetail /></ProtectedRoute>} />
+              <Route path="/vdr" element={<ProtectedRoute><VDR /></ProtectedRoute>} />
+              <Route path="/borrower-underwriting" element={<ProtectedRoute><BorrowerUnderwritingPage /></ProtectedRoute>} />
+              <Route path="/borrower-ratio-details" element={<ProtectedRoute><BorrowerRatioDetails /></ProtectedRoute>} />
+              <Route path="/financial-report" element={<ProtectedRoute><FinancialReport /></ProtectedRoute>} />
+              <Route path="/lenders" element={<ProtectedRoute><Lenders /></ProtectedRoute>} />
+              <Route path="/lender/:id" element={<ProtectedRoute><LenderProfile /></ProtectedRoute>} />
+              <Route path="/enterprise-network" element={<ProtectedRoute><EnterpriseNetwork /></ProtectedRoute>} />
+              <Route path="/enterprise/:id" element={<ProtectedRoute><EnterpriseDetail /></ProtectedRoute>} />
+              <Route path="/team" element={<ProtectedRoute><Team /></ProtectedRoute>} />
+              <Route path="/underwriting" element={<ProtectedRoute><Underwriting /></ProtectedRoute>} />
+              <Route path="*" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 };
